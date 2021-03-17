@@ -46,6 +46,18 @@ func ReadFile() []string {
 	return lines
 }
 
+// ReadFileAsInts takes lines in a text file and puts them into an array as integers
+func ReadFileAsInts() []int {
+	file, err := os.Open("./input.txt")
+	Check(err)
+	var lines []int
+	scanner := bufio.NewScanner(file)
+	for scanner.Scan() {
+		lines = append(lines, StringToInt(scanner.Text()))
+	}
+	return lines
+}
+
 // Abs returns the absolute value of the int provided
 func Abs(x int) int {
 	if x >= 0 {
