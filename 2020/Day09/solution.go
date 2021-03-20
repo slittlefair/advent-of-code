@@ -4,38 +4,79 @@ import (
 	helpers "Advent-of-Code"
 	"errors"
 	"fmt"
+	"sort"
 )
 
-func cyclePrevNumbers(entries []int, preambleLength int, i int) (bool, int, int) {
+type Numbers []int
+
+func (n *Numbers) cyclePrevNumbers(preambleLength int, i int) (bool, int) {
 	for j := i - preambleLength; j < i; j++ {
 		for k := i - preambleLength; k < i; k++ {
-			if j != k && entries[j]+entries[k] == entries[i] {
-				return false, -1, -1
+			if j != k && (*n)[j]+(*n)[k] == (*n)[i] {
+				return false, -1
 			}
 		}
 	}
-	return true, i, entries[i]
+	return true, (*n)[i]
 }
 
-func part1(entries []int, preambleLength int) (int, int, error) {
-	for i := preambleLength; i < len(entries); i++ {
-		solved, solIndex, solValue := cyclePrevNumbers(entries, preambleLength, i)
+func (n *Numbers) part1(preambleLength int) (int, error) {
+	for i := preambleLength; i < len(*n); i++ {
+		solved, solValue := n.cyclePrevNumbers(preambleLength, i)
 		if solved {
-			return solIndex, solValue, nil
+			return solValue, nil
 		}
 	}
-	return -1, -1, errors.New("could not find solution to part 1")
+	return -1, errors.New("could not find solution to part 1")
+}
+
+func (n *Numbers) getSumNumbers(part1Sol int) ([]int, error) {
+	for i := 0; i < len(*n); i++ {
+		count := 0
+		for j := i; j < len(*n); j++ {
+			count += (*n)[j]
+			if count > part1Sol {
+				continue
+			} else if count == part1Sol {
+				return (*n)[i : j+1], nil
+			}
+		}
+	}
+	return []int{}, errors.New("could not find solution to part 2")
+}
+
+func (n *Numbers) part2(part1Sol int) (int, error) {
+	numbers, err := n.getSumNumbers(part1Sol)
+	if err != nil {
+		return -1, err
+	}
+	count := 0
+	for _, num := range numbers {
+		count += num
+	}
+	sort.Ints(numbers)
+	return numbers[0] + numbers[len(numbers)-1], nil
 }
 
 func main() {
 	entries := helpers.ReadFileAsInts()
+	numbers := Numbers{}
+	for _, e := range entries {
+		numbers = append(numbers, e)
+	}
 	preambleLength := 25
 
-	_, part1SolValue, err := part1(entries, preambleLength)
+	part1Sol, err := numbers.part1(preambleLength)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	fmt.Println("Part 1:", part1Sol)
 
-	fmt.Println("Part 1:", part1SolValue)
+	part2Sol, err := numbers.part2(part1Sol)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Part 2:", part2Sol)
 }
