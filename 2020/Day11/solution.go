@@ -7,6 +7,17 @@ import (
 
 type Grid map[helpers.Coordinate]string
 
+var directions = []helpers.Coordinate{
+	{X: -1, Y: -1},
+	{X: -1, Y: 0},
+	{X: -1, Y: +1},
+	{X: 0, Y: -1},
+	{X: 0, Y: +1},
+	{X: +1, Y: -1},
+	{X: +1, Y: 0},
+	{X: +1, Y: +1},
+}
+
 func (g *Grid) isSameGrid(newGrid Grid) bool {
 	for co, val := range *g {
 		if newGrid[co] != val {
@@ -16,27 +27,59 @@ func (g *Grid) isSameGrid(newGrid Grid) bool {
 	return true
 }
 
-func (g *Grid) evaluateEmptySeatPart1(co helpers.Coordinate) string {
-	for x := co.X - 1; x <= co.X+1; x++ {
-		for y := co.Y - 1; y <= co.Y+1; y++ {
-			if !(x == co.X && y == co.Y) && (*g)[helpers.Coordinate{X: x, Y: y}] == "#" {
-				return "L"
+func (g *Grid) evaluateEmptySeat(co helpers.Coordinate, part int) string {
+	newVal := "#"
+	for _, d := range directions {
+		startingCo := co
+		for {
+			startingCo = helpers.Coordinate{
+				X: startingCo.X + d.X,
+				Y: startingCo.Y + d.Y,
+			}
+			if val := (*g)[helpers.Coordinate{X: startingCo.X, Y: startingCo.Y}]; val != "." {
+				if val == "#" {
+					newVal = "L"
+				}
+				break
+			} else if part == 2 && val == "" {
+				break
+			}
+			if part == 1 {
+				break
 			}
 		}
+		if newVal == "L" {
+			break
+		}
 	}
-	return "#"
+	return newVal
 }
 
-func (g *Grid) evaluateOccupiedSeatPart1(co helpers.Coordinate) string {
+func (g *Grid) evaluateOccupiedSeat(co helpers.Coordinate, part int) string {
+	// If part 1 empty seat if 4 occupied, if part 2 empty seat if 5 occupied
+	adjacentThreshold := 3 + part
 	adjacentOccupied := 0
-	for x := co.X - 1; x <= co.X+1; x++ {
-		for y := co.Y - 1; y <= co.Y+1; y++ {
-			if !(x == co.X && y == co.Y) && (*g)[helpers.Coordinate{X: x, Y: y}] == "#" {
-				adjacentOccupied++
+	for _, d := range directions {
+		startingCo := co
+		for {
+			startingCo = helpers.Coordinate{
+				X: startingCo.X + d.X,
+				Y: startingCo.Y + d.Y,
+			}
+			if val := (*g)[helpers.Coordinate{X: startingCo.X, Y: startingCo.Y}]; val != "." {
+				if val == "#" {
+					adjacentOccupied++
+				}
+				break
+			} else if part == 2 && val == "" {
+				break
+			}
+			if part == 1 {
+				break
 			}
 		}
 	}
-	if adjacentOccupied >= 4 {
+	if adjacentOccupied >= adjacentThreshold {
 		return "L"
 	}
 	return "#"
@@ -46,13 +89,9 @@ func (g *Grid) generateNextGrid(part int) Grid {
 	newGrid := Grid{}
 	for co, val := range *g {
 		if val == "L" {
-			if part == 1 {
-				newGrid[co] = g.evaluateEmptySeatPart1(co)
-			}
+			newGrid[co] = g.evaluateEmptySeat(co, part)
 		} else if val == "#" {
-			if part == 1 {
-				newGrid[co] = g.evaluateOccupiedSeatPart1(co)
-			}
+			newGrid[co] = g.evaluateOccupiedSeat(co, part)
 		} else {
 			newGrid[co] = "."
 		}
@@ -74,12 +113,24 @@ func (g *Grid) findSolution(part int) {
 	for {
 		newGrid := g.generateNextGrid(part)
 		if g.isSameGrid(newGrid) {
-			fmt.Printf("Part %d:%d\n", part, g.countOccupiedSeats())
+			fmt.Printf("Part %d: %d\n", part, g.countOccupiedSeats())
 			return
 		}
 		g = &newGrid
 	}
 }
+
+// For debugging
+// func (g *Grid) printExampleGrid() {
+// 	printGrid := [10][10]string{}
+// 	for co, val := range *g {
+// 		printGrid[co.Y][co.X] = val
+// 	}
+// 	for _, row := range printGrid {
+// 		fmt.Println(row)
+// 	}
+// 	fmt.Println()
+// }
 
 func main() {
 	plan := helpers.ReadFile()
@@ -91,4 +142,6 @@ func main() {
 	}
 	g1 := g
 	g1.findSolution(1)
+	g2 := g
+	g2.findSolution(2)
 }
