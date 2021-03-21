@@ -11,6 +11,8 @@ type Ship struct {
 	facingDir string
 }
 
+type Waypoint helpers.Coordinate
+
 var points = []string{"N", "E", "S", "W"}
 
 var pointsToIndex = map[string]int{
@@ -51,21 +53,32 @@ func (s *Ship) calculateDistance() int {
 	return helpers.Abs(s.co.X) + helpers.Abs(s.co.Y)
 }
 
-func main() {
+func parseDirection(entry string) (string, int, error) {
+	dir := string(entry[0])
+	val, err := strconv.Atoi(entry[1:])
+	return dir, val, err
+}
+
+func part1(entries []string) (int, error) {
 	ship := Ship{
 		facingDir: "E",
 	}
-	entries := helpers.ReadFile()
-
 	for _, entry := range entries {
-		dir := string(entry[0])
-		val, err := strconv.Atoi(entry[1:])
+		dir, val, err := parseDirection(entry)
 		if err != nil {
-			fmt.Println(err, entry)
-			return
+			return 0, err
 		}
 		ship.moveShip(dir, val)
 	}
+	return ship.calculateDistance(), nil
+}
 
-	fmt.Println("Part 1:", ship.calculateDistance())
+func main() {
+	entries := helpers.ReadFile()
+	part1Sol, err := part1(entries)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Part 1:", part1Sol)
 }
