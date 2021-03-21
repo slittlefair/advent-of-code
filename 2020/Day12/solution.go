@@ -73,6 +73,78 @@ func part1(entries []string) (int, error) {
 	return ship.calculateDistance(), nil
 }
 
+func (w *Waypoint) turnWaypointLeft(val int) {
+	// Rotated around the origin 90 degrees anticlockwise point M (h, k) takes the image M' (-k, h)
+	for i := 0; i < val; i += 90 {
+		newWaypoint := helpers.Coordinate{
+			X: -w.Y,
+			Y: w.X,
+		}
+		w.X = newWaypoint.X
+		w.Y = newWaypoint.Y
+	}
+}
+
+func (w *Waypoint) turnWaypointRight(val int) {
+	// Rotated around the origin 90 degrees clockwise point M (h, k) takes the image M' (k, -h)
+	for i := 0; i < val; i += 90 {
+		newWaypoint := helpers.Coordinate{
+			X: w.Y,
+			Y: -w.X,
+		}
+		w.X = newWaypoint.X
+		w.Y = newWaypoint.Y
+	}
+}
+
+func (w *Waypoint) moveWaypoint(s *Ship, d string, val int) {
+	switch d {
+	case "N":
+		w.Y += val
+	case "E":
+		w.X += val
+	case "S":
+		w.Y -= val
+	case "W":
+		w.X -= val
+	case "L":
+		w.turnWaypointLeft(val)
+	case "R":
+		w.turnWaypointRight(val)
+	case "F":
+		for i := 0; i < val; i++ {
+			if w.X > 0 {
+				s.moveShip("E", w.X)
+			} else {
+				s.moveShip("W", -w.X)
+			}
+			if w.Y > 0 {
+				s.moveShip("N", w.Y)
+			} else {
+				s.moveShip("S", -w.Y)
+			}
+		}
+	}
+}
+
+func part2(entries []string) (int, error) {
+	ship := Ship{
+		facingDir: "E",
+	}
+	waypoint := Waypoint{
+		X: 10,
+		Y: 1,
+	}
+	for _, entry := range entries {
+		dir, val, err := parseDirection(entry)
+		if err != nil {
+			return 0, err
+		}
+		waypoint.moveWaypoint(&ship, dir, val)
+	}
+	return ship.calculateDistance(), nil
+}
+
 func main() {
 	entries := helpers.ReadFile()
 	part1Sol, err := part1(entries)
@@ -81,4 +153,11 @@ func main() {
 		return
 	}
 	fmt.Println("Part 1:", part1Sol)
+
+	part2Sol, err := part2(entries)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Part 2:", part2Sol)
 }
