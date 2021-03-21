@@ -16,7 +16,7 @@ func (g *Grid) isSameGrid(newGrid Grid) bool {
 	return true
 }
 
-func (g *Grid) evaluateEmptySeat(co helpers.Coordinate) string {
+func (g *Grid) evaluateEmptySeatPart1(co helpers.Coordinate) string {
 	for x := co.X - 1; x <= co.X+1; x++ {
 		for y := co.Y - 1; y <= co.Y+1; y++ {
 			if !(x == co.X && y == co.Y) && (*g)[helpers.Coordinate{X: x, Y: y}] == "#" {
@@ -27,7 +27,7 @@ func (g *Grid) evaluateEmptySeat(co helpers.Coordinate) string {
 	return "#"
 }
 
-func (g *Grid) evaluateOccupiedSeat(co helpers.Coordinate) string {
+func (g *Grid) evaluateOccupiedSeatPart1(co helpers.Coordinate) string {
 	adjacentOccupied := 0
 	for x := co.X - 1; x <= co.X+1; x++ {
 		for y := co.Y - 1; y <= co.Y+1; y++ {
@@ -42,13 +42,17 @@ func (g *Grid) evaluateOccupiedSeat(co helpers.Coordinate) string {
 	return "#"
 }
 
-func (g *Grid) generateNextGrid() Grid {
+func (g *Grid) generateNextGrid(part int) Grid {
 	newGrid := Grid{}
 	for co, val := range *g {
 		if val == "L" {
-			newGrid[co] = g.evaluateEmptySeat(co)
+			if part == 1 {
+				newGrid[co] = g.evaluateEmptySeatPart1(co)
+			}
 		} else if val == "#" {
-			newGrid[co] = g.evaluateOccupiedSeat(co)
+			if part == 1 {
+				newGrid[co] = g.evaluateOccupiedSeatPart1(co)
+			}
 		} else {
 			newGrid[co] = "."
 		}
@@ -66,11 +70,11 @@ func (g *Grid) countOccupiedSeats() int {
 	return numOccupiedSeats
 }
 
-func (g *Grid) part1() {
+func (g *Grid) findSolution(part int) {
 	for {
-		newGrid := g.generateNextGrid()
+		newGrid := g.generateNextGrid(part)
 		if g.isSameGrid(newGrid) {
-			fmt.Println("Part 1:", g.countOccupiedSeats())
+			fmt.Printf("Part %d:%d\n", part, g.countOccupiedSeats())
 			return
 		}
 		g = &newGrid
@@ -85,5 +89,6 @@ func main() {
 			g[helpers.Coordinate{X: c, Y: r}] = string(col)
 		}
 	}
-	g.part1()
+	g1 := g
+	g1.findSolution(1)
 }
