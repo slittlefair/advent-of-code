@@ -15,9 +15,16 @@ type FieldParams struct {
 	pr PossibleRows
 }
 type TicketFields map[string]FieldParams
-type AllTickets [][]int
+type TicketCollection [][]int
 
-func (tf TicketFields) populateField(re *regexp.Regexp, field []string) error {
+var myTicket []int
+var allValidTickets TicketCollection
+
+var re = regexp.MustCompile(`\d+`)
+
+var errorRate int
+
+func (tf TicketFields) populateField(field []string) error {
 	rangeLimits := re.FindAllString(field[1], -1)
 	rangeLimitsNums := helpers.StringSliceToIntSlice(rangeLimits)
 	if len(rangeLimitsNums) != 4 {
@@ -36,74 +43,62 @@ func (tf TicketFields) populateField(re *regexp.Regexp, field []string) error {
 	return nil
 }
 
-func main() {
-	entries := helpers.ReadFile()
-	re := regexp.MustCompile(`\d+`)
-	tFields := TicketFields{}
-	myTicket := []int{}
-	allTickets := AllTickets{}
-	errorRate := 0
-	for _, entry := range entries {
-		if entry == "" || entry == "your ticket:" || entry == "nearby tickets:" {
-			continue
-		}
-		field := strings.Split(entry, ":")
-		if len(field) > 1 {
-			if err := tFields.populateField(re, field); err != nil {
-				fmt.Println(err)
-				return
-			}
-		} else {
-			nums := helpers.StringSliceToIntSlice(re.FindAllString(entry, -1))
-			if len(myTicket) == 0 {
-				myTicket = nums
-				for field := range tFields {
-					possibleRows := PossibleRows{}
-					for i := 0; i < len(myTicket); i++ {
-						possibleRows[i] = true
-					}
-					tFields[field] = FieldParams{
-						pr: possibleRows,
-						vn: tFields[field].vn,
-					}
-				}
-			} else {
-				validTicket := true
-				for _, num := range nums {
-					if isValid := tFields.numIsValid(num); !isValid {
-						errorRate += num
-						validTicket = false
-					}
-				}
-				if validTicket {
-					allTickets = append(allTickets, nums)
-				}
-			}
+func (tf TicketFields) numIsValid(num int) bool {
+	for _, field := range tf {
+		if field.vn[num] {
+			return true
 		}
 	}
+	return false
+}
 
-	fmt.Println("Part 1:", errorRate)
+func (tf TicketFields) part1(ticket string) {
+	nums := helpers.StringSliceToIntSlice(re.FindAllString(ticket, -1))
+	if len(myTicket) == 0 {
+		myTicket = nums
+		for field := range tf {
+			possibleRows := PossibleRows{}
+			for i := 0; i < len(myTicket); i++ {
+				possibleRows[i] = true
+			}
+			tf[field] = FieldParams{
+				pr: possibleRows,
+				vn: tf[field].vn,
+			}
+		}
+	} else {
+		validTicket := true
+		for _, num := range nums {
+			if isValid := tf.numIsValid(num); !isValid {
+				errorRate += num
+				validTicket = false
+			}
+		}
+		if validTicket {
+			allValidTickets = append(allValidTickets, nums)
+		}
+	}
+}
 
+func (tf TicketFields) part2() int {
 	ticketColToField := make(map[int]string)
-
 	for len(ticketColToField) < len(myTicket) {
-		for _, ticket := range allTickets {
+		for _, ticket := range allValidTickets {
 			for j, num := range ticket {
-				for field, param := range tFields {
+				for field, param := range tf {
 					if !param.vn[num] {
-						delete(tFields[field].pr, j)
+						delete(tf[field].pr, j)
 					}
-					if len(tFields[field].pr) == 1 {
+					if len(tf[field].pr) == 1 {
 						// There should only be one so the loop only runs once
-						for key := range tFields[field].pr {
+						for key := range tf[field].pr {
 							ticketColToField[key] = field
-							for f := range tFields {
+							for f := range tf {
 								if f != field {
-									delete(tFields[f].pr, key)
+									delete(tf[f].pr, key)
 								}
 							}
 						}
-
 					}
 				}
 			}
@@ -117,15 +112,28 @@ func main() {
 		}
 	}
 
-	fmt.Println("Part 2:", runningTotal)
-
+	return runningTotal
 }
 
-func (tf TicketFields) numIsValid(num int) bool {
-	for _, field := range tf {
-		if field.vn[num] {
-			return true
+func main() {
+	entries := helpers.ReadFile()
+	tFields := TicketFields{}
+	for _, entry := range entries {
+		if entry == "" || entry == "your ticket:" || entry == "nearby tickets:" {
+			continue
+		}
+		field := strings.Split(entry, ":")
+		if len(field) > 1 {
+			if err := tFields.populateField(field); err != nil {
+				fmt.Println(err)
+				return
+			}
+		} else {
+			tFields.part1(entry)
 		}
 	}
-	return false
+
+	fmt.Println("Part 1:", errorRate)
+	fmt.Println("Part 2:", tFields.part2())
+
 }
