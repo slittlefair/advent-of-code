@@ -8,11 +8,14 @@ import (
 	"strings"
 )
 
+// Valid numbers for a field which the numbers on a ticket could correspond to
 type ValidNumbers map[int]bool
-type PossibleRows map[int]bool
+
+// Possible values of a ticket
+type PossibleValueIndices map[int]bool
 type FieldParams struct {
-	vn ValidNumbers
-	pr PossibleRows
+	vn  ValidNumbers
+	pvi PossibleValueIndices
 }
 type TicketFields map[string]FieldParams
 type TicketCollection [][]int
@@ -24,6 +27,8 @@ var re = regexp.MustCompile(`\d+`)
 
 var errorRate int
 
+// Populate a field with the valid numbers, so we can just look up a number on a ticket to see if it
+// is valid for a field
 func (tf TicketFields) populateField(field []string) error {
 	rangeLimits := re.FindAllString(field[1], -1)
 	rangeLimitsNums := helpers.StringSliceToIntSlice(rangeLimits)
@@ -36,13 +41,16 @@ func (tf TicketFields) populateField(field []string) error {
 			vn[i] = true
 		}
 	}
+	// TODO figure out how to use pointers to make this better
 	tf[field[0]] = FieldParams{
-		vn: vn,
-		pr: tf[field[0]].pr,
+		vn:  vn,
+		pvi: tf[field[0]].pvi,
 	}
 	return nil
 }
 
+// Check a number on a ticket against all valid numbers for each field and return whether it appears
+// for at least one field
 func (tf TicketFields) numIsValid(num int) bool {
 	for _, field := range tf {
 		if field.vn[num] {
@@ -52,50 +60,61 @@ func (tf TicketFields) numIsValid(num int) bool {
 	return false
 }
 
-func (tf TicketFields) part1(ticket string) {
-	nums := helpers.StringSliceToIntSlice(re.FindAllString(ticket, -1))
-	if len(myTicket) == 0 {
-		myTicket = nums
-		for field := range tf {
-			possibleRows := PossibleRows{}
-			for i := 0; i < len(myTicket); i++ {
-				possibleRows[i] = true
-			}
-			tf[field] = FieldParams{
-				pr: possibleRows,
-				vn: tf[field].vn,
-			}
+// For each field, set possible value indices, which initially is every index in a ticket
+func (tf TicketFields) populatePossibleValueIndices() {
+	for field := range tf {
+		possibleValueIndices := PossibleValueIndices{}
+		for i := 0; i < len(myTicket); i++ {
+			possibleValueIndices[i] = true
 		}
-	} else {
-		validTicket := true
-		for _, num := range nums {
-			if isValid := tf.numIsValid(num); !isValid {
-				errorRate += num
-				validTicket = false
-			}
+		tf[field] = FieldParams{
+			pvi: possibleValueIndices,
+			vn:  tf[field].vn,
 		}
-		if validTicket {
-			allValidTickets = append(allValidTickets, nums)
+	}
+}
+
+func (tf TicketFields) part1(ticket string, nums []int) {
+	validTicket := true
+	for _, num := range nums {
+		if isValid := tf.numIsValid(num); !isValid {
+			errorRate += num
+			validTicket = false
 		}
+	}
+	if validTicket {
+		allValidTickets = append(allValidTickets, nums)
 	}
 }
 
 func (tf TicketFields) part2() int {
 	ticketColToField := make(map[int]string)
+	// Keep looping whilst we still have fields to find value for
 	for len(ticketColToField) < len(myTicket) {
+		// Loop over all valid tickets
 		for _, ticket := range allValidTickets {
+			// For each ticket, loop over the numbers in the ticket
 			for j, num := range ticket {
+				// For each number, loop over every field and parameter
 				for field, param := range tf {
+					// If the number from the ticket is not valid for that field, then the index of
+					// the number cannot relate to that field, so delete it from the possible
+					// indeces for that field
 					if !param.vn[num] {
-						delete(tf[field].pr, j)
+						delete(tf[field].pvi, j)
 					}
-					if len(tf[field].pr) == 1 {
-						// There should only be one so the loop only runs once
-						for key := range tf[field].pr {
+					// Once we've deleted a possible indeces, check to see how many possibilities
+					// are left. If there's only one, by process of elimination we have found the
+					// index for which the field relates. In which case we add the index and field
+					// pair to ticketColToField and delete the index from all other fields' possible
+					// indices
+					if len(tf[field].pvi) == 1 {
+						// There is only one so the loop only runs once
+						for key := range tf[field].pvi {
 							ticketColToField[key] = field
 							for f := range tf {
 								if f != field {
-									delete(tf[f].pr, key)
+									delete(tf[f].pvi, key)
 								}
 							}
 						}
@@ -123,13 +142,20 @@ func main() {
 			continue
 		}
 		field := strings.Split(entry, ":")
+		// If the split yields more than one string then it is a field, otherwise it's a ticket
 		if len(field) > 1 {
 			if err := tFields.populateField(field); err != nil {
 				fmt.Println(err)
 				return
 			}
 		} else {
-			tFields.part1(entry)
+			nums := helpers.StringSliceToIntSlice(re.FindAllString(entry, -1))
+			if len(myTicket) == 0 {
+				myTicket = nums
+				tFields.populatePossibleValueIndices()
+			} else {
+				tFields.part1(entry, nums)
+			}
 		}
 	}
 
