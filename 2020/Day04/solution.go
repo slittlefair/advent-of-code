@@ -15,26 +15,21 @@ func validateYr(val string, min int, max int) (bool, error) {
 	return year >= min && year <= max, nil
 }
 
-func validateHgt(val string) (bool, error) {
+func validateHgt(val string) bool {
 	re := regexp.MustCompile(`(\d+)(cm|in)`)
 	match := re.FindStringSubmatch(val)
 	if len(match) == 0 {
-		return false, nil
+		return false
 	}
+
+	// Because of the regex matching above we know this won't return an error
+	num, _ := strconv.Atoi(match[1])
 
 	if match[2] == "cm" {
-		cm, err := strconv.Atoi(match[1])
-		if err != nil {
-			return false, err
-		}
-		return cm >= 150 && cm <= 193, nil
+		return num >= 150 && num <= 193
 	}
 
-	in, err := strconv.Atoi(match[1])
-	if err != nil {
-		return false, err
-	}
-	return in >= 59 && in <= 76, nil
+	return num >= 59 && num <= 76
 }
 
 func validateHcl(val string) bool {
@@ -43,8 +38,13 @@ func validateHcl(val string) bool {
 }
 
 func validateEcl(val string) bool {
-	re := regexp.MustCompile(`amb|blu|brn|gry|grn|hzl|oth`)
-	return re.MatchString(val)
+	validColours := []string{"amb", "blu", "brn", "gry", "grn", "hzl", "oth"}
+	for _, colour := range validColours {
+		if colour == val {
+			return true
+		}
+	}
+	return false
 }
 
 func validatePid(val string) bool {
@@ -77,10 +77,7 @@ func allFieldsValid(fields map[string]string) (bool, error) {
 		return false, nil
 	}
 
-	hgtValid, err := validateHgt(fields["hgt"])
-	if err != nil {
-		return false, err
-	}
+	hgtValid := validateHgt(fields["hgt"])
 	if !hgtValid {
 		return false, nil
 	}
@@ -113,6 +110,8 @@ func solution(entries []string) (int, int, error) {
 		for _, match := range matches {
 			fields[match[1]] = match[2]
 		}
+		// At a blank line, or the last entry, consider the "group" of fields to be completed so
+		// start analysing them
 		if len(entry) == 0 || i == len(entries)-1 {
 			if len(fields) == 7 {
 				validPassportsPart1++
@@ -134,6 +133,7 @@ func main() {
 	entries := helpers.ReadFile()
 	validPassportsPart1, validPassportsPart2, err := solution(entries)
 	if err != nil {
+		fmt.Println(err)
 		return
 	}
 	fmt.Println("Part 1:", validPassportsPart1)
