@@ -27,43 +27,34 @@ var examplePasswordCollection = []passwords{
 }
 
 func Test_populatePasswordCollection(t *testing.T) {
-	type args struct {
-		input []string
-	}
 	tests := []struct {
 		name    string
-		args    args
+		input   []string
 		want    []passwords
 		wantErr bool
 	}{
 		{
-			name: "returns an empty collection if no input provided",
-			args: args{
-				input: []string{},
-			},
+			name:    "returns an empty collection if no input provided",
+			input:   []string{},
 			want:    []passwords{},
 			wantErr: false,
 		},
 		{
 			name: "returns some passwords for the given input",
-			args: args{
-				input: []string{
-					"1-3 a: abcde",
-					"1-3 b: cdefg",
-					"2-9 c: ccccccccc",
-				},
+			input: []string{
+				"1-3 a: abcde",
+				"1-3 b: cdefg",
+				"2-9 c: ccccccccc",
 			},
 			want:    examplePasswordCollection,
 			wantErr: false,
 		},
 		{
 			name: "returns an error if an input line is invalid",
-			args: args{
-				input: []string{
-					"1-3 a: abcde",
-					"1-somerandomtext2 a: abc some random text",
-					"2-9 c: ccccccccc",
-				},
+			input: []string{
+				"1-3 a: abcde",
+				"1-somerandomtext2 a: abc some random text",
+				"2-9 c: ccccccccc",
 			},
 			want:    nil,
 			wantErr: true,
@@ -71,7 +62,7 @@ func Test_populatePasswordCollection(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := populatePasswordCollection(tt.args.input)
+			got, err := populatePasswordCollection(tt.input)
 			if (err != nil) != tt.wantErr {
 				t.Errorf("populatePasswordCollection() error = %v, wantErr %v", err, tt.wantErr)
 				return
@@ -84,19 +75,14 @@ func Test_populatePasswordCollection(t *testing.T) {
 }
 
 func Test_readPassword(t *testing.T) {
-	type args struct {
-		match []string
-	}
 	tests := []struct {
-		name string
-		args args
-		want passwords
+		name  string
+		match []string
+		want  passwords
 	}{
 		{
-			name: "returns a password given a list of input matches",
-			args: args{
-				match: []string{"1-45 a:abcde", "1", "45", "s", "abcde"},
-			},
+			name:  "returns a password given a list of input matches",
+			match: []string{"1-45 a:abcde", "1", "45", "s", "abcde"},
 			want: passwords{
 				min:      1,
 				max:      45,
@@ -107,7 +93,7 @@ func Test_readPassword(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := readPassword(tt.args.match); !reflect.DeepEqual(got, tt.want) {
+			if got := readPassword(tt.match); !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("readPassword() = %v, want %v", got, tt.want)
 			}
 		})
@@ -115,27 +101,22 @@ func Test_readPassword(t *testing.T) {
 }
 
 func Test_getSolutions(t *testing.T) {
-	type args struct {
-		passwordCollection []passwords
-	}
 	tests := []struct {
-		name  string
-		args  args
-		want  int
-		want1 int
+		name               string
+		passwordCollection []passwords
+		want               int
+		want1              int
 	}{
 		{
-			name: "advent of code example input",
-			args: args{
-				passwordCollection: examplePasswordCollection,
-			},
-			want:  2,
-			want1: 1,
+			name:               "advent of code example input",
+			passwordCollection: examplePasswordCollection,
+			want:               2,
+			want1:              1,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := getSolutions(tt.args.passwordCollection)
+			got, got1 := getSolutions(tt.passwordCollection)
 			if got != tt.want {
 				t.Errorf("getSolutions() got = %v, want %v", got, tt.want)
 			}
