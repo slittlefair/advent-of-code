@@ -2,8 +2,10 @@ package helpers
 
 import (
 	"bufio"
+	"fmt"
 	"os"
 	"strconv"
+	"time"
 )
 
 // Coordinate is a simple struct for a graph coordinate with points x, y
@@ -120,4 +122,10 @@ func StringSlicesEqual(a []string, b []string) (equal bool) {
 		}
 	}
 	return true
+}
+
+// TimeTrack prints how long a function took to run
+func TimeTrack(start time.Time) {
+	elapsed := time.Since(start)
+	fmt.Printf("took %s\n", elapsed)
 }
