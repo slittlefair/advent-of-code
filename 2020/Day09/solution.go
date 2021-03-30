@@ -9,19 +9,19 @@ import (
 
 type Numbers []int
 
-func (n *Numbers) cyclePrevNumbers(preambleLength int, i int) (bool, int) {
+func (n Numbers) cyclePrevNumbers(preambleLength int, i int) (bool, int) {
 	for j := i - preambleLength; j < i; j++ {
 		for k := i - preambleLength; k < i; k++ {
-			if j != k && (*n)[j]+(*n)[k] == (*n)[i] {
+			if j != k && n[j]+n[k] == n[i] {
 				return false, -1
 			}
 		}
 	}
-	return true, (*n)[i]
+	return true, n[i]
 }
 
-func (n *Numbers) part1(preambleLength int) (int, error) {
-	for i := preambleLength; i < len(*n); i++ {
+func (n Numbers) part1(preambleLength int) (int, error) {
+	for i := preambleLength; i < len(n); i++ {
 		solved, solValue := n.cyclePrevNumbers(preambleLength, i)
 		if solved {
 			return solValue, nil
@@ -30,29 +30,25 @@ func (n *Numbers) part1(preambleLength int) (int, error) {
 	return -1, errors.New("could not find solution to part 1")
 }
 
-func (n *Numbers) getSumNumbers(part1Sol int) ([]int, error) {
-	for i := 0; i < len(*n); i++ {
+func (n Numbers) getSumNumbers(part1Sol int) ([]int, error) {
+	for i := 0; i < len(n); i++ {
 		count := 0
-		for j := i; j < len(*n); j++ {
-			count += (*n)[j]
+		for j := i; j < len(n); j++ {
+			count += n[j]
 			if count > part1Sol {
 				continue
 			} else if count == part1Sol {
-				return (*n)[i : j+1], nil
+				return n[i : j+1], nil
 			}
 		}
 	}
 	return []int{}, errors.New("could not find solution to part 2")
 }
 
-func (n *Numbers) part2(part1Sol int) (int, error) {
+func (n Numbers) part2(part1Sol int) (int, error) {
 	numbers, err := n.getSumNumbers(part1Sol)
 	if err != nil {
 		return -1, err
-	}
-	count := 0
-	for _, num := range numbers {
-		count += num
 	}
 	sort.Ints(numbers)
 	return numbers[0] + numbers[len(numbers)-1], nil
