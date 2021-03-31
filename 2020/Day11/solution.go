@@ -40,7 +40,7 @@ func (g Grid) evaluateEmptySeat(co helpers.Coordinate, part int) string {
 			}
 		}
 		if newVal == "L" {
-			break
+			return newVal
 		}
 	}
 	return newVal
@@ -138,7 +138,6 @@ func (g Grid) parseInput(plan []string) {
 
 func main() {
 	plan := helpers.ReadFile()
-	fmt.Println(plan)
 	g := Grid{}
 	g.parseInput(plan)
 	fmt.Println("Part 1:", g.findSolution(1))
