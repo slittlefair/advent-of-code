@@ -1,6 +1,8 @@
 package ship
 
-import helpers "Advent-of-Code"
+import (
+	helpers "Advent-of-Code"
+)
 
 type Ship struct {
 	Co        helpers.Coordinate
@@ -21,7 +23,7 @@ func (s *Ship) turnShip(d string, val int) {
 	if d == "L" {
 		turnTimes *= -1
 	}
-	s.FacingDir = points[(pointsToIndex[s.FacingDir]+turnTimes+len(points))%len(points)]
+	s.FacingDir = points[(pointsToIndex[s.FacingDir]+(turnTimes%len(points))+len(points))%len(points)]
 }
 
 func (s *Ship) MoveShip(d string, val int) {
