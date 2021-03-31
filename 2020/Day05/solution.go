@@ -11,8 +11,8 @@ import (
 // it's not valid. Otherwise it partitions the seats depending on the direction and alters the min
 // or max accordingly. It returns these, as well as the remainder of the directions, minus the
 // direction we just evaluated.
-func halfSeats(pass string, min int, max int) (string, int, int, error) {
-	direction := string(pass[0])
+func halfSeats(dirs string, min int, max int) (string, int, int, error) {
+	direction := string(dirs[0])
 	if direction != "F" && direction != "B" && direction != "L" && direction != "R" {
 		return "", 0, 0, errors.New("invalid character found")
 	}
@@ -21,7 +21,7 @@ func halfSeats(pass string, min int, max int) (string, int, int, error) {
 	} else {
 		min = min + ((max - min + 1) / 2)
 	}
-	return string(pass[1:]), min, max, nil
+	return string(dirs[1:]), min, max, nil
 }
 
 // findMyID takes a map of IDs we know are taken, the lowest and the highest IDs in the map. It then
@@ -38,7 +38,7 @@ func findMyID(usedIDs map[int]bool, lowestID int, highestID int) (int, error) {
 	return 0, errors.New("could not find my ID")
 }
 
-func part1(entries []string) (int, int, map[int]bool, error) {
+func getusedIDs(entries []string) (int, int, map[int]bool, error) {
 	highestID := 0
 	lowestID := (127 * 8) + 7
 	usedIDs := make(map[int]bool)
@@ -77,7 +77,7 @@ func part1(entries []string) (int, int, map[int]bool, error) {
 
 func main() {
 	entries := helpers.ReadFile()
-	lowestID, highestID, usedIDs, err := part1(entries)
+	lowestID, highestID, usedIDs, err := getusedIDs(entries)
 	if err != nil {
 		fmt.Println(err)
 		return
