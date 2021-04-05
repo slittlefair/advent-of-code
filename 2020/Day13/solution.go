@@ -14,8 +14,12 @@ type Bus struct {
 
 type Buses []Bus
 
-func parseInput(entries []string) Buses {
+func parseInput(entries []string) (int, Buses, error) {
 	re := regexp.MustCompile(`\w+`)
+	arrivalTime, err := strconv.Atoi(entries[0])
+	if err != nil {
+		return 0, nil, err
+	}
 	busStrings := re.FindAllString(entries[1], -1)
 	buses := []Bus{}
 	for offset, id := range busStrings {
@@ -30,7 +34,7 @@ func parseInput(entries []string) Buses {
 		})
 	}
 
-	return buses
+	return arrivalTime, buses, nil
 }
 
 func (b *Buses) part1(arrivalTime int) int {
@@ -60,14 +64,11 @@ func (b *Buses) part2() int {
 
 func main() {
 	entries := helpers.ReadFile()
-	buses := parseInput(entries)
-
-	arrivalTime, err := strconv.Atoi(entries[0])
+	arrivalTime, buses, err := parseInput(entries)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-
 	fmt.Println("Part 1:", buses.part1(arrivalTime))
 	fmt.Println("Part 2:", buses.part2())
 }
