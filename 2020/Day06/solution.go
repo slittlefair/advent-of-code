@@ -6,7 +6,7 @@ import (
 	"regexp"
 )
 
-func part1(entries []string) (int, int) {
+func getSolution(entries []string) (int, int) {
 	re := regexp.MustCompile(`\w`)
 	groupPositiveResponses := map[string]int{}
 	numAnyoneYes := 0
@@ -41,7 +41,7 @@ func part1(entries []string) (int, int) {
 func main() {
 	entries := helpers.ReadFile()
 
-	part1Sol, part2Sol := part1(entries)
+	part1Sol, part2Sol := getSolution(entries)
 
 	fmt.Println("Part 1:", part1Sol)
 	fmt.Println("Part 2:", part2Sol)
