@@ -13,7 +13,6 @@ type Instructions struct {
 }
 
 type Programme struct {
-	accumulator   int
 	foundSolution bool
 	instructions  []Instructions
 }
@@ -23,13 +22,12 @@ func parseProgramme(entries []string) (*Programme, error) {
 
 	for _, entry := range entries {
 		split := strings.Split(entry, " ")
-		instruction := split[0]
 		value, err := strconv.Atoi(split[1])
 		if err != nil {
 			return nil, err
 		}
 		prog.instructions = append(prog.instructions, Instructions{
-			instruction: instruction,
+			instruction: split[0],
 			value:       value,
 		})
 	}
@@ -37,8 +35,9 @@ func parseProgramme(entries []string) (*Programme, error) {
 	return prog, nil
 }
 
-func (p *Programme) runProgramme(tweakAtIndex int) {
+func (p *Programme) runProgramme(tweakAtIndex int) int {
 	index := 0
+	accumulator := 0
 	instructionsRun := map[int]bool{}
 	for {
 		inst := p.instructions[index]
@@ -49,7 +48,7 @@ func (p *Programme) runProgramme(tweakAtIndex int) {
 				index++
 			}
 		} else if inst.instruction == "acc" {
-			p.accumulator += inst.value
+			accumulator += inst.value
 			index++
 		} else if inst.instruction == "jmp" {
 			if index == tweakAtIndex {
@@ -59,10 +58,10 @@ func (p *Programme) runProgramme(tweakAtIndex int) {
 			}
 		}
 		if _, ok := instructionsRun[index]; ok {
-			return
+			return accumulator
 		} else if index >= len(p.instructions) {
 			p.foundSolution = true
-			return
+			return accumulator
 		}
 		instructionsRun[index] = true
 	}
@@ -75,14 +74,13 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	prog.runProgramme(-1)
-	fmt.Println("Part 1:", prog.accumulator)
+	fmt.Println("Part 1:", prog.runProgramme(-1))
+	part2Accumulator := 0
 	for i := range prog.instructions {
-		prog.accumulator = 0
-		prog.runProgramme(i)
+		part2Accumulator = prog.runProgramme(i)
 		if prog.foundSolution {
 			break
 		}
 	}
-	fmt.Println("Part 2:", prog.accumulator)
+	fmt.Println("Part 2:", part2Accumulator)
 }
