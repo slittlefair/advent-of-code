@@ -5,12 +5,13 @@ import (
 	"fmt"
 )
 
-func traverseSlopes(right int, down int) int {
-	entries := helpers.ReadFile()
+type TreeMap []string
+
+func (tm TreeMap) traverseSlopes(right int, down int) int {
 	col := 0
 	treesEncountered := 0
-	for i := 0; i < len(entries); i += down {
-		row := entries[i]
+	for i := 0; i < len(tm); i += down {
+		row := tm[i]
 		if string(row[col%len(row)]) == "#" {
 			treesEncountered++
 		}
@@ -19,15 +20,16 @@ func traverseSlopes(right int, down int) int {
 	return treesEncountered
 }
 
-func part1() int {
-	return traverseSlopes(3, 1)
+func (tm TreeMap) part1() int {
+	return tm.traverseSlopes(3, 1)
 }
 
-func part2() int {
-	return traverseSlopes(1, 1) * traverseSlopes(3, 1) * traverseSlopes(5, 1) * traverseSlopes(7, 1) * traverseSlopes(1, 2)
+func (tm TreeMap) part2() int {
+	return tm.traverseSlopes(1, 1) * tm.traverseSlopes(3, 1) * tm.traverseSlopes(5, 1) * tm.traverseSlopes(7, 1) * tm.traverseSlopes(1, 2)
 }
 
 func main() {
-	fmt.Println("Part 1:", part1())
-	fmt.Println("Part 2:", part2())
+	var tm TreeMap = helpers.ReadFile()
+	fmt.Println("Part 1:", tm.part1())
+	fmt.Println("Part 2:", tm.part2())
 }
