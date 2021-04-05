@@ -17,14 +17,12 @@ func getVal(val int, mask string) (int, error) {
 	if err != nil {
 		return 0, err
 	}
-	or, err := strconv.ParseUint(strings.ReplaceAll(mask, "X", "0"), 2, 0)
-	if err != nil {
-		return 0, err
-	}
+	// If the previous ParseUint produced a nil error then so will this one
+	or, _ := strconv.ParseUint(strings.ReplaceAll(mask, "X", "0"), 2, 0)
 	return val&int(and) | int(or), nil
 }
 
-func part1(entries []string) (int, int, error) {
+func findSolutions(entries []string) (int, int, error) {
 	part1Total, part1Addresses := 0, Addresses{}
 	part2Total, part2Addresses := 0, Addresses{}
 	var mask string
@@ -42,10 +40,6 @@ func part1(entries []string) (int, int, error) {
 			if err != nil {
 				return 0, 0, err
 			}
-			fmt.Println(matches)
-
-			// This loop was sourced from https://github.com/mnml/aoc/blob/master/2020/14/2.go
-			// TODO work out exactly what this loop is doing
 			for i, x := 0, strings.Count(mask, "X"); i < 1<<x; i++ {
 				mask := strings.NewReplacer("X", "x", "0", "X").Replace(mask)
 				for _, r := range fmt.Sprintf("%0*b", x, i) {
@@ -59,10 +53,9 @@ func part1(entries []string) (int, int, error) {
 				part2Addresses[add] = val
 			}
 
-			val, err = getVal(val, mask)
-			if err != nil {
-				return 0, 0, err
-			}
+			// Any error will have been returned in the previous for loop, so one shouldn't be
+			// returned here
+			val, _ = getVal(val, mask)
 			part1Total += val - part1Addresses[add]
 			part1Addresses[add] = val
 		}
@@ -73,7 +66,7 @@ func part1(entries []string) (int, int, error) {
 
 func main() {
 	entries := helpers.ReadFile()
-	part1Sol, part2Sol, err := part1(entries)
+	part1Sol, part2Sol, err := findSolutions(entries)
 	if err != nil {
 		fmt.Println(err)
 		return
