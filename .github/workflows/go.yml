@@ -2,24 +2,24 @@ name: Go
 
 on:
   push:
-    branches: [ master ]
+    branches: [master]
   pull_request:
-    branches: [ master ]
+    branches: [master]
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v2
+      - uses: actions/checkout@v2
 
-    - name: Set up Go
-      uses: actions/setup-go@v2
-      with:
-        go-version: 1.15
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: 1.15
 
-    - name: Build
-      run: go build -v ./...
+      # TODO tidy up so this can be run for whole directory (remove TypeScript attempts)
+      - name: Build
+        run: go build -v 2020/...
 
-    - name: Test
-      run: go test -v ./...
+      - name: Test
+        run: go test -v ./2020/...
