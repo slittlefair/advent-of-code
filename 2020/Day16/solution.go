@@ -20,12 +20,9 @@ type FieldParams struct {
 type TicketFields map[string]FieldParams
 type TicketCollection [][]int
 
-var myTicket []int
-var allValidTickets TicketCollection
+// var allValidTickets TicketCollection
 
 var re = regexp.MustCompile(`\d+`)
-
-var errorRate int
 
 // Populate a field with the valid numbers, so we can just look up a number on a ticket to see if it
 // is valid for a field
@@ -41,10 +38,8 @@ func (tf TicketFields) populateField(field []string) error {
 			vn[i] = true
 		}
 	}
-	// TODO figure out how to use pointers to make this better
 	tf[field[0]] = FieldParams{
-		vn:  vn,
-		pvi: tf[field[0]].pvi,
+		vn: vn,
 	}
 	return nil
 }
@@ -61,10 +56,10 @@ func (tf TicketFields) numIsValid(num int) bool {
 }
 
 // For each field, set possible value indices, which initially is every index in a ticket
-func (tf TicketFields) populatePossibleValueIndices() {
+func (tf TicketFields) populatePossibleValueIndices(maxIndex int) {
 	for field := range tf {
 		possibleValueIndices := PossibleValueIndices{}
-		for i := 0; i < len(myTicket); i++ {
+		for i := 0; i < maxIndex; i++ {
 			possibleValueIndices[i] = true
 		}
 		tf[field] = FieldParams{
@@ -74,7 +69,8 @@ func (tf TicketFields) populatePossibleValueIndices() {
 	}
 }
 
-func (tf TicketFields) part1(ticket string, nums []int) {
+func (tf TicketFields) validateTicket(nums []int, allValidTickets TicketCollection) (int, TicketCollection) {
+	errorRate := 0
 	validTicket := true
 	for _, num := range nums {
 		if isValid := tf.numIsValid(num); !isValid {
@@ -85,9 +81,10 @@ func (tf TicketFields) part1(ticket string, nums []int) {
 	if validTicket {
 		allValidTickets = append(allValidTickets, nums)
 	}
+	return errorRate, allValidTickets
 }
 
-func (tf TicketFields) part2() int {
+func (tf TicketFields) part2(myTicket []int, allValidTickets TicketCollection) int {
 	ticketColToField := make(map[int]string)
 	// Keep looping whilst we still have fields to find value for
 	for len(ticketColToField) < len(myTicket) {
@@ -99,11 +96,11 @@ func (tf TicketFields) part2() int {
 				for field, param := range tf {
 					// If the number from the ticket is not valid for that field, then the index of
 					// the number cannot relate to that field, so delete it from the possible
-					// indeces for that field
+					// indices for that field
 					if !param.vn[num] {
 						delete(tf[field].pvi, j)
 					}
-					// Once we've deleted a possible indeces, check to see how many possibilities
+					// Once we've deleted a possible indices, check to see how many possibilities
 					// are left. If there's only one, by process of elimination we have found the
 					// index for which the field relates. In which case we add the index and field
 					// pair to ticketColToField and delete the index from all other fields' possible
@@ -134,9 +131,10 @@ func (tf TicketFields) part2() int {
 	return runningTotal
 }
 
-func main() {
-	entries := helpers.ReadFile()
-	tFields := TicketFields{}
+func (tf TicketFields) runSolution(entries []string) ([]int, int, TicketCollection, error) {
+	allValidTickets := TicketCollection{}
+	myTicket := []int{}
+	var errorRate, er int
 	for _, entry := range entries {
 		if entry == "" || entry == "your ticket:" || entry == "nearby tickets:" {
 			continue
@@ -144,22 +142,31 @@ func main() {
 		field := strings.Split(entry, ":")
 		// If the split yields more than one string then it is a field, otherwise it's a ticket
 		if len(field) > 1 {
-			if err := tFields.populateField(field); err != nil {
-				fmt.Println(err)
-				return
+			if err := tf.populateField(field); err != nil {
+				return nil, 0, nil, err
 			}
 		} else {
 			nums := helpers.StringSliceToIntSlice(re.FindAllString(entry, -1))
 			if len(myTicket) == 0 {
 				myTicket = nums
-				tFields.populatePossibleValueIndices()
+				tf.populatePossibleValueIndices(len(myTicket))
 			} else {
-				tFields.part1(entry, nums)
+				er, allValidTickets = tf.validateTicket(nums, allValidTickets)
+				errorRate += er
 			}
 		}
 	}
+	return myTicket, errorRate, allValidTickets, nil
+}
 
+func main() {
+	entries := helpers.ReadFile()
+	tFields := TicketFields{}
+	myTicket, errorRate, allValidTickets, err := tFields.runSolution(entries)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("Part 1:", errorRate)
-	fmt.Println("Part 2:", tFields.part2())
-
+	fmt.Println("Part 2:", tFields.part2(myTicket, allValidTickets))
 }
