@@ -505,7 +505,7 @@ func TestTicketFields_runSolution(t *testing.T) {
 			},
 			want:  []int{7, 1, 14},
 			want1: 71,
-			want2: TicketCollection{{7, 36, 47}},
+			want2: TicketCollection{{7, 3, 47}},
 			want3: TicketFields{
 				"row":   rowParams,
 				"class": classParams,
