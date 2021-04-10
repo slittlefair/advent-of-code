@@ -14,8 +14,6 @@ type Coord4D struct {
 }
 type Grid map[Coord4D]string
 
-var iterations = 6
-
 // Compare the given co to its neighbour and increment the number of neighboursActive if necessary
 func (g Grid) evaluateAdjacentCo(co Coord4D, adjacentCo Coord4D, neighboursActive int) int {
 	if val := g[adjacentCo]; val == "#" && !reflect.DeepEqual(co, adjacentCo) {
@@ -52,12 +50,12 @@ func (g Grid) evaluateCo(is4D bool, co Coord4D) string {
 	return "."
 }
 
-func (g Grid) parseInput(pocketDimension []string) {
+func (g Grid) parseInput(pocketDimension []string, iterations int) {
 	// Pad out the grid so that all future cubes are already considered. We can at most add one
 	// cube on either side of the dimension each iteration, so the edges of our initial grid plus
 	// the number of iterations each side is the maximum our grid can get to.
-	width := len(pocketDimension[0])
-	height := len(pocketDimension)
+	width := len(pocketDimension[0]) - 1
+	height := len(pocketDimension) - 1
 	for x := -iterations; x <= width+iterations; x++ {
 		for y := -iterations; y <= height+iterations; y++ {
 			for z := -iterations; z <= iterations; z++ {
@@ -96,7 +94,7 @@ func (g Grid) countActiveCubes() int {
 }
 
 // A runner for the solution of each part
-func (g Grid) findSolution(is4D bool) int {
+func (g Grid) findSolution(is4D bool, iterations int) int {
 	for i := 0; i < iterations; i++ {
 		newGrid := g.generateNextGrid(is4D)
 		g = newGrid
@@ -106,8 +104,9 @@ func (g Grid) findSolution(is4D bool) int {
 
 func main() {
 	pocketDimension := helpers.ReadFile()
+	iterations := 6
 	g := Grid{}
-	g.parseInput(pocketDimension)
-	fmt.Println("Part 1:", g.findSolution(false))
-	fmt.Println("Part 2:", g.findSolution(true))
+	g.parseInput(pocketDimension, iterations)
+	fmt.Println("Part 1:", g.findSolution(false, iterations))
+	fmt.Println("Part 2:", g.findSolution(true, iterations))
 }
