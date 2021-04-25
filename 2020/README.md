@@ -17,7 +17,7 @@
 - [x] Day 17 - Conway Cubes :black_square_button:
 - [x] Day 18 - Operation Order :1234:
 - [x] Day 19 - Monster Messages :dragon_face:
-- [ ] Day 20
+- [x] Day 20 - Jurassic Jigsaw :jigsaw:
 - [ ] Day 21
 - [ ] Day 22
 - [ ] Day 23
