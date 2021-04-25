@@ -44,49 +44,63 @@ func (i *Input) parseInput(rawInput []string) {
 	}
 }
 
-func (i Input) iterateMessages(key string, message string, index int) (bool, int) {
-	// If the index is the length of the message then we've traversed each character in it
-	if len(message) == index {
-		return true, 0
-	}
-
+func (i Input) iterateMessages(key string, remainingRules []string, message string, index int, seen map[string]bool) map[string]bool {
 	rule := i.Rules[key]
-
-	// If the rule val is a character then check whether it matches the character at the current
-	// index of the current message
 	if rule.val != "" {
-		return string(message[index]) == rule.val, index + 1
-	}
+		if index >= len(message) {
+			return seen
+		}
 
-	for _, sr := range rule.subRules {
-		subRulesMatched := true
-		offset := index
-
-		for _, k := range sr {
-			match, nextIndex := i.iterateMessages(k, message, offset)
-			if !match {
-				subRulesMatched = false
-				break
+		if rule.val == string(message[index]) {
+			if len(remainingRules) > 0 {
+				seen = i.iterateMessages(remainingRules[0], remainingRules[1:], message, index+1, seen)
+			} else {
+				if index == len(message)-1 {
+					seen[message] = true
+				}
 			}
-			offset = nextIndex
 		}
 
-		if subRulesMatched {
-			return true, offset
-		}
+		return seen
 	}
 
-	return false, index
+	rule1 := rule.subRules[0]
+	seen = i.iterateMessages(rule1[0], append(rule1[1:], remainingRules...), message, index, seen)
+
+	if len(rule.subRules) > 1 {
+		rule2 := rule.subRules[1]
+		seen = i.iterateMessages(rule2[0], append(rule2[1:], remainingRules...), message, index, seen)
+	}
+
+	return seen
+}
+
+func (i Input) changeRulesForPart2() {
+	for key := range i.Rules {
+		if key == "8" {
+			i.Rules["8"] = Rule{
+				subRules: [][]string{{"42"}, {"42", "8"}},
+			}
+		} else if key == "11" {
+			i.Rules["11"] = Rule{
+				subRules: [][]string{{"42", "31"}, {"42", "11", "31"}},
+			}
+		}
+	}
 }
 
 func (i Input) evaluateMessages() int {
 	count := 0
+	seen := map[string]bool{}
+
 	for _, message := range i.Messages {
-		valid, offset := i.iterateMessages("0", message, 0)
-		if valid && offset == len(message) {
+		seen = i.iterateMessages(i.Rules["0"].subRules[0][0], i.Rules["0"].subRules[0][1:], string(message), 0, seen)
+		_, ok := seen[message]
+		if ok {
 			count++
 		}
 	}
+
 	return count
 }
 
@@ -97,4 +111,6 @@ func main() {
 	}
 	i.parseInput(rawInput)
 	fmt.Println("Part 1:", i.evaluateMessages())
+	i.changeRulesForPart2()
+	fmt.Println("Part 2:", i.evaluateMessages())
 }
