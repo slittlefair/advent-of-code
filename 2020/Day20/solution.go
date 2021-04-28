@@ -27,6 +27,22 @@ type Tile struct {
 // 	}
 // }
 
+func (t *Tile) rotateTile90() {
+	newPixels := make(map[helpers.Coordinate]string)
+	for co, val := range t.pixels {
+		newPixels[helpers.Coordinate{X: int((float64(t.width) / 2) - (float64(co.Y) - (float64(t.height) / 2))), Y: int(float64(co.X) - float64(t.width)/2 + float64(t.height)/2)}] = val
+	}
+	t.pixels = newPixels
+}
+
+func (t *Tile) flipTile() {
+	newPixels := make(map[helpers.Coordinate]string)
+	for co, val := range t.pixels {
+		newPixels[helpers.Coordinate{X: t.width - co.X, Y: co.Y}] = val
+	}
+	t.pixels = newPixels
+}
+
 func (t Tile) isMatch(tile Tile) bool {
 	for _, edge1 := range t.edges {
 		for _, edge2 := range tile.edges {
@@ -43,13 +59,9 @@ func (p Picture) findMatchesForTile(t Tile) {
 		if tile.id == t.id || t.adjacentTiles[tile.id] {
 			continue
 		}
-		if t.isMatch(tile) {
-			t.adjacentTiles[tile.id] = true
-			tile.adjacentTiles[t.id] = true
-		} else {
-			t.adjacentTiles[tile.id] = false
-			tile.adjacentTiles[t.id] = false
-		}
+		match := t.isMatch(tile)
+		t.adjacentTiles[tile.id] = match
+		tile.adjacentTiles[t.id] = match
 	}
 }
 
@@ -126,7 +138,7 @@ func (p *Picture) populateTiles(input []string) {
 			continue
 		}
 		tile.height = i
-		tile.width = len(line)
+		tile.width = len(line) - 1
 		for j, char := range line {
 			tile.pixels[helpers.Coordinate{X: j, Y: i}] = string(char)
 		}
@@ -146,7 +158,7 @@ func (t Tile) numAdjacent() int {
 	return numAdjacent
 }
 
-func (p Picture) calculateCorenerIDs() (int, error) {
+func (p Picture) calculateCornerIDs() (int, error) {
 	cornerID := 1
 	for _, tile := range p {
 		if tile.numAdjacent() == 2 {
@@ -167,7 +179,7 @@ func main() {
 	for _, tile := range *picture {
 		picture.findMatchesForTile(tile)
 	}
-	sol, err := picture.calculateCorenerIDs()
+	sol, err := picture.calculateCornerIDs()
 	if err != nil {
 		fmt.Println(err)
 		return
