@@ -2,12 +2,17 @@ package main
 
 import (
 	helpers "Advent-of-Code"
+	"errors"
 	"fmt"
 	"regexp"
 	"strconv"
 )
 
-type Picture []Tile
+type Picture struct {
+	pixels  map[helpers.Coordinate]string
+	tileMap map[helpers.Coordinate]Tile
+	tiles   []Tile
+}
 
 type AdjacentTiles struct {
 	top    string
@@ -102,37 +107,37 @@ func (t Tile) isAdjacentTo(tile Tile) bool {
 }
 
 func (p Picture) findMatchesForTile(t Tile, index int) {
-	for k, tile := range p {
+	for k, tile := range p.tiles {
 		if tile.id == t.id || t.isAdjacentTo(tile) || t.numAdjacent() == 4 || tile.numAdjacent() == 4 {
 			continue
 		}
 		for j := 0; j < 2; j++ {
 			for i := 0; i < 4; i++ {
 				if t.isAdjacentTop(tile) {
-					p[k].adjacentTiles.bottom = t.id
-					p[index].adjacentTiles.top = tile.id
-					p[k].pixels = tile.pixels
+					p.tiles[k].adjacentTiles.bottom = t.id
+					p.tiles[index].adjacentTiles.top = tile.id
+					p.tiles[k].pixels = tile.pixels
 					p.findMatchesForTile(tile, k)
 					break
 				}
 				if t.isAdjacentBottom(tile) {
-					p[k].adjacentTiles.top = t.id
-					p[index].adjacentTiles.bottom = tile.id
-					p[k].pixels = tile.pixels
+					p.tiles[k].adjacentTiles.top = t.id
+					p.tiles[index].adjacentTiles.bottom = tile.id
+					p.tiles[k].pixels = tile.pixels
 					p.findMatchesForTile(tile, k)
 					break
 				}
 				if t.isAdjacentLeft(tile) {
-					p[k].adjacentTiles.right = t.id
-					p[index].adjacentTiles.left = tile.id
-					p[k].pixels = tile.pixels
+					p.tiles[k].adjacentTiles.right = t.id
+					p.tiles[index].adjacentTiles.left = tile.id
+					p.tiles[k].pixels = tile.pixels
 					p.findMatchesForTile(tile, k)
 					break
 				}
 				if t.isAdjacentRight(tile) {
-					p[k].adjacentTiles.left = t.id
-					p[index].adjacentTiles.right = tile.id
-					p[k].pixels = tile.pixels
+					p.tiles[k].adjacentTiles.left = t.id
+					p.tiles[index].adjacentTiles.right = tile.id
+					p.tiles[k].pixels = tile.pixels
 					p.findMatchesForTile(tile, k)
 					break
 				}
@@ -151,7 +156,7 @@ func (p *Picture) populateTiles(input []string) {
 	var i int
 	for _, line := range input {
 		if line == "" {
-			*p = append(*p, tile)
+			p.tiles = append(p.tiles, tile)
 			tile = Tile{
 				pixels: make(map[helpers.Coordinate]string),
 			}
@@ -169,7 +174,7 @@ func (p *Picture) populateTiles(input []string) {
 		}
 		i++
 	}
-	*p = append(*p, tile)
+	p.tiles = append(p.tiles, tile)
 }
 
 func (t Tile) numAdjacent() int {
@@ -191,7 +196,7 @@ func (t Tile) numAdjacent() int {
 
 func (p Picture) calculateCornerIDs() (int, error) {
 	cornerID := 1
-	for _, tile := range p {
+	for _, tile := range p.tiles {
 		if tile.numAdjacent() == 2 {
 			numericID, err := strconv.Atoi(tile.id)
 			if err != nil {
@@ -203,11 +208,58 @@ func (p Picture) calculateCornerIDs() (int, error) {
 	return cornerID, nil
 }
 
+func (p Picture) getTileFromID(id string) (Tile, error) {
+	for _, tile := range p.tiles {
+		if tile.id == id {
+			return tile, nil
+		}
+	}
+	return Tile{}, errors.New(fmt.Sprintln("could not find tile for id:", id))
+}
+
+func (p *Picture) populateTileMap() error {
+	// First the top left tile, then build out from there
+	var tile Tile
+	var x, y int
+	for _, t := range p.tiles {
+		if t.adjacentTiles.bottom != "" && t.adjacentTiles.right != "" && t.adjacentTiles.left == "" && t.adjacentTiles.top == "" {
+			tile = t
+		}
+		p.tileMap[helpers.Coordinate{X: x, Y: y}] = tile
+	}
+	for {
+		if tile.adjacentTiles.bottom != "" {
+			t, err := p.getTileFromID(tile.adjacentTiles.bottom)
+			if err != nil {
+				return err
+			}
+			y++
+			p.tileMap[helpers.Coordinate{X: x, Y: y}] = t
+			tile = t
+		} else {
+			tile = p.tileMap[helpers.Coordinate{X: x, Y: 0}]
+			if tile.adjacentTiles.right == "" {
+				return nil
+			}
+			t, err := p.getTileFromID(tile.adjacentTiles.right)
+			if err != nil {
+				return err
+			}
+			x++
+			y = 0
+			p.tileMap[helpers.Coordinate{X: x, Y: y}] = t
+			tile = t
+		}
+	}
+}
+
 func main() {
 	input := helpers.ReadFile()
-	picture := &Picture{}
+	picture := &Picture{
+		tileMap: make(map[helpers.Coordinate]Tile),
+	}
 	picture.populateTiles(input)
-	for i, tile := range *picture {
+	for i, tile := range picture.tiles {
 		picture.findMatchesForTile(tile, i)
 	}
 	sol, err := picture.calculateCornerIDs()
@@ -216,4 +268,12 @@ func main() {
 		return
 	}
 	fmt.Println("Part 1:", sol)
+	err = picture.populateTileMap()
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	for co, tile := range picture.tileMap {
+		fmt.Println(co, tile.id)
+	}
 }
