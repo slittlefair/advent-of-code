@@ -8,12 +8,9 @@ import (
 
 func TestTile_rotateTile90right(t *testing.T) {
 	type fields struct {
-		id            string
-		pixels        map[helpers.Coordinate]string
-		height        int
-		width         int
-		adjacentTiles map[string]bool
-		edges         []string
+		pixels map[helpers.Coordinate]string
+		height int
+		width  int
 	}
 	tests := []struct {
 		name   string
@@ -72,12 +69,9 @@ func TestTile_rotateTile90right(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tr := &Tile{
-				id:            tt.fields.id,
-				pixels:        tt.fields.pixels,
-				height:        tt.fields.height,
-				width:         tt.fields.width,
-				adjacentTiles: tt.fields.adjacentTiles,
-				edges:         tt.fields.edges,
+				pixels: tt.fields.pixels,
+				height: tt.fields.height,
+				width:  tt.fields.width,
 			}
 			tr.rotateTile90()
 			if !reflect.DeepEqual(tr.pixels, tt.want) {
@@ -89,12 +83,9 @@ func TestTile_rotateTile90right(t *testing.T) {
 
 func TestTile_flipTile(t *testing.T) {
 	type fields struct {
-		id            string
-		pixels        map[helpers.Coordinate]string
-		height        int
-		width         int
-		adjacentTiles map[string]bool
-		edges         []string
+		pixels map[helpers.Coordinate]string
+		height int
+		width  int
 	}
 	tests := []struct {
 		name   string
@@ -151,12 +142,9 @@ func TestTile_flipTile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tr := &Tile{
-				id:            tt.fields.id,
-				pixels:        tt.fields.pixels,
-				height:        tt.fields.height,
-				width:         tt.fields.width,
-				adjacentTiles: tt.fields.adjacentTiles,
-				edges:         tt.fields.edges,
+				pixels: tt.fields.pixels,
+				height: tt.fields.height,
+				width:  tt.fields.width,
 			}
 			tr.flipTile()
 			if !reflect.DeepEqual(tr.pixels, tt.want) {
