@@ -5,7 +5,7 @@ import (
 )
 
 type Ship struct {
-	Co        helpers.Coordinate
+	Co        helpers.Co
 	FacingDir string
 }
 

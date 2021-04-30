@@ -8,8 +8,8 @@ import (
 	"time"
 )
 
-// Coordinate is a simple struct for a graph coordinate with points x, y
-type Coordinate struct {
+// Co is a simple struct for a graph coordinate with points x, y
+type Co struct {
 	X int
 	Y int
 }
