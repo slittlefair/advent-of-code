@@ -28,5 +28,6 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	picture.PrintPictureMap()
+	picture.FindSeaMonster()
+	fmt.Println("Part 2:", picture.CountWaterRoughness())
 }

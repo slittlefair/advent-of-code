@@ -182,3 +182,82 @@ func (p Picture) PrintPictureMap() {
 		fmt.Println()
 	}
 }
+
+var seaMonster = []helpers.Co{
+	{X: 0, Y: 1},
+	{X: 1, Y: 2},
+	{X: 4, Y: 2},
+	{X: 5, Y: 1},
+	{X: 6, Y: 1},
+	{X: 7, Y: 2},
+	{X: 10, Y: 2},
+	{X: 11, Y: 1},
+	{X: 12, Y: 1},
+	{X: 13, Y: 2},
+	{X: 16, Y: 2},
+	{X: 17, Y: 1},
+	{X: 18, Y: 0},
+	{X: 18, Y: 1},
+	{X: 19, Y: 1},
+}
+
+func (p *Picture) rotatePicture90() {
+	newPixels := make(map[helpers.Co]string)
+	for co, val := range p.Pixels {
+		newPixels[helpers.Co{X: p.Width - co.Y, Y: co.X}] = val
+	}
+	p.Pixels = newPixels
+}
+
+func (p *Picture) flipPicture() {
+	newPixels := make(map[helpers.Co]string)
+	for co, val := range p.Pixels {
+		newPixels[helpers.Co{X: p.Width - co.X, Y: co.Y}] = val
+	}
+	p.Pixels = newPixels
+}
+
+func (p *Picture) FindSeaMonster() {
+	var found bool
+	for j := 0; j < 2; j++ {
+		for i := 0; i < 4; i++ {
+			for co := range p.Pixels {
+				if p.checkSeaMonsterAtCo(co) {
+					found = true
+				}
+			}
+			if found {
+				return
+			}
+			p.rotatePicture90()
+		}
+		p.flipPicture()
+	}
+}
+
+func (p *Picture) checkSeaMonsterAtCo(co helpers.Co) bool {
+	for _, smCo := range seaMonster {
+		c := helpers.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}
+		if val, ok := p.Pixels[c]; val != "#" || !ok {
+			return false
+		}
+	}
+	p.markSeaMonster(co)
+	return true
+}
+
+func (p *Picture) markSeaMonster(co helpers.Co) {
+	for _, smCo := range seaMonster {
+		p.Pixels[helpers.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}] = "O"
+	}
+}
+
+func (p Picture) CountWaterRoughness() int {
+	count := 0
+	for _, val := range p.Pixels {
+		if val == "#" {
+			count++
+		}
+	}
+	return count
+}
