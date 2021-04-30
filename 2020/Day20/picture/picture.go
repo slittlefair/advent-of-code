@@ -17,8 +17,6 @@ type Picture struct {
 	Tiles   []tile.Tile
 }
 
-// TODO add comments to exported functions
-
 // Populate tiles takes the string of lines, input, and populates the tiles accordingly
 func (p *Picture) PopulateTiles(input []string) {
 	re := regexp.MustCompile(`\d+`)
