@@ -2,6 +2,7 @@ package tile
 
 import (
 	helpers "Advent-of-Code"
+	"fmt"
 )
 
 type AdjacentTiles struct {
@@ -17,16 +18,17 @@ type Tile struct {
 	Height        int
 	Width         int
 	AdjacentTiles AdjacentTiles
+	InPlace       bool
 }
 
-// func (t Tile) printPixels() {
-// 	for h := 0; h <= t.height; h++ {
-// 		for w := 0; w <= t.width; w++ {
-// 			fmt.Print(t.pixels[helpers.Coordinate{X: w, Y: h}])
-// 		}
-// 		fmt.Println()
-// 	}
-// }
+func (t Tile) PrintPixels() {
+	for h := 0; h <= t.Height; h++ {
+		for w := 0; w <= t.Width; w++ {
+			fmt.Print(t.Pixels[helpers.Coordinate{X: w, Y: h}])
+		}
+		fmt.Println()
+	}
+}
 
 // TODO add comments to exported functions
 

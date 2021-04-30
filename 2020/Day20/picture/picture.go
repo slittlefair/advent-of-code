@@ -10,6 +10,8 @@ import (
 )
 
 type Picture struct {
+	Height  int
+	Width   int
 	Pixels  map[helpers.Coordinate]string
 	TileMap map[helpers.Coordinate]tile.Tile
 	Tiles   []tile.Tile
@@ -111,16 +113,39 @@ func (p Picture) getTileFromID(id string) (tile.Tile, error) {
 	return tile.Tile{}, errors.New(fmt.Sprintln("could not find tile for id:", id))
 }
 
-func (p *Picture) PopulateTileMap() error {
-	// First the top left tile, then build out from there
-	var tile tile.Tile
-	var x, y int
+func (p Picture) getTopLeftTile() (tile.Tile, error) {
 	for _, t := range p.Tiles {
 		if t.AdjacentTiles.Bottom != "" && t.AdjacentTiles.Right != "" && t.AdjacentTiles.Left == "" && t.AdjacentTiles.Top == "" {
-			tile = t
+			return t, nil
 		}
-		p.TileMap[helpers.Coordinate{X: x, Y: y}] = tile
 	}
+	return tile.Tile{}, errors.New("no tile found at top left")
+}
+
+func (p *Picture) populatePictureWithTile(t tile.Tile, x, y int) {
+	p.TileMap[helpers.Coordinate{X: x, Y: y}] = t
+	for i := 0; i <= t.Height; i++ {
+		for j := 0; j <= t.Width; j++ {
+			// for some reason the pixels in the tiles are flipped vertically, so populate with t.Height - i rather than just i
+			p.Pixels[helpers.Coordinate{X: (x * (t.Width + 1)) + j, Y: (y * (t.Height + 1)) + i}] = t.Pixels[helpers.Coordinate{X: j, Y: t.Height - i}]
+			if y*(t.Height+1)+i > p.Height {
+				p.Height = y*(t.Height+1) + i
+			}
+			if x*(t.Width+1)+j > p.Width {
+				p.Width = x*(t.Width+1) + j
+			}
+		}
+	}
+}
+
+func (p *Picture) PopulateTileMap() error {
+	// Find the top left tile first, then build out from there
+	var x, y int
+	tile, err := p.getTopLeftTile()
+	if err != nil {
+		return err
+	}
+	p.populatePictureWithTile(tile, x, y)
 	for {
 		if tile.AdjacentTiles.Bottom != "" {
 			t, err := p.getTileFromID(tile.AdjacentTiles.Bottom)
@@ -128,7 +153,7 @@ func (p *Picture) PopulateTileMap() error {
 				return err
 			}
 			y++
-			p.TileMap[helpers.Coordinate{X: x, Y: y}] = t
+			p.populatePictureWithTile(t, x, y)
 			tile = t
 		} else {
 			tile = p.TileMap[helpers.Coordinate{X: x, Y: 0}]
@@ -141,8 +166,17 @@ func (p *Picture) PopulateTileMap() error {
 			}
 			x++
 			y = 0
-			p.TileMap[helpers.Coordinate{X: x, Y: y}] = t
+			p.populatePictureWithTile(t, x, y)
 			tile = t
 		}
+	}
+}
+
+func (p Picture) PrintPictureMap() {
+	for h := 0; h <= p.Height; h++ {
+		for w := 0; w <= p.Width; w++ {
+			fmt.Print(p.Pixels[helpers.Coordinate{X: w, Y: h}])
+		}
+		fmt.Println()
 	}
 }
