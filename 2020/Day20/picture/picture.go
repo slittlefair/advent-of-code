@@ -12,8 +12,8 @@ import (
 type Picture struct {
 	Height  int
 	Width   int
-	Pixels  map[helpers.Coordinate]string
-	TileMap map[helpers.Coordinate]tile.Tile
+	Pixels  map[helpers.Co]string
+	TileMap map[helpers.Co]tile.Tile
 	Tiles   []tile.Tile
 }
 
@@ -64,14 +64,14 @@ func (p Picture) FindMatchesForTile(t tile.Tile, index int) {
 func (p *Picture) PopulateTiles(input []string) {
 	re := regexp.MustCompile(`\d+`)
 	t := tile.Tile{
-		Pixels: make(map[helpers.Coordinate]string),
+		Pixels: make(map[helpers.Co]string),
 	}
 	var i int
 	for _, line := range input {
 		if line == "" {
 			p.Tiles = append(p.Tiles, t)
 			t = tile.Tile{
-				Pixels: make(map[helpers.Coordinate]string),
+				Pixels: make(map[helpers.Co]string),
 			}
 			continue
 		}
@@ -83,7 +83,7 @@ func (p *Picture) PopulateTiles(input []string) {
 		t.Height = i
 		t.Width = len(line) - 1
 		for j, char := range line {
-			t.Pixels[helpers.Coordinate{X: j, Y: i}] = string(char)
+			t.Pixels[helpers.Co{X: j, Y: i}] = string(char)
 		}
 		i++
 	}
@@ -123,13 +123,13 @@ func (p Picture) getTopLeftTile() (tile.Tile, error) {
 }
 
 func (p *Picture) populatePictureWithTile(t tile.Tile, x, y int) {
-	p.TileMap[helpers.Coordinate{X: x, Y: y}] = t
+	p.TileMap[helpers.Co{X: x, Y: y}] = t
 	for i := 1; i < t.Height; i++ {
 		for j := 1; j < t.Width; j++ {
 			xValue := (x * (t.Width + 1)) + j - 2*x - 1
 			yValue := (y * (t.Height + 1)) + i - 2*y - 1
 			// for some reason the pixels in the tiles are flipped vertically, so populate with t.Height - i rather than just i
-			p.Pixels[helpers.Coordinate{X: xValue, Y: yValue}] = t.Pixels[helpers.Coordinate{X: j, Y: t.Height - i}]
+			p.Pixels[helpers.Co{X: xValue, Y: yValue}] = t.Pixels[helpers.Co{X: j, Y: t.Height - i}]
 			if yValue > p.Height {
 				p.Height = yValue
 			}
@@ -158,7 +158,7 @@ func (p *Picture) PopulateTileMap() error {
 			p.populatePictureWithTile(t, x, y)
 			tile = t
 		} else {
-			tile = p.TileMap[helpers.Coordinate{X: x, Y: 0}]
+			tile = p.TileMap[helpers.Co{X: x, Y: 0}]
 			if tile.AdjacentTiles.Right == "" {
 				return nil
 			}
@@ -177,7 +177,7 @@ func (p *Picture) PopulateTileMap() error {
 func (p Picture) PrintPictureMap() {
 	for h := 0; h <= p.Height; h++ {
 		for w := 0; w <= p.Width; w++ {
-			fmt.Print(p.Pixels[helpers.Coordinate{X: w, Y: h}])
+			fmt.Print(p.Pixels[helpers.Co{X: w, Y: h}])
 		}
 		fmt.Println()
 	}

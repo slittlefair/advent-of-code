@@ -8,19 +8,19 @@ import (
 
 func TestTile_RotateTile90(t *testing.T) {
 	type fields struct {
-		Pixels map[helpers.Coordinate]string
+		Pixels map[helpers.Co]string
 		Height int
 		Width  int
 	}
 	tests := []struct {
 		name   string
 		fields fields
-		want   map[helpers.Coordinate]string
+		want   map[helpers.Co]string
 	}{
 		{
 			name: "test",
 			fields: fields{
-				Pixels: map[helpers.Coordinate]string{
+				Pixels: map[helpers.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 0, Y: 1}: ".",
@@ -29,7 +29,7 @@ func TestTile_RotateTile90(t *testing.T) {
 				Width:  1,
 				Height: 1,
 			},
-			want: map[helpers.Coordinate]string{
+			want: map[helpers.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 0, Y: 1}: ".",
@@ -39,7 +39,7 @@ func TestTile_RotateTile90(t *testing.T) {
 		{
 			name: "test",
 			fields: fields{
-				Pixels: map[helpers.Coordinate]string{
+				Pixels: map[helpers.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: "#",
@@ -53,7 +53,7 @@ func TestTile_RotateTile90(t *testing.T) {
 				Width:  2,
 				Height: 2,
 			},
-			want: map[helpers.Coordinate]string{
+			want: map[helpers.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -83,19 +83,19 @@ func TestTile_RotateTile90(t *testing.T) {
 
 func TestTile_FlipTile(t *testing.T) {
 	type fields struct {
-		Pixels map[helpers.Coordinate]string
+		Pixels map[helpers.Co]string
 		Height int
 		Width  int
 	}
 	tests := []struct {
 		name   string
 		fields fields
-		want   map[helpers.Coordinate]string
+		want   map[helpers.Co]string
 	}{
 		{
 			name: "test",
 			fields: fields{
-				Pixels: map[helpers.Coordinate]string{
+				Pixels: map[helpers.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 0, Y: 1}: ".",
@@ -103,7 +103,7 @@ func TestTile_FlipTile(t *testing.T) {
 				},
 				Width: 1,
 			},
-			want: map[helpers.Coordinate]string{
+			want: map[helpers.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 0, Y: 1}: ".",
@@ -113,7 +113,7 @@ func TestTile_FlipTile(t *testing.T) {
 		{
 			name: "test",
 			fields: fields{
-				Pixels: map[helpers.Coordinate]string{
+				Pixels: map[helpers.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: "#",
@@ -126,7 +126,7 @@ func TestTile_FlipTile(t *testing.T) {
 				},
 				Width: 2,
 			},
-			want: map[helpers.Coordinate]string{
+			want: map[helpers.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",

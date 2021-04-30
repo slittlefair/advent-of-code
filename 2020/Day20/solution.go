@@ -10,8 +10,8 @@ import (
 func main() {
 	input := helpers.ReadFile()
 	picture := &picture.Picture{
-		Pixels:  make(map[helpers.Coordinate]string),
-		TileMap: make(map[helpers.Coordinate]tile.Tile),
+		Pixels:  make(map[helpers.Co]string),
+		TileMap: make(map[helpers.Co]tile.Tile),
 	}
 	picture.PopulateTiles(input)
 	for i, tile := range picture.Tiles {

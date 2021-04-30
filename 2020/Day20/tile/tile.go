@@ -14,7 +14,7 @@ type AdjacentTiles struct {
 
 type Tile struct {
 	ID            string
-	Pixels        map[helpers.Coordinate]string
+	Pixels        map[helpers.Co]string
 	Height        int
 	Width         int
 	AdjacentTiles AdjacentTiles
@@ -24,7 +24,7 @@ type Tile struct {
 func (t Tile) PrintPixels() {
 	for h := 0; h <= t.Height; h++ {
 		for w := 0; w <= t.Width; w++ {
-			fmt.Print(t.Pixels[helpers.Coordinate{X: w, Y: h}])
+			fmt.Print(t.Pixels[helpers.Co{X: w, Y: h}])
 		}
 		fmt.Println()
 	}
@@ -33,24 +33,24 @@ func (t Tile) PrintPixels() {
 // TODO add comments to exported functions
 
 func (t *Tile) RotateTile90() {
-	newPixels := make(map[helpers.Coordinate]string)
+	newPixels := make(map[helpers.Co]string)
 	for co, val := range t.Pixels {
-		newPixels[helpers.Coordinate{X: t.Width - co.Y, Y: co.X}] = val
+		newPixels[helpers.Co{X: t.Width - co.Y, Y: co.X}] = val
 	}
 	t.Pixels = newPixels
 }
 
 func (t *Tile) FlipTile() {
-	newPixels := make(map[helpers.Coordinate]string)
+	newPixels := make(map[helpers.Co]string)
 	for co, val := range t.Pixels {
-		newPixels[helpers.Coordinate{X: t.Width - co.X, Y: co.Y}] = val
+		newPixels[helpers.Co{X: t.Width - co.X, Y: co.Y}] = val
 	}
 	t.Pixels = newPixels
 }
 
 func (t Tile) IsAdjacentTop(tile Tile) bool {
 	for x := 0; x <= t.Width; x++ {
-		if t.Pixels[helpers.Coordinate{X: x, Y: t.Height}] != tile.Pixels[helpers.Coordinate{X: x, Y: 0}] {
+		if t.Pixels[helpers.Co{X: x, Y: t.Height}] != tile.Pixels[helpers.Co{X: x, Y: 0}] {
 			return false
 		}
 	}
@@ -59,7 +59,7 @@ func (t Tile) IsAdjacentTop(tile Tile) bool {
 
 func (t Tile) IsAdjacentBottom(tile Tile) bool {
 	for x := 0; x <= t.Width; x++ {
-		if t.Pixels[helpers.Coordinate{X: x, Y: 0}] != tile.Pixels[helpers.Coordinate{X: x, Y: t.Height}] {
+		if t.Pixels[helpers.Co{X: x, Y: 0}] != tile.Pixels[helpers.Co{X: x, Y: t.Height}] {
 			return false
 		}
 	}
@@ -68,7 +68,7 @@ func (t Tile) IsAdjacentBottom(tile Tile) bool {
 
 func (t Tile) IsAdjacentLeft(tile Tile) bool {
 	for y := 0; y <= t.Height; y++ {
-		if t.Pixels[helpers.Coordinate{X: 0, Y: y}] != tile.Pixels[helpers.Coordinate{X: tile.Width, Y: y}] {
+		if t.Pixels[helpers.Co{X: 0, Y: y}] != tile.Pixels[helpers.Co{X: tile.Width, Y: y}] {
 			return false
 		}
 	}
@@ -77,7 +77,7 @@ func (t Tile) IsAdjacentLeft(tile Tile) bool {
 
 func (t Tile) IsAdjacentRight(tile Tile) bool {
 	for y := 0; y <= t.Height; y++ {
-		if t.Pixels[helpers.Coordinate{X: t.Width, Y: y}] != tile.Pixels[helpers.Coordinate{X: 0, Y: y}] {
+		if t.Pixels[helpers.Co{X: t.Width, Y: y}] != tile.Pixels[helpers.Co{X: 0, Y: y}] {
 			return false
 		}
 	}
