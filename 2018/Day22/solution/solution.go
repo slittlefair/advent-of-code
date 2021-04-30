@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"Advent-of-Code-2018/Day22/dijkstra"
 	"fmt"
 	"strconv"
@@ -12,8 +12,8 @@ var inputDepth = 11394
 var inputX = 7
 var inputY = 701
 
-var mouth = helpers.Coordinate{X: minX, Y: minY}
-var target = helpers.Coordinate{X: inputX, Y: inputY}
+var mouth = helpers.Co{X: minX, Y: minY}
+var target = helpers.Co{X: inputX, Y: inputY}
 var depth = inputDepth
 
 var g = dijkstra.Graph{}
@@ -27,20 +27,20 @@ const minY = 0
 var maxY = inputY + 150
 
 type region struct {
-	co              helpers.Coordinate
+	co              helpers.Co
 	rType           int
 	erosionLevel    int
 	geologicalIndex int
 }
 
 type meType struct {
-	co       helpers.Coordinate
+	co       helpers.Co
 	torch    bool
 	climbing bool
 }
 
 var me = meType{
-	co:       helpers.Coordinate{X: 0, Y: 0},
+	co:       helpers.Co{X: 0, Y: 0},
 	torch:    true,
 	climbing: false,
 }
@@ -57,7 +57,7 @@ var typeToString = map[int]string{
 }
 
 // CaveMapType is a map of coordinates to regions which we can use to form the map
-type CaveMapType map[helpers.Coordinate]region
+type CaveMapType map[helpers.Co]region
 
 // CaveMap is an instance of CaveMapType
 var CaveMap = CaveMapType{}
@@ -70,7 +70,7 @@ func (cm CaveMapType) printCave() {
 			} else if x == target.X && y == target.Y {
 				fmt.Print("T")
 			} else {
-				fmt.Print(typeToString[cm[helpers.Coordinate{X: x, Y: y}].rType])
+				fmt.Print(typeToString[cm[helpers.Co{X: x, Y: y}].rType])
 			}
 		}
 		fmt.Println()
@@ -80,7 +80,7 @@ func (cm CaveMapType) printCave() {
 func populateCaveMap() {
 	for y := minY; y <= maxY; y++ {
 		for x := minX; x <= maxX; x++ {
-			CaveMap[helpers.Coordinate{X: x, Y: y}] = region{co: helpers.Coordinate{X: x, Y: y}}
+			CaveMap[helpers.Co{X: x, Y: y}] = region{co: helpers.Co{X: x, Y: y}}
 		}
 	}
 }
@@ -91,8 +91,8 @@ func (r region) calculateGeoIndex() int {
 	} else if r.co.X == 0 {
 		return r.co.Y * 48271
 	} else {
-		adjXCoord := helpers.Coordinate{X: r.co.X - 1, Y: r.co.Y}
-		adjYCoord := helpers.Coordinate{X: r.co.X, Y: r.co.Y - 1}
+		adjXCoord := helpers.Co{X: r.co.X - 1, Y: r.co.Y}
+		adjYCoord := helpers.Co{X: r.co.X, Y: r.co.Y - 1}
 		return CaveMap[adjXCoord].erosionLevel * CaveMap[adjYCoord].erosionLevel
 	}
 }
@@ -119,7 +119,7 @@ func main() {
 	// CaveMap.printCave()
 	for y := minY; y <= maxY; y++ {
 		for x := minX; x <= maxX; x++ {
-			co := helpers.Coordinate{X: x, Y: y}
+			co := helpers.Co{X: x, Y: y}
 			reg := CaveMap[co]
 			if (x == minX && y == minY) || (x == inputX && y == inputY) {
 				reg.geologicalIndex = 0
@@ -139,11 +139,11 @@ func main() {
 		for _, equip := range dijkstra.TypeToEquipment[coType] {
 			coString := fmt.Sprintf("%v,%v,%v", strconv.Itoa(co.X), strconv.Itoa(co.Y), equip)
 			g[coString] = make(map[string]int)
-			adjacentCo := make(map[helpers.Coordinate]int)
+			adjacentCo := make(map[helpers.Co]int)
 			xOffset := []int{-1, 1, 0, 0}
 			yOffset := []int{0, 0, -1, 1}
 			for i := range xOffset {
-				coord := helpers.Coordinate{X: co.X + xOffset[i], Y: co.Y + yOffset[i]}
+				coord := helpers.Co{X: co.X + xOffset[i], Y: co.Y + yOffset[i]}
 				if _, ok := CaveMap[coord]; ok {
 					adjacentCo[coord] = CaveMap[coord].rType
 				}
