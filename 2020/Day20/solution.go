@@ -7,6 +7,10 @@ import (
 	"fmt"
 )
 
+// TODO:
+// - Part 2 README
+// - Tests
+
 func main() {
 	input := helpers.ReadFile()
 	picture := &picture.Picture{
