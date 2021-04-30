@@ -6,6 +6,7 @@ import (
 	"testing"
 )
 
+// TODO put this in the right directory
 func TestTile_rotateTile90right(t *testing.T) {
 	type fields struct {
 		pixels map[helpers.Coordinate]string
