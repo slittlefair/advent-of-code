@@ -124,15 +124,17 @@ func (p Picture) getTopLeftTile() (tile.Tile, error) {
 
 func (p *Picture) populatePictureWithTile(t tile.Tile, x, y int) {
 	p.TileMap[helpers.Coordinate{X: x, Y: y}] = t
-	for i := 0; i <= t.Height; i++ {
-		for j := 0; j <= t.Width; j++ {
+	for i := 1; i < t.Height; i++ {
+		for j := 1; j < t.Width; j++ {
+			xValue := (x * (t.Width + 1)) + j - 2*x - 1
+			yValue := (y * (t.Height + 1)) + i - 2*y - 1
 			// for some reason the pixels in the tiles are flipped vertically, so populate with t.Height - i rather than just i
-			p.Pixels[helpers.Coordinate{X: (x * (t.Width + 1)) + j, Y: (y * (t.Height + 1)) + i}] = t.Pixels[helpers.Coordinate{X: j, Y: t.Height - i}]
-			if y*(t.Height+1)+i > p.Height {
-				p.Height = y*(t.Height+1) + i
+			p.Pixels[helpers.Coordinate{X: xValue, Y: yValue}] = t.Pixels[helpers.Coordinate{X: j, Y: t.Height - i}]
+			if yValue > p.Height {
+				p.Height = yValue
 			}
-			if x*(t.Width+1)+j > p.Width {
-				p.Width = x*(t.Width+1) + j
+			if xValue > p.Width {
+				p.Width = xValue
 			}
 		}
 	}
