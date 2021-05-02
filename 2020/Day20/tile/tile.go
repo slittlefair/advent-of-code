@@ -50,7 +50,7 @@ func (t *Tile) FlipTile() {
 	t.Pixels = newPixels
 }
 
-// IsAdjacentTop returns whether the tile "tile" is directly above the tile "t"
+// IsAdjacentTop returns whether the tile "t" is directly above the tile "tile"
 func (t Tile) IsAdjacentTop(tile Tile) bool {
 	for x := 0; x <= t.Width; x++ {
 		if t.Pixels[helpers.Co{X: x, Y: t.Height}] != tile.Pixels[helpers.Co{X: x, Y: 0}] {
@@ -60,30 +60,30 @@ func (t Tile) IsAdjacentTop(tile Tile) bool {
 	return true
 }
 
-// IsAdjacentTop returns whether the tile "tile" is directly below the tile "t"
+// IsAdjacentTop returns whether the tile "t" is directly below the tile "tile"
 func (t Tile) IsAdjacentBottom(tile Tile) bool {
 	for x := 0; x <= t.Width; x++ {
-		if t.Pixels[helpers.Co{X: x, Y: 0}] != tile.Pixels[helpers.Co{X: x, Y: t.Height}] {
+		if t.Pixels[helpers.Co{X: x, Y: 0}] != tile.Pixels[helpers.Co{X: x, Y: tile.Height}] {
 			return false
 		}
 	}
 	return true
 }
 
-// IsAdjacentTop returns whether the tile "tile" is directly to the left of tile "t"
+// IsAdjacentTop returns whether the tile "t" is directly to the left of tile "tile"
 func (t Tile) IsAdjacentLeft(tile Tile) bool {
 	for y := 0; y <= t.Height; y++ {
-		if t.Pixels[helpers.Co{X: 0, Y: y}] != tile.Pixels[helpers.Co{X: tile.Width, Y: y}] {
+		if t.Pixels[helpers.Co{X: t.Width, Y: y}] != tile.Pixels[helpers.Co{X: 0, Y: y}] {
 			return false
 		}
 	}
 	return true
 }
 
-// IsAdjacentTop returns whether the tile "tile" is directly to the right of tile "t"
+// IsAdjacentTop returns whether the tile "t" is directly to the right of tile "tile"
 func (t Tile) IsAdjacentRight(tile Tile) bool {
 	for y := 0; y <= t.Height; y++ {
-		if t.Pixels[helpers.Co{X: t.Width, Y: y}] != tile.Pixels[helpers.Co{X: 0, Y: y}] {
+		if t.Pixels[helpers.Co{X: 0, Y: y}] != tile.Pixels[helpers.Co{X: tile.Width, Y: y}] {
 			return false
 		}
 	}

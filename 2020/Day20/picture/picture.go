@@ -71,15 +71,15 @@ func (p Picture) FindMatchesForTile(t tile.Tile, index int) {
 					break
 				}
 				if t.IsAdjacentLeft(tile) {
-					p.Tiles[k].AdjacentTiles.Right = t.ID
-					p.Tiles[index].AdjacentTiles.Left = tile.ID
+					p.Tiles[k].AdjacentTiles.Left = t.ID
+					p.Tiles[index].AdjacentTiles.Right = tile.ID
 					p.Tiles[k].Pixels = tile.Pixels
 					p.FindMatchesForTile(tile, k)
 					break
 				}
 				if t.IsAdjacentRight(tile) {
-					p.Tiles[k].AdjacentTiles.Left = t.ID
-					p.Tiles[index].AdjacentTiles.Right = tile.ID
+					p.Tiles[k].AdjacentTiles.Right = t.ID
+					p.Tiles[index].AdjacentTiles.Left = tile.ID
 					p.Tiles[k].Pixels = tile.Pixels
 					p.FindMatchesForTile(tile, k)
 					break
