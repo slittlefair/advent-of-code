@@ -8,7 +8,6 @@ import (
 )
 
 // TODO:
-// - Part 2 README
 // - Tests
 
 func main() {
