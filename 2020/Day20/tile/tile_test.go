@@ -75,7 +75,7 @@ func TestTile_RotateTile90(t *testing.T) {
 			}
 			tr.RotateTile90()
 			if !reflect.DeepEqual(tr.Pixels, tt.want) {
-				t.Errorf("got %v, want %v, %d", tr.Pixels, tt.want, tr.Width)
+				t.Errorf("got %v, want %v", tr.Pixels, tt.want)
 			}
 		})
 	}
@@ -148,7 +148,7 @@ func TestTile_FlipTile(t *testing.T) {
 			}
 			tr.FlipTile()
 			if !reflect.DeepEqual(tr.Pixels, tt.want) {
-				t.Errorf("got %v, want %v, %d", tr.Pixels, tt.want, tr.Width)
+				t.Errorf("got %v, want %v", tr.Pixels, tt.want)
 			}
 		})
 	}
