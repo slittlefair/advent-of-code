@@ -18,7 +18,6 @@ type Tile struct {
 	Height        int
 	Width         int
 	AdjacentTiles AdjacentTiles
-	InPlace       bool
 }
 
 // PrintPixels is a helper method which prints a visual representation of the pixels of a tile in
