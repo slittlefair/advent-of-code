@@ -51,43 +51,61 @@ func (p *Picture) PopulateTiles(input []string) {
 // "bottom", "left" or "right" on the respective tiles
 func (p Picture) FindMatchesForTile(t tile.Tile, index int) {
 	for k, tile := range p.Tiles {
-		if tile.ID == t.ID || t.IsAdjacentTo(tile) || t.NumAdjacent() == 4 || tile.NumAdjacent() == 4 {
+		if tile.ID == t.ID {
+			continue
+		}
+		if t.IsAdjacentTo(tile) {
+			continue
+		}
+		if t.NumAdjacent() == 4 {
+			continue
+		}
+		if tile.NumAdjacent() == 4 {
 			continue
 		}
 		for j := 0; j < 2; j++ {
 			for i := 0; i < 4; i++ {
 				if t.IsAdjacentTop(tile) {
-					p.Tiles[k].AdjacentTiles.Bottom = t.ID
-					p.Tiles[index].AdjacentTiles.Top = tile.ID
-					p.Tiles[k].Pixels = tile.Pixels
-					p.FindMatchesForTile(tile, k)
-					break
+					tileAtK := &p.Tiles[k]
+					tileAtK.AdjacentTiles.Top = t.ID
+					tileAtK.Pixels = tile.Pixels
+					tileAtIndex := &p.Tiles[index]
+					tileAtIndex.AdjacentTiles.Bottom = tile.ID
+					p.FindMatchesForTile(*tileAtK, k)
+					goto out
 				}
 				if t.IsAdjacentBottom(tile) {
-					p.Tiles[k].AdjacentTiles.Top = t.ID
-					p.Tiles[index].AdjacentTiles.Bottom = tile.ID
-					p.Tiles[k].Pixels = tile.Pixels
-					p.FindMatchesForTile(tile, k)
-					break
+					tileAtK := &p.Tiles[k]
+					tileAtK.AdjacentTiles.Bottom = t.ID
+					tileAtK.Pixels = tile.Pixels
+					tileAtIndex := &p.Tiles[index]
+					tileAtIndex.AdjacentTiles.Top = tile.ID
+					p.FindMatchesForTile(*tileAtK, k)
+					goto out
 				}
 				if t.IsAdjacentLeft(tile) {
-					p.Tiles[k].AdjacentTiles.Left = t.ID
-					p.Tiles[index].AdjacentTiles.Right = tile.ID
-					p.Tiles[k].Pixels = tile.Pixels
-					p.FindMatchesForTile(tile, k)
-					break
+					tileAtK := &p.Tiles[k]
+					tileAtK.AdjacentTiles.Left = t.ID
+					tileAtK.Pixels = tile.Pixels
+					tileAtIndex := &p.Tiles[index]
+					tileAtIndex.AdjacentTiles.Right = tile.ID
+					p.FindMatchesForTile(*tileAtK, k)
+					goto out
 				}
 				if t.IsAdjacentRight(tile) {
-					p.Tiles[k].AdjacentTiles.Right = t.ID
-					p.Tiles[index].AdjacentTiles.Left = tile.ID
-					p.Tiles[k].Pixels = tile.Pixels
-					p.FindMatchesForTile(tile, k)
-					break
+					tileAtK := &p.Tiles[k]
+					tileAtK.AdjacentTiles.Right = t.ID
+					tileAtK.Pixels = tile.Pixels
+					tileAtIndex := &p.Tiles[index]
+					tileAtIndex.AdjacentTiles.Left = tile.ID
+					p.FindMatchesForTile(*tileAtK, k)
+					goto out
 				}
 				tile.RotateTile90()
 			}
 			tile.FlipTile()
 		}
+	out:
 	}
 }
 
@@ -139,7 +157,7 @@ func (p *Picture) populatePictureWithTile(t tile.Tile, x, y int) {
 			xValue := (x * (t.Width + 1)) + j - 2*x - 1
 			yValue := (y * (t.Height + 1)) + i - 2*y - 1
 			// for some reason the pixels in the tiles are flipped vertically, so populate with t.Height - i rather than just i
-			p.Pixels[helpers.Co{X: xValue, Y: yValue}] = t.Pixels[helpers.Co{X: j, Y: t.Height - i}]
+			p.Pixels[helpers.Co{X: xValue, Y: yValue}] = t.Pixels[helpers.Co{X: j, Y: i}]
 			if yValue > p.Height {
 				p.Height = yValue
 			}
