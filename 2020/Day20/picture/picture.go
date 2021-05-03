@@ -137,8 +137,9 @@ func (p Picture) getTileFromID(id string) (tile.Tile, error) {
 	return tile.Tile{}, errors.New(fmt.Sprintln("could not find tile for id:", id))
 }
 
-// getTopeLeftTile returns the tile at the top left of the picture. We do this so we can start
-// creating a picture from this tile, with all other tiles relative to it.
+// getTopLeftTile returns the tile at the top left of the picture. We do this so we can start
+// creating a picture from this tile, with all other tiles relative to it. At the point we call this
+// we expect there to be a top left tile, so return an error if one doesn't exist
 func (p Picture) getTopLeftTile() (tile.Tile, error) {
 	for _, t := range p.Tiles {
 		if t.AdjacentTiles.Bottom != "" && t.AdjacentTiles.Right != "" && t.AdjacentTiles.Left == "" && t.AdjacentTiles.Top == "" {
@@ -156,7 +157,6 @@ func (p *Picture) populatePictureWithTile(t tile.Tile, x, y int) {
 		for j := 1; j < t.Width; j++ {
 			xValue := (x * (t.Width + 1)) + j - 2*x - 1
 			yValue := (y * (t.Height + 1)) + i - 2*y - 1
-			// for some reason the pixels in the tiles are flipped vertically, so populate with t.Height - i rather than just i
 			p.Pixels[helpers.Co{X: xValue, Y: yValue}] = t.Pixels[helpers.Co{X: j, Y: i}]
 			if yValue > p.Height {
 				p.Height = yValue
@@ -215,24 +215,6 @@ func (p Picture) PrintPictureMap() {
 	}
 }
 
-var seaMonster = []helpers.Co{
-	{X: 0, Y: 1},
-	{X: 1, Y: 2},
-	{X: 4, Y: 2},
-	{X: 5, Y: 1},
-	{X: 6, Y: 1},
-	{X: 7, Y: 2},
-	{X: 10, Y: 2},
-	{X: 11, Y: 1},
-	{X: 12, Y: 1},
-	{X: 13, Y: 2},
-	{X: 16, Y: 2},
-	{X: 17, Y: 1},
-	{X: 18, Y: 0},
-	{X: 18, Y: 1},
-	{X: 19, Y: 1},
-}
-
 // rotatePicture90 rotates the pixels in the picture p by 90 degrees
 func (p *Picture) rotatePicture90() {
 	newPixels := make(map[helpers.Co]string)
@@ -251,16 +233,36 @@ func (p *Picture) flipPicture() {
 	p.Pixels = newPixels
 }
 
+// markSeaMonster changes the pixels in the picture that represent a sea monster from "#" to "O"
+func (p *Picture) markSeaMonster(co helpers.Co, seaMonster []helpers.Co) {
+	for _, smCo := range seaMonster {
+		p.Pixels[helpers.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}] = "O"
+	}
+}
+
+// checkSeaMonsterAtCo checks to see if a sea monster is in the picture relative to the given
+// coordinate, co
+func (p *Picture) checkSeaMonsterAtCo(co helpers.Co, seaMonster []helpers.Co) bool {
+	for _, smCo := range seaMonster {
+		c := helpers.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}
+		if val, ok := p.Pixels[c]; val != "#" || !ok {
+			return false
+		}
+	}
+	p.markSeaMonster(co, seaMonster)
+	return true
+}
+
 // FindSeaMonster iterates through the picture p and finds any sea monsters. They only exist on one
 // orientation of the picture, so if we find at least one then we can find the rest in that
 // orientation then return early. Otherwise we keep rotating the picture, then flip it before
 // rotating it again.
-func (p *Picture) FindSeaMonster() {
+func (p *Picture) FindSeaMonster(seaMonster []helpers.Co) {
 	var found bool
 	for j := 0; j < 2; j++ {
 		for i := 0; i < 4; i++ {
 			for co := range p.Pixels {
-				if p.checkSeaMonsterAtCo(co) {
+				if p.checkSeaMonsterAtCo(co, seaMonster) {
 					found = true
 				}
 			}
@@ -270,26 +272,6 @@ func (p *Picture) FindSeaMonster() {
 			p.rotatePicture90()
 		}
 		p.flipPicture()
-	}
-}
-
-// checkSeaMonsterAtCo checks to see if a sea monster is in the picture relative to the given
-// coordinate, co
-func (p *Picture) checkSeaMonsterAtCo(co helpers.Co) bool {
-	for _, smCo := range seaMonster {
-		c := helpers.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}
-		if val, ok := p.Pixels[c]; val != "#" || !ok {
-			return false
-		}
-	}
-	p.markSeaMonster(co)
-	return true
-}
-
-// markSeaMonster changes the pixels in the picture that represent a sea monster from "#" to "O"
-func (p *Picture) markSeaMonster(co helpers.Co) {
-	for _, smCo := range seaMonster {
-		p.Pixels[helpers.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}] = "O"
 	}
 }
 
