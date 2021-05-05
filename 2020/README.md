@@ -18,7 +18,7 @@
 - [x] Day 18 - Operation Order :1234:
 - [x] Day 19 - Monster Messages :dragon_face:
 - [x] Day 20 - Jurassic Jigsaw :jigsaw:
-- [ ] Day 21
+- [x] Day 21 - Allergen Assessment :microbe:
 - [ ] Day 22
 - [ ] Day 23
 - [ ] Day 24
