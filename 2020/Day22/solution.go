@@ -87,7 +87,7 @@ func (g Game) deckSeen(seen []Game) bool {
 	return false
 }
 
-func (g *Game) playRecursiveRound(seen []Game, gameNum, roundNum int) []Game {
+func (g *Game) playRecursiveRound(seen []Game) []Game {
 	seen = append(seen, Game{
 		player1: g.player1,
 		player2: g.player2,
@@ -97,7 +97,7 @@ func (g *Game) playRecursiveRound(seen []Game, gameNum, roundNum int) []Game {
 			player1: append(Deck{}, g.player1[1:g.player1[0]+1]...),
 			player2: append(Deck{}, g.player2[1:g.player2[0]+1]...),
 		}
-		winner, _ := g2.playRecursiveGame(gameNum + 1)
+		winner, _ := g2.playRecursiveGame()
 		if winner == "player1" {
 			g.player1Wins()
 		} else {
@@ -109,7 +109,7 @@ func (g *Game) playRecursiveRound(seen []Game, gameNum, roundNum int) []Game {
 	return seen
 }
 
-func (g *Game) playRecursiveGame(gameNum int) (string, Deck) {
+func (g *Game) playRecursiveGame() (string, Deck) {
 	seen := []Game{}
 	roundNum := 1
 	for {
@@ -122,12 +122,12 @@ func (g *Game) playRecursiveGame(gameNum int) (string, Deck) {
 		if len(g.player2) == 0 {
 			return "player1", g.player1
 		}
-		seen = g.playRecursiveRound(seen, gameNum, roundNum)
+		seen = g.playRecursiveRound(seen)
 		roundNum++
 	}
 }
 
-func (g Game) calculateWinningScore(deck Deck) (int, error) {
+func calculateWinningScore(deck Deck) (int, error) {
 	score := 0
 	if len(deck) == 0 {
 		return score, errors.New("error")
@@ -148,14 +148,14 @@ func main() {
 	}
 	game2 := game
 	winner := game.playNormalGame()
-	score, err := game.calculateWinningScore(winner)
+	score, err := calculateWinningScore(winner)
 	if err != nil {
 		fmt.Println("could not get score for", err)
 		return
 	}
 	fmt.Println("Part 1:", score)
-	_, winner = game2.playRecursiveGame(1)
-	score, err = game.calculateWinningScore(winner)
+	_, winner = game2.playRecursiveGame()
+	score, err = calculateWinningScore(winner)
 	if err != nil {
 		fmt.Println("could not get score for", err)
 		return
