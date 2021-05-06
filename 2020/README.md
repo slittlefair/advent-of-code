@@ -1,25 +1,25 @@
-- [x] Day 1 - Report Repair :wrench:
-- [x] Day 2 - Password Philosophy  :eight_spoked_asterisk:
-- [x] Day 3 - Toboggan Trajectory :snowboarder:
-- [x] Day 4 - Passport Processing :passport_control:
-- [x] Day 5 - Binary Boarding :keycap_ten:
-- [x] Day 6 - Custom Customs :customs:
-- [x] Day 7 - Handy Haversacks :baggage_claim:
-- [x] Day 8 - Handheld Halting :video_game:
-- [x] Day 9 - Encoding Error :x:
-- [x] Day 10 - Adapter Array :battery:
-- [x] Day 11 - Seating System :seat:
-- [x] Day 12 - Rain Risk :umbrella:
-- [x] Day 13 - Shuttle Search :bus:
-- [x] Day 14 - Docking Data :electric_plug:
-- [x] Day 15 - Rambunctious Recitation :thinking:
-- [x] Day 16 - Ticket Translation :ticket:
-- [x] Day 17 - Conway Cubes :black_square_button:
-- [x] Day 18 - Operation Order :1234:
-- [x] Day 19 - Monster Messages :dragon_face:
-- [x] Day 20 - Jurassic Jigsaw :jigsaw:
-- [x] Day 21 - Allergen Assessment :microbe:
-- [x] Day 22 - Crab Combat :crab:
+- [x] Day 1 - Report Repair :memo: :wrench:
+- [x] Day 2 - Password Philosophy :eight_spoked_asterisk: :thinking:
+- [x] Day 3 - Toboggan Trajectory :snowboarder: :arrow_right:
+- [x] Day 4 - Passport Processing :passport_control: :gear:
+- [x] Day 5 - Binary Boarding :keycap_ten: :ticket:
+- [x] Day 6 - Custom Customs :customs: :customs:
+- [x] Day 7 - Handy Haversacks :hand: :baggage_claim:
+- [x] Day 8 - Handheld Halting :video_game: :stop_sign:
+- [x] Day 9 - Encoding Error :asterisk: :x:
+- [x] Day 10 - Adapter Array :battery: :battery:
+- [x] Day 11 - Seating System :seat: :gear:
+- [x] Day 12 - Rain Risk :umbrella: :warning:
+- [x] Day 13 - Shuttle Search :bus: :mag:
+- [x] Day 14 - Docking Data :anchor: :electric_plug:
+- [x] Day 15 - Rambunctious Recitation :loudspeaker: :thinking:
+- [x] Day 16 - Ticket Translation :ticket: :speech_balloon:
+- [x] Day 17 - Conway Cubes :black_square_button: :white_square_button:
+- [x] Day 18 - Operation Order :1234: :arrows_counterclockwise:
+- [x] Day 19 - Monster Messages :dragon_face: :envelope:
+- [x] Day 20 - Jurassic Jigsaw :t-rex: :jigsaw:
+- [x] Day 21 - Allergen Assessment :microbe: :man_health_worker:
+- [x] Day 22 - Crab Combat :crab: :crossed_swords:
 - [ ] Day 23
 - [ ] Day 24
 - [ ] Day 25
