@@ -19,7 +19,7 @@
 - [x] Day 19 - Monster Messages :dragon_face:
 - [x] Day 20 - Jurassic Jigsaw :jigsaw:
 - [x] Day 21 - Allergen Assessment :microbe:
-- [ ] Day 22 - Crab Combat :crab:
+- [x] Day 22 - Crab Combat :crab:
 - [ ] Day 23
 - [ ] Day 24
 - [ ] Day 25
