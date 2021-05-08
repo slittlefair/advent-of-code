@@ -27,18 +27,18 @@ func Test_createGame(t *testing.T) {
 				Cups:       []int{0, 2, 5, 8, 6, 4, 7, 3, 9, 1},
 			},
 		},
-		// {
-		// 	name: "creates larger game, snippet of advent of code part 2 example",
-		// 	args: args{
-		// 		input: "389125467",
-		// 		maxNum: 20,
-		// 	},
-		// 	want: Game{
-		// 		CurrentCup: 3,
-		// 		Max:        9,
-		// 		Cups:       []int{0, 2, 5, 8, 6, 4, 7, 3, 9, 1},
-		// 	},
-		// },
+		{
+			name: "creates larger game, snippet of advent of code part 2 example",
+			args: args{
+				input:  "389125467",
+				maxNum: 20,
+			},
+			want: Game{
+				CurrentCup: 3,
+				Max:        20,
+				Cups:       []int{0, 2, 5, 8, 6, 4, 7, 10, 9, 1, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 3},
+			},
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
