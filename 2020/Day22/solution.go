@@ -66,21 +66,9 @@ func (g *Game) playNormalGame() Deck {
 	}
 }
 
-func isEqual(deck1, deck2 Deck) bool {
-	if len(deck1) != len(deck2) {
-		return false
-	}
-	for i, num := range deck1 {
-		if deck2[i] != num {
-			return false
-		}
-	}
-	return true
-}
-
 func (g Game) deckSeen(seen []Game) bool {
 	for _, game := range seen {
-		if isEqual(game.player1, g.player1) && isEqual(game.player2, g.player2) {
+		if helpers.IntSlicesAreEqual(game.player1, g.player1) && helpers.IntSlicesAreEqual(game.player2, g.player2) {
 			return true
 		}
 	}

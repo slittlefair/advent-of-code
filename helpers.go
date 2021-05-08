@@ -129,3 +129,16 @@ func TimeTrack(start time.Time) {
 	elapsed := time.Since(start)
 	fmt.Printf("took %s\n", elapsed)
 }
+
+// IntSlicesAreEqual returns a bool depending on whether the given slices are equal,
+func IntSlicesAreEqual(slice1, slice2 []int) bool {
+	if len(slice1) != len(slice2) {
+		return false
+	}
+	for i, num := range slice1 {
+		if slice2[i] != num {
+			return false
+		}
+	}
+	return true
+}

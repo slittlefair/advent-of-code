@@ -1,25 +1,25 @@
-- [x] Day 1 - Report Repair :memo:&nbsp;:wrench:
-- [x] Day 2 - Password Philosophy :eight_spoked_asterisk:&nbsp;:thinking:
-- [x] Day 3 - Toboggan Trajectory :snowboarder:&nbsp;:arrow_right:
-- [x] Day 4 - Passport Processing :passport_control:&nbsp;:gear:
-- [x] Day 5 - Binary Boarding :keycap_ten:&nbsp;:ticket:
-- [x] Day 6 - Custom Customs :customs:&nbsp;:customs:
-- [x] Day 7 - Handy Haversacks :hand:&nbsp;:baggage_claim:
-- [x] Day 8 - Handheld Halting :video_game:&nbsp;:stop_sign:
-- [x] Day 9 - Encoding Error :asterisk:&nbsp;:x:
-- [x] Day 10 - Adapter Array :battery:&nbsp;:battery:
-- [x] Day 11 - Seating System :seat:&nbsp;:gear:
-- [x] Day 12 - Rain Risk :umbrella:&nbsp;:warning:
-- [x] Day 13 - Shuttle Search :bus:&nbsp;:mag:
-- [x] Day 14 - Docking Data :anchor:&nbsp;:electric_plug:
-- [x] Day 15 - Rambunctious Recitation :loudspeaker:&nbsp;:thinking:
-- [x] Day 16 - Ticket Translation :ticket:&nbsp;:speech_balloon:
-- [x] Day 17 - Conway Cubes :black_square_button:&nbsp;:white_square_button:
-- [x] Day 18 - Operation Order :1234:&nbsp;:arrows_counterclockwise:
-- [x] Day 19 - Monster Messages :dragon_face:&nbsp;:envelope:
-- [x] Day 20 - Jurassic Jigsaw :t-rex:&nbsp;:jigsaw:
-- [x] Day 21 - Allergen Assessment :microbe:&nbsp;:man_health_worker:
-- [x] Day 22 - Crab Combat :crab:&nbsp;:crossed_swords:
-- [ ] Day 23
+- [x] Day 1 - Report Repair :memo: :wrench:
+- [x] Day 2 - Password Philosophy :eight_spoked_asterisk: :thinking:
+- [x] Day 3 - Toboggan Trajectory :snowboarder: :arrow_right:
+- [x] Day 4 - Passport Processing :passport_control: :gear:
+- [x] Day 5 - Binary Boarding :keycap_ten: :ticket:
+- [x] Day 6 - Custom Customs :customs: :customs:
+- [x] Day 7 - Handy Haversacks :hand: :baggage_claim:
+- [x] Day 8 - Handheld Halting :video_game: :stop_sign:
+- [x] Day 9 - Encoding Error :asterisk: :x:
+- [x] Day 10 - Adapter Array :battery: :battery:
+- [x] Day 11 - Seating System :seat: :gear:
+- [x] Day 12 - Rain Risk :umbrella: :warning:
+- [x] Day 13 - Shuttle Search :bus: :mag:
+- [x] Day 14 - Docking Data :anchor: :electric_plug:
+- [x] Day 15 - Rambunctious Recitation :loudspeaker: :thinking:
+- [x] Day 16 - Ticket Translation :ticket: :speech_balloon:
+- [x] Day 17 - Conway Cubes :black_square_button: :white_square_button:
+- [x] Day 18 - Operation Order :1234: :arrows_counterclockwise:
+- [x] Day 19 - Monster Messages :dragon_face: :envelope:
+- [x] Day 20 - Jurassic Jigsaw :t-rex: :jigsaw:
+- [x] Day 21 - Allergen Assessment :microbe: :man_health_worker:
+- [x] Day 22 - Crab Combat :crab: :crossed_swords:
+- [x] Day 23 - Crab Cups :crab: :cup_with_straw:
 - [ ] Day 24
 - [ ] Day 25
