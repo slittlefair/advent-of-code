@@ -20,6 +20,6 @@
 - [x] Day 20 - Jurassic Jigsaw :t-rex: :jigsaw:
 - [x] Day 21 - Allergen Assessment :microbe: :man_health_worker:
 - [x] Day 22 - Crab Combat :crab: :crossed_swords:
-- [ ] Day 23 - Crab Cups :crab: :cup_with_straw:
+- [x] Day 23 - Crab Cups :crab: :cup_with_straw:
 - [ ] Day 24
 - [ ] Day 25
