@@ -299,50 +299,6 @@ func TestGame_playNormalGame(t *testing.T) {
 	}
 }
 
-func Test_isEqual(t *testing.T) {
-	type args struct {
-		deck1 Deck
-		deck2 Deck
-	}
-	tests := []struct {
-		name string
-		args args
-		want bool
-	}{
-		{
-			name: "returns false if the given decks aren't of equal length",
-			args: args{
-				deck1: Deck{1, 2, 3, 4},
-				deck2: Deck{1, 2},
-			},
-			want: false,
-		},
-		{
-			name: "returns false if the given decks aren't equal",
-			args: args{
-				deck1: Deck{1, 2, 3, 4, 6, 5, 7},
-				deck2: Deck{1, 2, 3, 4, 5, 6, 7},
-			},
-			want: false,
-		},
-		{
-			name: "returns true if the given decks are equal",
-			args: args{
-				deck1: Deck{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-				deck2: Deck{1, 2, 3, 4, 5, 6, 7, 8, 9, 10},
-			},
-			want: true,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := isEqual(tt.args.deck1, tt.args.deck2); got != tt.want {
-				t.Errorf("isEqual() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
-
 func TestGame_deckSeen(t *testing.T) {
 	type fields struct {
 		player1 Deck
