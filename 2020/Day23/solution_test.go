@@ -196,3 +196,32 @@ func TestGame_getOrderString(t *testing.T) {
 		})
 	}
 }
+
+func TestGame_getProductOfLabels(t *testing.T) {
+	tests := []struct {
+		name string
+		cups []int
+		want int
+	}{
+		{
+			name: "returns the product of the two cups to the right of 1, advent of code example 1",
+			cups: []int{0, 9, 6, 7, 1, 8, 5, 4, 3, 2},
+			want: 18,
+		},
+		{
+			name: "returns the product of the two cups to the right of 1, advent of code example 2",
+			cups: []int{0, 6, 9, 8, 5, 2, 7, 3, 4, 1},
+			want: 42,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			g := Game{
+				Cups: tt.cups,
+			}
+			if got := g.getProductOfLabels(); got != tt.want {
+				t.Errorf("Game.getProductOfLabels() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

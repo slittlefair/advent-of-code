@@ -26,12 +26,18 @@ func createGame(input string, maxNum int) Game {
 
 	start := inputNums[0]
 	last := inputNums[len(inputNums)-1]
-	g.Cups[last] = start
 	g.CurrentCup = start
 
 	for i := 0; i < len(inputNums)-1; i++ {
 		g.Cups[inputNums[i]] = inputNums[i+1]
 	}
+
+	for i := len(inputNums) + 1; i <= maxNum; i++ {
+		g.Cups[last] = i
+		last = i
+	}
+
+	g.Cups[last] = start
 
 	return g
 }
@@ -76,9 +82,19 @@ func (g Game) getOrderString() string {
 	return str
 }
 
+func (g Game) getProductOfLabels() int {
+	cup1 := g.Cups[1]
+	cup2 := g.Cups[cup1]
+	return cup1 * cup2
+}
+
 func main() {
 	input := helpers.ReadFile()
 	g := createGame(input[0], len(input[0]))
 	g.playGame(100)
 	fmt.Println("Part 1:", g.getOrderString())
+
+	g = createGame(input[0], 1000000)
+	g.playGame(10000000)
+	fmt.Println("Part 2:", g.getProductOfLabels())
 }
