@@ -16,8 +16,8 @@ type Tiles struct {
 }
 
 func (t *Tiles) populateMissingTiles() {
-	for x := t.MinX - 1; x <= t.MaxX+1; x++ {
-		for y := t.MinY - 1; y <= t.MaxY+1; y++ {
+	for x := t.MinX; x <= t.MaxX; x++ {
+		for y := t.MinY; y <= t.MaxY; y++ {
 			if _, ok := t.Map[helpers.Co{X: x, Y: y}]; !ok {
 				t.Map[helpers.Co{X: x, Y: y}] = false
 			}
@@ -26,10 +26,13 @@ func (t *Tiles) populateMissingTiles() {
 }
 
 func (t *Tiles) doFlipEachDay(days int) {
-	for i := 0; i < days; i++ {
+	for i := 1; i <= days; i++ {
+		t.MinX--
+		t.MaxX++
+		t.MinY--
+		t.MaxY++
 		t.populateMissingTiles()
 		t.doFlips()
-		fmt.Printf("Day %d: %d\n", i+1, t.countTiles())
 	}
 }
 
@@ -42,22 +45,22 @@ func (t *Tiles) doFlips() {
 
 func (t *Tiles) shouldFlip(co helpers.Co) bool {
 	count := 0
-	if t.Map[helpers.Co{X: co.X + 1, Y: co.Y}] {
+	if _, blackTile := t.getETile(co); blackTile {
 		count++
 	}
-	if t.Map[helpers.Co{X: co.X + 1, Y: co.Y + 1}] {
+	if _, blackTile := t.getSETile(co); blackTile {
 		count++
 	}
-	if t.Map[helpers.Co{X: co.X + 1, Y: co.Y - 1}] {
+	if _, blackTile := t.getNETile(co); blackTile {
 		count++
 	}
-	if t.Map[helpers.Co{X: co.X - 1, Y: co.Y}] {
+	if _, blackTile := t.getWTile(co); blackTile {
 		count++
 	}
-	if t.Map[helpers.Co{X: co.X - 1, Y: co.Y + 1}] {
+	if _, blackTile := t.getSWTile(co); blackTile {
 		count++
 	}
-	if t.Map[helpers.Co{X: co.X - 1, Y: co.Y - 1}] {
+	if _, blackTile := t.getNWTile(co); blackTile {
 		count++
 	}
 	if t.Map[co] && (count == 0 || count > 2) {
@@ -83,52 +86,83 @@ func (t *Tiles) moveThroughList(tiles []string) {
 	t.CurrentTile = helpers.Co{X: 0, Y: 0}
 	for _, tile := range tiles {
 		t.moveTile(tile)
-		if t.CurrentTile.X < t.MinX {
-			t.MinX = t.CurrentTile.X
-		}
-		if t.CurrentTile.Y < t.MinY {
-			t.MinY = t.CurrentTile.Y
-		}
-		if t.CurrentTile.X > t.MaxX {
-			t.MaxX = t.CurrentTile.X
-		}
-		if t.CurrentTile.Y > t.MaxY {
-			t.MaxY = t.CurrentTile.Y
-		}
 	}
 	t.flipTiles(t.CurrentTile)
 }
 
+func (t *Tiles) getETile(co helpers.Co) (helpers.Co, bool) {
+	newCo := helpers.Co{X: co.X + 1, Y: co.Y}
+	return newCo, t.Map[newCo]
+}
+
+func (t *Tiles) getSETile(co helpers.Co) (helpers.Co, bool) {
+	changeX := 0
+	if co.Y%2 != 0 {
+		changeX = 1
+	}
+	newCo := helpers.Co{X: co.X + changeX, Y: co.Y + 1}
+	return newCo, t.Map[newCo]
+}
+
+func (t *Tiles) getNETile(co helpers.Co) (helpers.Co, bool) {
+	changeX := 0
+	if co.Y%2 != 0 {
+		changeX = 1
+	}
+	newCo := helpers.Co{X: co.X + changeX, Y: co.Y - 1}
+	return newCo, t.Map[newCo]
+}
+
+func (t *Tiles) getWTile(co helpers.Co) (helpers.Co, bool) {
+	newCo := helpers.Co{X: co.X - 1, Y: co.Y}
+	return newCo, t.Map[newCo]
+}
+
+func (t *Tiles) getSWTile(co helpers.Co) (helpers.Co, bool) {
+	changeX := 0
+	if co.Y%2 == 0 {
+		changeX = -1
+	}
+	newCo := helpers.Co{X: co.X + changeX, Y: co.Y + 1}
+	return newCo, t.Map[newCo]
+}
+
+func (t *Tiles) getNWTile(co helpers.Co) (helpers.Co, bool) {
+	changeX := 0
+	if co.Y%2 == 0 {
+		changeX = -1
+	}
+	newCo := helpers.Co{X: co.X + changeX, Y: co.Y - 1}
+	return newCo, t.Map[newCo]
+}
+
 func (t *Tiles) moveTile(dir string) {
-	var changeX, changeY int
 	switch dir {
 	case "e":
-		changeX = 1
+		t.CurrentTile, _ = t.getETile(t.CurrentTile)
 	case "se":
-		changeY = 1
-		if t.CurrentTile.Y%2 != 0 {
-			changeX = 1
-		}
+		t.CurrentTile, _ = t.getSETile(t.CurrentTile)
 	case "ne":
-		changeY = -1
-		if t.CurrentTile.Y%2 != 0 {
-			changeX = 1
-		}
+		t.CurrentTile, _ = t.getNETile(t.CurrentTile)
 	case "w":
-		changeX = -1
+		t.CurrentTile, _ = t.getWTile(t.CurrentTile)
 	case "sw":
-		changeY = 1
-		if t.CurrentTile.Y%2 == 0 {
-			changeX = -1
-		}
+		t.CurrentTile, _ = t.getSWTile(t.CurrentTile)
 	case "nw":
-		changeY = -1
-		if t.CurrentTile.Y%2 == 0 {
-			changeX = -1
-		}
+		t.CurrentTile, _ = t.getNWTile(t.CurrentTile)
 	}
-	t.CurrentTile.X += changeX
-	t.CurrentTile.Y += changeY
+	if t.CurrentTile.X < t.MinX {
+		t.MinX = t.CurrentTile.X
+	}
+	if t.CurrentTile.Y < t.MinY {
+		t.MinY = t.CurrentTile.Y
+	}
+	if t.CurrentTile.X > t.MaxX {
+		t.MaxX = t.CurrentTile.X
+	}
+	if t.CurrentTile.Y > t.MaxY {
+		t.MaxY = t.CurrentTile.Y
+	}
 }
 
 func (t *Tiles) flipTiles(co helpers.Co) {
@@ -149,13 +183,13 @@ func parseInput(input []string) [][]string {
 }
 
 func (t Tiles) countTiles() int {
-	var black int
+	var count int
 	for _, tile := range t.Map {
 		if tile {
-			black++
+			count++
 		}
 	}
-	return black
+	return count
 }
 
 func main() {
@@ -169,6 +203,6 @@ func main() {
 	}
 	fmt.Println("Part 1:", tiles.countTiles())
 
-	tiles.doFlipEachDay(10)
-	// fmt.Println("Part 2:", tiles.countTiles())
+	tiles.doFlipEachDay(100)
+	fmt.Println("Part 2:", tiles.countTiles())
 }
