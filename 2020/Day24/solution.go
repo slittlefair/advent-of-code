@@ -15,79 +15,13 @@ type Tiles struct {
 	MinY        int
 }
 
-func (t *Tiles) populateMissingTiles() {
-	for x := t.MinX; x <= t.MaxX; x++ {
-		for y := t.MinY; y <= t.MaxY; y++ {
-			if _, ok := t.Map[helpers.Co{X: x, Y: y}]; !ok {
-				t.Map[helpers.Co{X: x, Y: y}] = false
-			}
-		}
+func parseInput(input []string) [][]string {
+	re := regexp.MustCompile(`e|se|ne|w|sw|nw`)
+	tileList := [][]string{}
+	for _, line := range input {
+		tileList = append(tileList, re.FindAllString(line, -1))
 	}
-}
-
-func (t *Tiles) doFlipEachDay(days int) {
-	for i := 1; i <= days; i++ {
-		t.MinX--
-		t.MaxX++
-		t.MinY--
-		t.MaxY++
-		t.populateMissingTiles()
-		t.doFlips()
-	}
-}
-
-func (t *Tiles) doFlips() {
-	tiles := t.decideWhichTilesToFlip()
-	for _, co := range tiles {
-		t.Map[co] = !t.Map[co]
-	}
-}
-
-func (t *Tiles) shouldFlip(co helpers.Co) bool {
-	count := 0
-	if _, blackTile := t.getETile(co); blackTile {
-		count++
-	}
-	if _, blackTile := t.getSETile(co); blackTile {
-		count++
-	}
-	if _, blackTile := t.getNETile(co); blackTile {
-		count++
-	}
-	if _, blackTile := t.getWTile(co); blackTile {
-		count++
-	}
-	if _, blackTile := t.getSWTile(co); blackTile {
-		count++
-	}
-	if _, blackTile := t.getNWTile(co); blackTile {
-		count++
-	}
-	if t.Map[co] && (count == 0 || count > 2) {
-		return true
-	}
-	if !t.Map[co] && count == 2 {
-		return true
-	}
-	return false
-}
-
-func (t *Tiles) decideWhichTilesToFlip() []helpers.Co {
-	tiles := []helpers.Co{}
-	for co := range t.Map {
-		if t.shouldFlip(co) {
-			tiles = append(tiles, co)
-		}
-	}
-	return tiles
-}
-
-func (t *Tiles) moveThroughList(tiles []string) {
-	t.CurrentTile = helpers.Co{X: 0, Y: 0}
-	for _, tile := range tiles {
-		t.moveTile(tile)
-	}
-	t.flipTiles(t.CurrentTile)
+	return tileList
 }
 
 func (t *Tiles) getETile(co helpers.Co) (helpers.Co, bool) {
@@ -154,11 +88,11 @@ func (t *Tiles) moveTile(dir string) {
 	if t.CurrentTile.X < t.MinX {
 		t.MinX = t.CurrentTile.X
 	}
-	if t.CurrentTile.Y < t.MinY {
-		t.MinY = t.CurrentTile.Y
-	}
 	if t.CurrentTile.X > t.MaxX {
 		t.MaxX = t.CurrentTile.X
+	}
+	if t.CurrentTile.Y < t.MinY {
+		t.MinY = t.CurrentTile.Y
 	}
 	if t.CurrentTile.Y > t.MaxY {
 		t.MaxY = t.CurrentTile.Y
@@ -173,13 +107,12 @@ func (t *Tiles) flipTiles(co helpers.Co) {
 	}
 }
 
-func parseInput(input []string) [][]string {
-	re := regexp.MustCompile(`e|se|ne|w|sw|nw`)
-	tileList := [][]string{}
-	for _, line := range input {
-		tileList = append(tileList, re.FindAllString(line, -1))
+func (t *Tiles) moveThroughList(tiles []string) {
+	t.CurrentTile = helpers.Co{X: 0, Y: 0}
+	for _, tile := range tiles {
+		t.moveTile(tile)
 	}
-	return tileList
+	t.flipTiles(t.CurrentTile)
 }
 
 func (t Tiles) countTiles() int {
@@ -192,6 +125,74 @@ func (t Tiles) countTiles() int {
 	return count
 }
 
+func (t *Tiles) populateMissingTiles() {
+	t.MinX--
+	t.MaxX++
+	t.MinY--
+	t.MaxY++
+	for x := t.MinX; x <= t.MaxX; x++ {
+		for y := t.MinY; y <= t.MaxY; y++ {
+			if _, ok := t.Map[helpers.Co{X: x, Y: y}]; !ok {
+				t.Map[helpers.Co{X: x, Y: y}] = false
+			}
+		}
+	}
+}
+
+func (t *Tiles) shouldFlip(co helpers.Co) bool {
+	count := 0
+	if _, blackTile := t.getETile(co); blackTile {
+		count++
+	}
+	if _, blackTile := t.getSETile(co); blackTile {
+		count++
+	}
+	if _, blackTile := t.getNETile(co); blackTile {
+		count++
+	}
+	if _, blackTile := t.getWTile(co); blackTile {
+		count++
+	}
+	if _, blackTile := t.getSWTile(co); blackTile {
+		count++
+	}
+	if _, blackTile := t.getNWTile(co); blackTile {
+		count++
+	}
+	if t.Map[co] && (count == 0 || count > 2) {
+		return true
+	}
+	if !t.Map[co] && count == 2 {
+		return true
+	}
+	return false
+}
+
+func (t *Tiles) decideWhichTilesToFlip() []helpers.Co {
+	tiles := []helpers.Co{}
+	for co := range t.Map {
+		if t.shouldFlip(co) {
+			tiles = append(tiles, co)
+		}
+	}
+	return tiles
+}
+
+func (t *Tiles) doFlips() {
+	tiles := t.decideWhichTilesToFlip()
+	for _, co := range tiles {
+		t.Map[co] = !t.Map[co]
+	}
+}
+
+func (t *Tiles) countTilesAfterDays(days int) int {
+	for i := 1; i <= days; i++ {
+		t.populateMissingTiles()
+		t.doFlips()
+	}
+	return t.countTiles()
+}
+
 func main() {
 	input := helpers.ReadFile()
 	tileList := parseInput(input)
@@ -202,7 +203,5 @@ func main() {
 		tiles.moveThroughList(list)
 	}
 	fmt.Println("Part 1:", tiles.countTiles())
-
-	tiles.doFlipEachDay(100)
-	fmt.Println("Part 2:", tiles.countTiles())
+	fmt.Println("Part 2:", tiles.countTilesAfterDays(100))
 }
