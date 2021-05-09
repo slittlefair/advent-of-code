@@ -21,5 +21,5 @@
 - [x] Day 21 - Allergen Assessment :microbe: :man_health_worker:
 - [x] Day 22 - Crab Combat :crab: :crossed_swords:
 - [x] Day 23 - Crab Cups :crab: :cup_with_straw:
-- [ ] Day 24
+- [x] Day 24 - Lobby Layout :hotel: :world_map:
 - [ ] Day 25

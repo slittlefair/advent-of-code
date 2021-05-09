@@ -164,7 +164,6 @@ func TestGrid_evaluateEmptySeat(t *testing.T) {
 			},
 			want: "L",
 		},
-		// TODO part 2
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

@@ -7,9 +7,6 @@ import (
 	"fmt"
 )
 
-// TODO:
-// - Tests
-
 var seaMonster = []helpers.Co{
 	{X: 0, Y: 1},
 	{X: 1, Y: 2},
