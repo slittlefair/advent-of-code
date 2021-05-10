@@ -1,48 +1,50 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"fmt"
 	"regexp"
+	"sort"
+	"strconv"
 )
 
-func main() {
-	presents := helpers.ReadFile()
-	re := regexp.MustCompile("\\d+")
-	totalPaperFootage := 0
-	totalRibbonFootage := 0
+func paperForPresent(dimensions []int) int {
+	return 3*dimensions[0]*dimensions[1] + 2*dimensions[1]*dimensions[2] + 2*dimensions[0]*dimensions[2]
+}
+
+func ribbonForPresent(dimensions []int) int {
+	return 2*dimensions[0] + 2*dimensions[1] + dimensions[0]*dimensions[1]*dimensions[2]
+}
+
+func totalPaperForPresents(presents []string) (int, int, error) {
+	re := regexp.MustCompile(`\d+`)
+	paper := 0
+	ribbon := 0
 	for _, present := range presents {
-		nums := helpers.StringSliceToIntSlice(re.FindAllString(present, -1))
-		h, l, w := nums[0], nums[1], nums[2]
-
-		// Paper
-		face1, face2, face3 := h*l, h*w, l*w
-		var m int
-		for i, n := range []int{face1, face2, face3} {
-			if i == 0 || n < m {
-				m = n
-			}
+		dimensions := re.FindAllString(present, -1)
+		if len(dimensions) != 3 {
+			return -1, -1, fmt.Errorf("something went wrong, got dimensions %v", dimensions)
 		}
-		totalPaperFootage += 2*face1 + 2*face2 + 2*face3 + m
-
-		// Ribbon
-		perim1, perim2, perim3 := h+h+l+l, h+h+w+w, l+l+w+w
-		for i, n := range []int{w, l, h} {
-			if i == 0 || n > m {
-				m = n
-			}
+		dimensionsInt := []int{}
+		for _, d := range dimensions {
+			// we can ignore the error as we know each dimension is an int due to the regex
+			dInt, _ := strconv.Atoi(d)
+			dimensionsInt = append(dimensionsInt, dInt)
 		}
-		var ribbon int
-		switch m {
-		case w:
-			ribbon = perim1
-		case l:
-			ribbon = perim2
-		case h:
-			ribbon = perim3
-		}
-		totalRibbonFootage += ribbon + w*h*l
+		sort.Ints(dimensionsInt)
+		paper += paperForPresent(dimensionsInt)
+		ribbon += ribbonForPresent(dimensionsInt)
 	}
-	fmt.Println("Part 1:", totalPaperFootage)
-	fmt.Println("Part 2:", totalRibbonFootage)
+	return paper, ribbon, nil
+}
+
+func main() {
+	input := helpers.ReadFile()
+	paper, ribbon, err := totalPaperForPresents(input)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Part 1:", paper)
+	fmt.Println("Part 2:", ribbon)
 }
