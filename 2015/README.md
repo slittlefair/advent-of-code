@@ -4,7 +4,7 @@
 - [x] Day 2 - I Was Told There Would Be No Math :no_entry_sign: :1234:
 - [x] Day 3 - Perfectly Spherical Houses in a Vacuum :red_circle: :houses:
 - [x] Day 4 - The Ideal Stocking Stuffer :100: :socks:
-- [ ] Day 5
+- [x] Day 5 - Doesn't He Have Intern-Elves For This? :baby: :elf:
 - [ ] Day 6
 - [ ] Day 7
 - [ ] Day 8
