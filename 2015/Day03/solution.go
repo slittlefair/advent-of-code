@@ -1,64 +1,77 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"fmt"
 )
 
-type coordinate struct {
-	X int
-	Y int
+type VisitedHouses struct {
+	Map       map[helpers.Co]bool
+	Santa     helpers.Co
+	RoboSanta helpers.Co
 }
 
-type houses map[coordinate]int
-
-var delivered = houses{
-	coordinate{0, 0}: 1,
-}
-
-func (delivered houses) addPresent(co coordinate) {
-	if num, ok := delivered[co]; !ok {
-		delivered[co] = 1
-	} else {
-		delivered[co] = num + 1
+func createVisitedHouses() *VisitedHouses {
+	return &VisitedHouses{
+		Map: map[helpers.Co]bool{
+			{X: 0, Y: 0}: true,
+		},
 	}
 }
 
-func (co coordinate) move(d rune) coordinate {
-	var offset [2]int
-	switch string(d) {
-	case ">":
-		offset = [2]int{1, 0}
-	case "<":
-		offset = [2]int{-1, 0}
-	case "^":
-		offset = [2]int{0, 1}
-	case "v":
-		offset = [2]int{0, -1}
+func (vh *VisitedHouses) moveSanta(dir string) {
+	if dir == "<" {
+		vh.Santa.X--
+	} else if dir == ">" {
+		vh.Santa.X++
+	} else if dir == "^" {
+		vh.Santa.Y--
+	} else if dir == "v" {
+		vh.Santa.Y++
 	}
-	co = coordinate{co.X + offset[0], co.Y + offset[1]}
-	delivered.addPresent(co)
-	return co
+}
+
+func (vh *VisitedHouses) moveRoboSanta(dir string) {
+	if dir == "<" {
+		vh.RoboSanta.X--
+	} else if dir == ">" {
+		vh.RoboSanta.X++
+	} else if dir == "^" {
+		vh.RoboSanta.Y--
+	} else if dir == "v" {
+		vh.RoboSanta.Y++
+	}
+}
+
+func (vh *VisitedHouses) alreadyVisitedHouse(santa helpers.Co) bool {
+	return vh.Map[santa]
+}
+
+func (vh *VisitedHouses) countUniqueHousesVisited(input string, part1 bool) int {
+	uniqueHousesVisited := 1
+	for i, dir := range input {
+		strDir := string(dir)
+		if part1 || i%2 == 0 {
+			vh.moveSanta(strDir)
+			if !vh.alreadyVisitedHouse(vh.Santa) {
+				uniqueHousesVisited++
+				vh.Map[vh.Santa] = true
+			}
+		} else {
+			vh.moveRoboSanta(strDir)
+			if !vh.alreadyVisitedHouse(vh.RoboSanta) {
+				uniqueHousesVisited++
+				vh.Map[vh.RoboSanta] = true
+			}
+		}
+	}
+	return uniqueHousesVisited
 }
 
 func main() {
-	directions := helpers.ReadFile()[0]
-	co := coordinate{0, 0}
-	for _, d := range directions {
-		co = co.move(d)
-	}
-	fmt.Println("Part 1:", len(delivered))
-	delivered = houses{
-		coordinate{0, 0}: 1,
-	}
-	co1 := coordinate{0, 0}
-	co2 := coordinate{0, 0}
-	for i, d := range directions {
-		if i%2 == 0 {
-			co1 = co1.move(d)
-		} else {
-			co2 = co2.move(d)
-		}
-	}
-	fmt.Println("Part 2:", len(delivered))
+	input := helpers.ReadFile()[0]
+	visitedHouses := createVisitedHouses()
+	fmt.Println("Part 1:", visitedHouses.countUniqueHousesVisited(input, true))
+	visitedHouses = createVisitedHouses()
+	fmt.Println("Part 2:", visitedHouses.countUniqueHousesVisited(input, false))
 }
