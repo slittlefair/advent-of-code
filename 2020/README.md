@@ -22,4 +22,4 @@
 - [x] Day 22 - Crab Combat :crab: :crossed_swords:
 - [x] Day 23 - Crab Cups :crab: :cup_with_straw:
 - [x] Day 24 - Lobby Layout :hotel: :world_map:
-- [ ] Day 25
+- [x] Day 25 - Combo Breaker :lock: :unlock:
