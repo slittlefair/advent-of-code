@@ -1,7 +1,7 @@
 # :christmas_tree: 2015 :christmas_tree:
 
 - [x] Day 1 - Not Quite Lisp :wavy_dash: :yin_yang:
-- [ ] Day 2
+- [x] Day 2 - I Was Told There Would Be No Math :no_entry_sign: :1234:
 - [ ] Day 3
 - [ ] Day 4
 - [ ] Day 5
