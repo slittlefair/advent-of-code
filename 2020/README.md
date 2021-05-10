@@ -1,5 +1,3 @@
-# :christmas_tree: 2020 :christmas_tree:
-
 - [x] Day 1 - Report Repair :memo: :wrench:
 - [x] Day 2 - Password Philosophy :eight_spoked_asterisk: :thinking:
 - [x] Day 3 - Toboggan Trajectory :snowboarder: :arrow_right:
