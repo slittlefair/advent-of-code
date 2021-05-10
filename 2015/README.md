@@ -2,7 +2,7 @@
 
 - [x] Day 1 - Not Quite Lisp :wavy_dash: :yin_yang:
 - [x] Day 2 - I Was Told There Would Be No Math :no_entry_sign: :1234:
-- [ ] Day 3
+- [x] Day 3 - Perfectly Spherical Houses in a Vacuum :red_circle: :houses:
 - [ ] Day 4
 - [ ] Day 5
 - [ ] Day 6
