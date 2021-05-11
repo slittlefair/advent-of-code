@@ -6,47 +6,20 @@ import (
 	"regexp"
 )
 
-// type coordinate struct {
-// 	X int
-// 	Y int
-// }
-
-// var part1Lights = make(map[coordinate]bool)
-// var part2Lights = make(map[coordinate]int)
-
-// func updateStatus(x int, y int, instruction string) {
-// 	co := coordinate{x, y}
-// 	switch instruction {
-// 	case "on":
-// 		part1Lights[co] = true
-// 	case "off":
-// 		part1Lights[co] = false
-// 	case "through":
-// 		part1Lights[co] = !part1Lights[co]
-// 	}
-// }
-
-// func updateBrightness(x int, y int, instruction string) {
-// 	co := coordinate{x, y}
-// 	switch instruction {
-// 	case "on":
-// 		part2Lights[co] = part2Lights[co] + 1
-// 	case "off":
-// 		if part2Lights[co] > 0 {
-// 			part2Lights[co] = part2Lights[co] - 1
-// 		}
-// 	case "through":
-// 		part2Lights[co] = part2Lights[co] + 2
-// 	}
-// }
-
-type Lights map[helpers.Co]bool
+type Lights struct {
+	Analogue map[helpers.Co]bool
+	Digital  map[helpers.Co]int
+}
 
 func populateLights() *Lights {
-	lights := Lights{}
+	lights := Lights{
+		Analogue: make(map[helpers.Co]bool),
+		Digital:  make(map[helpers.Co]int),
+	}
 	for x := 0; x < 1000; x++ {
 		for y := 0; y < 1000; y++ {
-			lights[helpers.Co{X: x, Y: y}] = false
+			lights.Analogue[helpers.Co{X: x, Y: y}] = false
+			lights.Digital[helpers.Co{X: x, Y: y}] = 0
 		}
 	}
 	return &lights
@@ -55,7 +28,9 @@ func populateLights() *Lights {
 func (l Lights) turnLightsOn(nums []int) {
 	for x := nums[0]; x <= nums[2]; x++ {
 		for y := nums[1]; y <= nums[3]; y++ {
-			l[helpers.Co{X: x, Y: y}] = true
+			co := helpers.Co{X: x, Y: y}
+			l.Analogue[co] = true
+			l.Digital[co]++
 		}
 	}
 }
@@ -63,7 +38,11 @@ func (l Lights) turnLightsOn(nums []int) {
 func (l Lights) turnLightsOff(nums []int) {
 	for x := nums[0]; x <= nums[2]; x++ {
 		for y := nums[1]; y <= nums[3]; y++ {
-			l[helpers.Co{X: x, Y: y}] = false
+			co := helpers.Co{X: x, Y: y}
+			l.Analogue[co] = false
+			if l.Digital[co] > 0 {
+				l.Digital[co]--
+			}
 		}
 	}
 }
@@ -71,7 +50,9 @@ func (l Lights) turnLightsOff(nums []int) {
 func (l Lights) toggleLights(nums []int) {
 	for x := nums[0]; x <= nums[2]; x++ {
 		for y := nums[1]; y <= nums[3]; y++ {
-			l[helpers.Co{X: x, Y: y}] = !l[helpers.Co{X: x, Y: y}]
+			co := helpers.Co{X: x, Y: y}
+			l.Analogue[co] = !l.Analogue[co]
+			l.Digital[co] += 2
 		}
 	}
 }
@@ -104,12 +85,20 @@ func (l *Lights) followInstructions(input []string) error {
 	return nil
 }
 
-func (l *Lights) countLights() int {
+func (l *Lights) countAnalogueBrightness() int {
 	count := 0
-	for _, light := range *l {
+	for _, light := range l.Analogue {
 		if light {
 			count++
 		}
+	}
+	return count
+}
+
+func (l *Lights) countDigitalBrightness() int {
+	count := 0
+	for _, light := range l.Digital {
+		count += light
 	}
 	return count
 }
@@ -118,37 +107,6 @@ func main() {
 	input := helpers.ReadFile()
 	lights := populateLights()
 	lights.followInstructions(input)
-	fmt.Println("Part 1:", lights.countLights())
-	// for x := 0; x < 1000; x++ {
-	// 	for y := 0; y < 1000; y++ {
-	// 		part1Lights[coordinate{x, y}] = false
-	// 		part2Lights[coordinate{x, y}] = 0
-	// 	}
-	// }
-
-	// instructions := helpers.ReadFile()
-	// coordsRe := regexp.MustCompile("\\d+")
-	// wordsRe := regexp.MustCompile("[a-z]+")
-
-	// for _, inst := range instructions {
-	// 	points := helpers.StringSliceToIntSlice(coordsRe.FindAllString(inst, -1))
-	// 	words := wordsRe.FindAllString(inst, -1)
-	// 	for x := points[0]; x <= points[2]; x++ {
-	// 		for y := points[1]; y <= points[3]; y++ {
-	// 			updateStatus(x, y, words[1])
-	// 			updateBrightness(x, y, words[1])
-	// 		}
-	// 	}
-	// }
-
-	// totalOn := 0
-	// totalBrightness := 0
-	// for co := range part1Lights {
-	// 	if part1Lights[co] {
-	// 		totalOn++
-	// 	}
-	// 	totalBrightness += part2Lights[co]
-	// }
-	// fmt.Println("Part 1:", totalOn)
-	// fmt.Println("Part 2:", totalBrightness)
+	fmt.Println("Part 1:", lights.countAnalogueBrightness())
+	fmt.Println("Part 2:", lights.countDigitalBrightness())
 }

@@ -5,7 +5,7 @@
 - [x] Day 3 - Perfectly Spherical Houses in a Vacuum :red_circle: :houses:
 - [x] Day 4 - The Ideal Stocking Stuffer :100: :socks:
 - [x] Day 5 - Doesn't He Have Intern-Elves For This? :baby: :elf:
-- [ ] Day 6 - Probably a Fire Hazard :fire: :warning:
+- [x] Day 6 - Probably a Fire Hazard :fire: :warning:
 - [ ] Day 7
 - [ ] Day 8
 - [ ] Day 9
