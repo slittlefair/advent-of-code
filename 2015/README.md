@@ -6,7 +6,7 @@
 - [x] Day 4 - The Ideal Stocking Stuffer :100: :socks:
 - [x] Day 5 - Doesn't He Have Intern-Elves For This? :baby: :elf:
 - [x] Day 6 - Probably a Fire Hazard :fire: :warning:
-- [ ] Day 7
+- [x] Day 7 - Some Assembly Required :toolbox: :eight_spoked_asterisk:
 - [ ] Day 8
 - [ ] Day 9
 - [ ] Day 10
