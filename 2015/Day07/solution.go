@@ -1,72 +1,125 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"fmt"
 	"regexp"
+	"strconv"
 )
 
-type v map[string]int
+type Wires map[string]int
 
-var reNum = regexp.MustCompile("\\d+")
-var reCaps = regexp.MustCompile("[A-Z]+")
-var reIdentifier = regexp.MustCompile("[a-z]+")
-
-func (values v) assign(value int, id string) {
-	values[id] = value
+func (w Wires) doBitwiseAND(identifiers []string, nums []string) {
+	if _, ok := w[identifiers[0]]; !ok {
+		return
+	}
+	if len(nums) > 0 {
+		n, _ := strconv.Atoi(nums[0])
+		w[identifiers[1]] = w[identifiers[0]] & n
+		return
+	}
+	if _, ok := w[identifiers[1]]; !ok {
+		return
+	}
+	w[identifiers[2]] = w[identifiers[0]] & w[identifiers[1]]
 }
 
-func (values v) iterateValues(instructions []string) {
-	addingValues := true
-	for addingValues {
-		for _, inst := range instructions {
-			nums := helpers.StringSliceToIntSlice(reNum.FindAllString(inst, -1))
-			caps := reCaps.FindAllString(inst, -1)
-			id := reIdentifier.FindAllString(inst, -1)
-			if len(caps) == 0 {
-				if len(nums) != 0 {
-					if _, ok := values[id[0]]; !ok {
-						values.assign(nums[0], id[0])
-					}
-				} else if _, ok := values[id[0]]; ok {
-					values.assign(values[id[0]], id[1])
-				}
-			} else if _, ok := values[id[0]]; ok {
-				switch caps[0] {
-				case "AND":
-					if _, ok := values[id[1]]; len(nums) == 0 && ok {
-						values.assign(values[id[0]]&values[id[1]], id[2])
-					} else if len(nums) > 0 {
-						values.assign(values[id[0]]&nums[0], id[1])
-					}
-				case "OR":
-					if _, ok := values[id[1]]; len(nums) == 0 && ok {
-						values.assign(values[id[0]]|values[id[1]], id[2])
-					} else if len(nums) > 0 {
-						values.assign(values[id[0]]|nums[0], id[1])
-					}
-				case "LSHIFT":
-					values.assign(values[id[0]]<<uint(nums[0]), id[1])
-				case "RSHIFT":
-					values.assign(values[id[0]]>>uint(nums[0]), id[1])
-				case "NOT":
-					values.assign(65535-values[id[0]], id[1])
-				}
-			}
+func (w Wires) doBitwiseOR(identifiers []string, nums []string) {
+	if _, ok := w[identifiers[0]]; !ok {
+		return
+	}
+	if len(nums) > 0 {
+		n, _ := strconv.Atoi(nums[0])
+		w[identifiers[1]] = w[identifiers[0]] | n
+		return
+	}
+	if _, ok := w[identifiers[1]]; !ok {
+		return
+	}
+	w[identifiers[2]] = w[identifiers[0]] | w[identifiers[1]]
+}
+
+func (w Wires) doBitwiseNOT(identifiers []string) {
+	if _, ok := w[identifiers[0]]; !ok {
+		return
+	}
+	w[identifiers[1]] = 65535 ^ w[identifiers[0]]
+}
+
+func (w Wires) doBitwiseLSHIFT(identifiers []string, nums []string) {
+	if _, ok := w[identifiers[0]]; !ok {
+		return
+	}
+	n, _ := strconv.Atoi(nums[0])
+	w[identifiers[1]] = w[identifiers[0]] << n
+}
+
+func (w Wires) doBitwiseRSHIFT(identifiers []string, nums []string) {
+	if _, ok := w[identifiers[0]]; !ok {
+		return
+	}
+	n, _ := strconv.Atoi(nums[0])
+	w[identifiers[1]] = w[identifiers[0]] >> n
+}
+
+func (w Wires) doASSIGN(identifiers []string, nums []string) {
+	if len(nums) > 0 {
+		if _, ok := w[identifiers[0]]; ok {
+			return
 		}
-		if len(values) == len(instructions) {
-			addingValues = false
+		n, _ := strconv.Atoi(nums[0])
+		w[identifiers[0]] = n
+		return
+	}
+	if _, ok := w[identifiers[0]]; !ok {
+		return
+	}
+	w[identifiers[1]] = w[identifiers[0]]
+}
+
+func (w Wires) followInstructions(instructions []string) {
+	identifierRe := regexp.MustCompile(`[a-z]+`)
+	signalRe := regexp.MustCompile(`[A-Z]+`)
+	intRe := regexp.MustCompile(`\d+`)
+	for len(w) != len(instructions) {
+		for _, inst := range instructions {
+			identifiers := identifierRe.FindAllString(inst, -1)
+			signal := signalRe.FindString(inst)
+			if signal == "NOT" {
+				w.doBitwiseNOT(identifiers)
+				continue
+			}
+			nums := intRe.FindAllString(inst, -1)
+			if signal == "AND" {
+				w.doBitwiseAND(identifiers, nums)
+				continue
+			}
+			if signal == "OR" {
+				w.doBitwiseOR(identifiers, nums)
+				continue
+			}
+			if signal == "LSHIFT" {
+				w.doBitwiseLSHIFT(identifiers, nums)
+				continue
+			}
+			if signal == "RSHIFT" {
+				w.doBitwiseRSHIFT(identifiers, nums)
+				continue
+			}
+			w.doASSIGN(identifiers, nums)
 		}
 	}
 }
 
 func main() {
-	instructions := helpers.ReadFile()
-	part1Values := make(v)
-	part1Values.iterateValues(instructions)
-	fmt.Println("Part 1:", part1Values["a"])
+	input := helpers.ReadFile()
+	wires := Wires{}
+	wires.followInstructions(input)
+	fmt.Println("Part 1:", wires["a"])
 
-	part2Values := v{"b": part1Values["a"]}
-	part2Values.iterateValues(instructions)
-	fmt.Println("Part 2:", part2Values["a"])
+	wires = Wires{
+		"b": wires["a"],
+	}
+	wires.followInstructions(input)
+	fmt.Println("Part 2:", wires["a"])
 }
