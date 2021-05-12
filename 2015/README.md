@@ -7,7 +7,7 @@
 - [x] Day 5 - Doesn't He Have Intern-Elves For This? :baby: :elf:
 - [x] Day 6 - Probably a Fire Hazard :fire: :warning:
 - [x] Day 7 - Some Assembly Required :toolbox: :eight_spoked_asterisk:
-- [ ] Day 8
+- [x] Day 8 - Matchsticks :fire: :chopsticks:
 - [ ] Day 9
 - [ ] Day 10
 - [ ] Day 11
