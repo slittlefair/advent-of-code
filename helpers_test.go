@@ -35,8 +35,7 @@ func TestPermutations(t *testing.T) {
 				{"Broccoli", "Calcium", "Alligator"},
 				{"Broccoli", "Alligator", "Calcium"},
 				{"Calcium", "Broccoli", "Alligator"},
-				{"Calcium", "Broccoli", "Alligator"},
-				// {"Calcium", "Alligator", "Broccoli"},
+				{"Calcium", "Alligator", "Broccoli"},
 			},
 		},
 	}
