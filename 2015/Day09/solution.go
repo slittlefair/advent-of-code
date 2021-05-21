@@ -1,71 +1,97 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"fmt"
-	"regexp"
+	"strconv"
+	"strings"
 )
 
-type leg struct {
-	from     string
-	to       string
-	distance int
+type Graph struct {
+	Edges []Edge
+	Nodes []string
+	Paths [][]string
 }
 
-var allLegs []leg
+type Edge struct {
+	Parent string
+	Child  string
+	Cost   int
+}
 
-var allDestinations []string
+func (g *Graph) addNode(n string) {
+	for _, node := range g.Nodes {
+		if node == n {
+			return
+		}
+	}
+	g.Nodes = append(g.Nodes, n)
+}
 
-func routeDistance(perm []string) (totalDistance int) {
-	for i := 0; i < len(perm)-1; i++ {
-		for _, lg := range allLegs {
-			if (lg.from == perm[i] && lg.to == perm[i+1]) || (lg.to == perm[i] && lg.from == perm[i+1]) {
-				totalDistance += lg.distance
+func (g *Graph) addEdge(parent, child string, cost int) {
+	edge := Edge{
+		Parent: parent,
+		Child:  child,
+		Cost:   cost,
+	}
+
+	g.Edges = append(g.Edges, edge)
+	g.addNode(parent)
+	g.addNode(child)
+}
+
+func (g *Graph) parseInput(input []string) error {
+	for _, line := range input {
+		split := strings.Split(line, " ")
+		cost, err := strconv.Atoi(split[4])
+		if err != nil {
+			return err
+		}
+		node1 := split[0]
+		node2 := split[2]
+		g.addEdge(node1, node2, cost)
+	}
+	nodes := make([]string, len(g.Nodes))
+	copy(nodes, g.Nodes)
+	g.Paths = helpers.Permutations(nodes)
+	return nil
+}
+
+func (g *Graph) getDistanceOfPath(path []string) int {
+	distance := 0
+	for i := 0; i < len(path)-1; i++ {
+		locationA := path[i]
+		locationB := path[i+1]
+		for _, edge := range g.Edges {
+			if (edge.Child == locationA && edge.Parent == locationB) || (edge.Child == locationB && edge.Parent == locationA) {
+				distance += edge.Cost
+				break
 			}
 		}
 	}
-	return totalDistance
+	return distance
+}
+
+func (g *Graph) findMinimumAndMaximumPaths() (int, int) {
+	minPathDistance := int(^uint(0) >> 1)
+	maxPathDistance := 0
+	for _, path := range g.Paths {
+		dist := g.getDistanceOfPath(path)
+		if dist < minPathDistance {
+			minPathDistance = dist
+		}
+		if dist > maxPathDistance {
+			maxPathDistance = dist
+		}
+	}
+	return minPathDistance, maxPathDistance
 }
 
 func main() {
-	lines := helpers.ReadFile()
-	wordRe := regexp.MustCompile("\\w+")
-	for _, l := range lines {
-		words := wordRe.FindAllString(l, -1)
-		allLegs = append(allLegs, leg{
-			to:       words[0],
-			from:     words[2],
-			distance: helpers.StringToInt(words[3]),
-		})
-		inArray1 := false
-		inArray2 := false
-		for _, dest := range allDestinations {
-			if words[0] == dest {
-				inArray1 = true
-			}
-			if words[2] == dest {
-				inArray2 = true
-			}
-		}
-		if !inArray1 {
-			allDestinations = append(allDestinations, words[0])
-		}
-		if !inArray2 {
-			allDestinations = append(allDestinations, words[2])
-		}
-	}
-	allPerms := helpers.Permutations(allDestinations)
-	shortestDistance := 1000000000
-	longestDistance := 0
-	for _, perm := range allPerms {
-		dist := routeDistance(perm)
-		if dist < shortestDistance {
-			shortestDistance = dist
-		}
-		if dist > longestDistance {
-			longestDistance = dist
-		}
-	}
-	fmt.Println("Part 1:", shortestDistance)
-	fmt.Println("Part 2:", longestDistance)
+	input := helpers.ReadFile()
+	graph := Graph{}
+	graph.parseInput(input)
+	minPathDistance, maxPathDistance := graph.findMinimumAndMaximumPaths()
+	fmt.Println("Part 1:", minPathDistance)
+	fmt.Println("Part 2:", maxPathDistance)
 }
