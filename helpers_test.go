@@ -1,6 +1,63 @@
 package helpers
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
+
+func TestPermutations(t *testing.T) {
+	tests := []struct {
+		name string
+		arg  []string
+		want [][]string
+	}{
+		{
+			name: "returns all permutations of two element slice",
+			arg: []string{
+				"Alligator",
+				"Broccoli",
+			},
+			want: [][]string{
+				{"Alligator", "Broccoli"},
+				{"Broccoli", "Alligator"},
+			},
+		},
+		{
+			name: "returns all permutations of three element slice",
+			arg: []string{
+				"Alligator",
+				"Broccoli",
+				"Calcium",
+			},
+			want: [][]string{
+				{"Alligator", "Broccoli", "Calcium"},
+				{"Alligator", "Calcium", "Broccoli"},
+				{"Broccoli", "Calcium", "Alligator"},
+				{"Broccoli", "Alligator", "Calcium"},
+				{"Calcium", "Broccoli", "Alligator"},
+				{"Calcium", "Broccoli", "Alligator"},
+				// {"Calcium", "Alligator", "Broccoli"},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := Permutations(tt.arg)
+			if len(got) != len(tt.want) {
+				t.Errorf("Permutations() = %v, want %v", got, tt.want)
+			}
+			for _, g := range got {
+				for _, w := range tt.want {
+					if reflect.DeepEqual(g, w) {
+						goto out
+					}
+				}
+				t.Errorf("Permutations() = %v, want %v", got, tt.want)
+			out:
+			}
+		})
+	}
+}
 
 func TestIntSlicesAreEqual(t *testing.T) {
 	type args struct {
