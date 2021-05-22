@@ -1,39 +1,40 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
-func lookAndSay(num string) (newNum string) {
-	var figure = 0
-	var freq = 0
-	for i := 0; i <= len(num)-1; i++ {
-		if figure == 0 {
-			figure = helpers.StringToInt(string(num[i]))
-			freq = 1
-		} else if string(num[i]) != strconv.Itoa(figure) {
-			newNum += strconv.Itoa(freq) + strconv.Itoa(figure)
-			figure = helpers.StringToInt(string(num[i]))
-			freq = 1
-		} else {
+func lookAndSay(num []string) []string {
+	say := []string{}
+	currentNum := num[0]
+	freq := 1
+	for i := 1; i < len(num); i++ {
+		char := num[i]
+		if char == currentNum {
 			freq++
+		} else {
+			say = append(say, strconv.Itoa(freq), currentNum)
+			currentNum = char
+			freq = 1
 		}
 	}
-	if figure != 0 {
-		newNum += strconv.Itoa(freq) + strconv.Itoa(figure)
-	}
-	return newNum
+	say = append(say, strconv.Itoa(freq), currentNum)
+	return say
 }
 
 func main() {
-	num := helpers.ReadFile()[0]
-	for i := 0; i < 50; i++ {
+	input := helpers.ReadFile()[0]
+	nums := strings.Split(input, "")
+	for i := 1; i <= 50; i++ {
+		nums = lookAndSay(nums)
 		if i == 40 {
-			fmt.Println("Part 1:", len(num))
+			fmt.Println("Part 1:", len(nums))
 		}
-		num = lookAndSay(num)
+		if i == 50 {
+			fmt.Println("Part 2:", len(nums))
+		}
 	}
-	fmt.Println("Part 2:", len(num))
 }
