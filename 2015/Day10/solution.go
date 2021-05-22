@@ -3,37 +3,38 @@ package main
 import (
 	helpers "Advent-of-Code"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
-func lookAndSay(num string) string {
-	split := strings.Split(num, "")
-	say := ""
-	currentNum := split[0]
+func lookAndSay(num []string) []string {
+	say := []string{}
+	currentNum := num[0]
 	freq := 1
-	for i := 1; i < len(split); i++ {
-		char := split[i]
+	for i := 1; i < len(num); i++ {
+		char := num[i]
 		if char == currentNum {
 			freq++
 		} else {
-			say = fmt.Sprintf("%s%d%s", say, freq, currentNum)
+			say = append(say, strconv.Itoa(freq), currentNum)
 			currentNum = char
 			freq = 1
 		}
 	}
-	say = fmt.Sprintf("%s%d%s", say, freq, currentNum)
+	say = append(say, strconv.Itoa(freq), currentNum)
 	return say
 }
 
 func main() {
-	num := helpers.ReadFile()[0]
+	input := helpers.ReadFile()[0]
+	nums := strings.Split(input, "")
 	for i := 1; i <= 50; i++ {
-		num = lookAndSay(num)
+		nums = lookAndSay(nums)
 		if i == 40 {
-			fmt.Println("Part 1:", len(num))
+			fmt.Println("Part 1:", len(nums))
 		}
 		if i == 50 {
-			fmt.Println("Part 2:", len(num))
+			fmt.Println("Part 2:", len(nums))
 		}
 	}
 }
