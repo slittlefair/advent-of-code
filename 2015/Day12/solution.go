@@ -1,62 +1,55 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"encoding/json"
 	"fmt"
-	"io/ioutil"
 	"regexp"
+	"strconv"
 )
 
-func findNumbers(input interface{}) (numbers []int) {
-	switch input := input.(type) {
+func countNumbers(input string) int {
+	re := regexp.MustCompile(`-?\d+`)
+	nums := re.FindAllString(input, -1)
+	sum := 0
+	for _, num := range nums {
+		n, _ := strconv.Atoi(num)
+		sum += n
+	}
+	return sum
+}
+
+func findNonRedNumbers(input string) int {
+	var result interface{}
+	json.Unmarshal([]byte(input), &result)
+	return recursive(result)
+}
+
+func recursive(r interface{}) int {
+	count := 0
+out:
+	switch t := r.(type) {
+	case float64:
+		count += int(t)
 	case []interface{}:
-		for _, value := range input {
-			numbers = append(numbers, findNumbers(value)...)
+		for _, val := range t {
+			count += recursive(val)
 		}
 	case map[string]interface{}:
-		noRed := true
-		for _, value := range input {
-			if str, ok := value.(string); ok && str == "red" {
-				noRed = false
-				break
+		for _, val := range t {
+			if val == "red" {
+				break out
 			}
 		}
-		if noRed {
-			for _, value := range input {
-				numbers = append(numbers, findNumbers(value)...)
-			}
+		for _, val := range t {
+			count += recursive(val)
 		}
-	case float64:
-		numbers = append(numbers, int(input))
 	}
-
-	return
+	return count
 }
 
 func main() {
-	re := regexp.MustCompile("-?\\d+")
-	line := helpers.ReadFile()
-	numbers := re.FindAllString(line[0], -1)
-	total := 0
-	for _, num := range numbers {
-		total += helpers.StringToInt(num)
-	}
-	fmt.Println("Part 1:", total)
-
-	input, err := ioutil.ReadFile("input.txt")
-	if err != nil {
-		panic(err)
-	}
-
-	data := make(map[string]interface{}, 0)
-	json.Unmarshal(input, &data)
-
-	sum := 0
-	for _, num := range findNumbers(data) {
-		sum += num
-	}
-
-	fmt.Println("Part 2:", sum)
-
+	input := helpers.ReadFile()[0]
+	fmt.Println("Part 1:", countNumbers(input))
+	fmt.Println("Part 2:", findNonRedNumbers(input))
 }
