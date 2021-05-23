@@ -1,61 +1,112 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"fmt"
-	"regexp"
+	"strconv"
+	"strings"
 )
 
-type relationships map[string]int
+type Graph struct {
+	Edges []*Edge
+	Nodes []string
+	Paths [][]string
+}
 
-var people = make(map[string]relationships)
+type Edge struct {
+	Parent string
+	Child  string
+	Cost   int
+}
 
-var allPeople []string
-
-func calculateMaxHappiness() (maxHappiness int) {
-	for _, perm := range helpers.Permutations(allPeople) {
-		happiness := 0
-		for i := 0; i < len(perm)-1; i++ {
-			happiness += people[perm[i]][perm[i+1]]
-			happiness += people[perm[i+1]][perm[i]]
-		}
-		happiness += people[perm[len(perm)-1]][perm[0]]
-		happiness += people[perm[0]][perm[len(perm)-1]]
-		if happiness > maxHappiness {
-			maxHappiness = happiness
+func (g *Graph) AddNode(n string) {
+	for _, node := range g.Nodes {
+		if node == n {
+			return
 		}
 	}
-	return maxHappiness
+	g.Nodes = append(g.Nodes, n)
+}
+
+func (g *Graph) AddEdge(parent, child string, cost int) {
+	for _, edge := range g.Edges {
+		if edge.Parent == child && edge.Child == parent {
+			edge.Cost += cost
+			return
+		}
+	}
+	edge := Edge{
+		Parent: parent,
+		Child:  child,
+		Cost:   cost,
+	}
+
+	g.Edges = append(g.Edges, &edge)
+	g.AddNode(parent)
+	g.AddNode(child)
+}
+
+func (g *Graph) AddMe() {
+	for _, node := range g.Nodes {
+		g.AddEdge(node, "Me", 0)
+	}
+	nodes := make([]string, len(g.Nodes))
+	copy(nodes, g.Nodes)
+	g.Paths = helpers.Permutations(nodes)
+}
+
+func (g *Graph) ParseInput(input []string) error {
+	for _, line := range input {
+		split := strings.Split(line, " ")
+		cost, err := strconv.Atoi(split[3])
+		if err != nil {
+			return err
+		}
+		personA := split[0]
+		personB := strings.TrimSuffix(split[10], ".")
+		gain := split[2] == "gain"
+		if !gain {
+			cost *= -1
+		}
+		g.AddEdge(personA, personB, cost)
+	}
+	nodes := make([]string, len(g.Nodes))
+	copy(nodes, g.Nodes)
+	g.Paths = helpers.Permutations(nodes)
+	return nil
+}
+
+func (g *Graph) GetDistanceOfPath(path []string) int {
+	distance := 0
+	for i := 0; i < len(path); i++ {
+		personA := path[i%len(path)]
+		personB := path[(i+1)%len(path)]
+		for _, edge := range g.Edges {
+			if (edge.Child == personA && edge.Parent == personB) || (edge.Child == personB && edge.Parent == personA) {
+				distance += edge.Cost
+				break
+			}
+		}
+	}
+	return distance
+}
+
+func (g Graph) FindGreatestHappiness() int {
+	greatestHappiness := 0
+	for _, path := range g.Paths {
+		dist := g.GetDistanceOfPath(path)
+		if dist > greatestHappiness {
+			greatestHappiness = dist
+		}
+	}
+	return greatestHappiness
 }
 
 func main() {
-	lines := helpers.ReadFile()
-	nameRe := regexp.MustCompile("[A-Z][a-z]+")
-	numberRe := regexp.MustCompile("\\d+")
-	gainRe := regexp.MustCompile("gain")
-	for _, l := range lines {
-		persons := nameRe.FindAllString(l, -1)
-		if !helpers.StringInSlice(persons[0], allPeople) {
-			allPeople = append(allPeople, persons[0])
-		}
-		happiness := helpers.StringToInt(numberRe.FindAllString(l, -1)[0])
-		if sign := gainRe.MatchString(l); !sign {
-			happiness = -happiness
-		}
-		if rel, ok := people[persons[0]]; !ok {
-			people[persons[0]] = relationships{persons[1]: happiness}
-		} else {
-			rel[persons[1]] = happiness
-			people[persons[0]] = rel
-		}
-	}
-
-	fmt.Println("Part 1:", calculateMaxHappiness())
-	people["Me"] = relationships{}
-	for _, p := range allPeople {
-		people["Me"][p] = 0
-		people[p]["Me"] = 0
-	}
-	allPeople = append(allPeople, "Me")
-	fmt.Println("Part 2:", calculateMaxHappiness())
+	input := helpers.ReadFile()
+	graph := Graph{}
+	graph.ParseInput(input)
+	fmt.Println("Part 1:", graph.FindGreatestHappiness())
+	graph.AddMe()
+	fmt.Println("Part 2:", graph.FindGreatestHappiness())
 }

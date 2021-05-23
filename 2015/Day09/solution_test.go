@@ -56,8 +56,6 @@ func TestGraph_addNode(t *testing.T) {
 }
 
 func TestGraph_addEdge(t *testing.T) {
-	// cyprus := string{name: "Cyprus"}
-	// denmark := string{name: "Denmark"}
 	type fields struct {
 		Edges []Edge
 		Nodes []string
