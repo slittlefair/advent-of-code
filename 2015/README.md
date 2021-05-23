@@ -11,7 +11,7 @@
 - [x] Day 9 - All in a Single Night :one: :night_with_stars:
 - [x] Day 10 - Elves Look, Elves Say :eyes: :speaking_head:
 - [x] Day 11 - Corporate Policy :necktie: :scroll:
-- [ ] Day 12
+- [x] Day 12 - JSAbacusFramework<area>.io :abacus: :building_construction:
 - [ ] Day 13
 - [ ] Day 14
 - [ ] Day 15
