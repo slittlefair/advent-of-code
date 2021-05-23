@@ -1,98 +1,112 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"fmt"
+	"strings"
 )
 
-var letters = []string{"a", "b", "c", "d", "e", "f", "g", "h", "j", "k", "m", "n", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
+var letters = []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
 
-func letterIndex(s string) (i int) {
+func letterIndex(s string) int {
 	for i, l := range letters {
 		if s == l {
 			return i
 		}
 	}
-	return
+	return -1
 }
 
-func legalLetter(s string) (isLegal bool) {
-	for _, l := range letters {
-		if l == s {
-			isLegal = true
-		}
-	}
-	return isLegal
+type Password []int
+
+func incrementCharacter(n int) int {
+	return (n + 1) % len(letters)
 }
 
-func increment(password string) string {
-	if password == "zzzzzzzz" {
-		return "aaaaaaaa"
-	}
-	if string(password[len(password)-1]) != "z" {
-		password = password[:len(password)-1] + letters[letterIndex(string(password[len(password)-1]))+1]
-		return password
-	}
-	password = password[:len(password)-1] + "a"
-	for i := len(password) - 2; i >= 1; i-- {
-		if string(password[i]) != "z" {
-			password = password[:i] + letters[letterIndex(string(password[i]))+1] + password[i+1:]
-			return password
+func (p Password) RemoveIllegalCharacters() {
+	for i := 0; i < len(p); i++ {
+		if p[i] == 8 || p[i] == 11 || p[i] == 14 {
+			p[i] = incrementCharacter(p[i])
+			for j := i + 1; j < len(p); j++ {
+				p[j] = 0
+			}
 		}
-		password = password[:i] + "a" + password[i+1:]
 	}
-	return password
+}
+
+func (p Password) IncrementPassword() {
+	p.RemoveIllegalCharacters()
+	for i := len(p) - 1; i >= 0; i-- {
+		p[i] = incrementCharacter(p[i])
+		if p[i] != 0 {
+			return
+		}
+	}
+}
+
+func (p Password) HasIncreasingStraightLetters() bool {
+	for i := 0; i < len(p)-2; i++ {
+		if p[i+1] == p[i]+1 && p[i+2] == p[i]+2 {
+			return true
+		}
+	}
+	return false
+}
+
+func (p Password) HasDifferentPairs() bool {
+	doubles := map[int]bool{}
+	for i := 0; i < len(p)-1; i++ {
+		if p[i] == p[i+1] {
+			doubles[p[i]] = true
+			if i < len(p)-2 && p[i] == p[i+1] && p[i] == p[i+2] {
+				i++
+			}
+		}
+	}
+	return len(doubles) >= 2
+}
+
+func (p Password) IsValid() bool {
+	if !p.HasIncreasingStraightLetters() {
+		return false
+	}
+	if !p.HasDifferentPairs() {
+		return false
+	}
+	return true
+}
+
+func (p Password) ConvertToString() string {
+	str := ""
+	for _, n := range p {
+		str += letters[n]
+	}
+	return str
+}
+
+func (p Password) GetNextValidPassword() {
+	for {
+		p.IncrementPassword()
+		if p.IsValid() {
+			return
+		}
+	}
+}
+
+func makePassword(passString string) *Password {
+	password := make(Password, len(passString))
+	for i, n := range strings.Split(passString, "") {
+		password[i] = letterIndex(n)
+	}
+	password.RemoveIllegalCharacters()
+	return &password
 }
 
 func main() {
-	password := helpers.ReadFile()[0]
-	part1Done := false
-	for {
-		consecutiveMatch := false
-		forbiddenLetterCheck := true
-		doubles := make(map[string]int)
-		for i, str := range password {
-			s := string(str)
-			// Check forbidden letter
-			if ok := legalLetter(s); forbiddenLetterCheck && !ok {
-				forbiddenLetterCheck = false
-			}
-			// Check consecutive match
-			if i < len(password)-2 {
-				idx := letterIndex(s)
-				if !consecutiveMatch && idx < len(letters)-2 && string(password[i+1]) == letters[idx+1] && string(password[i+2]) == letters[idx+2] {
-					consecutiveMatch = true
-				}
-			}
-		}
-		// Check doubles
-		for i := 0; i < len(password); i++ {
-			if i <= len(password)-2 {
-				if password[i] == password[i+1] {
-					if freq, ok := doubles[string(password[i])+string(password[i+1])]; !ok {
-						doubles[string(password[i])+string(password[i+1])] = 1
-					} else {
-						doubles[string(password[i])+string(password[i+1])] = freq + 1
-					}
-					if i < len(password)-2 && password[i] == password[i+1] && password[i] == password[i+2] {
-						i++
-					}
-				}
-			}
-		}
-		numDoubles := 0
-		for _, freq := range doubles {
-			numDoubles += freq
-		}
-		if numDoubles > 1 && consecutiveMatch && forbiddenLetterCheck {
-			if !part1Done {
-				fmt.Println("Part 1:", password)
-				part1Done = true
-			} else {
-				fmt.Println("Part 2:", password)
-				return
-			}
-		}
-		password = increment(password)
-	}
+	input := helpers.ReadFile()[0]
+	password := makePassword(input)
+	password.GetNextValidPassword()
+	fmt.Println("Part 1:", password.ConvertToString())
+	password.GetNextValidPassword()
+	fmt.Println("Part 2:", password.ConvertToString())
 }

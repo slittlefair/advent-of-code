@@ -8,9 +8,9 @@
 - [x] Day 6 - Probably a Fire Hazard :fire: :warning:
 - [x] Day 7 - Some Assembly Required :toolbox: :eight_spoked_asterisk:
 - [x] Day 8 - Matchsticks :fire: :chopsticks:
-- [ ] Day 9
-- [ ] Day 10
-- [ ] Day 11
+- [x] Day 9 - All in a Single Night :one: :night_with_stars:
+- [x] Day 10 - Elves Look, Elves Say :eyes: :speaking_head:
+- [x] Day 11 - Corporate Policy :necktie: :scroll:
 - [ ] Day 12
 - [ ] Day 13
 - [ ] Day 14
