@@ -12,7 +12,7 @@
 - [x] Day 10 - Elves Look, Elves Say :eyes: :speaking_head:
 - [x] Day 11 - Corporate Policy :necktie: :scroll:
 - [x] Day 12 - JSAbacusFramework<area>.io :abacus: :building_construction:
-- [x] Day 13 - Knights of the Dinner Table :black_chess_knight: :hamburger:
+- [x] Day 13 - Knights of the Dinner Table :night_with_stars: :hamburger:
 - [ ] Day 14
 - [ ] Day 15
 - [ ] Day 16
