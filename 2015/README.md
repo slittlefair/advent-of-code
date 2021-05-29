@@ -13,7 +13,7 @@
 - [x] Day 11 - Corporate Policy :necktie: :scroll:
 - [x] Day 12 - JSAbacusFramework<area>.io :abacus: :building_construction:
 - [x] Day 13 - Knights of the Dinner Table :night_with_stars: :hamburger:
-- [ ] Day 14 - Reindeer Olympics :deer: :weight_lifting_man:
+- [x] Day 14 - Reindeer Olympics :deer: :weight_lifting_man:
 - [ ] Day 15
 - [ ] Day 16
 - [ ] Day 17
