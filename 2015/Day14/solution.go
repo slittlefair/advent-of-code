@@ -78,8 +78,7 @@ func (rc Racers) runRace(length int) (int, int) {
 	return winningDist, winningPoints
 }
 
-func main() {
-	input := helpers.ReadFile()
+func parseInput(input []string) Racers {
 	re := regexp.MustCompile(`\d+`)
 	racers := Racers{}
 	for _, reindeer := range input {
@@ -98,7 +97,12 @@ func main() {
 			IsFlying: true,
 		}
 	}
+	return racers
+}
 
+func main() {
+	input := helpers.ReadFile()
+	racers := parseInput(input)
 	winningDist, winningPoints := racers.runRace(2503)
 	fmt.Println("Part 1:", winningDist)
 	fmt.Println("Part 2:", winningPoints)
