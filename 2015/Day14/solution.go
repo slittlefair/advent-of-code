@@ -1,89 +1,105 @@
 package main
 
 import (
-	"Advent-of-Code"
+	helpers "Advent-of-Code"
 	"fmt"
 	"regexp"
+	"strconv"
+	"strings"
 )
 
-var totalTime = 2503
-
-type reindeer struct {
-	name        string
-	speed       int
-	duration    int
-	rest        int
-	currentMove int
-	currentRest int
-	flying      bool
-	totalDist   int
-	points      int
+type Reindeer struct {
+	Name          string
+	Speed         int
+	Duration      int
+	Rest          int
+	CurrentMove   int
+	CurrentRest   int
+	TotalDistance int
+	TotalPoints   int
+	IsFlying      bool
 }
 
-var herd = make(map[string]reindeer)
+type Racers map[string]*Reindeer
 
-func reindeerMove(r reindeer) reindeer {
-	if !r.flying {
-		r.currentRest++
-		if r.currentRest == r.rest {
-			r.flying = true
-			r.currentRest = 0
-		}
-	} else {
-		r.totalDist += r.speed
-		r.currentMove++
-		if r.currentMove == r.duration {
-			r.flying = false
-			r.currentMove = 0
+func (r *Reindeer) move() {
+	r.TotalDistance += r.Speed
+	r.CurrentMove++
+	if r.CurrentMove == r.Duration {
+		r.IsFlying = false
+		r.CurrentMove = 0
+	}
+}
+
+func (r *Reindeer) rest() {
+	r.CurrentRest++
+	if r.CurrentRest == r.Rest {
+		r.IsFlying = true
+		r.CurrentRest = 0
+	}
+}
+
+func (rc Racers) givePoints() {
+	leadingDistance := 0
+	for _, r := range rc {
+		if r.TotalDistance > leadingDistance {
+			leadingDistance = r.TotalDistance
 		}
 	}
-	return r
+	for _, r := range rc {
+		if r.TotalDistance == leadingDistance {
+			r.TotalPoints++
+		}
+	}
+}
+
+func (rc Racers) runRace(length int) (int, int) {
+	for i := 0; i < length; i++ {
+		for _, r := range rc {
+			if r.IsFlying {
+				r.move()
+			} else {
+				r.rest()
+			}
+		}
+		rc.givePoints()
+	}
+
+	winningDist := 0
+	winningPoints := 0
+	for _, r := range rc {
+		if r.TotalDistance > winningDist {
+			winningDist = r.TotalDistance
+		}
+		if r.TotalPoints > winningPoints {
+			winningPoints = r.TotalPoints
+		}
+	}
+	return winningDist, winningPoints
 }
 
 func main() {
-	lines := helpers.ReadFile()
-	reNums := regexp.MustCompile("\\d+")
-	reName := regexp.MustCompile("[A-Z][a-z]+")
-	for _, l := range lines {
-		nums := helpers.StringSliceToIntSlice(reNums.FindAllString(l, -1))
-		name := reName.FindAllString(l, -1)
-		herd[name[0]] = reindeer{
-			name:     name[0],
-			speed:    nums[0],
-			duration: nums[1],
-			rest:     nums[2],
-			flying:   true,
+	input := helpers.ReadFile()
+	re := regexp.MustCompile(`\d+`)
+	racers := Racers{}
+	for _, reindeer := range input {
+		split := strings.Split(reindeer, " ")
+		name := split[0]
+		nums := re.FindAllString(reindeer, -1)
+		// We can ignore the errors as we know they'll convert due to regex match
+		speed, _ := strconv.Atoi(nums[0])
+		duration, _ := strconv.Atoi(nums[1])
+		rest, _ := strconv.Atoi(nums[2])
+		racers[name] = &Reindeer{
+			Name:     name,
+			Speed:    speed,
+			Duration: duration,
+			Rest:     rest,
+			IsFlying: true,
 		}
 	}
 
-	for i := 0; i < totalTime; i++ {
-		for name, deer := range herd {
-			herd[name] = reindeerMove(deer)
-		}
-		leadingDist := 0
-		for _, deer := range herd {
-			if deer.totalDist > leadingDist {
-				leadingDist = deer.totalDist
-			}
-		}
-		for name, deer := range herd {
-			if deer.totalDist == leadingDist {
-				deer.points++
-				herd[name] = deer
-			}
-		}
-	}
-
-	var winningDist = 0
-	var winningPoints = 0
-	for _, deer := range herd {
-		if deer.totalDist > winningDist {
-			winningDist = deer.totalDist
-		}
-		if deer.points > winningPoints {
-			winningPoints = deer.points
-		}
-	}
+	winningDist, winningPoints := racers.runRace(2503)
 	fmt.Println("Part 1:", winningDist)
 	fmt.Println("Part 2:", winningPoints)
 }
