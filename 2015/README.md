@@ -15,7 +15,7 @@
 - [x] Day 13 - Knights of the Dinner Table :night_with_stars: :hamburger:
 - [x] Day 14 - Reindeer Olympics :deer: :weight_lifting_man:
 - [x] Day 15 - Science for Hungry People :microscope: :hungary:
-- [ ] Day 16
+- [x] Day 16 - Aunt Sue :woman: :boy:
 - [ ] Day 17
 - [ ] Day 18
 - [ ] Day 19
