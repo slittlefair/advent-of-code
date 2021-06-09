@@ -17,7 +17,7 @@
 - [x] Day 15 - Science for Hungry People :microscope: :hungary:
 - [x] Day 16 - Aunt Sue :woman: :boy:
 - [x] Day 17 - No Such Thing as Too Much :x: :beers:
-- [ ] Day 18
+- [x] Day 18 - Like a GIF For Your Yard :space_invader: :house_with_garden:
 - [ ] Day 19
 - [ ] Day 20
 - [ ] Day 21
