@@ -17,7 +17,7 @@ func parseInput(input []string) ([]int, error) {
 	for i, v := range input {
 		conv, err := strconv.Atoi(v)
 		if err != nil {
-			return nil, nil
+			return nil, err
 		}
 		inputInt[i] = conv
 	}
