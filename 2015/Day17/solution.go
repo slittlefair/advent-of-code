@@ -7,6 +7,11 @@ import (
 	"strconv"
 )
 
+type EggnogContainers struct {
+	WantedTotal int
+	Ways        map[int]int
+}
+
 func parseInput(input []string) ([]int, error) {
 	inputInt := make([]int, len(input))
 	for i, v := range input {
@@ -20,19 +25,37 @@ func parseInput(input []string) ([]int, error) {
 	return inputInt, nil
 }
 
-func findContainers(remainingContainers []int, count int, totalCapacity int, wantedTotal int) ([]int, int, int, int) {
-	if totalCapacity == wantedTotal {
-		count++
+func (ec *EggnogContainers) FindContainers(remainingContainers []int, totalCapacity int, levels int) {
+	if totalCapacity == ec.WantedTotal {
+		if val, ok := ec.Ways[levels]; !ok {
+			ec.Ways[levels] = 1
+		} else {
+			ec.Ways[levels] = val + 1
+		}
 	}
 	for i := 0; i < len(remainingContainers); i++ {
-		_, count, _, wantedTotal = findContainers(remainingContainers[i+1:], count, totalCapacity+remainingContainers[i], wantedTotal)
+		ec.FindContainers(remainingContainers[i+1:], totalCapacity+remainingContainers[i], levels+1)
 	}
-	return remainingContainers, count, totalCapacity, wantedTotal
 }
 
-func getPermutations(containers []int) int {
-	_, perms, _, _ := findContainers(containers, 0, 0, 150)
-	return perms
+func (ec EggnogContainers) CountPermutations() int {
+	count := 0
+	for _, v := range ec.Ways {
+		count += v
+	}
+	return count
+}
+
+func (ec EggnogContainers) CountSmallestContainersPermutations() int {
+	smallestPermutations := helpers.Infinty
+	count := 0
+	for numContainers, freq := range ec.Ways {
+		if numContainers < smallestPermutations {
+			smallestPermutations = numContainers
+			count = freq
+		}
+	}
+	return count
 }
 
 func main() {
@@ -42,7 +65,11 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	permutations := getPermutations(containers)
-	fmt.Println("Part 1:", permutations)
-	// fmt.Println(remainingContainers, count, tc, wt)
+	ec := &EggnogContainers{
+		WantedTotal: 150,
+		Ways:        make(map[int]int),
+	}
+	ec.FindContainers(containers, 0, 0)
+	fmt.Println("Part 1:", ec.CountPermutations())
+	fmt.Println("Part 2:", ec.CountSmallestContainersPermutations())
 }
