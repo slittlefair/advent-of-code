@@ -142,3 +142,6 @@ func IntSlicesAreEqual(slice1, slice2 []int) bool {
 	}
 	return true
 }
+
+// Infinity is the int value of infinity, useful for looping over a range and trying to get the lowest value
+var Infinty = int(^uint(0) >> 1)

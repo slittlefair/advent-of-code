@@ -16,7 +16,7 @@
 - [x] Day 14 - Reindeer Olympics :deer: :weight_lifting_man:
 - [x] Day 15 - Science for Hungry People :microscope: :hungary:
 - [x] Day 16 - Aunt Sue :woman: :boy:
-- [ ] Day 17
+- [x] Day 17 - No Such Thing as Too Much :x: :beers:
 - [ ] Day 18
 - [ ] Day 19
 - [ ] Day 20

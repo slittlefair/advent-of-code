@@ -3,43 +3,73 @@ package main
 import (
 	helpers "Advent-of-Code"
 	"fmt"
+	"sort"
 	"strconv"
 )
 
-var litres = 150
+type EggnogContainers struct {
+	WantedTotal int
+	Ways        map[int]int
+}
 
-var idToContainer = make(map[string]int)
-var successfulCombinations [][]string
-var allIDs []string
-
-func main() {
-	containers := helpers.ReadFile()
-	for i, c := range helpers.StringSliceToIntSlice(containers) {
-		idToContainer[strconv.Itoa(i)] = c
-		allIDs = append(allIDs, strconv.Itoa(i))
+func parseInput(input []string) ([]int, error) {
+	inputInt := make([]int, len(input))
+	for i, v := range input {
+		conv, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, err
+		}
+		inputInt[i] = conv
 	}
-	allPerms := helpers.Permutations(allIDs)
-	fmt.Println(len(allPerms))
-	for _, perm := range allPerms {
-		total := 0
-		idSlice := []string{}
-		for _, c := range perm {
-			total += idToContainer[c]
-			idSlice = append(idSlice, c)
-			if total == litres {
-				alreadyPicked := false
-				for _, comb := range successfulCombinations {
-					if helpers.StringSlicesEqual(idSlice, comb) {
-						alreadyPicked = true
-					}
-				}
-				if !alreadyPicked {
-					successfulCombinations = append(successfulCombinations, idSlice)
-				}
-			} else if total > litres {
-				continue
-			}
+	sort.Sort(sort.Reverse(sort.IntSlice(inputInt)))
+	return inputInt, nil
+}
+
+func (ec *EggnogContainers) FindContainers(remainingContainers []int, totalCapacity int, levels int) {
+	if totalCapacity == ec.WantedTotal {
+		if val, ok := ec.Ways[levels]; !ok {
+			ec.Ways[levels] = 1
+		} else {
+			ec.Ways[levels] = val + 1
 		}
 	}
-	fmt.Println("Part 1:", len(successfulCombinations))
+	for i := 0; i < len(remainingContainers); i++ {
+		ec.FindContainers(remainingContainers[i+1:], totalCapacity+remainingContainers[i], levels+1)
+	}
+}
+
+func (ec EggnogContainers) CountPermutations() int {
+	count := 0
+	for _, v := range ec.Ways {
+		count += v
+	}
+	return count
+}
+
+func (ec EggnogContainers) CountSmallestContainersPermutations() int {
+	smallestPermutations := helpers.Infinty
+	count := 0
+	for numContainers, freq := range ec.Ways {
+		if numContainers < smallestPermutations {
+			smallestPermutations = numContainers
+			count = freq
+		}
+	}
+	return count
+}
+
+func main() {
+	input := helpers.ReadFile()
+	containers, err := parseInput(input)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	ec := &EggnogContainers{
+		WantedTotal: 150,
+		Ways:        make(map[int]int),
+	}
+	ec.FindContainers(containers, 0, 0)
+	fmt.Println("Part 1:", ec.CountPermutations())
+	fmt.Println("Part 2:", ec.CountSmallestContainersPermutations())
 }
