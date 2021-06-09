@@ -3,43 +3,46 @@ package main
 import (
 	helpers "Advent-of-Code"
 	"fmt"
+	"sort"
 	"strconv"
 )
 
-var litres = 150
+func parseInput(input []string) ([]int, error) {
+	inputInt := make([]int, len(input))
+	for i, v := range input {
+		conv, err := strconv.Atoi(v)
+		if err != nil {
+			return nil, nil
+		}
+		inputInt[i] = conv
+	}
+	sort.Sort(sort.Reverse(sort.IntSlice(inputInt)))
+	return inputInt, nil
+}
 
-var idToContainer = make(map[string]int)
-var successfulCombinations [][]string
-var allIDs []string
+func findContainers(remainingContainers []int, count int, totalCapacity int, wantedTotal int) ([]int, int, int, int) {
+	if totalCapacity == wantedTotal {
+		count++
+	}
+	for i := 0; i < len(remainingContainers); i++ {
+		_, count, _, wantedTotal = findContainers(remainingContainers[i+1:], count, totalCapacity+remainingContainers[i], wantedTotal)
+	}
+	return remainingContainers, count, totalCapacity, wantedTotal
+}
+
+func getPermutations(containers []int) int {
+	_, perms, _, _ := findContainers(containers, 0, 0, 150)
+	return perms
+}
 
 func main() {
-	containers := helpers.ReadFile()
-	for i, c := range helpers.StringSliceToIntSlice(containers) {
-		idToContainer[strconv.Itoa(i)] = c
-		allIDs = append(allIDs, strconv.Itoa(i))
+	input := helpers.ReadFile()
+	containers, err := parseInput(input)
+	if err != nil {
+		fmt.Println(err)
+		return
 	}
-	allPerms := helpers.Permutations(allIDs)
-	fmt.Println(len(allPerms))
-	for _, perm := range allPerms {
-		total := 0
-		idSlice := []string{}
-		for _, c := range perm {
-			total += idToContainer[c]
-			idSlice = append(idSlice, c)
-			if total == litres {
-				alreadyPicked := false
-				for _, comb := range successfulCombinations {
-					if helpers.StringSlicesEqual(idSlice, comb) {
-						alreadyPicked = true
-					}
-				}
-				if !alreadyPicked {
-					successfulCombinations = append(successfulCombinations, idSlice)
-				}
-			} else if total > litres {
-				continue
-			}
-		}
-	}
-	fmt.Println("Part 1:", len(successfulCombinations))
+	permutations := getPermutations(containers)
+	fmt.Println("Part 1:", permutations)
+	// fmt.Println(remainingContainers, count, tc, wt)
 }
