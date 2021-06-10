@@ -1,6 +1,11 @@
 package main
 
-import "fmt"
+import (
+	helpers "Advent-of-Code"
+	"fmt"
+	"strconv"
+	"strings"
+)
 
 type Combatant struct {
 	HitPoints int
@@ -38,18 +43,50 @@ func (f *Fighters) Fight() bool {
 	}
 }
 
+func (f *Fighters) ParseBoss(input []string) error {
+	if length := len(input); length != 3 {
+		return fmt.Errorf("something went wrong, expected 3 lines of input, got %d", length)
+	}
+
+	boss := &Combatant{}
+
+	hp, err := strconv.Atoi(strings.Split(input[0], "Hit Points: ")[1])
+	if err != nil {
+		return err
+	}
+	boss.HitPoints = hp
+
+	damage, err := strconv.Atoi(strings.Split(input[1], "Damage: ")[1])
+	if err != nil {
+		return err
+	}
+	boss.Damage = damage
+
+	armour, err := strconv.Atoi(strings.Split(input[2], "Armor: ")[1])
+	if err != nil {
+		return err
+	}
+	boss.Armour = armour
+
+	f.Boss = &Combatant{
+		HitPoints: hp,
+		Damage:    damage,
+		Armour:    armour,
+	}
+
+	return nil
+}
+
 func main() {
+	input := helpers.ReadFile()
 	f := &Fighters{
 		Player: &Combatant{
 			HitPoints: 8,
 			Damage:    5,
 			Armour:    5,
 		},
-		Boss: &Combatant{
-			HitPoints: 12,
-			Damage:    7,
-			Armour:    2,
-		},
 	}
+	f.ParseBoss(input)
+	fmt.Printf("%+v\n", f.Boss)
 	fmt.Println(f.Fight())
 }
