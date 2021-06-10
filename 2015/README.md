@@ -19,7 +19,7 @@
 - [x] Day 17 - No Such Thing as Too Much :x: :beers:
 - [x] Day 18 - Like a GIF For Your Yard :space_invader: :house_with_garden:
 - [x] Day 19 - Medicine for Rudolph :pill: :deer:
-- [ ] Day 20
+- [ ] Day 20 - Infinite Elves and Infinite Houses :infinity: :infinity:
 - [ ] Day 21
 - [ ] Day 22
 - [ ] Day 23
