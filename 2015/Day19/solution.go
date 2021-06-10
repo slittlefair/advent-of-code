@@ -12,7 +12,6 @@ type Replacements map[string][]string
 type Medicine struct {
 	Replacements         Replacements
 	Molecule             string
-	NewMolecules         []string
 	DistinctNewMolecules map[string]bool
 }
 
@@ -20,7 +19,7 @@ func parseInput(input []string) *Medicine {
 	med := &Medicine{
 		Replacements:         make(Replacements),
 		Molecule:             input[len(input)-1],
-		DistinctNewMolecules: make(map[string]bool),
+		DistinctNewMolecules: map[string]bool{},
 	}
 	for i := 0; i < len(input)-2; i++ {
 		line := input[i]
@@ -36,7 +35,7 @@ func parseInput(input []string) *Medicine {
 	return med
 }
 
-func (m Medicine) FindIndicesOfSringInMolecule(s string) []int {
+func (m Medicine) FindIndicesOfStringInMolecule(s string) []int {
 	index := strings.Index(m.Molecule, s)
 	indices := []int{}
 	offset := 0
@@ -51,7 +50,7 @@ func (m Medicine) FindIndicesOfSringInMolecule(s string) []int {
 
 func (m *Medicine) ReplaceAndFindNewMolecules() {
 	for r, reps := range m.Replacements {
-		indices := m.FindIndicesOfSringInMolecule(r)
+		indices := m.FindIndicesOfStringInMolecule(r)
 		for _, re := range reps {
 			for _, i := range indices {
 				m.DistinctNewMolecules[m.Molecule[:i]+re+m.Molecule[i+len(r):]] = true
