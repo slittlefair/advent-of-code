@@ -58,7 +58,7 @@ func TestFighters_Attack(t *testing.T) {
 				Player: tt.Player,
 				Boss:   tt.Boss,
 			}
-			f.Attack(tt.Player, tt.Boss)
+			f.MartialAttack(tt.Player, tt.Boss)
 			if !reflect.DeepEqual(f, tt.want) {
 				t.Errorf("Fighters.Attack() = %v, want %v", f, tt.want)
 			}
@@ -225,7 +225,7 @@ func TestFighters_ParseBoss(t *testing.T) {
 				SuccessfulCosts:   tt.fields.SuccessfulCosts,
 				UnsuccessfulCosts: tt.fields.UnsuccessfulCosts,
 			}
-			if err := f.ParseBoss(tt.arg); (err != nil) != tt.wantErr {
+			if err := f.ParseBoss(tt.arg, true); (err != nil) != tt.wantErr {
 				t.Errorf("Fighters.ParseBoss() error = %v, wantErr %v", err, tt.wantErr)
 			}
 			if !reflect.DeepEqual(f, tt.want) {
