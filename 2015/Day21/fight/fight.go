@@ -4,6 +4,7 @@ import (
 	cmb "Advent-of-Code/2015/Day21/combatant"
 	"Advent-of-Code/2015/Day21/shop"
 	"fmt"
+	"math/rand"
 	"sort"
 	"strconv"
 	"strings"
@@ -16,7 +17,7 @@ type Fighters struct {
 	UnsuccessfulCosts []int
 }
 
-func (f *Fighters) MartialAttack(attacker, defender *cmb.Combatant) {
+func MartialAttack(attacker, defender *cmb.Combatant) {
 	damage := attacker.Damage - defender.Armour
 	if damage < 1 {
 		damage = 1
@@ -24,17 +25,16 @@ func (f *Fighters) MartialAttack(attacker, defender *cmb.Combatant) {
 	defender.HitPoints -= damage
 }
 
-func (f *Fighters) SpellAttack(spell *cmb.Spell) int {
+func SpellAttack(attacker, defender *cmb.Combatant, spell *cmb.Spell) {
 	fmt.Println("casting", spell.Name)
-	f.Player.Mana -= spell.Mana
-	f.Player.ManaSpent += spell.Mana
-	f.Player.HitPoints += spell.HitPoints
-	f.Boss.HitPoints -= spell.Damage
+	attacker.Mana -= spell.Mana
+	attacker.ManaSpent += spell.Mana
+	attacker.HitPoints += spell.HitPoints
+	defender.HitPoints -= spell.Damage
 	if spell.Effect.Effect != nil {
 		spell.Effect.Active = true
 		spell.Effect.DurationRemaining = spell.Effect.Duration
 	}
-	return spell.Mana
 }
 
 func ApplyEffects(attacker, defender *cmb.Combatant) {
@@ -45,47 +45,50 @@ func ApplyEffects(attacker, defender *cmb.Combatant) {
 	}
 }
 
-func (f *Fighters) Fight() bool {
+func Fight(player, boss *cmb.Combatant) bool {
 	for {
-		f.MartialAttack(f.Player, f.Boss)
-		if f.Boss.IsDead() {
+		MartialAttack(player, boss)
+		if boss.IsDead() {
 			return true
 		}
-		f.MartialAttack(f.Boss, f.Player)
-		if f.Player.IsDead() {
+		MartialAttack(boss, player)
+		if player.IsDead() {
 			return false
 		}
 	}
 }
 
-func (f *Fighters) SpellRound(spell *cmb.Spell) {
-	ApplyEffects(f.Player, f.Boss)
-	if f.Boss.IsDead() {
-		f.CompareManaSpent()
-		return
+func SpellRound(player, boss *cmb.Combatant) bool {
+	ApplyEffects(player, boss)
+	if boss.IsDead() {
+		player.CompareManaSpent()
+		fmt.Println("fight over, boss dead")
+		return false
 	}
-	if f.Player.Mana < spell.Mana {
-		return
+	validSpells := player.ValidSpells()
+	spell := validSpells[rand.Intn(len(validSpells))]
+	if player.Mana < spell.Mana {
+		fmt.Println("fight over, out of mana")
+		return false
 	}
-	f.SpellAttack(spell)
-	if f.Boss.IsDead() {
-		f.CompareManaSpent()
-		return
+	SpellAttack(player, boss, spell)
+	if boss.IsDead() {
+		player.CompareManaSpent()
+		fmt.Println("fight over, boss dead")
+		return false
 	}
-	f.MartialAttack(f.Boss, f.Player)
-	if f.Player.IsDead() {
-		return
+	MartialAttack(boss, player)
+	if player.IsDead() {
+		fmt.Println("fight over, player dead")
+		return false
 	}
-	for _, sp := range f.Player.Spells {
-		if !sp.Effect.Active {
-			f.SpellRound(&sp)
-		}
-	}
+	return true
 }
 
-func (f *Fighters) CompareManaSpent() {
-	if f.Player.ManaSpent < f.Player.LowestManaSpent {
-		f.Player.LowestManaSpent = f.Player.ManaSpent
+func SpellFight(player, boss *cmb.Combatant) {
+	fighting := true
+	for fighting {
+		fighting = SpellRound(player, boss)
 	}
 }
 

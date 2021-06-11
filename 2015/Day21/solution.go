@@ -28,7 +28,7 @@ func runFights(input []string) (*fight.Fighters, error) {
 				}
 				for _, weapon := range s.Weapons {
 					f.InitiatePlayerForFight(weapon, armour, ring1, ring2)
-					if f.Fight() {
+					if fight.Fight(f.Player, f.Boss) {
 						f.SuccessfulCosts = append(f.SuccessfulCosts, f.Player.Cost)
 					} else {
 						f.UnsuccessfulCosts = append(f.UnsuccessfulCosts, f.Player.Cost)

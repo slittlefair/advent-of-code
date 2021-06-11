@@ -62,7 +62,7 @@ type Spell struct {
 	Effect    Effect
 }
 
-type Spells []Spell
+type Spells []*Spell
 
 func PopulateSpells() Spells {
 	return Spells{
@@ -113,9 +113,15 @@ func (c *Combatant) CanCastSpells(spells Spells) bool {
 	return false
 }
 
-func (c *Combatant) ValidSpells(spells Spells) Spells {
+func (c *Combatant) CompareManaSpent() {
+	if c.ManaSpent < c.LowestManaSpent {
+		c.LowestManaSpent = c.ManaSpent
+	}
+}
+
+func (c *Combatant) ValidSpells() Spells {
 	validSpells := Spells{}
-	for _, sp := range spells {
+	for _, sp := range c.Spells {
 		if sp.Mana <= c.Mana {
 			validSpells = append(validSpells, sp)
 		}
