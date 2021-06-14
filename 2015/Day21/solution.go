@@ -3,20 +3,20 @@ package main
 import (
 	helpers "Advent-of-Code"
 	"Advent-of-Code/2015/Day21/fight"
-	shop "Advent-of-Code/2015/Day21/shop"
+	"Advent-of-Code/2015/Day21/martial"
+	"Advent-of-Code/2015/Day21/shop"
 	"fmt"
 )
 
-func runFights(input []string) (*fight.Fighters, error) {
-	f := &fight.Fighters{
-		SuccessfulCosts: []int{},
-	}
-	err := f.ParseBoss(input, true)
+func runFights(input []string) (int, int, error) {
+	boss, err := martial.ParseBoss(input, true)
 	if err != nil {
-		return nil, err
+		return -1, -1, err
 	}
-	bossHP := f.Boss.HitPoints
+	bossHP := boss.HP
 	s := shop.PopulateShop()
+	cheapestVictory := helpers.Infinty
+	dearestLoss := 0
 	// Loop through all combinations of armour, rings and weapons and work out their cost as well
 	// as who wins the fight
 	for _, armour := range s.Armour {
@@ -27,39 +27,32 @@ func runFights(input []string) (*fight.Fighters, error) {
 					continue
 				}
 				for _, weapon := range s.Weapons {
-					f.InitiatePlayerForFight(weapon, armour, ring1, ring2)
-					if fight.Fight(f.Player, f.Boss) {
-						f.SuccessfulCosts = append(f.SuccessfulCosts, f.Player.Cost)
+					player, fightCost := fight.InitiatePlayerForFight(weapon, armour, ring1, ring2)
+					if fight.Fight(player, boss) {
+						if fightCost < cheapestVictory {
+							cheapestVictory = fightCost
+						}
 					} else {
-						f.UnsuccessfulCosts = append(f.UnsuccessfulCosts, f.Player.Cost)
+						if fightCost > dearestLoss {
+							dearestLoss = fightCost
+						}
 					}
 					// Heal boss up after fight
-					f.Boss.HitPoints = bossHP
+					boss.HP = bossHP
 				}
 			}
 		}
 	}
-	return f, nil
+	return cheapestVictory, dearestLoss, nil
 }
 
 func main() {
 	input := helpers.ReadFile()
-	fighters, err := runFights(input)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-	cheapestVictory, err := fighters.CheapestVictory()
+	cheapestVictory, dearestLoss, err := runFights(input)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
 	fmt.Println("Part 1:", cheapestVictory)
-
-	dearestLoss, err := fighters.DearestLoss()
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
 	fmt.Println("Part 2:", dearestLoss)
 }

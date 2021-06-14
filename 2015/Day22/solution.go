@@ -2,33 +2,24 @@ package main
 
 import (
 	helpers "Advent-of-Code"
-	"Advent-of-Code/2015/Day21/combatant"
-	fight "Advent-of-Code/2015/Day21/fight"
+	"Advent-of-Code/2015/Day21/martial"
+	"Advent-of-Code/2015/Day22/mage"
+	"Advent-of-Code/2015/Day22/spellFight"
 	"fmt"
 )
 
 func runFights(input []string) (int, int, error) {
-	f := &fight.Fighters{
-		LowestManaSpent: helpers.Infinty,
-	}
-	err := f.ParseBoss(input, false)
+	boss, err := martial.ParseBoss(input, false)
 	if err != nil {
 		return -1, -1, err
 	}
-	bossHP := f.Boss.HitPoints
-	f.Player = &combatant.Combatant{
-		LowestManaSpent: helpers.Infinty,
-		Spells:          combatant.PopulateSpells(),
+	bossHP := boss.HP
+	player := &mage.Mage{
+		Spells: mage.PopulateSpells(),
 	}
-	lowestMana, err := fight.SpellFight(*f.Player, *f.Boss, bossHP, false)
-	if err != nil {
-		return -1, -1, err
-	}
-	lowestManaHardMode, err := fight.SpellFight(*f.Player, *f.Boss, bossHP, true)
-	if err != nil {
-		return -1, -1, err
-	}
-	return lowestMana, lowestManaHardMode, nil
+	lowestManaSpent := spellFight.SpellFight(*player, *boss, bossHP, false)
+	lowestManaHardModeSpent := spellFight.SpellFight(*player, *boss, bossHP, true)
+	return lowestManaSpent, lowestManaHardModeSpent, nil
 }
 
 func main() {
