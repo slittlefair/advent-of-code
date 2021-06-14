@@ -16,15 +16,6 @@ func (c *Combatant) IsDead() bool {
 	return c.HitPoints <= 0
 }
 
-func (c *Combatant) HasEffectInPlace(spell Spell) bool {
-	for _, sp := range c.Spells {
-		if sp.Name == spell.Name {
-			return sp.Effect.Active
-		}
-	}
-	return false
-}
-
 type Effect struct {
 	Active            bool
 	Duration          int
@@ -32,14 +23,13 @@ type Effect struct {
 	Effect            func(player, boss *Combatant)
 }
 
-type Effects map[string]Effect
-
-func (e *Effect) ApplyEffect(attacker, defender *Combatant) {
+func ApplyEffect(attacker, defender *Combatant, e Effect) Effect {
 	e.Effect(attacker, defender)
 	e.DurationRemaining--
 	if e.DurationRemaining == 0 {
 		e.Active = false
 	}
+	return e
 }
 
 func Shield(player, boss *Combatant) {
@@ -59,47 +49,58 @@ type Spell struct {
 	Mana      int
 	Damage    int
 	HitPoints int
-	Effect    Effect
+	Effect    string
 }
 
-type Spells []*Spell
+func PopulateEffects() map[string]Effect {
+	return map[string]Effect{
+		"None": {},
+		"Shield": {
+			Duration: 6,
+			Effect:   Shield,
+		},
+		"Poison": {
+			Duration: 6,
+			Effect:   Poison,
+		},
+		"Recharge": {
+			Duration: 5,
+			Effect:   Recharge,
+		},
+	}
+}
+
+type Spells map[string]*Spell
 
 func PopulateSpells() Spells {
 	return Spells{
-		{
+		"Magic Missile": {
 			Name:   "Magic Missile",
 			Mana:   53,
 			Damage: 4,
+			Effect: "None",
 		},
-		{
+		"Drain": {
 			Name:      "Drain",
 			Mana:      73,
 			Damage:    2,
 			HitPoints: 2,
+			Effect:    "None",
 		},
-		{
-			Name: "Shield",
-			Mana: 113,
-			Effect: Effect{
-				Duration: 6,
-				Effect:   Shield,
-			},
+		"Shield": {
+			Name:   "Shield",
+			Mana:   113,
+			Effect: "Shield",
 		},
-		{
-			Name: "Poison",
-			Mana: 173,
-			Effect: Effect{
-				Duration: 6,
-				Effect:   Poison,
-			},
+		"Poison": {
+			Name:   "Poison",
+			Mana:   173,
+			Effect: "Poison",
 		},
-		{
-			Name: "Recharge",
-			Mana: 229,
-			Effect: Effect{
-				Duration: 5,
-				Effect:   Recharge,
-			},
+		"Recharge": {
+			Name:   "Recharge",
+			Mana:   229,
+			Effect: "Recharge",
 		},
 	}
 }
@@ -113,18 +114,9 @@ func (c *Combatant) CanCastSpells(spells Spells) bool {
 	return false
 }
 
-func (c *Combatant) CompareManaSpent() {
-	if c.ManaSpent < c.LowestManaSpent {
-		c.LowestManaSpent = c.ManaSpent
+func (c *Combatant) SpellIsValid(spell *Spell, effects map[string]Effect) bool {
+	if c.Mana < spell.Mana {
+		return false
 	}
-}
-
-func (c *Combatant) ValidSpells() Spells {
-	validSpells := Spells{}
-	for _, sp := range c.Spells {
-		if sp.Mana <= c.Mana {
-			validSpells = append(validSpells, sp)
-		}
-	}
-	return validSpells
+	return !effects[spell.Effect].Active
 }

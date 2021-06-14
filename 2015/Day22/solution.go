@@ -5,28 +5,23 @@ import (
 	"Advent-of-Code/2015/Day21/combatant"
 	fight "Advent-of-Code/2015/Day21/fight"
 	"fmt"
-	"math/rand"
-	"time"
 )
 
 func runFights(input []string) (int, error) {
-	f := &fight.Fighters{}
+	f := &fight.Fighters{
+		LowestManaSpent: helpers.Infinty,
+	}
 	err := f.ParseBoss(input, false)
 	if err != nil {
 		return -1, err
 	}
-	seed := time.Now().UnixNano()
-	rand.Seed(seed)
+	bossHP := f.Boss.HitPoints
 	f.Player = &combatant.Combatant{
 		LowestManaSpent: helpers.Infinty,
 		Spells:          combatant.PopulateSpells(),
-		HitPoints:       50,
-		Mana:            500,
 	}
-	for {
-		fight.Fight(f.Player, f.Boss)
-	}
-	return f.Player.LowestManaSpent, nil
+	lowestMana := fight.SpellFight(*f.Player, *f.Boss, bossHP)
+	return lowestMana, nil
 }
 
 func main() {
