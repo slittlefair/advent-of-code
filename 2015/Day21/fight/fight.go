@@ -29,14 +29,11 @@ func SpellAttack(attacker, defender *cmb.Combatant, spell *cmb.Spell, effects ma
 	attacker.Mana -= spell.Mana
 	attacker.HitPoints += spell.HitPoints
 	defender.HitPoints -= spell.Damage
-	// fmt.Println(spell.Name, spell.Effect)
 	if spell.Effect != "None" {
-		// fmt.Println("activating spell", spell.Name)
 		eff := effects[spell.Effect]
 		eff.Active = true
 		eff.DurationRemaining = eff.Duration
 		effects[spell.Effect] = eff
-		// fmt.Println(spell.Effect.Active, spell.Effect.DurationRemaining)
 	}
 	return effects
 }
@@ -68,40 +65,32 @@ func Fight(player, boss *cmb.Combatant) bool {
 
 type ManaSpends struct {
 	Winning []int
-	Spells  [][]*cmb.Spell
-	Losing  []int
 }
 
-func (ms *ManaSpends) SpellRound(player, boss cmb.Combatant, spell *cmb.Spell, currentMana int, spells []*cmb.Spell, level int, effects map[string]cmb.Effect) {
+func (ms *ManaSpends) SpellRound(player, boss cmb.Combatant, spell *cmb.Spell, currentMana int, spells []*cmb.Spell, level int, effects map[string]cmb.Effect, hardMode bool) {
 	// Set playar armour to 0
 	player.Armour = 0
-	// printSpells := []string{}
-	// for _, s := range spells {
-	// 	printSpells = append(printSpells, s.Name)
-	// }
-	// fmt.Println("round", level, printSpells)
-	// fmt.Println("before effects")
-	// fmt.Printf("player: hp %d, mana %d\n", player.HitPoints, player.Mana)
-	// fmt.Printf("boss: hp %d\n\n", boss.HitPoints)
-	// At the start of the player's turn, apply any spell effects
+
+	if hardMode {
+		player.HitPoints--
+		if player.IsDead() {
+			return
+		}
+	}
+
 	effects = ApplyEffects(&player, &boss, effects)
 
 	// If the spell effects have caused the boss to die, end the fight and compare mana scores
 	if boss.IsDead() {
 		ms.Winning = append(ms.Winning, currentMana)
-		ms.Spells = append(ms.Spells, spells)
 		return
 	}
-	// fmt.Println("before spell attack")
+
 	if !player.SpellIsValid(spell, effects) {
-		// fmt.Printf("cannot cast %s, active is %t and cost is %d, only have %d left\n", spell.Name, effects[spell.Effect].Active, spell.Mana, player.Mana)
-		ms.Losing = append(ms.Losing, currentMana)
 		return
 	}
-	// fmt.Printf("player: hp %d, mana %d, armour %d\n", player.HitPoints, player.Mana, player.Armour)
-	// fmt.Printf("boss: hp %d\n\n", boss.HitPoints)
+
 	// Cast the spell and accumulate spent mana
-	// fmt.Println("casting", spell.Name)
 	effects = SpellAttack(&player, &boss, spell, effects)
 	spells = append(spells, spell)
 
@@ -111,13 +100,9 @@ func (ms *ManaSpends) SpellRound(player, boss cmb.Combatant, spell *cmb.Spell, c
 	// If the spell causes the boss to die, end the fight and compare mana scores
 	if boss.IsDead() {
 		ms.Winning = append(ms.Winning, currentMana)
-		ms.Spells = append(ms.Spells, spells)
 		return
 	}
 
-	// fmt.Println("before effects")
-	// fmt.Printf("player: hp %d, mana %d\n", player.HitPoints, player.Mana)
-	// fmt.Printf("boss: hp %d\n\n", boss.HitPoints)
 	// At the start of the boss' turn, set player armour to 0 and apply spell effects
 	player.Armour = 0
 	effects = ApplyEffects(&player, &boss, effects)
@@ -125,48 +110,25 @@ func (ms *ManaSpends) SpellRound(player, boss cmb.Combatant, spell *cmb.Spell, c
 	// If the spell effects have caused the boss to die, end the fight and compare mana scores
 	if boss.IsDead() {
 		ms.Winning = append(ms.Winning, currentMana)
-		ms.Spells = append(ms.Spells, spells)
 		return
 	}
 
-	// fmt.Printf("player: hp %d, mana %d, armour: %d\n", player.HitPoints, player.Mana, player.Armour)
-	// fmt.Printf("boss: hp %d\n\n", boss.HitPoints)
 	// Boss attacks the player with a marital attack
 	MartialAttack(&boss, &player)
 
 	// If the boss attack causes the player to die, end the fight
 	if player.IsDead() {
-		ms.Losing = append(ms.Losing, currentMana)
 		return
 	}
 
-	// Work out the spells the player can cast. These are spells that they have mana for and don't
-	// have an already active effect. Once these spells are calculated, iterate through them and use
-	// them in the next round
-	// validSpells := player.ValidSpells()
-	// fmt.Println("picking spells")
-	// fmt.Printf("player: hp %d, mana %d\n", player.HitPoints, player.Mana)
-	// fmt.Printf("boss: hp %d\n", boss.HitPoints)
-	// printSpells := []string{}
-	// for _, vs := range validSpells {
-	// 	printSpells = append(printSpells, vs.Name)
-	// }
-	// fmt.Println("spells:", printSpells)
-	// fmt.Println()
-	// if len(validSpells) == 0 {
-	// 	ms.Losing = append(ms.Losing, currentMana)
-	// 	return
-	// }
 	for _, vs := range player.Spells {
-		ms.SpellRound(player, boss, vs, currentMana, spells, level+1, effects)
+		ms.SpellRound(player, boss, vs, currentMana, spells, level+1, effects, hardMode)
 	}
 }
 
-func SpellFight(player, boss cmb.Combatant, bossHP int) int {
+func SpellFight(player, boss cmb.Combatant, bossHP int, hardMode bool) (int, error) {
 	ms := ManaSpends{
 		Winning: []int{},
-		Losing:  []int{},
-		Spells:  [][]*cmb.Spell{},
 	}
 
 	spells := cmb.PopulateSpells()
@@ -177,23 +139,15 @@ func SpellFight(player, boss cmb.Combatant, bossHP int) int {
 		player.Mana = 500
 		player.Spells = cmb.PopulateSpells()
 		boss.HitPoints = bossHP
-		ms.SpellRound(player, boss, sp, 0, []*cmb.Spell{}, 1, effects)
-	}
-	fmt.Println(ms.Winning)
-	for _, s := range ms.Spells {
-		sum := 0
-		for _, ss := range s {
-			fmt.Println(ss.Name)
-			sum += ss.Mana
-		}
-		fmt.Println(sum)
-	}
-	sort.Ints(ms.Winning)
-	if len(ms.Winning) > 0 {
-		fmt.Println(ms.Winning[0])
+		ms.SpellRound(player, boss, sp, 0, []*cmb.Spell{}, 1, effects, hardMode)
 	}
 
-	return ms.Winning[0]
+	sort.Ints(ms.Winning)
+	if len(ms.Winning) == 0 {
+		return -1, fmt.Errorf("no winning game found")
+	}
+
+	return ms.Winning[0], nil
 }
 
 func (f *Fighters) ParseBoss(input []string, hasArmour bool) error {
