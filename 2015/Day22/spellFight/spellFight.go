@@ -53,6 +53,7 @@ func (ms *ManaSpent) SpellRound(player mage.Mage, boss martial.Martial, spell *m
 	// Set playar armour to 0
 	player.Armour = 0
 
+	// If we're in hard mode reduce player's HP by 1
 	if hardMode {
 		player.HP--
 		if player.HP <= 0 {
@@ -60,6 +61,7 @@ func (ms *ManaSpent) SpellRound(player mage.Mage, boss martial.Martial, spell *m
 		}
 	}
 
+	// Apply the effects
 	effects = ApplyEffects(&player, &boss, effects)
 
 	// If the spell effects have caused the boss to die, end the fight and compare mana scores
@@ -68,6 +70,8 @@ func (ms *ManaSpent) SpellRound(player mage.Mage, boss martial.Martial, spell *m
 		return
 	}
 
+	// If the spell isn't actually valid, either it's effect is already active or we don't have
+	// enough mana to cast it, then the player has lost so end the fight
 	if !player.SpellIsValid(spell, effects) {
 		return
 	}
@@ -100,6 +104,7 @@ func (ms *ManaSpent) SpellRound(player mage.Mage, boss martial.Martial, spell *m
 		return
 	}
 
+	// Carry on the fight with each spell
 	for _, vs := range player.Spells {
 		ms.SpellRound(player, boss, vs, effects, hardMode)
 	}
