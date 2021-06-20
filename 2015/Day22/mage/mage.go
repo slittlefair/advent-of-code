@@ -24,22 +24,20 @@ type Effect struct {
 	Effect            func(mage *Mage, boss *martial.Martial)
 }
 
-func PopulateEffects() map[string]Effect {
-	return map[string]Effect{
-		"None": {},
-		"Shield": {
-			Duration: 6,
-			Effect:   Shield,
-		},
-		"Poison": {
-			Duration: 6,
-			Effect:   Poison,
-		},
-		"Recharge": {
-			Duration: 5,
-			Effect:   Recharge,
-		},
-	}
+var Effects = map[string]Effect{
+	"None": {},
+	"Shield": {
+		Duration: 6,
+		Effect:   Shield,
+	},
+	"Poison": {
+		Duration: 6,
+		Effect:   Poison,
+	},
+	"Recharge": {
+		Duration: 5,
+		Effect:   Recharge,
+	},
 }
 
 func ApplyEffect(mage *Mage, boss *martial.Martial, e Effect) Effect {
@@ -76,30 +74,25 @@ type Spells map[string]*Spell
 func PopulateSpells() Spells {
 	return Spells{
 		"Magic Missile": {
-			Name:   "Magic Missile",
 			Mana:   53,
 			Damage: 4,
 			Effect: "None",
 		},
 		"Drain": {
-			Name:   "Drain",
 			Mana:   73,
 			Damage: 2,
 			HP:     2,
 			Effect: "None",
 		},
 		"Shield": {
-			Name:   "Shield",
 			Mana:   113,
 			Effect: "Shield",
 		},
 		"Poison": {
-			Name:   "Poison",
 			Mana:   173,
 			Effect: "Poison",
 		},
 		"Recharge": {
-			Name:   "Recharge",
 			Mana:   229,
 			Effect: "Recharge",
 		},

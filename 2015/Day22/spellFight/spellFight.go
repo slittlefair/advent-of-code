@@ -116,7 +116,7 @@ func SpellFight(player mage.Mage, boss martial.Martial, bossHP int, hardMode boo
 	}
 
 	spells := mage.PopulateSpells()
-	effects := mage.PopulateEffects()
+	effects := mage.Effects
 
 	for _, sp := range spells {
 		player.HP = 50
