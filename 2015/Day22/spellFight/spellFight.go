@@ -110,22 +110,34 @@ func (ms *ManaSpent) SpellRound(player mage.Mage, boss martial.Martial, spell *m
 	}
 }
 
-func SpellFight(player mage.Mage, boss martial.Martial, bossHP int, hardMode bool) int {
+func SpellFight(boss martial.Martial, bossHP int, hardMode bool) int {
 	ms := ManaSpent{
 		LowestManaSpent: helpers.Infinty,
 	}
 
-	spells := mage.PopulateSpells()
+	spells := mage.SpellList
 	effects := mage.Effects
+	player := mage.Mage{}
 
 	for _, sp := range spells {
 		player.HP = 50
 		player.Mana = 500
 		player.ManaSpent = 0
-		player.Spells = mage.PopulateSpells()
+		player.Spells = mage.SpellList
 		boss.HP = bossHP
 		ms.SpellRound(player, boss, sp, effects, hardMode)
 	}
 
 	return ms.LowestManaSpent
+}
+
+func RunSpellFights(input []string) (int, int, error) {
+	boss, err := martial.ParseBoss(input, false)
+	if err != nil {
+		return -1, -1, err
+	}
+	bossHP := boss.HP
+	lowestManaSpent := SpellFight(*boss, bossHP, false)
+	lowestManaHardModeSpent := SpellFight(*boss, bossHP, true)
+	return lowestManaSpent, lowestManaHardModeSpent, nil
 }

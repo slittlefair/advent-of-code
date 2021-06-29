@@ -1,6 +1,8 @@
 package mage
 
-import "Advent-of-Code/2015/Day21/martial"
+import (
+	"Advent-of-Code/2015/Day21/martial"
+)
 
 type Mage struct {
 	HP        int
@@ -71,30 +73,28 @@ type Spell struct {
 
 type Spells map[string]*Spell
 
-func PopulateSpells() Spells {
-	return Spells{
-		"Magic Missile": {
-			Mana:   53,
-			Damage: 4,
-			Effect: "None",
-		},
-		"Drain": {
-			Mana:   73,
-			Damage: 2,
-			HP:     2,
-			Effect: "None",
-		},
-		"Shield": {
-			Mana:   113,
-			Effect: "Shield",
-		},
-		"Poison": {
-			Mana:   173,
-			Effect: "Poison",
-		},
-		"Recharge": {
-			Mana:   229,
-			Effect: "Recharge",
-		},
-	}
+var SpellList = Spells{
+	"Magic Missile": {
+		Mana:   53,
+		Damage: 4,
+		Effect: "None",
+	},
+	"Drain": {
+		Mana:   73,
+		Damage: 2,
+		HP:     2,
+		Effect: "None",
+	},
+	"Shield": {
+		Mana:   113,
+		Effect: "Shield",
+	},
+	"Poison": {
+		Mana:   173,
+		Effect: "Poison",
+	},
+	"Recharge": {
+		Mana:   229,
+		Effect: "Recharge",
+	},
 }

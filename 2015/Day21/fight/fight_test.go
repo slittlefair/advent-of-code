@@ -58,6 +58,12 @@ func TestMartialAttack(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			MartialAttack(tt.args.attacker, tt.args.defender)
+			if !reflect.DeepEqual(tt.args.attacker, tt.want) {
+				t.Errorf("MartialAttack() = %v, want %v", tt.args.attacker, tt.want)
+			}
+			if !reflect.DeepEqual(tt.args.defender, tt.want1) {
+				t.Errorf("MartialAttack() = %v, want %v", tt.args.defender, tt.want1)
+			}
 		})
 	}
 }
