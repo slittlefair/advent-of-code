@@ -21,7 +21,7 @@
 - [x] Day 19 - Medicine for Rudolph :pill: :deer:
 - [x] Day 20 - Infinite Elves and Infinite Houses :infinity: :infinity:
 - [x] Day 21 - RPG Simulator 20XX :crossed_swords: :shield:
-- [ ] Day 22 - Wizard Simulator 20XX :mage_man: :sparkles:
+- [x] Day 22 - Wizard Simulator 20XX :mage_man: :sparkles:
 - [ ] Day 23
 - [ ] Day 24
 - [ ] Day 25
