@@ -22,6 +22,6 @@
 - [x] Day 20 - Infinite Elves and Infinite Houses :infinity: :infinity:
 - [x] Day 21 - RPG Simulator 20XX :crossed_swords: :shield:
 - [x] Day 22 - Wizard Simulator 20XX :mage_man: :sparkles:
-- [x] Day 23 - Day 23: Opening the Turing Lock :old_key: :unlock:
-- [x] Day 24 - Day 24: It Hangs in the Balance :climbing: :balance_scale:
-- [ ] Day 25
+- [x] Day 23 - Opening the Turing Lock :old_key: :unlock:
+- [x] Day 24 - It Hangs in the Balance :climbing: :balance_scale:
+- [x] Day 25 - Let It Snow :cloud_with_snow: :snowflake:
