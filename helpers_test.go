@@ -101,3 +101,54 @@ func TestIntSlicesAreEqual(t *testing.T) {
 		})
 	}
 }
+
+func TestRemove(t *testing.T) {
+	type args struct {
+		s []int
+		i int
+	}
+	tests := []struct {
+		name  string
+		args  args
+		want  []int
+		want1 []int
+	}{
+		{
+			name: "it removes first element from given slice",
+			args: args{
+				s: []int{1, 2, 3, 4},
+				i: 0,
+			},
+			want:  []int{2, 3, 4},
+			want1: []int{1, 2, 3, 4},
+		},
+		{
+			name: "it removes last element from given slice",
+			args: args{
+				s: []int{1, 2, 3, 4},
+				i: 3,
+			},
+			want:  []int{1, 2, 3},
+			want1: []int{1, 2, 3, 4},
+		},
+		{
+			name: "it removes a middle element from given slice",
+			args: args{
+				s: []int{1, 2, 3, 4},
+				i: 1,
+			},
+			want:  []int{1, 3, 4},
+			want1: []int{1, 2, 3, 4},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Remove(tt.args.s, tt.args.i); !reflect.DeepEqual(got, tt.want) {
+				t.Errorf("Remove() = %v, want %v", got, tt.want)
+			}
+			if !reflect.DeepEqual(tt.args.s, tt.want1) {
+				t.Errorf("original slice = %v, want %v", tt.args.s, tt.want1)
+			}
+		})
+	}
+}

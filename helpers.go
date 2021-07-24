@@ -145,3 +145,10 @@ func IntSlicesAreEqual(slice1, slice2 []int) bool {
 
 // Infinity is the int value of infinity, useful for looping over a range and trying to get the lowest value
 var Infinty = int(^uint(0) >> 1)
+
+// Remove removes the element at index i from slice s and returns that slice, whilst keeping the original in tact
+func Remove(s []int, i int) []int {
+	ret := make([]int, 0)
+	ret = append(ret, s[:i]...)
+	return append(ret, s[i+1:]...)
+}
