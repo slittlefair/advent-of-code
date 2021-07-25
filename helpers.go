@@ -152,3 +152,16 @@ func Remove(s []int, i int) []int {
 	ret = append(ret, s[:i]...)
 	return append(ret, s[i+1:]...)
 }
+
+// CalculateManhattanDistance calculates the manhattan distance between the origin
+func CalculateManhattanDistance(co1, co2 Co) int {
+	x := co1.X - co2.X
+	y := co1.Y - co2.Y
+	if x < 0 {
+		x *= -1
+	}
+	if y < 0 {
+		y *= -1
+	}
+	return x + y
+}

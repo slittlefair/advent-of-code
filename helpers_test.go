@@ -152,3 +152,47 @@ func TestRemove(t *testing.T) {
 		})
 	}
 }
+
+func TestCalculateManhattanDistance(t *testing.T) {
+	type args struct {
+		co1 Co
+		co2 Co
+	}
+	tests := []struct {
+		name string
+		args args
+		want int
+	}{
+		{
+			name: "returns distance between a coordinate and origin",
+			args: args{
+				co1: Co{X: 7, Y: 8},
+				co2: Co{},
+			},
+			want: 15,
+		},
+		{
+			name: "returns distance between a positive and negative coordinate",
+			args: args{
+				co1: Co{X: 9, Y: 1},
+				co2: Co{X: -9, Y: -7},
+			},
+			want: 26,
+		},
+		{
+			name: "returns distance when where difference between the two will be negative",
+			args: args{
+				co1: Co{X: 1, Y: 1},
+				co2: Co{X: 8, Y: 11},
+			},
+			want: 17,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := CalculateManhattanDistance(tt.args.co1, tt.args.co2); got != tt.want {
+				t.Errorf("CalculateManhattanDistance() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
