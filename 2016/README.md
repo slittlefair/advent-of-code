@@ -5,3 +5,4 @@
 - [x] Day 3 - Squares With Three Sides :black_square_button: :three:
 - [x] Day 4 - Security Through Obscurity :closed_lock_with_key: :fog:
 - [x] Day 5 - How About a Nice Game of Chess? :blush: :chess_pawn:
+- [x] Day 6 - Signals and Noise :children_crossing: :loudspeaker:
