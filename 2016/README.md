@@ -6,3 +6,4 @@
 - [x] Day 4 - Security Through Obscurity :closed_lock_with_key: :fog:
 - [x] Day 5 - How About a Nice Game of Chess? :blush: :chess_pawn:
 - [x] Day 6 - Signals and Noise :children_crossing: :loudspeaker:
+- [x] Day 7 - Internet Protocol Version 7 :computer: :seven:
