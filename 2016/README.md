@@ -7,3 +7,4 @@
 - [x] Day 5 - How About a Nice Game of Chess? :blush: :chess_pawn:
 - [x] Day 6 - Signals and Noise :children_crossing: :loudspeaker:
 - [x] Day 7 - Internet Protocol Version 7 :computer: :seven:
+- [x] Day 8 - Two-Factor Authentication :1234: :asterisk:
