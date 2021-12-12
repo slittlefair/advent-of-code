@@ -68,6 +68,22 @@ func Abs(x int) int {
 	return -x
 }
 
+// Min returns the minimum of two ints
+func Min(x, y int) int {
+	if x < y {
+		return x
+	}
+	return y
+}
+
+// Max returns the maximum of two ints
+func Max(x, y int) int {
+	if x > y {
+		return x
+	}
+	return y
+}
+
 // StringInSlice returns a boolean based on if the given string is in the given slice
 func StringInSlice(s string, sl []string) bool {
 	for _, k := range sl {
