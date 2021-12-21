@@ -57,10 +57,8 @@ func validCos(input []string, part2 bool) ([]helpers.Co, error) {
 		}
 		matchInts := []int{}
 		for _, m := range matches {
-			conv, err := strconv.Atoi(m)
-			if err != nil {
-				return nil, err
-			}
+			// matches will be able to be converted due to regex match, so we know we won't get an error
+			conv, _ := strconv.Atoi(m)
 			matchInts = append(matchInts, conv)
 		}
 		m0 := matchInts[0]
