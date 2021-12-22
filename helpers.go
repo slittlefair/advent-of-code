@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"os"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -58,6 +59,23 @@ func ReadFileAsInts() []int {
 		lines = append(lines, StringToInt(scanner.Text()))
 	}
 	return lines
+}
+
+func ReadFileSingleLineAsInts() ([]int, error) {
+	input := ReadFile()
+	if l := len(input); l != 1 {
+		return nil, fmt.Errorf("error getting input, expected 1 line, got %d: %v", l, input)
+	}
+	ints := strings.Split(input[0], ",")
+	nums := []int{}
+	for _, i := range ints {
+		n, err := strconv.Atoi(i)
+		if err != nil {
+			return nil, err
+		}
+		nums = append(nums, n)
+	}
+	return nums, nil
 }
 
 // Abs returns the absolute value of the int provided
