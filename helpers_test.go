@@ -330,3 +330,42 @@ func TestMedian(t *testing.T) {
 		})
 	}
 }
+
+func TestFindExtremities(t *testing.T) {
+	tests := []struct {
+		name  string
+		nums  []int
+		want  int
+		want1 int
+	}{
+		{
+			name:  "returns max and min numbers from a slice of ints, low values",
+			nums:  []int{3, 2, 5, 1, 3, 6, 7, 4, 3, 5, 6, 7},
+			want:  1,
+			want1: 7,
+		},
+		{
+			name:  "returns max and min numbers from a slice of ints, include negatives",
+			nums:  []int{3, -2, 5, 1, 0, 3, -6, 10, 4, 3, 5, 6, 7},
+			want:  -6,
+			want1: 10,
+		},
+		{
+			name:  "returns max and min numbers from a slice of ints, high ranged values",
+			nums:  []int{639, 261, 280, 7635, 38005, 72619, 9811, 375, 209, 3856, 1111, 11114, 5739},
+			want:  209,
+			want1: 72619,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, got1 := FindExtremities(tt.nums)
+			if got != tt.want {
+				t.Errorf("FindExtremities() got = %v, want %v", got, tt.want)
+			}
+			if got1 != tt.want1 {
+				t.Errorf("FindExtremities() got1 = %v, want %v", got1, tt.want1)
+			}
+		})
+	}
+}

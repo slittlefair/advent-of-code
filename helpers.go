@@ -225,6 +225,7 @@ func CaesarCipher(text string, shiftNum int) string {
 	return string(runes)
 }
 
+// Median returns the median value from an unsorted slice of ints
 func Median(nums []int) float64 {
 	sort.Ints(nums)
 	l := len(nums)
@@ -234,4 +235,19 @@ func Median(nums []int) float64 {
 	midWay1 := float64(nums[l/2])
 	midWay2 := float64(nums[(l/2)-1])
 	return (midWay1 + midWay2) / 2
+}
+
+// FindExtremeties returns the max and min value from a slice of ints
+func FindExtremities(nums []int) (int, int) {
+	min := Infinty
+	max := 0
+	for _, n := range nums {
+		if n > max {
+			max = n
+		}
+		if n < min {
+			min = n
+		}
+	}
+	return min, max
 }
