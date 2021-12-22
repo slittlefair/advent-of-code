@@ -294,3 +294,39 @@ func TestCaesarCipher(t *testing.T) {
 		})
 	}
 }
+
+func TestMedian(t *testing.T) {
+	tests := []struct {
+		name string
+		nums []int
+		want float64
+	}{
+		{
+			name: "returns median of odd length input",
+			nums: []int{1, 9, 6, 5, 2},
+			want: 5,
+		},
+		{
+			name: "returns median of even length input, same numbers",
+			nums: []int{1, 3, 6, 5, 2, 3},
+			want: 3,
+		},
+		{
+			name: "returns median of even length input, different numbers but int",
+			nums: []int{1, 5, 6, 5, 2, 3},
+			want: 4,
+		},
+		{
+			name: "returns median of even length input, different numbers but decimal",
+			nums: []int{1, 5, 6, 5, 2, 2},
+			want: 3.5,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := Median(tt.nums); got != tt.want {
+				t.Errorf("Median() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

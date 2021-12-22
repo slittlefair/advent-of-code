@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
 	"strings"
 	"time"
@@ -222,4 +223,15 @@ func CaesarCipher(text string, shiftNum int) string {
 	}
 
 	return string(runes)
+}
+
+func Median(nums []int) float64 {
+	sort.Ints(nums)
+	l := len(nums)
+	if l%2 != 0 {
+		return float64(nums[(l-1)/2])
+	}
+	midWay1 := float64(nums[l/2])
+	midWay2 := float64(nums[(l/2)-1])
+	return (midWay1 + midWay2) / 2
 }
