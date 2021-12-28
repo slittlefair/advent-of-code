@@ -3,26 +3,16 @@ package main
 import (
 	helpers "Advent-of-Code"
 	"fmt"
-	"strconv"
-	"strings"
 )
 
 type Lanternfish []int
 
-func createLanternfish(input []string) (Lanternfish, error) {
-	if l := len(input); l != 1 {
-		return nil, fmt.Errorf("error getting input, expected 1 line, got %d: %v", l, input)
-	}
+func createLanternfish(input []int) Lanternfish {
 	lf := make(Lanternfish, 9)
-	ints := strings.Split(input[0], ",")
-	for _, i := range ints {
-		n, err := strconv.Atoi(i)
-		if err != nil {
-			return nil, err
-		}
-		lf[n]++
+	for _, i := range input {
+		lf[i]++
 	}
-	return lf, nil
+	return lf
 }
 
 func (lf Lanternfish) iterate() Lanternfish {
@@ -56,12 +46,12 @@ func (lf Lanternfish) findSolution() (int, int) {
 }
 
 func main() {
-	input := helpers.ReadFile()
-	lf, err := createLanternfish(input)
+	input, err := helpers.ReadFileSingleLineAsInts()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
+	lf := createLanternfish(input)
 	part1, part2 := lf.findSolution()
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)

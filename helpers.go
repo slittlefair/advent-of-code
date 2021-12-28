@@ -4,7 +4,9 @@ import (
 	"bufio"
 	"fmt"
 	"os"
+	"sort"
 	"strconv"
+	"strings"
 	"time"
 )
 
@@ -58,6 +60,23 @@ func ReadFileAsInts() []int {
 		lines = append(lines, StringToInt(scanner.Text()))
 	}
 	return lines
+}
+
+func ReadFileSingleLineAsInts() ([]int, error) {
+	input := ReadFile()
+	if l := len(input); l != 1 {
+		return nil, fmt.Errorf("error getting input, expected 1 line, got %d: %v", l, input)
+	}
+	ints := strings.Split(input[0], ",")
+	nums := []int{}
+	for _, i := range ints {
+		n, err := strconv.Atoi(i)
+		if err != nil {
+			return nil, err
+		}
+		nums = append(nums, n)
+	}
+	return nums, nil
 }
 
 // Abs returns the absolute value of the int provided
@@ -204,4 +223,31 @@ func CaesarCipher(text string, shiftNum int) string {
 	}
 
 	return string(runes)
+}
+
+// Median returns the median value from an unsorted slice of ints
+func Median(nums []int) float64 {
+	sort.Ints(nums)
+	l := len(nums)
+	if l%2 != 0 {
+		return float64(nums[(l-1)/2])
+	}
+	midWay1 := float64(nums[l/2])
+	midWay2 := float64(nums[(l/2)-1])
+	return (midWay1 + midWay2) / 2
+}
+
+// FindExtremeties returns the max and min value from a slice of ints
+func FindExtremities(nums []int) (int, int) {
+	min := Infinty
+	max := 0
+	for _, n := range nums {
+		if n > max {
+			max = n
+		}
+		if n < min {
+			min = n
+		}
+	}
+	return min, max
 }

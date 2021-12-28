@@ -7,46 +7,19 @@ import (
 
 func Test_createLanternfish(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    Lanternfish
-		wantErr bool
+		name  string
+		input []int
+		want  Lanternfish
 	}{
 		{
-			name:    "returns an error if input is less than 1 line",
-			input:   []string{},
-			want:    nil,
-			wantErr: true,
-		},
-		{
-			name: "returns an error if input is greater than 1 line",
-			input: []string{
-				"1,2",
-				"3,4",
-			},
-			want:    nil,
-			wantErr: true,
-		},
-		{
-			name:    "returns an error if input has a non convertible string-to-int in it",
-			input:   []string{"1,2,3,a,3,4"},
-			want:    nil,
-			wantErr: true,
-		},
-		{
-			name:    "returns a parsed Lanternfish srray from input, advent of code example",
-			input:   []string{"3,4,3,1,2"},
-			want:    Lanternfish{0, 1, 1, 2, 1, 0, 0, 0, 0},
-			wantErr: false,
+			name:  "returns a parsed Lanternfish srray from input, advent of code example",
+			input: []int{3, 4, 3, 1, 2},
+			want:  Lanternfish{0, 1, 1, 2, 1, 0, 0, 0, 0},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := createLanternfish(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("createLanternfish() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			got := createLanternfish(tt.input)
 			if !reflect.DeepEqual(got, tt.want) {
 				t.Errorf("createLanternfish() = %v, want %v", got, tt.want)
 			}
