@@ -7,3 +7,4 @@
 - [x] Day 5 - Hydrothermal Venture :sweat_drops: :world_map:
 - [x] Day 6 - Lanternfish :lantern: :tropical_fish:
 - [x] Day 7 - The Treachery of Whales :smiling_imp: :whale:
+- [x] Day 8 - Seven Segment Search :seven: :mag_right:
