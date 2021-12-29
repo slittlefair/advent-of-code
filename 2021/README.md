@@ -9,3 +9,4 @@
 - [x] Day 7 - The Treachery of Whales :smiling_imp: :whale:
 - [x] Day 8 - Seven Segment Search :seven: :mag_right:
 - [x] Day 9 - Smoke Basin :volcano: :bath:
+- [x] Day 10 - Syntax Scoring :symbols: :musical_score:
