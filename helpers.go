@@ -251,3 +251,16 @@ func FindExtremities(nums []int) (int, int) {
 	}
 	return min, max
 }
+
+func AdjacentCos(co Co) []Co {
+	return []Co{
+		{X: co.X - 1, Y: co.Y - 1},
+		{X: co.X, Y: co.Y - 1},
+		{X: co.X + 1, Y: co.Y - 1},
+		{X: co.X - 1, Y: co.Y},
+		{X: co.X + 1, Y: co.Y},
+		{X: co.X - 1, Y: co.Y + 1},
+		{X: co.X, Y: co.Y + 1},
+		{X: co.X + 1, Y: co.Y + 1},
+	}
+}
