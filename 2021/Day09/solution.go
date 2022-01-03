@@ -26,19 +26,13 @@ func parseInput(input []string) HeightMap {
 func (hm HeightMap) findLowPoints() LowPoints {
 	lowPoints := LowPoints{}
 	for co, v := range hm {
-		if val, ok := hm[helpers.Co{X: co.X - 1, Y: co.Y}]; ok && val <= v {
-			continue
-		}
-		if val, ok := hm[helpers.Co{X: co.X + 1, Y: co.Y}]; ok && val <= v {
-			continue
-		}
-		if val, ok := hm[helpers.Co{X: co.X, Y: co.Y - 1}]; ok && val <= v {
-			continue
-		}
-		if val, ok := hm[helpers.Co{X: co.X, Y: co.Y + 1}]; ok && val <= v {
-			continue
+		for _, adjCo := range helpers.AdjacentCos(co, false) {
+			if val, ok := hm[adjCo]; ok && val <= v {
+				goto out
+			}
 		}
 		lowPoints[co] = v
+	out:
 	}
 	return lowPoints
 }
@@ -67,21 +61,10 @@ func (hm HeightMap) calculateBasin(co helpers.Co) int {
 	for {
 		newCos := []helpers.Co{}
 		for co := range b {
-			newCo := helpers.Co{X: co.X - 1, Y: co.Y}
-			if hm.coIsPartOfBasin(b, newCo) {
-				newCos = append(newCos, newCo)
-			}
-			newCo = helpers.Co{X: co.X + 1, Y: co.Y}
-			if hm.coIsPartOfBasin(b, newCo) {
-				newCos = append(newCos, newCo)
-			}
-			newCo = helpers.Co{X: co.X, Y: co.Y - 1}
-			if hm.coIsPartOfBasin(b, newCo) {
-				newCos = append(newCos, newCo)
-			}
-			newCo = helpers.Co{X: co.X, Y: co.Y + 1}
-			if hm.coIsPartOfBasin(b, newCo) {
-				newCos = append(newCos, newCo)
+			for _, newCo := range helpers.AdjacentCos(co, false) {
+				if hm.coIsPartOfBasin(b, newCo) {
+					newCos = append(newCos, newCo)
+				}
 			}
 		}
 		if len(newCos) == 0 {

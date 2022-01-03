@@ -47,7 +47,7 @@ func (g Grid) followStep() int {
 			break
 		}
 		for _, co := range bursts {
-			adjCos := helpers.AdjacentCos(co)
+			adjCos := helpers.AdjacentCos(co, true)
 			for _, aCo := range adjCos {
 				if _, ok := g[aCo]; ok {
 					g[aCo]++

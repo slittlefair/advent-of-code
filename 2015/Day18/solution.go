@@ -40,18 +40,8 @@ func parseInput(input []string) Grid {
 
 func (g *Grid) LightStaysOn(co helpers.Co) bool {
 	count := 0
-	neighbours := []helpers.Co{
-		{X: -1, Y: -1},
-		{X: -1, Y: 0},
-		{X: -1, Y: 1},
-		{X: 0, Y: -1},
-		{X: 0, Y: 1},
-		{X: 1, Y: -1},
-		{X: 1, Y: 0},
-		{X: 1, Y: 1},
-	}
-	for _, nCo := range neighbours {
-		if g.Lights[helpers.Co{X: co.X + nCo.X, Y: co.Y + nCo.Y}] == "#" {
+	for _, adjCo := range helpers.AdjacentCos(co, true) {
+		if g.Lights[adjCo] == "#" {
 			count++
 		}
 	}

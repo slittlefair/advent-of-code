@@ -369,3 +369,131 @@ func TestFindExtremities(t *testing.T) {
 		})
 	}
 }
+
+func TestAdjacentCos(t *testing.T) {
+	type args struct {
+		co               Co
+		includeDiagonals bool
+	}
+	tests := []struct {
+		name string
+		args args
+		want map[Co]struct{}
+	}{
+		{
+			name: "returns adjacent coordinates, including diagonals, of a given coordinate",
+			args: args{
+				co:               Co{X: 4, Y: 7},
+				includeDiagonals: true,
+			},
+			want: map[Co]struct{}{
+				{X: 3, Y: 6}: {},
+				{X: 4, Y: 6}: {},
+				{X: 5, Y: 6}: {},
+				{X: 3, Y: 7}: {},
+				{X: 5, Y: 7}: {},
+				{X: 3, Y: 8}: {},
+				{X: 4, Y: 8}: {},
+				{X: 5, Y: 8}: {},
+			},
+		},
+		{
+			name: "returns adjacent coordinates, including diagonals, of the origin",
+			args: args{
+				co:               Co{X: 0, Y: 0},
+				includeDiagonals: true,
+			},
+			want: map[Co]struct{}{
+				{X: -1, Y: -1}: {},
+				{X: 0, Y: -1}:  {},
+				{X: 1, Y: -1}:  {},
+				{X: -1, Y: 0}:  {},
+				{X: 1, Y: 0}:   {},
+				{X: -1, Y: 1}:  {},
+				{X: 0, Y: 1}:   {},
+				{X: 1, Y: 1}:   {},
+			},
+		},
+		{
+			name: "returns adjacent coordinates, excluding diagonals, of a given coordinate",
+			args: args{
+				co:               Co{X: 4, Y: 7},
+				includeDiagonals: false,
+			},
+			want: map[Co]struct{}{
+				{X: 4, Y: 6}: {},
+				{X: 3, Y: 7}: {},
+				{X: 5, Y: 7}: {},
+				{X: 4, Y: 8}: {},
+			},
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got := map[Co]struct{}{}
+			for _, co := range AdjacentCos(tt.args.co, tt.args.includeDiagonals) {
+				got[co] = struct{}{}
+			}
+			if len(got) != len(tt.want) {
+				t.Errorf("AdjacentCos() got = %v, want %v", got, tt.want)
+			}
+			for co := range got {
+				if _, ok := tt.want[co]; !ok {
+					t.Errorf("AdjacentCos() got = %v, want %v", got, tt.want)
+				}
+			}
+		})
+	}
+}
+
+func TestIsUpper(t *testing.T) {
+	tests := []struct {
+		name string
+		s    string
+		want bool
+	}{
+		{
+			name: "returns false if the string is not all in upper case",
+			s:    "HELLO WOrLD",
+			want: false,
+		},
+		{
+			name: "returns true if the string is all in upper case",
+			s:    "HELLO WORLD",
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsUpper(tt.s); got != tt.want {
+				t.Errorf("IsUpper() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}
+
+func TestIsLower(t *testing.T) {
+	tests := []struct {
+		name string
+		s    string
+		want bool
+	}{
+		{
+			name: "returns false if the string is not all in lower case",
+			s:    "hellO world",
+			want: false,
+		},
+		{
+			name: "returns true if the string is all in lower case",
+			s:    "hello world",
+			want: true,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			if got := IsLower(tt.s); got != tt.want {
+				t.Errorf("IsLower() = %v, want %v", got, tt.want)
+			}
+		})
+	}
+}

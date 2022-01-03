@@ -17,9 +17,9 @@ type Graph map[string]map[string]int
 
 // TypeToEquipment maps a region type to the equipment that can be used in that region
 var TypeToEquipment = map[int][]string{
-	0: []string{"torch", "climbing"},
-	1: []string{"climbing", "no gear"},
-	2: []string{"torch", "no gear"},
+	0: {"torch", "climbing"},
+	1: {"climbing", "no gear"},
+	2: {"torch", "no gear"},
 }
 
 // CalculateTimes calculate the time it takes to travel to a region from an adjacent region
