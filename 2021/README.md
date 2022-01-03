@@ -11,3 +11,4 @@
 - [x] Day 9 - Smoke Basin :volcano: :bath:
 - [x] Day 10 - Syntax Scoring :symbols: :musical_score:
 - [x] Day 11 - Dumbo Octopus :elephant: :octopus:
+- [x] Day 12 - Passage Pathing :motorway: :railway_track:

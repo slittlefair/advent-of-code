@@ -8,6 +8,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unicode"
 )
 
 // Co is a simple struct for a graph coordinate with points x, y
@@ -252,15 +253,41 @@ func FindExtremities(nums []int) (int, int) {
 	return min, max
 }
 
-func AdjacentCos(co Co) []Co {
-	return []Co{
-		{X: co.X - 1, Y: co.Y - 1},
+// AdjactedCos returns all adjacent coordinates for the given coordinate, including diagonals
+func AdjacentCos(co Co, includeDiagonals bool) []Co {
+	cos := []Co{
 		{X: co.X, Y: co.Y - 1},
-		{X: co.X + 1, Y: co.Y - 1},
 		{X: co.X - 1, Y: co.Y},
 		{X: co.X + 1, Y: co.Y},
-		{X: co.X - 1, Y: co.Y + 1},
 		{X: co.X, Y: co.Y + 1},
-		{X: co.X + 1, Y: co.Y + 1},
 	}
+	if !includeDiagonals {
+		return cos
+	}
+	return append(cos,
+		Co{X: co.X - 1, Y: co.Y - 1},
+		Co{X: co.X + 1, Y: co.Y - 1},
+		Co{X: co.X - 1, Y: co.Y + 1},
+		Co{X: co.X + 1, Y: co.Y + 1},
+	)
+}
+
+// IsUpper returns true if all characters in a string are upper case, false otherwise
+func IsUpper(s string) bool {
+	for _, r := range s {
+		if unicode.IsLower(r) {
+			return false
+		}
+	}
+	return true
+}
+
+// IsLower returns true if all characters in a string are lower case, false otherwise
+func IsLower(s string) bool {
+	for _, r := range s {
+		if unicode.IsUpper(r) {
+			return false
+		}
+	}
+	return true
 }
