@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 )
@@ -52,11 +52,11 @@ func (pe *PolymerizationEquipment) followInstructions() {
 }
 
 func (pe PolymerizationEquipment) getVal() int {
-	minVal := helpers.Infinty
+	minVal := utils.Infinty
 	maxVal := 0
 	for _, v := range pe.lf {
-		minVal = helpers.Min(minVal, v)
-		maxVal = helpers.Max(maxVal, v)
+		minVal = utils.Min(minVal, v)
+		maxVal = utils.Max(maxVal, v)
 	}
 	return maxVal - minVal
 }
@@ -77,7 +77,7 @@ func findSolutions(input []string) (int, int, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	part1, part2, err := findSolutions(input)
 	if err != nil {
 		fmt.Println(err)
