@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strings"
 )
@@ -105,7 +105,7 @@ func (i Input) evaluateMessages() int {
 }
 
 func main() {
-	rawInput := helpers.ReadFile()
+	rawInput := utils.ReadFile()
 	i := &Input{
 		Rules: map[string]Rule{},
 	}

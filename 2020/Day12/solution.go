@@ -1,9 +1,9 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
 	ship "Advent-of-Code/2020/Day12/ship"
 	waypoint "Advent-of-Code/2020/Day12/waypoint"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strconv"
 )
@@ -47,7 +47,7 @@ func part2(entries []string) (int, error) {
 }
 
 func main() {
-	entries := helpers.ReadFile()
+	entries := utils.ReadFile()
 	part1Sol, err := part1(entries)
 	if err != nil {
 		fmt.Println(err)

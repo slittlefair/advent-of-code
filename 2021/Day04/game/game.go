@@ -1,8 +1,8 @@
 package game
 
 import (
-	helpers "Advent-of-Code"
 	"Advent-of-Code/2021/Day04/card"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -37,7 +37,7 @@ func ParseInput(input []string) (*Game, error) {
 	g.Nums = nums
 	reNum := regexp.MustCompile(`\d+`)
 	for i := 1; i < len(input); i += 6 {
-		card := &card.Card{Numbers: make(map[helpers.Co]*card.Number)}
+		card := &card.Card{Numbers: make(map[utils.Co]*card.Number)}
 		card.ParseCard(input[i:i+6], reNum)
 		g.Cards = append(g.Cards, card)
 	}

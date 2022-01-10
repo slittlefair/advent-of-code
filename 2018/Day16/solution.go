@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 )
@@ -22,12 +22,12 @@ type sample struct {
 
 func populateSamplesPart1(lines []string) (samples []sample) {
 	for i := 0; i < len(lines); {
-		o := helpers.StringSliceToIntSlice(re.FindAllString(lines[i+2], -1))
+		o := utils.StringSliceToIntSlice(re.FindAllString(lines[i+2], -1))
 		var output [4]int
 		copy(output[:], o)
 		s := sample{
-			input:        helpers.StringSliceToIntSlice(re.FindAllString(lines[i], -1)),
-			instructions: helpers.StringSliceToIntSlice(re.FindAllString(lines[i+1], -1)),
+			input:        utils.StringSliceToIntSlice(re.FindAllString(lines[i], -1)),
+			instructions: utils.StringSliceToIntSlice(re.FindAllString(lines[i+1], -1)),
 			output:       output,
 		}
 		samples = append(samples, s)
@@ -212,7 +212,7 @@ func assignOpcodeNumbers(samples []sample) (numbersToOpcodes [16]func([]int, []i
 
 func populatePrograms(lines []string) (programs [][]int) {
 	for _, line := range lines {
-		o := helpers.StringSliceToIntSlice(re.FindAllString(line, -1))
+		o := utils.StringSliceToIntSlice(re.FindAllString(line, -1))
 		output := make([]int, 4)
 		copy(output[:], o)
 		programs = append(programs, output)
@@ -221,7 +221,7 @@ func populatePrograms(lines []string) (programs [][]int) {
 }
 
 func main() {
-	lines := helpers.ReadFile()
+	lines := utils.ReadFile()
 	samples := populateSamplesPart1(lines[:3352])
 	var total int
 	for _, s := range samples {

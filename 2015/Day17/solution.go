@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"sort"
 	"strconv"
@@ -47,7 +47,7 @@ func (ec EggnogContainers) CountPermutations() int {
 }
 
 func (ec EggnogContainers) CountSmallestContainersPermutations() int {
-	smallestPermutations := helpers.Infinty
+	smallestPermutations := utils.Infinty
 	count := 0
 	for numContainers, freq := range ec.Ways {
 		if numContainers < smallestPermutations {
@@ -59,7 +59,7 @@ func (ec EggnogContainers) CountSmallestContainersPermutations() int {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	containers, err := parseInput(input)
 	if err != nil {
 		fmt.Println(err)

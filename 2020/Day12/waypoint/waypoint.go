@@ -1,16 +1,16 @@
 package waypoint
 
 import (
-	helpers "Advent-of-Code"
 	"Advent-of-Code/2020/Day12/ship"
+	utils "Advent-of-Code/utils"
 )
 
-type Waypoint helpers.Co
+type Waypoint utils.Co
 
 func (w *Waypoint) turnWaypointLeft(val int) {
 	// Rotated around the origin 90 degrees anticlockwise point M (h, k) takes the image M' (-k, h)
 	for i := 0; i < val; i += 90 {
-		newWaypoint := helpers.Co{
+		newWaypoint := utils.Co{
 			X: -w.Y,
 			Y: w.X,
 		}
@@ -22,7 +22,7 @@ func (w *Waypoint) turnWaypointLeft(val int) {
 func (w *Waypoint) turnWaypointRight(val int) {
 	// Rotated around the origin 90 degrees clockwise point M (h, k) takes the image M' (k, -h)
 	for i := 0; i < val; i += 90 {
-		newWaypoint := helpers.Co{
+		newWaypoint := utils.Co{
 			X: w.Y,
 			Y: -w.X,
 		}

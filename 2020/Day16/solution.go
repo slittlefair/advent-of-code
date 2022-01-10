@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"errors"
 	"fmt"
 	"regexp"
@@ -28,7 +28,7 @@ var re = regexp.MustCompile(`\d+`)
 // is valid for a field
 func (tf TicketFields) populateField(field []string) error {
 	rangeLimits := re.FindAllString(field[1], -1)
-	rangeLimitsNums := helpers.StringSliceToIntSlice(rangeLimits)
+	rangeLimitsNums := utils.StringSliceToIntSlice(rangeLimits)
 	if len(rangeLimitsNums) != 4 {
 		return errors.New("range limits not as expected")
 	}
@@ -146,7 +146,7 @@ func (tf TicketFields) runSolution(entries []string) ([]int, int, TicketCollecti
 				return nil, 0, nil, err
 			}
 		} else {
-			nums := helpers.StringSliceToIntSlice(re.FindAllString(entry, -1))
+			nums := utils.StringSliceToIntSlice(re.FindAllString(entry, -1))
 			if len(myTicket) == 0 {
 				myTicket = nums
 				tf.populatePossibleValueIndices(len(myTicket))
@@ -160,7 +160,7 @@ func (tf TicketFields) runSolution(entries []string) ([]int, int, TicketCollecti
 }
 
 func main() {
-	entries := helpers.ReadFile()
+	entries := utils.ReadFile()
 	tFields := TicketFields{}
 	myTicket, errorRate, allValidTickets, err := tFields.runSolution(entries)
 	if err != nil {

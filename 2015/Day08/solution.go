@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 )
 
@@ -67,7 +67,7 @@ func readInputForPart2(input []string) int {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	fmt.Println("Part 1:", readInputForPart1(input))
 	fmt.Println("Part 2:", readInputForPart2(input))
 }

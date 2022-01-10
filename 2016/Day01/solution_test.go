@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"reflect"
 	"testing"
 )
@@ -9,7 +9,7 @@ import (
 func TestPosition_turnLeft(t *testing.T) {
 	type fields struct {
 		direction int
-		location  helpers.Co
+		location  utils.Co
 	}
 	tests := []struct {
 		name   string
@@ -36,7 +36,7 @@ func TestPosition_turnLeft(t *testing.T) {
 			p := &Position{
 				direction: tt.fields.direction,
 				location:  tt.fields.location,
-				seen:      map[helpers.Co]bool{{X: 0, Y: 0}: true},
+				seen:      map[utils.Co]bool{{X: 0, Y: 0}: true},
 			}
 			p.turnLeft()
 			if p.direction != tt.want {
@@ -49,7 +49,7 @@ func TestPosition_turnLeft(t *testing.T) {
 func TestPosition_turnRight(t *testing.T) {
 	type fields struct {
 		direction int
-		location  helpers.Co
+		location  utils.Co
 	}
 	tests := []struct {
 		name   string
@@ -76,7 +76,7 @@ func TestPosition_turnRight(t *testing.T) {
 			p := &Position{
 				direction: tt.fields.direction,
 				location:  tt.fields.location,
-				seen:      map[helpers.Co]bool{{X: 0, Y: 0}: true},
+				seen:      map[utils.Co]bool{{X: 0, Y: 0}: true},
 			}
 			p.turnRight()
 			if p.direction != tt.want {
@@ -89,58 +89,58 @@ func TestPosition_turnRight(t *testing.T) {
 func TestPosition_move(t *testing.T) {
 	type fields struct {
 		direction int
-		location  helpers.Co
-		seen      map[helpers.Co]bool
-		hq        helpers.Co
+		location  utils.Co
+		seen      map[utils.Co]bool
+		hq        utils.Co
 	}
 	tests := []struct {
 		name   string
 		fields fields
-		want   helpers.Co
-		want1  helpers.Co
+		want   utils.Co
+		want1  utils.Co
 	}{
 		{
 			name: "moves north",
 			fields: fields{
 				direction: 0,
-				location:  helpers.Co{X: 6, Y: 9},
-				seen:      make(map[helpers.Co]bool),
+				location:  utils.Co{X: 6, Y: 9},
+				seen:      make(map[utils.Co]bool),
 			},
-			want: helpers.Co{X: 6, Y: 10},
+			want: utils.Co{X: 6, Y: 10},
 		},
 		{
 			name: "moves east",
 			fields: fields{
 				direction: 1,
-				location:  helpers.Co{X: -6, Y: 9},
-				seen:      make(map[helpers.Co]bool),
+				location:  utils.Co{X: -6, Y: 9},
+				seen:      make(map[utils.Co]bool),
 			},
-			want: helpers.Co{X: -5, Y: 9},
+			want: utils.Co{X: -5, Y: 9},
 		},
 		{
 			name: "moves south",
 			fields: fields{
 				direction: 2,
-				location:  helpers.Co{X: 6, Y: 9},
-				seen:      make(map[helpers.Co]bool),
+				location:  utils.Co{X: 6, Y: 9},
+				seen:      make(map[utils.Co]bool),
 			},
-			want: helpers.Co{X: 6, Y: 8},
+			want: utils.Co{X: 6, Y: 8},
 		},
 		{
 			name: "moves west",
 			fields: fields{
 				direction: 3,
-				location:  helpers.Co{X: 2, Y: 9},
-				seen:      make(map[helpers.Co]bool),
+				location:  utils.Co{X: 2, Y: 9},
+				seen:      make(map[utils.Co]bool),
 			},
-			want: helpers.Co{X: 1, Y: 9},
+			want: utils.Co{X: 1, Y: 9},
 		},
 		{
 			name: "sets the hq to the location if it has been seen before",
 			fields: fields{
 				direction: 0,
-				location:  helpers.Co{X: 0, Y: 0},
-				seen: map[helpers.Co]bool{
+				location:  utils.Co{X: 0, Y: 0},
+				seen: map[utils.Co]bool{
 					{X: 0, Y: 0}:    true,
 					{X: 9, Y: 3}:    true,
 					{X: -8, Y: -15}: true,
@@ -148,25 +148,25 @@ func TestPosition_move(t *testing.T) {
 					{X: 0, Y: 2}:    true,
 				},
 			},
-			want:  helpers.Co{X: 0, Y: 1},
-			want1: helpers.Co{X: 0, Y: 1},
+			want:  utils.Co{X: 0, Y: 1},
+			want1: utils.Co{X: 0, Y: 1},
 		},
 		{
 			name: "doesn't set the hq to the location if it has been set before",
 			fields: fields{
 				direction: 0,
-				location:  helpers.Co{X: 0, Y: 0},
-				seen: map[helpers.Co]bool{
+				location:  utils.Co{X: 0, Y: 0},
+				seen: map[utils.Co]bool{
 					{X: 0, Y: 0}:    true,
 					{X: 9, Y: 3}:    true,
 					{X: -8, Y: -15}: true,
 					{X: 0, Y: 1}:    true,
 					{X: 0, Y: 3}:    true,
 				},
-				hq: helpers.Co{X: 4, Y: 5},
+				hq: utils.Co{X: 4, Y: 5},
 			},
-			want:  helpers.Co{X: 0, Y: 1},
-			want1: helpers.Co{X: 4, Y: 5},
+			want:  utils.Co{X: 0, Y: 1},
+			want1: utils.Co{X: 4, Y: 5},
 		},
 	}
 	for _, tt := range tests {
@@ -191,8 +191,8 @@ func TestPosition_move(t *testing.T) {
 func TestPosition_followInstruction(t *testing.T) {
 	type fields struct {
 		direction int
-		location  helpers.Co
-		seen      map[helpers.Co]bool
+		location  utils.Co
+		seen      map[utils.Co]bool
 	}
 	tests := []struct {
 		name    string
@@ -233,14 +233,14 @@ func TestPosition_followInstruction(t *testing.T) {
 			name: "follows an instruction turning left",
 			fields: fields{
 				direction: 2,
-				location:  helpers.Co{X: 8, Y: 10},
-				seen:      map[helpers.Co]bool{{X: 0, Y: 0}: true},
+				location:  utils.Co{X: 8, Y: 10},
+				seen:      map[utils.Co]bool{{X: 0, Y: 0}: true},
 			},
 			inst: "L2",
 			want: &Position{
 				direction: 1,
-				location:  helpers.Co{X: 10, Y: 10},
-				seen: map[helpers.Co]bool{
+				location:  utils.Co{X: 10, Y: 10},
+				seen: map[utils.Co]bool{
 					{X: 0, Y: 0}:   true,
 					{X: 9, Y: 10}:  true,
 					{X: 10, Y: 10}: true,
@@ -252,14 +252,14 @@ func TestPosition_followInstruction(t *testing.T) {
 			name: "follows an instruction turning right",
 			fields: fields{
 				direction: 3,
-				location:  helpers.Co{X: 0, Y: 0},
-				seen:      map[helpers.Co]bool{{X: 0, Y: 0}: true},
+				location:  utils.Co{X: 0, Y: 0},
+				seen:      map[utils.Co]bool{{X: 0, Y: 0}: true},
 			},
 			inst: "R3",
 			want: &Position{
 				direction: 0,
-				location:  helpers.Co{X: 0, Y: 3},
-				seen: map[helpers.Co]bool{
+				location:  utils.Co{X: 0, Y: 3},
+				seen: map[utils.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 0, Y: 1}: true,
 					{X: 0, Y: 2}: true,
@@ -321,7 +321,7 @@ func Test_followSteps(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := Position{
-				seen: map[helpers.Co]bool{{X: 0, Y: 0}: true},
+				seen: map[utils.Co]bool{{X: 0, Y: 0}: true},
 			}
 			got, err := p.followSteps(tt.input)
 			if (err != nil) != tt.wantErr {

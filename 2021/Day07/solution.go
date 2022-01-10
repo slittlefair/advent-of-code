@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 )
 
@@ -14,14 +14,14 @@ func calculateFuelSpend(x int) int {
 }
 
 func findMinFuelSpend(input []int, min, max int, part2 bool) int {
-	minDist := helpers.Infinty
+	minDist := utils.Infinty
 	for x := min; x <= max; x++ {
 		dist := 0
 		for _, i := range input {
 			if part2 {
-				dist += calculateFuelSpend(helpers.Abs(i - x))
+				dist += calculateFuelSpend(utils.Abs(i - x))
 			} else {
-				dist += helpers.Abs(i - x)
+				dist += utils.Abs(i - x)
 			}
 
 		}
@@ -33,12 +33,12 @@ func findMinFuelSpend(input []int, min, max int, part2 bool) int {
 }
 
 func main() {
-	input, err := helpers.ReadFileSingleLineAsInts()
+	input, err := utils.ReadFileSingleLineAsInts()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	min, max := helpers.FindExtremities(input)
+	min, max := utils.FindExtremities(input)
 	fmt.Println("Part 1:", findMinFuelSpend(input, min, max, false))
 	fmt.Println("Part 2:", findMinFuelSpend(input, min, max, true))
 }

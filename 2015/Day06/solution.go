@@ -1,25 +1,25 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 )
 
 type Lights struct {
-	Analogue map[helpers.Co]bool
-	Digital  map[helpers.Co]int
+	Analogue map[utils.Co]bool
+	Digital  map[utils.Co]int
 }
 
 func populateLights() *Lights {
 	lights := Lights{
-		Analogue: make(map[helpers.Co]bool),
-		Digital:  make(map[helpers.Co]int),
+		Analogue: make(map[utils.Co]bool),
+		Digital:  make(map[utils.Co]int),
 	}
 	for x := 0; x < 1000; x++ {
 		for y := 0; y < 1000; y++ {
-			lights.Analogue[helpers.Co{X: x, Y: y}] = false
-			lights.Digital[helpers.Co{X: x, Y: y}] = 0
+			lights.Analogue[utils.Co{X: x, Y: y}] = false
+			lights.Digital[utils.Co{X: x, Y: y}] = 0
 		}
 	}
 	return &lights
@@ -28,7 +28,7 @@ func populateLights() *Lights {
 func (l Lights) turnLightsOn(nums []int) {
 	for x := nums[0]; x <= nums[2]; x++ {
 		for y := nums[1]; y <= nums[3]; y++ {
-			co := helpers.Co{X: x, Y: y}
+			co := utils.Co{X: x, Y: y}
 			l.Analogue[co] = true
 			l.Digital[co]++
 		}
@@ -38,7 +38,7 @@ func (l Lights) turnLightsOn(nums []int) {
 func (l Lights) turnLightsOff(nums []int) {
 	for x := nums[0]; x <= nums[2]; x++ {
 		for y := nums[1]; y <= nums[3]; y++ {
-			co := helpers.Co{X: x, Y: y}
+			co := utils.Co{X: x, Y: y}
 			l.Analogue[co] = false
 			if l.Digital[co] > 0 {
 				l.Digital[co]--
@@ -50,7 +50,7 @@ func (l Lights) turnLightsOff(nums []int) {
 func (l Lights) toggleLights(nums []int) {
 	for x := nums[0]; x <= nums[2]; x++ {
 		for y := nums[1]; y <= nums[3]; y++ {
-			co := helpers.Co{X: x, Y: y}
+			co := utils.Co{X: x, Y: y}
 			l.Analogue[co] = !l.Analogue[co]
 			l.Digital[co] += 2
 		}
@@ -67,7 +67,7 @@ func (l *Lights) followInstructions(input []string) error {
 		if len(nums) != 4 {
 			return fmt.Errorf("something went wrong, got nums %v", nums)
 		}
-		intNums := helpers.StringSliceToIntSlice(nums)
+		intNums := utils.StringSliceToIntSlice(nums)
 		if reOn.MatchString(inst) {
 			l.turnLightsOn(intNums)
 			continue
@@ -104,7 +104,7 @@ func (l *Lights) countDigitalBrightness() int {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	lights := populateLights()
 	lights.followInstructions(input)
 	fmt.Println("Part 1:", lights.countAnalogueBrightness())

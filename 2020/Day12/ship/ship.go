@@ -1,11 +1,11 @@
 package ship
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 )
 
 type Ship struct {
-	Co        helpers.Co
+	Co        utils.Co
 	FacingDir string
 }
 
@@ -46,5 +46,5 @@ func (s *Ship) MoveShip(d string, val int) {
 }
 
 func (s *Ship) CalculateDistance() int {
-	return helpers.Abs(s.Co.X) + helpers.Abs(s.Co.Y)
+	return utils.Abs(s.Co.X) + utils.Abs(s.Co.Y)
 }

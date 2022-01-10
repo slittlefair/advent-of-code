@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -130,7 +130,7 @@ func solution(entries []string) (int, int, error) {
 }
 
 func main() {
-	entries := helpers.ReadFile()
+	entries := utils.ReadFile()
 	validPassportsPart1, validPassportsPart2, err := solution(entries)
 	if err != nil {
 		fmt.Println(err)

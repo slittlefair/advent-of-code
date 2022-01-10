@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strconv"
 	"strings"
@@ -52,7 +52,7 @@ func (g *Graph) AddMe() {
 	}
 	nodes := make([]string, len(g.Nodes))
 	copy(nodes, g.Nodes)
-	g.Paths = helpers.Permutations(nodes)
+	g.Paths = utils.Permutations(nodes)
 }
 
 func (g *Graph) ParseInput(input []string) error {
@@ -72,7 +72,7 @@ func (g *Graph) ParseInput(input []string) error {
 	}
 	nodes := make([]string, len(g.Nodes))
 	copy(nodes, g.Nodes)
-	g.Paths = helpers.Permutations(nodes)
+	g.Paths = utils.Permutations(nodes)
 	return nil
 }
 
@@ -103,7 +103,7 @@ func (g Graph) FindGreatestHappiness() int {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	graph := Graph{}
 	graph.ParseInput(input)
 	fmt.Println("Part 1:", graph.FindGreatestHappiness())

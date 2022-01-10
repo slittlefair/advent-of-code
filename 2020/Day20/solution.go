@@ -1,13 +1,13 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
 	"Advent-of-Code/2020/Day20/picture"
 	"Advent-of-Code/2020/Day20/tile"
+	utils "Advent-of-Code/utils"
 	"fmt"
 )
 
-var seaMonster = []helpers.Co{
+var seaMonster = []utils.Co{
 	{X: 0, Y: 1},
 	{X: 1, Y: 2},
 	{X: 4, Y: 2},
@@ -26,10 +26,10 @@ var seaMonster = []helpers.Co{
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	picture := &picture.Picture{
-		Pixels:  make(map[helpers.Co]string),
-		TileMap: make(map[helpers.Co]tile.Tile),
+		Pixels:  make(map[utils.Co]string),
+		TileMap: make(map[utils.Co]tile.Tile),
 	}
 	picture.PopulateTiles(input)
 	for i, tile := range picture.Tiles {

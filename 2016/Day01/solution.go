@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -10,9 +10,9 @@ import (
 
 type Position struct {
 	direction int
-	location  helpers.Co
-	seen      map[helpers.Co]bool
-	hq        helpers.Co
+	location  utils.Co
+	seen      map[utils.Co]bool
+	hq        utils.Co
 }
 
 func (p *Position) turnLeft() {
@@ -83,13 +83,13 @@ func (p *Position) followSteps(input []string) (int, error) {
 			return -1, err
 		}
 	}
-	return helpers.CalculateManhattanDistance(p.location, helpers.Co{}), nil
+	return utils.CalculateManhattanDistance(p.location, utils.Co{}), nil
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	p := &Position{
-		seen: map[helpers.Co]bool{
+		seen: map[utils.Co]bool{
 			{X: 0, Y: 0}: true,
 		},
 	}
@@ -99,5 +99,5 @@ func main() {
 		return
 	}
 	fmt.Println("Part 1:", part1)
-	fmt.Println("Part 2:", helpers.CalculateManhattanDistance(p.hq, helpers.Co{}))
+	fmt.Println("Part 2:", utils.CalculateManhattanDistance(p.hq, utils.Co{}))
 }

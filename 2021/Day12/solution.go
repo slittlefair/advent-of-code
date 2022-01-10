@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strings"
 )
@@ -25,7 +25,7 @@ func makeCave(id string) *Cave {
 	return &Cave{
 		id:         id,
 		neighbours: map[string]*Cave{},
-		small:      helpers.IsLower(id),
+		small:      utils.IsLower(id),
 	}
 }
 
@@ -135,7 +135,7 @@ func findSolutions(input []string) (int, int, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	part1, part2, err := findSolutions(input)
 	if err != nil {
 		fmt.Println(err)

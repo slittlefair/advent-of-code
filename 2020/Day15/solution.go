@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 )
@@ -52,9 +52,9 @@ func (wns WhenNumsSaid) playGame(startingIndex int) (int, int) {
 }
 
 func main() {
-	numList := helpers.ReadFile()[0]
+	numList := utils.ReadFile()[0]
 	re := regexp.MustCompile(`\d+`)
-	numStrings := helpers.StringSliceToIntSlice(re.FindAllString(numList, -1))
+	numStrings := utils.StringSliceToIntSlice(re.FindAllString(numList, -1))
 	whenNumsSaid := WhenNumsSaid{}
 	lastNumSaid = whenNumsSaid.parseInput(numStrings)
 	part1Sol, part2Sol := whenNumsSaid.playGame(len(numStrings) + 1)

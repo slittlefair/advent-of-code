@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strconv"
 	"strings"
@@ -68,7 +68,7 @@ func (p *Programme) runProgramme(tweakAtIndex int) int {
 }
 
 func main() {
-	entries := helpers.ReadFile()
+	entries := utils.ReadFile()
 	prog, err := parseProgramme(entries)
 	if err != nil {
 		fmt.Println(err)

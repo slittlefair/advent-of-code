@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 )
@@ -73,7 +73,7 @@ func countValidIPs(input []string) (int, int) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	tlsValid, sslValid := countValidIPs(input)
 	fmt.Println("Part 1:", tlsValid)
 	fmt.Println("Part 2:", sslValid)

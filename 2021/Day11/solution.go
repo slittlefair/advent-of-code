@@ -1,17 +1,17 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 )
 
-type Grid map[helpers.Co]int
+type Grid map[utils.Co]int
 
 func parseInput(input []string) Grid {
 	g := Grid{}
 	for y := 0; y < len(input); y++ {
 		for x := 0; x < len(input[0]); x++ {
-			g[helpers.Co{X: x, Y: y}] = int(input[y][x] - '0')
+			g[utils.Co{X: x, Y: y}] = int(input[y][x] - '0')
 		}
 	}
 	return g
@@ -22,7 +22,7 @@ func parseInput(input []string) Grid {
 // 	fmt.Println("step:", step)
 // 	for y := 0; y < 10; y++ {
 // 		for x := 0; x < 10; x++ {
-// 			fmt.Print(g[helpers.Co{X: x, Y: y}])
+// 			fmt.Print(g[utils.Co{X: x, Y: y}])
 // 		}
 // 		fmt.Println()
 // 	}
@@ -33,10 +33,10 @@ func (g Grid) followStep() int {
 	for co, v := range g {
 		g[co] = v + 1
 	}
-	flashTally := map[helpers.Co]struct{}{}
+	flashTally := map[utils.Co]struct{}{}
 	flashes := 0
 	for {
-		bursts := []helpers.Co{}
+		bursts := []utils.Co{}
 		for co, v := range g {
 			if _, ok := flashTally[co]; !ok && v > 9 {
 				flashTally[co] = struct{}{}
@@ -47,7 +47,7 @@ func (g Grid) followStep() int {
 			break
 		}
 		for _, co := range bursts {
-			adjCos := helpers.AdjacentCos(co, true)
+			adjCos := utils.AdjacentCos(co, true)
 			for _, aCo := range adjCos {
 				if _, ok := g[aCo]; ok {
 					g[aCo]++
@@ -93,7 +93,7 @@ func findSolution(input []string) (int, int) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	part1, part2 := findSolution(input)
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)

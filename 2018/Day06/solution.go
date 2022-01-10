@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"math"
 	"regexp"
@@ -26,13 +26,13 @@ var safeRegions int
 var maxSafe = float64(10000)
 
 func main() {
-	coordinates := helpers.ReadFile()
+	coordinates := utils.ReadFile()
 	for _, val := range coordinates {
 		match := re.FindAllString(val, -1)
 		var ints []float64
 		for _, num := range match {
 			i, err := strconv.ParseFloat(num, 64)
-			helpers.Check(err)
+			utils.Check(err)
 			ints = append(ints, i)
 		}
 		coords = append(coords, co{ints[0], ints[1]})

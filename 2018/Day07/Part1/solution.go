@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 	"sort"
@@ -18,7 +18,7 @@ var solution string
 var allSteps = make(map[step]bool)
 
 func main() {
-	instructions := helpers.ReadFile()
+	instructions := utils.ReadFile()
 	for _, line := range instructions {
 		s := reString.FindAllString(line, -1)
 		allSteps[step{s[1], s[2]}] = false

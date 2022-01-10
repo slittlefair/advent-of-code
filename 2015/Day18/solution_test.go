@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"reflect"
 	"testing"
 )
@@ -50,7 +50,7 @@ func TestGrid_LightStaysOn(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-		arg    helpers.Co
+		arg    utils.Co
 		want   bool
 	}{
 		{
@@ -68,7 +68,7 @@ func TestGrid_LightStaysOn(t *testing.T) {
 					{X: 2, Y: 2}: "#",
 				},
 			},
-			arg:  helpers.Co{X: 0, Y: 0},
+			arg:  utils.Co{X: 0, Y: 0},
 			want: false,
 		},
 		{
@@ -86,7 +86,7 @@ func TestGrid_LightStaysOn(t *testing.T) {
 					{X: 2, Y: 2}: "#",
 				},
 			},
-			arg:  helpers.Co{X: 1, Y: 1},
+			arg:  utils.Co{X: 1, Y: 1},
 			want: false,
 		},
 		{
@@ -104,7 +104,7 @@ func TestGrid_LightStaysOn(t *testing.T) {
 					{X: 2, Y: 2}: "#",
 				},
 			},
-			arg:  helpers.Co{X: 1, Y: 1},
+			arg:  utils.Co{X: 1, Y: 1},
 			want: false,
 		},
 		{
@@ -122,7 +122,7 @@ func TestGrid_LightStaysOn(t *testing.T) {
 					{X: 2, Y: 2}: ".",
 				},
 			},
-			arg:  helpers.Co{X: 1, Y: 1},
+			arg:  utils.Co{X: 1, Y: 1},
 			want: true,
 		},
 		{
@@ -140,7 +140,7 @@ func TestGrid_LightStaysOn(t *testing.T) {
 					{X: 2, Y: 2}: ".",
 				},
 			},
-			arg:  helpers.Co{X: 1, Y: 1},
+			arg:  utils.Co{X: 1, Y: 1},
 			want: true,
 		},
 		{
@@ -158,7 +158,7 @@ func TestGrid_LightStaysOn(t *testing.T) {
 					{X: 2, Y: 2}: ".",
 				},
 			},
-			arg:  helpers.Co{X: 1, Y: 1},
+			arg:  utils.Co{X: 1, Y: 1},
 			want: false,
 		},
 		{
@@ -176,7 +176,7 @@ func TestGrid_LightStaysOn(t *testing.T) {
 					{X: 2, Y: 2}: "#",
 				},
 			},
-			arg:  helpers.Co{X: 1, Y: 1},
+			arg:  utils.Co{X: 1, Y: 1},
 			want: false,
 		},
 		{
@@ -194,7 +194,7 @@ func TestGrid_LightStaysOn(t *testing.T) {
 					{X: 2, Y: 2}: "#",
 				},
 			},
-			arg:  helpers.Co{X: 1, Y: 1},
+			arg:  utils.Co{X: 1, Y: 1},
 			want: true,
 		},
 	}

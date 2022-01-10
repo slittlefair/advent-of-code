@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"errors"
 	"fmt"
 	"strconv"
@@ -68,7 +68,7 @@ func (g *Game) playNormalGame() Deck {
 
 func (g Game) deckSeen(seen []Game) bool {
 	for _, game := range seen {
-		if helpers.IntSlicesAreEqual(game.player1, g.player1) && helpers.IntSlicesAreEqual(game.player2, g.player2) {
+		if utils.IntSlicesAreEqual(game.player1, g.player1) && utils.IntSlicesAreEqual(game.player2, g.player2) {
 			return true
 		}
 	}
@@ -127,7 +127,7 @@ func calculateWinningScore(deck Deck) (int, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	game := Game{}
 	err := game.parseInput(input)
 	if err != nil {
