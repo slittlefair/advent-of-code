@@ -1,12 +1,12 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 )
 
-var allCoords = map[helpers.Co]string{{X: 500, Y: 0}: "+"}
+var allCoords = map[utils.Co]string{{X: 500, Y: 0}: "+"}
 
 var (
 	minX = 10000000
@@ -15,9 +15,9 @@ var (
 	maxY = 0
 )
 
-var boundaryCheck = make(map[helpers.Co]bool)
+var boundaryCheck = make(map[utils.Co]bool)
 
-func updateBoundaries(co helpers.Co) {
+func updateBoundaries(co utils.Co) {
 	if co.X < minX {
 		minX = co.X
 	}
@@ -31,7 +31,7 @@ func updateBoundaries(co helpers.Co) {
 
 func populateRocks(lines []string) {
 	re, err := regexp.Compile(`[xy]|\d+`)
-	helpers.Check(err)
+	utils.Check(err)
 	for _, line := range lines {
 		match := re.FindAllString(line, -1)
 		if len(match) == 6 {
@@ -46,26 +46,26 @@ func populateRocks(lines []string) {
 				}
 			}
 			if yIndex == 2 {
-				for y := helpers.StringToInt(match[3]); y <= helpers.StringToInt(match[4]); y++ {
-					co := helpers.Co{X: helpers.StringToInt(match[1]), Y: y}
+				for y := utils.StringToInt(match[3]); y <= utils.StringToInt(match[4]); y++ {
+					co := utils.Co{X: utils.StringToInt(match[1]), Y: y}
 					allCoords[co] = "#"
 					updateBoundaries(co)
 				}
 			} else if yIndex == 3 {
-				for x := helpers.StringToInt(match[1]); x <= helpers.StringToInt(match[2]); x++ {
-					co := helpers.Co{X: x, Y: helpers.StringToInt(match[4])}
+				for x := utils.StringToInt(match[1]); x <= utils.StringToInt(match[2]); x++ {
+					co := utils.Co{X: x, Y: utils.StringToInt(match[4])}
 					allCoords[co] = "#"
 					updateBoundaries(co)
 				}
 			} else if xIndex == 2 {
-				for x := helpers.StringToInt(match[3]); x <= helpers.StringToInt(match[4]); x++ {
-					co := helpers.Co{X: x, Y: helpers.StringToInt(match[1])}
+				for x := utils.StringToInt(match[3]); x <= utils.StringToInt(match[4]); x++ {
+					co := utils.Co{X: x, Y: utils.StringToInt(match[1])}
 					allCoords[co] = "#"
 					updateBoundaries(co)
 				}
 			} else if xIndex == 3 {
-				for y := helpers.StringToInt(match[1]); y <= helpers.StringToInt(match[2]); y++ {
-					co := helpers.Co{X: helpers.StringToInt(match[4]), Y: y}
+				for y := utils.StringToInt(match[1]); y <= utils.StringToInt(match[2]); y++ {
+					co := utils.Co{X: utils.StringToInt(match[4]), Y: y}
 					allCoords[co] = "#"
 					updateBoundaries(co)
 				}
@@ -74,11 +74,11 @@ func populateRocks(lines []string) {
 			}
 		} else {
 			if match[0] == "x" {
-				co := helpers.Co{X: helpers.StringToInt(match[1]), Y: helpers.StringToInt(match[3])}
+				co := utils.Co{X: utils.StringToInt(match[1]), Y: utils.StringToInt(match[3])}
 				allCoords[co] = "#"
 				updateBoundaries(co)
 			} else {
-				co := helpers.Co{X: helpers.StringToInt(match[3]), Y: helpers.StringToInt(match[1])}
+				co := utils.Co{X: utils.StringToInt(match[3]), Y: utils.StringToInt(match[1])}
 				allCoords[co] = "#"
 				updateBoundaries(co)
 			}
@@ -89,7 +89,7 @@ func populateRocks(lines []string) {
 func populateSand() {
 	for x := minX; x <= maxX; x++ {
 		for y := minY; y <= maxY; y++ {
-			co := helpers.Co{X: x, Y: y}
+			co := utils.Co{X: x, Y: y}
 			if _, ok := allCoords[co]; !ok {
 				allCoords[co] = "."
 			}
@@ -100,7 +100,7 @@ func populateSand() {
 func printLandscape(part1 bool) {
 	for y := minY; y <= maxY; y++ {
 		for x := minX; x <= maxX; x++ {
-			co := helpers.Co{X: x, Y: y}
+			co := utils.Co{X: x, Y: y}
 			if allCoords[co] == "." {
 				fmt.Printf(" ")
 			} else if part1 {
@@ -118,29 +118,29 @@ func printLandscape(part1 bool) {
 	fmt.Println()
 }
 
-func nextWater(c []helpers.Co) (newCoords []helpers.Co) {
+func nextWater(c []utils.Co) (newCoords []utils.Co) {
 	for _, co := range c {
 		if _, ok := boundaryCheck[co]; ok {
-			newCo := helpers.Co{X: co.X, Y: co.Y + 1}
+			newCo := utils.Co{X: co.X, Y: co.Y + 1}
 			if allCoords[co] == "~" {
-				newCoords = append(newCoords, helpers.Co{X: co.X, Y: co.Y - 1})
+				newCoords = append(newCoords, utils.Co{X: co.X, Y: co.Y - 1})
 			} else if allCoords[newCo] == "|" {
 			} else if allCoords[newCo] == "." {
 				allCoords[newCo] = "|"
 				newCoords = append(newCoords, newCo)
 			} else {
-				layer := []helpers.Co{{X: co.X, Y: co.Y}}
+				layer := []utils.Co{{X: co.X, Y: co.Y}}
 				fullLayer := true
 				offsets := [2]int{-1, 1}
 				for _, direction := range offsets {
 					traversing := true
-					directionCo := helpers.Co{X: co.X + direction, Y: co.Y}
+					directionCo := utils.Co{X: co.X + direction, Y: co.Y}
 					for traversing {
-						if (allCoords[directionCo] == "." || allCoords[directionCo] == "|") && allCoords[helpers.Co{X: directionCo.X, Y: directionCo.Y + 1}] != "." {
+						if (allCoords[directionCo] == "." || allCoords[directionCo] == "|") && allCoords[utils.Co{X: directionCo.X, Y: directionCo.Y + 1}] != "." {
 							layer = append(layer, directionCo)
-							directionCo = helpers.Co{X: directionCo.X + direction, Y: directionCo.Y}
-						} else if (allCoords[directionCo] == "." || allCoords[directionCo] == "|") && allCoords[helpers.Co{X: directionCo.X, Y: directionCo.Y + 1}] == "." {
-							if allCoords[helpers.Co{X: directionCo.X - direction, Y: directionCo.Y + 1}] == "|" {
+							directionCo = utils.Co{X: directionCo.X + direction, Y: directionCo.Y}
+						} else if (allCoords[directionCo] == "." || allCoords[directionCo] == "|") && allCoords[utils.Co{X: directionCo.X, Y: directionCo.Y + 1}] == "." {
+							if allCoords[utils.Co{X: directionCo.X - direction, Y: directionCo.Y + 1}] == "|" {
 								fullLayer = false
 								traversing = false
 							} else {
@@ -158,7 +158,7 @@ func nextWater(c []helpers.Co) (newCoords []helpers.Co) {
 					for _, cell := range layer {
 						allCoords[cell] = "~"
 					}
-					newCoords = append(newCoords, helpers.Co{X: co.X, Y: co.Y - 1})
+					newCoords = append(newCoords, utils.Co{X: co.X, Y: co.Y - 1})
 				} else {
 					for _, cell := range layer {
 						allCoords[cell] = "|"
@@ -167,7 +167,7 @@ func nextWater(c []helpers.Co) (newCoords []helpers.Co) {
 			}
 		}
 	}
-	boundaryCheck = make(map[helpers.Co]bool)
+	boundaryCheck = make(map[utils.Co]bool)
 	for _, c := range newCoords {
 		if c.Y != maxY && c.Y >= minY {
 			boundaryCheck[c] = false
@@ -199,11 +199,11 @@ func calculateTotal() {
 }
 
 func main() {
-	lines := helpers.ReadFile()
+	lines := utils.ReadFile()
 	populateRocks(lines)
 	populateSand()
-	co := []helpers.Co{{X: 500, Y: 0}}
-	boundaryCheck[helpers.Co{X: 500, Y: 0}] = false
+	co := []utils.Co{{X: 500, Y: 0}}
+	boundaryCheck[utils.Co{X: 500, Y: 0}] = false
 	for {
 		if len(boundaryCheck) == 0 {
 			calculateTotal()

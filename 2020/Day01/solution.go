@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"errors"
 	"fmt"
 )
@@ -35,7 +35,7 @@ func part2(entries []int) (int, error) {
 }
 
 func main() {
-	entries := helpers.ReadFileAsInts()
+	entries := utils.ReadFileAsInts()
 	answer1, err := part1(entries)
 	if err != nil {
 		return

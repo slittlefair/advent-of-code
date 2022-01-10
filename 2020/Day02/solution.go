@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"errors"
 	"fmt"
 	"regexp"
@@ -32,8 +32,8 @@ func populatePasswordCollection(input []string) ([]passwords, error) {
 
 func readPassword(match []string) passwords {
 	return passwords{
-		min:      helpers.StringToInt(match[1]),
-		max:      helpers.StringToInt(match[2]),
+		min:      utils.StringToInt(match[1]),
+		max:      utils.StringToInt(match[2]),
 		letter:   match[3],
 		password: match[4],
 	}
@@ -56,7 +56,7 @@ func getSolutions(passwordCollection []passwords) (int, int) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	passwordCollection, err := populatePasswordCollection(input)
 	if err != nil {
 		fmt.Println(err)

@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"reflect"
 	"testing"
 )
@@ -16,7 +16,7 @@ func Test_convertToCos(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []helpers.Co
+		want []utils.Co
 	}{
 		{
 			name: "converts a horizontal line to coordinates, advent of code example",
@@ -26,7 +26,7 @@ func Test_convertToCos(t *testing.T) {
 				minY: 9,
 				maxY: 9,
 			},
-			want: []helpers.Co{
+			want: []utils.Co{
 				{X: 0, Y: 9},
 				{X: 1, Y: 9},
 				{X: 2, Y: 9},
@@ -40,7 +40,7 @@ func Test_convertToCos(t *testing.T) {
 				minY: 0,
 				maxY: 4,
 			},
-			want: []helpers.Co{
+			want: []utils.Co{
 				{X: 7, Y: 0},
 				{X: 7, Y: 1},
 				{X: 7, Y: 2},
@@ -68,7 +68,7 @@ func Test_convertDiagonalToCos(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want []helpers.Co
+		want []utils.Co
 	}{
 		{
 			name: "converts a diagonal line (increasing X, increasing Y) to coordinates, advent of code example",
@@ -78,7 +78,7 @@ func Test_convertDiagonalToCos(t *testing.T) {
 				startY: 1,
 				endY:   3,
 			},
-			want: []helpers.Co{
+			want: []utils.Co{
 				{X: 1, Y: 1},
 				{X: 2, Y: 2},
 				{X: 3, Y: 3},
@@ -92,7 +92,7 @@ func Test_convertDiagonalToCos(t *testing.T) {
 				startY: 5,
 				endY:   2,
 			},
-			want: []helpers.Co{
+			want: []utils.Co{
 				{X: 5, Y: 5},
 				{X: 6, Y: 4},
 				{X: 7, Y: 3},
@@ -107,7 +107,7 @@ func Test_convertDiagonalToCos(t *testing.T) {
 				startY: 0,
 				endY:   8,
 			},
-			want: []helpers.Co{
+			want: []utils.Co{
 				{X: 8, Y: 0},
 				{X: 7, Y: 1},
 				{X: 6, Y: 2},
@@ -127,7 +127,7 @@ func Test_convertDiagonalToCos(t *testing.T) {
 				startY: 4,
 				endY:   0,
 			},
-			want: []helpers.Co{
+			want: []utils.Co{
 				{X: 6, Y: 4},
 				{X: 5, Y: 3},
 				{X: 4, Y: 2},
@@ -153,7 +153,7 @@ func Test_validCos(t *testing.T) {
 	tests := []struct {
 		name    string
 		args    args
-		want    []helpers.Co
+		want    []utils.Co
 		wantErr bool
 	}{
 		{
@@ -180,7 +180,7 @@ func Test_validCos(t *testing.T) {
 				},
 				part2: false,
 			},
-			want: []helpers.Co{
+			want: []utils.Co{
 				{X: 0, Y: 9},
 				{X: 1, Y: 9},
 				{X: 2, Y: 9},
@@ -208,7 +208,7 @@ func Test_validCos(t *testing.T) {
 				},
 				part2: true,
 			},
-			want: []helpers.Co{
+			want: []utils.Co{
 				{X: 0, Y: 9},
 				{X: 1, Y: 9},
 				{X: 2, Y: 9},
@@ -257,12 +257,12 @@ func Test_validCos(t *testing.T) {
 func Test_populateGrid(t *testing.T) {
 	tests := []struct {
 		name string
-		cos  []helpers.Co
+		cos  []utils.Co
 		want Grid
 	}{
 		{
 			name: "populates grid from list of coordinates",
-			cos: []helpers.Co{
+			cos: []utils.Co{
 				{X: 0, Y: 9},
 				{X: 1, Y: 9},
 				{X: 2, Y: 9},

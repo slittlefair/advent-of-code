@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"math"
 	"regexp"
@@ -89,14 +89,14 @@ func updatePositions() {
 }
 
 func main() {
-	lines := helpers.ReadFile()
+	lines := utils.ReadFile()
 	re := regexp.MustCompile("-?\\d+")
 	for _, v := range lines {
 		conv := re.FindAllString(v, -1)
 		var points []int
 		for i := range conv {
 			c, err := strconv.Atoi(conv[i])
-			helpers.Check(err)
+			utils.Check(err)
 			points = append(points, c)
 		}
 		if points[0] < minX {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strconv"
 	"strings"
@@ -87,7 +87,7 @@ func (r Registers) RunInstructions(instructions []string) error {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	registers := Registers{
 		"a": 0,
 		"b": 0,

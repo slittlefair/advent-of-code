@@ -1,15 +1,15 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"reflect"
 )
 
-type Grid map[helpers.Co]string
+type Grid map[utils.Co]string
 
 // Get the 8 adjacent coordinates so we can continue in these directions for part 2
-var directions = []helpers.Co{
+var directions = []utils.Co{
 	{X: -1, Y: -1},
 	{X: -1, Y: 0},
 	{X: -1, Y: +1},
@@ -21,16 +21,16 @@ var directions = []helpers.Co{
 }
 
 // Decide what state an empty seat should be in at the next stage
-func (g Grid) evaluateEmptySeat(co helpers.Co, part int) string {
+func (g Grid) evaluateEmptySeat(co utils.Co, part int) string {
 	newVal := "#"
 	for _, d := range directions {
 		startingCo := co
 		for {
-			startingCo = helpers.Co{
+			startingCo = utils.Co{
 				X: startingCo.X + d.X,
 				Y: startingCo.Y + d.Y,
 			}
-			if val := g[helpers.Co{X: startingCo.X, Y: startingCo.Y}]; val != "." {
+			if val := g[utils.Co{X: startingCo.X, Y: startingCo.Y}]; val != "." {
 				if val == "#" {
 					newVal = "L"
 				}
@@ -47,18 +47,18 @@ func (g Grid) evaluateEmptySeat(co helpers.Co, part int) string {
 }
 
 // Decide what state an occupied seat should be in at the next stage
-func (g Grid) evaluateOccupiedSeat(co helpers.Co, part int) string {
+func (g Grid) evaluateOccupiedSeat(co utils.Co, part int) string {
 	// If part 1 empty seat if 4 occupied, if part 2 empty seat if 5 occupied
 	adjacentThreshold := 3 + part
 	adjacentOccupied := 0
 	for _, d := range directions {
 		startingCo := co
 		for {
-			startingCo = helpers.Co{
+			startingCo = utils.Co{
 				X: startingCo.X + d.X,
 				Y: startingCo.Y + d.Y,
 			}
-			if val := g[helpers.Co{X: startingCo.X, Y: startingCo.Y}]; val != "." {
+			if val := g[utils.Co{X: startingCo.X, Y: startingCo.Y}]; val != "." {
 				if val == "#" {
 					adjacentOccupied++
 				}
@@ -131,13 +131,13 @@ func (g Grid) findSolution(part int) int {
 func (g Grid) parseInput(plan []string) {
 	for r, row := range plan {
 		for c, col := range row {
-			g[helpers.Co{X: c, Y: r}] = string(col)
+			g[utils.Co{X: c, Y: r}] = string(col)
 		}
 	}
 }
 
 func main() {
-	plan := helpers.ReadFile()
+	plan := utils.ReadFile()
 	g := Grid{}
 	g.parseInput(plan)
 	fmt.Println("Part 1:", g.findSolution(1))

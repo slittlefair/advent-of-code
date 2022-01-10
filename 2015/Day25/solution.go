@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -40,7 +40,7 @@ func getSolution(input []string) (int, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	code, err := getSolution(input)
 	if err != nil {
 		fmt.Println(err)

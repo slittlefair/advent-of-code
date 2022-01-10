@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"crypto/md5"
 	"fmt"
 	"strconv"
@@ -32,7 +32,7 @@ func findValidHash(input string, part1 bool) int {
 }
 
 func main() {
-	input := helpers.ReadFile()[0]
+	input := utils.ReadFile()[0]
 	fmt.Println("Part 1:", findValidHash(input, true))
 	fmt.Println("Part 2:", findValidHash(input, false))
 }

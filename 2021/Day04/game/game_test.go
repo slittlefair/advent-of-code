@@ -1,8 +1,8 @@
 package game
 
 import (
-	helpers "Advent-of-Code"
 	"Advent-of-Code/2021/Day04/card"
+	utils "Advent-of-Code/utils"
 	"reflect"
 	"testing"
 )
@@ -43,7 +43,7 @@ func Test_parseNums(t *testing.T) {
 
 func TestParseInput(t *testing.T) {
 	var card0 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 22},
 			{X: 0, Y: 1}: {Val: 8},
 			{X: 0, Y: 2}: {Val: 21},
@@ -72,7 +72,7 @@ func TestParseInput(t *testing.T) {
 		},
 	}
 	var card1 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 3},
 			{X: 0, Y: 1}: {Val: 9},
 			{X: 0, Y: 2}: {Val: 19},
@@ -101,7 +101,7 @@ func TestParseInput(t *testing.T) {
 		},
 	}
 	var card2 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 14},
 			{X: 0, Y: 1}: {Val: 10},
 			{X: 0, Y: 2}: {Val: 18},
@@ -208,7 +208,7 @@ func TestParseInput(t *testing.T) {
 
 func TestGame_PlayGame(t *testing.T) {
 	var card00 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 22},
 			{X: 0, Y: 1}: {Val: 8},
 			{X: 0, Y: 2}: {Val: 21},
@@ -237,7 +237,7 @@ func TestGame_PlayGame(t *testing.T) {
 		},
 	}
 	var card01 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 3},
 			{X: 0, Y: 1}: {Val: 9},
 			{X: 0, Y: 2}: {Val: 19},
@@ -266,7 +266,7 @@ func TestGame_PlayGame(t *testing.T) {
 		},
 	}
 	var card02 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 14},
 			{X: 0, Y: 1}: {Val: 10},
 			{X: 0, Y: 2}: {Val: 18},
@@ -295,7 +295,7 @@ func TestGame_PlayGame(t *testing.T) {
 		},
 	}
 	var card10 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 22},
 			{X: 0, Y: 1}: {Val: 8},
 			{X: 0, Y: 2}: {Val: 21},
@@ -324,7 +324,7 @@ func TestGame_PlayGame(t *testing.T) {
 		},
 	}
 	var card11 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 3},
 			{X: 0, Y: 1}: {Val: 9},
 			{X: 0, Y: 2}: {Val: 19},
@@ -353,7 +353,7 @@ func TestGame_PlayGame(t *testing.T) {
 		},
 	}
 	var card12 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 14},
 			{X: 0, Y: 1}: {Val: 10},
 			{X: 0, Y: 2}: {Val: 18},
@@ -382,7 +382,7 @@ func TestGame_PlayGame(t *testing.T) {
 		},
 	}
 	var card20 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 22},
 			{X: 0, Y: 1}: {Val: 8},
 			{X: 0, Y: 2}: {Val: 21},
@@ -411,7 +411,7 @@ func TestGame_PlayGame(t *testing.T) {
 		},
 	}
 	var card21 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 3},
 			{X: 0, Y: 1}: {Val: 9},
 			{X: 0, Y: 2}: {Val: 19},
@@ -440,7 +440,7 @@ func TestGame_PlayGame(t *testing.T) {
 		},
 	}
 	var card22 = &card.Card{
-		Numbers: map[helpers.Co]*card.Number{
+		Numbers: map[utils.Co]*card.Number{
 			{X: 0, Y: 0}: {Val: 14},
 			{X: 0, Y: 1}: {Val: 10},
 			{X: 0, Y: 2}: {Val: 18},

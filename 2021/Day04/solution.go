@@ -1,13 +1,13 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
 	"Advent-of-Code/2021/Day04/game"
+	utils "Advent-of-Code/utils"
 	"fmt"
 )
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	g, err := game.ParseInput(input)
 	if err != nil {
 		fmt.Println(err)

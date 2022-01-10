@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strconv"
 	"strings"
@@ -53,7 +53,7 @@ func (g *Graph) parseInput(input []string) error {
 	}
 	nodes := make([]string, len(g.Nodes))
 	copy(nodes, g.Nodes)
-	g.Paths = helpers.Permutations(nodes)
+	g.Paths = utils.Permutations(nodes)
 	return nil
 }
 
@@ -88,7 +88,7 @@ func (g *Graph) findMinimumAndMaximumPaths() (int, int) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	graph := Graph{}
 	graph.parseInput(input)
 	minPathDistance, maxPathDistance := graph.findMinimumAndMaximumPaths()

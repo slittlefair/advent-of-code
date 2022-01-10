@@ -1,14 +1,14 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 )
 
 type Tiles struct {
-	Map         map[helpers.Co]bool
-	CurrentTile helpers.Co
+	Map         map[utils.Co]bool
+	CurrentTile utils.Co
 	MaxX        int
 	MaxY        int
 	MinX        int
@@ -24,49 +24,49 @@ func parseInput(input []string) [][]string {
 	return tileList
 }
 
-func (t *Tiles) getETile(co helpers.Co) (helpers.Co, bool) {
-	newCo := helpers.Co{X: co.X + 1, Y: co.Y}
+func (t *Tiles) getETile(co utils.Co) (utils.Co, bool) {
+	newCo := utils.Co{X: co.X + 1, Y: co.Y}
 	return newCo, t.Map[newCo]
 }
 
-func (t *Tiles) getSETile(co helpers.Co) (helpers.Co, bool) {
+func (t *Tiles) getSETile(co utils.Co) (utils.Co, bool) {
 	changeX := 0
 	if co.Y%2 != 0 {
 		changeX = 1
 	}
-	newCo := helpers.Co{X: co.X + changeX, Y: co.Y + 1}
+	newCo := utils.Co{X: co.X + changeX, Y: co.Y + 1}
 	return newCo, t.Map[newCo]
 }
 
-func (t *Tiles) getNETile(co helpers.Co) (helpers.Co, bool) {
+func (t *Tiles) getNETile(co utils.Co) (utils.Co, bool) {
 	changeX := 0
 	if co.Y%2 != 0 {
 		changeX = 1
 	}
-	newCo := helpers.Co{X: co.X + changeX, Y: co.Y - 1}
+	newCo := utils.Co{X: co.X + changeX, Y: co.Y - 1}
 	return newCo, t.Map[newCo]
 }
 
-func (t *Tiles) getWTile(co helpers.Co) (helpers.Co, bool) {
-	newCo := helpers.Co{X: co.X - 1, Y: co.Y}
+func (t *Tiles) getWTile(co utils.Co) (utils.Co, bool) {
+	newCo := utils.Co{X: co.X - 1, Y: co.Y}
 	return newCo, t.Map[newCo]
 }
 
-func (t *Tiles) getSWTile(co helpers.Co) (helpers.Co, bool) {
+func (t *Tiles) getSWTile(co utils.Co) (utils.Co, bool) {
 	changeX := 0
 	if co.Y%2 == 0 {
 		changeX = -1
 	}
-	newCo := helpers.Co{X: co.X + changeX, Y: co.Y + 1}
+	newCo := utils.Co{X: co.X + changeX, Y: co.Y + 1}
 	return newCo, t.Map[newCo]
 }
 
-func (t *Tiles) getNWTile(co helpers.Co) (helpers.Co, bool) {
+func (t *Tiles) getNWTile(co utils.Co) (utils.Co, bool) {
 	changeX := 0
 	if co.Y%2 == 0 {
 		changeX = -1
 	}
-	newCo := helpers.Co{X: co.X + changeX, Y: co.Y - 1}
+	newCo := utils.Co{X: co.X + changeX, Y: co.Y - 1}
 	return newCo, t.Map[newCo]
 }
 
@@ -99,7 +99,7 @@ func (t *Tiles) moveTile(dir string) {
 	}
 }
 
-func (t *Tiles) flipTiles(co helpers.Co) {
+func (t *Tiles) flipTiles(co utils.Co) {
 	if val, ok := t.Map[co]; !ok {
 		t.Map[co] = true
 	} else {
@@ -108,7 +108,7 @@ func (t *Tiles) flipTiles(co helpers.Co) {
 }
 
 func (t *Tiles) moveThroughList(tiles []string) {
-	t.CurrentTile = helpers.Co{X: 0, Y: 0}
+	t.CurrentTile = utils.Co{X: 0, Y: 0}
 	for _, tile := range tiles {
 		t.moveTile(tile)
 	}
@@ -132,14 +132,14 @@ func (t *Tiles) populateMissingTiles() {
 	t.MaxY++
 	for x := t.MinX; x <= t.MaxX; x++ {
 		for y := t.MinY; y <= t.MaxY; y++ {
-			if _, ok := t.Map[helpers.Co{X: x, Y: y}]; !ok {
-				t.Map[helpers.Co{X: x, Y: y}] = false
+			if _, ok := t.Map[utils.Co{X: x, Y: y}]; !ok {
+				t.Map[utils.Co{X: x, Y: y}] = false
 			}
 		}
 	}
 }
 
-func (t *Tiles) shouldFlip(co helpers.Co) bool {
+func (t *Tiles) shouldFlip(co utils.Co) bool {
 	count := 0
 	if _, blackTile := t.getETile(co); blackTile {
 		count++
@@ -168,8 +168,8 @@ func (t *Tiles) shouldFlip(co helpers.Co) bool {
 	return false
 }
 
-func (t *Tiles) decideWhichTilesToFlip() []helpers.Co {
-	tiles := []helpers.Co{}
+func (t *Tiles) decideWhichTilesToFlip() []utils.Co {
+	tiles := []utils.Co{}
 	for co := range t.Map {
 		if t.shouldFlip(co) {
 			tiles = append(tiles, co)
@@ -194,10 +194,10 @@ func (t *Tiles) countTilesAfterDays(days int) int {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	tileList := parseInput(input)
 	tiles := &Tiles{
-		Map: make(map[helpers.Co]bool),
+		Map: make(map[utils.Co]bool),
 	}
 	for _, list := range tileList {
 		tiles.moveThroughList(list)

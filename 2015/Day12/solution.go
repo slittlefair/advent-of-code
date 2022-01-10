@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"encoding/json"
 	"fmt"
 	"regexp"
@@ -49,7 +49,7 @@ out:
 }
 
 func main() {
-	input := helpers.ReadFile()[0]
+	input := utils.ReadFile()[0]
 	fmt.Println("Part 1:", countNumbers(input))
 	fmt.Println("Part 2:", findNonRedNumbers(input))
 }

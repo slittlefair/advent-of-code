@@ -1,7 +1,7 @@
 package dijkstra
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strconv"
 )
@@ -23,7 +23,7 @@ var TypeToEquipment = map[int][]string{
 }
 
 // CalculateTimes calculate the time it takes to travel to a region from an adjacent region
-func (g *Graph) CalculateTimes(co string, coType int, adjacentCo map[helpers.Co]int, equip string) {
+func (g *Graph) CalculateTimes(co string, coType int, adjacentCo map[utils.Co]int, equip string) {
 	for key, val := range adjacentCo {
 		for _, eq := range TypeToEquipment[val] {
 			adjCoString := fmt.Sprintf("%v,%v,%v", strconv.Itoa(key.X), strconv.Itoa(key.Y), eq)

@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"math"
 	"strconv"
@@ -44,7 +44,7 @@ func deliverPresentsPart2(target int) (int, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()[0]
+	input := utils.ReadFile()[0]
 	target, err := strconv.Atoi(input)
 	if err != nil {
 		fmt.Println(err)

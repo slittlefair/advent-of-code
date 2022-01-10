@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"errors"
 	"fmt"
 	"regexp"
@@ -63,7 +63,7 @@ func findRangedMatch(input []string, ticker map[string]int) (string, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	ticker := map[string]int{
 		"children":    3,
 		"cats":        7,

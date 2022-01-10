@@ -1,26 +1,26 @@
 package tile
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"reflect"
 	"testing"
 )
 
 func TestTile_RotateTile90(t *testing.T) {
 	type fields struct {
-		Pixels map[helpers.Co]string
+		Pixels map[utils.Co]string
 		Height int
 		Width  int
 	}
 	tests := []struct {
 		name   string
 		fields fields
-		want   map[helpers.Co]string
+		want   map[utils.Co]string
 	}{
 		{
 			name: "test1",
 			fields: fields{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 0, Y: 1}: ".",
@@ -29,7 +29,7 @@ func TestTile_RotateTile90(t *testing.T) {
 				Width:  1,
 				Height: 1,
 			},
-			want: map[helpers.Co]string{
+			want: map[utils.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 0, Y: 1}: ".",
@@ -39,7 +39,7 @@ func TestTile_RotateTile90(t *testing.T) {
 		{
 			name: "test2",
 			fields: fields{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: "#",
@@ -53,7 +53,7 @@ func TestTile_RotateTile90(t *testing.T) {
 				Width:  2,
 				Height: 2,
 			},
-			want: map[helpers.Co]string{
+			want: map[utils.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -83,18 +83,18 @@ func TestTile_RotateTile90(t *testing.T) {
 
 func TestTile_FlipTile(t *testing.T) {
 	type fields struct {
-		Pixels map[helpers.Co]string
+		Pixels map[utils.Co]string
 		Width  int
 	}
 	tests := []struct {
 		name   string
 		fields fields
-		want   map[helpers.Co]string
+		want   map[utils.Co]string
 	}{
 		{
 			name: "test1",
 			fields: fields{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 0, Y: 1}: ".",
@@ -102,7 +102,7 @@ func TestTile_FlipTile(t *testing.T) {
 				},
 				Width: 1,
 			},
-			want: map[helpers.Co]string{
+			want: map[utils.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 0, Y: 1}: ".",
@@ -112,7 +112,7 @@ func TestTile_FlipTile(t *testing.T) {
 		{
 			name: "test2",
 			fields: fields{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: "#",
@@ -125,7 +125,7 @@ func TestTile_FlipTile(t *testing.T) {
 				},
 				Width: 2,
 			},
-			want: map[helpers.Co]string{
+			want: map[utils.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -164,7 +164,7 @@ func TestTile_IsAdjacentTop(t *testing.T) {
 			t: Tile{
 				Height: 1,
 				Width:  4,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: ".",
 					{X: 1, Y: 0}: "#",
 					{X: 2, Y: 0}: "#",
@@ -178,7 +178,7 @@ func TestTile_IsAdjacentTop(t *testing.T) {
 				},
 			},
 			tile: Tile{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: ".",
@@ -198,7 +198,7 @@ func TestTile_IsAdjacentTop(t *testing.T) {
 			t: Tile{
 				Height: 1,
 				Width:  4,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: ".",
@@ -212,7 +212,7 @@ func TestTile_IsAdjacentTop(t *testing.T) {
 				},
 			},
 			tile: Tile{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: ".",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: "#",
@@ -248,7 +248,7 @@ func TestTile_IsAdjacentBottom(t *testing.T) {
 			name: "returns true if the top row (y = 0) of t matches the bottom row (y = tile.Height) of tile",
 			t: Tile{
 				Width: 4,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: ".",
@@ -263,7 +263,7 @@ func TestTile_IsAdjacentBottom(t *testing.T) {
 			},
 			tile: Tile{
 				Height: 1,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: ".",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: "#",
@@ -283,7 +283,7 @@ func TestTile_IsAdjacentBottom(t *testing.T) {
 			t: Tile{
 				Height: 1,
 				Width:  4,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: ".",
 					{X: 1, Y: 0}: "#",
 					{X: 2, Y: 0}: "#",
@@ -297,7 +297,7 @@ func TestTile_IsAdjacentBottom(t *testing.T) {
 				},
 			},
 			tile: Tile{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: ".",
@@ -334,7 +334,7 @@ func TestTile_IsAdjacentLeft(t *testing.T) {
 			t: Tile{
 				Height: 4,
 				Width:  1,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 0, Y: 1}: ".",
 					{X: 0, Y: 2}: ".",
@@ -348,7 +348,7 @@ func TestTile_IsAdjacentLeft(t *testing.T) {
 				},
 			},
 			tile: Tile{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 0, Y: 1}: ".",
 					{X: 0, Y: 2}: "#",
@@ -367,7 +367,7 @@ func TestTile_IsAdjacentLeft(t *testing.T) {
 			name: "returns false if the right column (x = tile.Width) of t doesn't match the left column (x = 0) of tile",
 			t: Tile{
 				Height: 4,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: ".",
 					{X: 0, Y: 1}: ".",
 					{X: 0, Y: 2}: "#",
@@ -382,7 +382,7 @@ func TestTile_IsAdjacentLeft(t *testing.T) {
 			},
 			tile: Tile{
 				Width: 1,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 0, Y: 1}: ".",
 					{X: 0, Y: 2}: ".",
@@ -418,7 +418,7 @@ func TestTile_IsAdjacentRight(t *testing.T) {
 			name: "returns true if the left column (x = 0) of t matches the right column (x = tile.Width) of tile",
 			t: Tile{
 				Height: 4,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: ".",
 					{X: 0, Y: 1}: ".",
 					{X: 0, Y: 2}: "#",
@@ -433,7 +433,7 @@ func TestTile_IsAdjacentRight(t *testing.T) {
 			},
 			tile: Tile{
 				Width: 1,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 0, Y: 1}: ".",
 					{X: 0, Y: 2}: ".",
@@ -452,7 +452,7 @@ func TestTile_IsAdjacentRight(t *testing.T) {
 			name: "returns false if the left column (x = 0) of t doesn't match the right column (x = tile.Width) of tile",
 			t: Tile{
 				Height: 4,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 0, Y: 1}: ".",
 					{X: 0, Y: 2}: ".",
@@ -467,7 +467,7 @@ func TestTile_IsAdjacentRight(t *testing.T) {
 			},
 			tile: Tile{
 				Width: 1,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 0, Y: 1}: ".",
 					{X: 0, Y: 2}: "#",

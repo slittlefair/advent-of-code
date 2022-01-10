@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 )
@@ -156,7 +156,7 @@ var functionsMap = map[string]func([]int, []int) []int{
 }
 
 func main() {
-	lines := helpers.ReadFile()
+	lines := utils.ReadFile()
 	ipString := reNum.FindAllString(lines[0], -1)
 	// fmt.Println(ip)
 
@@ -165,13 +165,13 @@ func main() {
 		instNums := reNum.FindAllString(lines[i], -1)
 		inst := instructions{
 			inst:      instText[0],
-			registers: helpers.StringSliceToIntSlice(instNums),
+			registers: utils.StringSliceToIntSlice(instNums),
 		}
 		allInstructions = append(allInstructions, inst)
 	}
 
 	ip := 0
-	ipRegister := helpers.StringToInt(ipString[0])
+	ipRegister := utils.StringToInt(ipString[0])
 	registers := []int{1, 0, 0, 0, 0, 0}
 	for ip >= 0 && ip < len(allInstructions) {
 		registers[ipRegister] = ip

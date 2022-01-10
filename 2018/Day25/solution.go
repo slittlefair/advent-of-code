@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"math"
 	"regexp"
@@ -41,10 +41,10 @@ func (co coordinate) addNearbyToConstellation(cons constellation) constellation 
 }
 
 func main() {
-	re := regexp.MustCompile("-?\\d+")
-	lines := helpers.ReadFile()
+	re := regexp.MustCompile(`-?\d+`)
+	lines := utils.ReadFile()
 	for _, line := range lines {
-		points := helpers.StringSliceToIntSlice(re.FindAllString(line, -1))
+		points := utils.StringSliceToIntSlice(re.FindAllString(line, -1))
 		co := coordinate{
 			X: points[0],
 			Y: points[1],

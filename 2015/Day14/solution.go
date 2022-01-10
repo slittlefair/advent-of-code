@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -101,7 +101,7 @@ func parseInput(input []string) Racers {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	racers := parseInput(input)
 	winningDist, winningPoints := racers.runRace(2503)
 	fmt.Println("Part 1:", winningDist)

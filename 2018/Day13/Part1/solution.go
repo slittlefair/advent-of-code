@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 )
 
@@ -94,10 +94,10 @@ func populateCarts(co coordinate, piece string) {
 }
 
 var handleTurns = map[string][]string{
-	"^": []string{"<", "^", ">", ">", "<"},
-	">": []string{"^", ">", "v", "^", "v"},
-	"v": []string{">", "v", "<", "<", ">"},
-	"<": []string{"v", "<", "^", "v", "^"},
+	"^": {"<", "^", ">", ">", "<"},
+	">": {"^", ">", "v", "^", "v"},
+	"v": {">", "v", "<", "<", ">"},
+	"<": {"v", "<", "^", "v", "^"},
 }
 
 func moveCart(cart cart) (crashed bool, coord coordinate) {
@@ -134,7 +134,7 @@ func moveCart(cart cart) (crashed bool, coord coordinate) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := utils.ReadFile()
 	validCarts["^"] = true
 	validCarts[">"] = true
 	validCarts["v"] = true

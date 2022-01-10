@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -37,7 +37,7 @@ func readData(lines []string) {
 		} else if line == "" || line == "Immune System:" {
 			continue
 		} else {
-			stats := helpers.StringSliceToIntSlice(reStats.FindAllString(line, -1))
+			stats := utils.StringSliceToIntSlice(reStats.FindAllString(line, -1))
 			var weaknesses []string
 			var immunities []string
 			wi := reWeaknessesImmunities.FindStringSubmatch(line)
@@ -289,7 +289,7 @@ func battle(boost int) (int, string) {
 }
 
 func main() {
-	lines := helpers.ReadFile()
+	lines := utils.ReadFile()
 	readData(lines)
 	boost := 0
 	unitsLeft, survivingArmy := battle(boost)

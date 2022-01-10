@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -38,7 +38,7 @@ func parseInput(entries []string) (int, Buses, error) {
 }
 
 func (b *Buses) part1(arrivalTime int) int {
-	smallestTimeToWait := helpers.Infinty
+	smallestTimeToWait := utils.Infinty
 	var busToWaitFor int
 	for _, bus := range *b {
 		timeToWait := bus.id - (arrivalTime % bus.id)
@@ -63,7 +63,7 @@ func (b *Buses) part2() int {
 }
 
 func main() {
-	entries := helpers.ReadFile()
+	entries := utils.ReadFile()
 	arrivalTime, buses, err := parseInput(entries)
 	if err != nil {
 		fmt.Println(err)

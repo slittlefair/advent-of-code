@@ -1,13 +1,13 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strconv"
 )
 
 func main() {
-	lines := helpers.ReadFile()
+	lines := utils.ReadFile()
 
 	m := make(map[int]bool)
 	var frequency int
@@ -15,7 +15,7 @@ func main() {
 	for {
 		for _, val := range lines {
 			n, err := strconv.Atoi(val)
-			helpers.Check(err)
+			utils.Check(err)
 			frequency = frequency + n
 			if m[frequency] {
 				fmt.Println(frequency)

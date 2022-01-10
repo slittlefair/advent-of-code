@@ -1,8 +1,8 @@
 package waypoint
 
 import (
-	helpers "Advent-of-Code"
 	"Advent-of-Code/2020/Day12/ship"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"reflect"
 	"testing"
@@ -75,7 +75,7 @@ func TestWaypoint_turnWaypointRight(t *testing.T) {
 
 func TestWaypoint_MoveWaypoint(t *testing.T) {
 	var baseShip = &ship.Ship{
-		Co:        helpers.Co{X: 99, Y: 13},
+		Co:        utils.Co{X: 99, Y: 13},
 		FacingDir: "E",
 	}
 	type args struct {
@@ -161,7 +161,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			w:    &Waypoint{X: 0, Y: 23},
 			args: args{
 				s: &ship.Ship{
-					Co:        helpers.Co{X: 99, Y: 13},
+					Co:        utils.Co{X: 99, Y: 13},
 					FacingDir: "E",
 				},
 				d:   "F",
@@ -169,7 +169,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			},
 			want: &Waypoint{X: 0, Y: 23},
 			want1: &ship.Ship{
-				Co:        helpers.Co{X: 99, Y: 105},
+				Co:        utils.Co{X: 99, Y: 105},
 				FacingDir: "E",
 			},
 		},
@@ -178,7 +178,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			w:    &Waypoint{X: 70, Y: 0},
 			args: args{
 				s: &ship.Ship{
-					Co:        helpers.Co{X: -6, Y: 22},
+					Co:        utils.Co{X: -6, Y: 22},
 					FacingDir: "S",
 				},
 				d:   "F",
@@ -186,7 +186,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			},
 			want: &Waypoint{X: 70, Y: 0},
 			want1: &ship.Ship{
-				Co:        helpers.Co{X: 64, Y: 22},
+				Co:        utils.Co{X: 64, Y: 22},
 				FacingDir: "S",
 			},
 		},
@@ -195,7 +195,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			w:    &Waypoint{X: 0, Y: -6},
 			args: args{
 				s: &ship.Ship{
-					Co:        helpers.Co{X: 2, Y: -7},
+					Co:        utils.Co{X: 2, Y: -7},
 					FacingDir: "E",
 				},
 				d:   "F",
@@ -203,7 +203,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			},
 			want: &Waypoint{X: 0, Y: -6},
 			want1: &ship.Ship{
-				Co:        helpers.Co{X: 2, Y: -49},
+				Co:        utils.Co{X: 2, Y: -49},
 				FacingDir: "E",
 			},
 		},
@@ -212,7 +212,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			w:    &Waypoint{X: -12, Y: 0},
 			args: args{
 				s: &ship.Ship{
-					Co:        helpers.Co{X: 17, Y: 1333},
+					Co:        utils.Co{X: 17, Y: 1333},
 					FacingDir: "N",
 				},
 				d:   "F",
@@ -220,7 +220,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			},
 			want: &Waypoint{X: -12, Y: 0},
 			want1: &ship.Ship{
-				Co:        helpers.Co{X: -127, Y: 1333},
+				Co:        utils.Co{X: -127, Y: 1333},
 				FacingDir: "N",
 			},
 		},
@@ -229,7 +229,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			w:    &Waypoint{X: 10, Y: 3},
 			args: args{
 				s: &ship.Ship{
-					Co:        helpers.Co{X: 99, Y: 103},
+					Co:        utils.Co{X: 99, Y: 103},
 					FacingDir: "S",
 				},
 				d:   "F",
@@ -237,7 +237,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			},
 			want: &Waypoint{X: 10, Y: 3},
 			want1: &ship.Ship{
-				Co:        helpers.Co{X: 149, Y: 118},
+				Co:        utils.Co{X: 149, Y: 118},
 				FacingDir: "S",
 			},
 		},
@@ -246,7 +246,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			w:    &Waypoint{X: 7, Y: -9},
 			args: args{
 				s: &ship.Ship{
-					Co:        helpers.Co{X: -9, Y: -9},
+					Co:        utils.Co{X: -9, Y: -9},
 					FacingDir: "S",
 				},
 				d:   "F",
@@ -254,7 +254,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			},
 			want: &Waypoint{X: 7, Y: -9},
 			want1: &ship.Ship{
-				Co:        helpers.Co{X: 5, Y: -27},
+				Co:        utils.Co{X: 5, Y: -27},
 				FacingDir: "S",
 			},
 		},
@@ -263,7 +263,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			w:    &Waypoint{X: -6, Y: -33},
 			args: args{
 				s: &ship.Ship{
-					Co:        helpers.Co{X: 1, Y: 12},
+					Co:        utils.Co{X: 1, Y: 12},
 					FacingDir: "S",
 				},
 				d:   "F",
@@ -271,7 +271,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			},
 			want: &Waypoint{X: -6, Y: -33},
 			want1: &ship.Ship{
-				Co:        helpers.Co{X: -59, Y: -318},
+				Co:        utils.Co{X: -59, Y: -318},
 				FacingDir: "S",
 			},
 		},
@@ -280,7 +280,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			w:    &Waypoint{X: -4, Y: 3},
 			args: args{
 				s: &ship.Ship{
-					Co:        helpers.Co{X: 99, Y: 103},
+					Co:        utils.Co{X: 99, Y: 103},
 					FacingDir: "E",
 				},
 				d:   "F",
@@ -288,7 +288,7 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 			},
 			want: &Waypoint{X: -4, Y: 3},
 			want1: &ship.Ship{
-				Co:        helpers.Co{X: 95, Y: 106},
+				Co:        utils.Co{X: 95, Y: 106},
 				FacingDir: "E",
 			},
 		},

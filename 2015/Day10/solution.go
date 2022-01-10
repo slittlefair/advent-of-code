@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 	"strconv"
 	"strings"
@@ -26,7 +26,7 @@ func lookAndSay(num []string) []string {
 }
 
 func main() {
-	input := helpers.ReadFile()[0]
+	input := utils.ReadFile()[0]
 	nums := strings.Split(input, "")
 	for i := 1; i <= 50; i++ {
 		nums = lookAndSay(nums)

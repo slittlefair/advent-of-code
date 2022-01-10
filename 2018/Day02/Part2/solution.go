@@ -1,12 +1,12 @@
 package main
 
 import (
-	"Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"fmt"
 )
 
 func main() {
-	lines := helpers.ReadFile()
+	lines := utils.ReadFile()
 	// Cycle through ids
 	for i := range lines {
 		id1 := lines[i]

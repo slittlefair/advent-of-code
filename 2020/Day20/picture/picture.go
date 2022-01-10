@@ -1,8 +1,8 @@
 package picture
 
 import (
-	helpers "Advent-of-Code"
 	tile "Advent-of-Code/2020/Day20/tile"
+	utils "Advent-of-Code/utils"
 	"errors"
 	"fmt"
 	"regexp"
@@ -12,8 +12,8 @@ import (
 type Picture struct {
 	Height  int
 	Width   int
-	Pixels  map[helpers.Co]string
-	TileMap map[helpers.Co]tile.Tile
+	Pixels  map[utils.Co]string
+	TileMap map[utils.Co]tile.Tile
 	Tiles   []tile.Tile
 }
 
@@ -21,14 +21,14 @@ type Picture struct {
 func (p *Picture) PopulateTiles(input []string) {
 	re := regexp.MustCompile(`\d+`)
 	t := tile.Tile{
-		Pixels: make(map[helpers.Co]string),
+		Pixels: make(map[utils.Co]string),
 	}
 	var i int
 	for _, line := range input {
 		if line == "" {
 			p.Tiles = append(p.Tiles, t)
 			t = tile.Tile{
-				Pixels: make(map[helpers.Co]string),
+				Pixels: make(map[utils.Co]string),
 			}
 			continue
 		}
@@ -40,7 +40,7 @@ func (p *Picture) PopulateTiles(input []string) {
 		t.Height = i
 		t.Width = len(line) - 1
 		for j, char := range line {
-			t.Pixels[helpers.Co{X: j, Y: i}] = string(char)
+			t.Pixels[utils.Co{X: j, Y: i}] = string(char)
 		}
 		i++
 	}
@@ -152,12 +152,12 @@ func (p Picture) getTopLeftTile() (tile.Tile, error) {
 // populatePictureWithTile gets the individual tiles and puts their pixels into the picture p's
 // pixels, into one large picture
 func (p *Picture) populatePictureWithTile(t tile.Tile, x, y int) {
-	p.TileMap[helpers.Co{X: x, Y: y}] = t
+	p.TileMap[utils.Co{X: x, Y: y}] = t
 	for i := 1; i < t.Height; i++ {
 		for j := 1; j < t.Width; j++ {
 			xValue := (x * (t.Width + 1)) + j - 2*x - 1
 			yValue := (y * (t.Height + 1)) + i - 2*y - 1
-			p.Pixels[helpers.Co{X: xValue, Y: yValue}] = t.Pixels[helpers.Co{X: j, Y: i}]
+			p.Pixels[utils.Co{X: xValue, Y: yValue}] = t.Pixels[utils.Co{X: j, Y: i}]
 			if yValue > p.Height {
 				p.Height = yValue
 			}
@@ -188,7 +188,7 @@ func (p *Picture) PopulateTileMap() error {
 			p.populatePictureWithTile(t, x, y)
 			tile = t
 		} else {
-			tile = p.TileMap[helpers.Co{X: x, Y: 0}]
+			tile = p.TileMap[utils.Co{X: x, Y: 0}]
 			if tile.AdjacentTiles.Right == "" {
 				return nil
 			}
@@ -209,7 +209,7 @@ func (p *Picture) PopulateTileMap() error {
 func (p Picture) PrintPictureMap() {
 	for h := 0; h <= p.Height; h++ {
 		for w := 0; w <= p.Width; w++ {
-			fmt.Print(p.Pixels[helpers.Co{X: w, Y: h}])
+			fmt.Print(p.Pixels[utils.Co{X: w, Y: h}])
 		}
 		fmt.Println()
 	}
@@ -217,34 +217,34 @@ func (p Picture) PrintPictureMap() {
 
 // rotatePicture90 rotates the pixels in the picture p by 90 degrees
 func (p *Picture) rotatePicture90() {
-	newPixels := make(map[helpers.Co]string)
+	newPixels := make(map[utils.Co]string)
 	for co, val := range p.Pixels {
-		newPixels[helpers.Co{X: p.Width - co.Y, Y: co.X}] = val
+		newPixels[utils.Co{X: p.Width - co.Y, Y: co.X}] = val
 	}
 	p.Pixels = newPixels
 }
 
 // flipPicture flips (reflects) the pixels of a tile along the vertical centre
 func (p *Picture) flipPicture() {
-	newPixels := make(map[helpers.Co]string)
+	newPixels := make(map[utils.Co]string)
 	for co, val := range p.Pixels {
-		newPixels[helpers.Co{X: p.Width - co.X, Y: co.Y}] = val
+		newPixels[utils.Co{X: p.Width - co.X, Y: co.Y}] = val
 	}
 	p.Pixels = newPixels
 }
 
 // markSeaMonster changes the pixels in the picture that represent a sea monster from "#" to "O"
-func (p *Picture) markSeaMonster(co helpers.Co, seaMonster []helpers.Co) {
+func (p *Picture) markSeaMonster(co utils.Co, seaMonster []utils.Co) {
 	for _, smCo := range seaMonster {
-		p.Pixels[helpers.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}] = "O"
+		p.Pixels[utils.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}] = "O"
 	}
 }
 
 // checkSeaMonsterAtCo checks to see if a sea monster is in the picture relative to the given
 // coordinate, co
-func (p *Picture) checkSeaMonsterAtCo(co helpers.Co, seaMonster []helpers.Co) bool {
+func (p *Picture) checkSeaMonsterAtCo(co utils.Co, seaMonster []utils.Co) bool {
 	for _, smCo := range seaMonster {
-		c := helpers.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}
+		c := utils.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}
 		if val, ok := p.Pixels[c]; val != "#" || !ok {
 			return false
 		}
@@ -257,7 +257,7 @@ func (p *Picture) checkSeaMonsterAtCo(co helpers.Co, seaMonster []helpers.Co) bo
 // orientation of the picture, so if we find at least one then we can find the rest in that
 // orientation then return early. Otherwise we keep rotating the picture, then flip it before
 // rotating it again.
-func (p *Picture) FindSeaMonster(seaMonster []helpers.Co) {
+func (p *Picture) FindSeaMonster(seaMonster []utils.Co) {
 	var found bool
 	for j := 0; j < 2; j++ {
 		for i := 0; i < 4; i++ {

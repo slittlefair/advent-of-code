@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	utils "Advent-of-Code/utils"
 	"reflect"
 	"testing"
 )
@@ -23,7 +23,7 @@ func Test_constructLights(t *testing.T) {
 				width:  4,
 			},
 			want: &Lights{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: " ",
 					{X: 1, Y: 0}: " ",
 					{X: 2, Y: 0}: " ",
@@ -49,7 +49,7 @@ func Test_constructLights(t *testing.T) {
 
 func TestLights_followInstruction(t *testing.T) {
 	type fields struct {
-		Pixels map[helpers.Co]string
+		Pixels map[utils.Co]string
 		Height int
 		Width  int
 	}
@@ -77,12 +77,12 @@ func TestLights_followInstruction(t *testing.T) {
 		{
 			name: "it follows a rect instruction",
 			fields: fields{
-				Pixels: map[helpers.Co]string{},
+				Pixels: map[utils.Co]string{},
 			},
 			inst:    "rect 3x2",
 			wantErr: false,
 			want: &Lights{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: "#",
 					{X: 2, Y: 0}: "#",
@@ -95,7 +95,7 @@ func TestLights_followInstruction(t *testing.T) {
 		{
 			name: "it follows a rotate column instruction",
 			fields: fields{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: "#",
 					{X: 2, Y: 0}: " ",
@@ -111,7 +111,7 @@ func TestLights_followInstruction(t *testing.T) {
 			inst:    "rotate column x=1 by 1",
 			wantErr: false,
 			want: &Lights{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: " ",
 					{X: 2, Y: 0}: " ",
@@ -128,7 +128,7 @@ func TestLights_followInstruction(t *testing.T) {
 		{
 			name: "it follows a rotate row instruction",
 			fields: fields{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: " ",
 					{X: 2, Y: 0}: " ",
@@ -144,7 +144,7 @@ func TestLights_followInstruction(t *testing.T) {
 			inst:    "rotate row y=0 by 6",
 			wantErr: false,
 			want: &Lights{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: " ",
 					{X: 1, Y: 0}: " ",
 					{X: 2, Y: 0}: "#",
@@ -178,7 +178,7 @@ func TestLights_followInstruction(t *testing.T) {
 
 func TestLights_followInstructions(t *testing.T) {
 	type fields struct {
-		Pixels map[helpers.Co]string
+		Pixels map[utils.Co]string
 		Height int
 		Width  int
 	}
@@ -210,7 +210,7 @@ func TestLights_followInstructions(t *testing.T) {
 		{
 			name: "follows a set of instructions",
 			fields: fields{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: " ",
 					{X: 1, Y: 0}: " ",
 					{X: 2, Y: 0}: " ",
@@ -230,7 +230,7 @@ func TestLights_followInstructions(t *testing.T) {
 			},
 			wantErr: false,
 			want: &Lights{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: " ",
 					{X: 1, Y: 0}: " ",
 					{X: 2, Y: 0}: "#",
@@ -264,7 +264,7 @@ func TestLights_followInstructions(t *testing.T) {
 
 func TestLights_countLightsOn(t *testing.T) {
 	type fields struct {
-		Pixels map[helpers.Co]string
+		Pixels map[utils.Co]string
 		Height int
 		Width  int
 	}
@@ -276,7 +276,7 @@ func TestLights_countLightsOn(t *testing.T) {
 		{
 			name: `returns number of pixels set to "#"`,
 			fields: fields{
-				Pixels: map[helpers.Co]string{
+				Pixels: map[utils.Co]string{
 					{X: 0, Y: 0}: " ",
 					{X: 1, Y: 0}: "#",
 					{X: 2, Y: 0}: " ",
