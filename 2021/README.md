@@ -15,3 +15,4 @@
 - [x] Day 13 - Transparent Origami :window: :page_with_curl:
 - [x] Day 14 - Extended Polymerization :left_right_arrow: :dna:
 - [x] Day 15 - Chiton :shell: :shell:
+- [x] Day 16 - Packet Decoder :package: :jigsaw:
