@@ -21,10 +21,8 @@ func parseInput(input string) (*TargetArea, error) {
 	}
 	conv := [4]int{}
 	for i, m := range matches {
-		c, err := strconv.Atoi(m)
-		if err != nil {
-			return nil, err
-		}
+		// We know that matches can be converted due to regex, so we can safely ignore the error
+		c, _ := strconv.Atoi(m)
 		conv[i] = c
 	}
 	ta := &TargetArea{
@@ -32,7 +30,7 @@ func parseInput(input string) (*TargetArea, error) {
 		MaxX:                conv[1],
 		MinY:                conv[2],
 		MaxY:                conv[3],
-		GreatestSuccessfulY: conv[2],
+		GreatestSuccessfulY: conv[3],
 	}
 	return ta, nil
 }
@@ -51,20 +49,20 @@ func (ta *TargetArea) evaluateTrajectory(x, y int) {
 		highestYForShot = utils.Max(highestYForShot, currentPosition.Y)
 		if ta.isInTargetArea(currentPosition) {
 			ta.SuccessfulTrajectories++
-			ta.GreatestSuccessfulY = utils.Max(ta.GreatestSuccessfulY, highestYForShot)
-			break
+			ta.GreatestSuccessfulY = highestYForShot
+			return
 		}
 		// This trajectory won't treach x as we haven't reached it and x is now 0
 		if velocity.X == 0 && currentPosition.X < ta.MinX {
-			break
+			return
 		}
 		// This trajectory has passed the target area along the x axis
 		if currentPosition.X > ta.MaxX {
-			break
+			return
 		}
 		// This trajectory has passed the target area along the y axis
 		if currentPosition.Y < ta.MinY {
-			break
+			return
 		}
 		if velocity.X > 0 {
 			velocity.X--
@@ -73,23 +71,29 @@ func (ta *TargetArea) evaluateTrajectory(x, y int) {
 	}
 }
 
-func (ta *TargetArea) findTrajectories() (int, int) {
+func findTrajectories(input []string) (int, int, error) {
+	if l := len(input); l != 1 {
+		return -1, -1, fmt.Errorf("expected one string input, got %d: %v", l, input)
+	}
+	ta, err := parseInput(input[0])
+	if err != nil {
+		return -1, -1, err
+	}
 	for y := ta.MinY; y <= -ta.MinY; y++ {
 		for x := 0; x <= ta.MaxX; x++ {
 			ta.evaluateTrajectory(x, y)
 		}
 	}
-	return ta.GreatestSuccessfulY, ta.SuccessfulTrajectories
+	return ta.GreatestSuccessfulY, ta.SuccessfulTrajectories, nil
 }
 
 func main() {
 	input := utils.ReadFile()
-	ta, err := parseInput(input[0])
+	part1, part2, err := findTrajectories(input)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	part1, part2 := ta.findTrajectories()
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)
 }
