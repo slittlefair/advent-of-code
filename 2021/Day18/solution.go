@@ -250,7 +250,28 @@ func (p *Pair) findMagnitude() int {
 	return mag
 }
 
-func findGreatestMag(input []string) (int, error) {
+func part1(input []string) (int, error) {
+	numbers := []*Pair{}
+	for _, line := range input {
+		idx := 0
+		pair, err := parseLine(line, &idx)
+		if err != nil {
+			return -1, err
+		}
+		numbers = append(numbers, pair)
+	}
+	pair := numbers[0]
+	var err error
+	for i := 1; i < len(numbers); i++ {
+		pair, err = pair.doSum(numbers[i])
+		if err != nil {
+			return -1, err
+		}
+	}
+	return pair.findMagnitude(), nil
+}
+
+func part2(input []string) (int, error) {
 	greatestMag := 0
 	for i := 0; i < len(input); i++ {
 		for j := 0; j < len(input); j++ {
@@ -279,31 +300,26 @@ func findGreatestMag(input []string) (int, error) {
 	return greatestMag, nil
 }
 
+func findSolutions(input []string) (int, int, error) {
+	part1, err := part1(input)
+	if err != nil {
+		return -1, -1, err
+	}
+	part2, err := part2(input)
+	if err != nil {
+		return -1, -1, err
+	}
+	return part1, part2, nil
+}
+
 func main() {
 	input := utils.ReadFile()
-	numbers := []*Pair{}
-	for _, line := range input {
-		idx := 0
-		pair, err := parseLine(line, &idx)
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-		numbers = append(numbers, pair)
-	}
-	pair := numbers[0]
-	var err error
-	for i := 1; i < len(numbers); i++ {
-		pair, err = pair.doSum(numbers[i])
-		if err != nil {
-			fmt.Println(err)
-			return
-		}
-	}
-	fmt.Println("Part 1:", pair.findMagnitude())
-	part2, err := findGreatestMag(input)
+	part1, part2, err := findSolutions(input)
+
 	if err != nil {
 		fmt.Println(err)
+		return
 	}
+	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)
 }
