@@ -56,56 +56,9 @@ func parseLine(line string, i *int) (*Pair, error) {
 	}
 }
 
-// Debugging
-// func buildPair(pair *Pair, b *strings.Builder) {
-// 	b.WriteString("[")
-// 	if pair.leftPair != nil {
-// 		buildPair(pair.leftPair, b)
-// 	} else if pair.leftVal != nil {
-// 		b.WriteString(fmt.Sprintf("%v", *pair.leftVal))
-// 	}
-// 	b.WriteString(",")
-// 	if pair.rightPair != nil {
-// 		buildPair(pair.rightPair, b)
-// 	} else if pair.rightVal != nil {
-// 		b.WriteString(fmt.Sprintf("%v", *pair.rightVal))
-// 	}
-// 	b.WriteString("]")
-// }
-
-// func printPair(pair *Pair) *strings.Builder {
-// 	b := &strings.Builder{}
-// 	if pair != nil {
-// 		buildPair(pair, b)
-// 	}
-// 	return b
-// }
-
-func (p *Pair) explode() (bool, error) {
-	ep := p.findExplodingPair(&ExplodingPair{}, 0)
-	if ep.pair == nil {
-		return false, nil
-	}
-	if ep.pair.leftVal == nil || ep.pair.rightVal == nil {
-		return false, fmt.Errorf("something went wrong, expected valid ep.pair, got %+v", ep.pair)
-	}
-	if ep.left != nil {
-		*ep.left += *ep.pair.leftVal
-	}
-	if ep.right != nil {
-		*ep.right += *ep.pair.rightVal
-	}
-	newVal := 0
-	if ep.pair == ep.pair.parent.leftPair {
-		ep.pair.parent.leftPair = nil
-		ep.pair.parent.leftVal = &newVal
-	} else if ep.pair == ep.pair.parent.rightPair {
-		ep.pair.parent.rightPair = nil
-		ep.pair.parent.rightVal = &newVal
-	} else {
-		return false, fmt.Errorf("something went wrong, expected ep.pair to match one of parent pairs, got ep.pair %+v and parent %+v", ep.pair, ep.pair.parent)
-	}
-	return true, nil
+type ExplodingPair struct {
+	pair        *Pair
+	left, right *int
 }
 
 func (p *Pair) findExplodingPair(ep *ExplodingPair, level int) *ExplodingPair {
@@ -137,41 +90,35 @@ func (p *Pair) findExplodingPair(ep *ExplodingPair, level int) *ExplodingPair {
 	return ep
 }
 
-type ExplodingPair struct {
-	pair        *Pair
-	left, right *int
-}
-
-func (sp *SplittingPair) foundSplittingPair() bool {
-	return sp.pair != nil
+func (p *Pair) explode() (bool, error) {
+	ep := p.findExplodingPair(&ExplodingPair{}, 0)
+	if ep.pair == nil {
+		return false, nil
+	}
+	if ep.pair.leftVal == nil || ep.pair.rightVal == nil {
+		return false, fmt.Errorf("something went wrong, expected valid ep.pair, got %+v", ep.pair)
+	}
+	if ep.left != nil {
+		*ep.left += *ep.pair.leftVal
+	}
+	if ep.right != nil {
+		*ep.right += *ep.pair.rightVal
+	}
+	newVal := 0
+	if ep.pair == ep.pair.parent.leftPair {
+		ep.pair.parent.leftPair = nil
+		ep.pair.parent.leftVal = &newVal
+	} else if ep.pair == ep.pair.parent.rightPair {
+		ep.pair.parent.rightPair = nil
+		ep.pair.parent.rightVal = &newVal
+	} else {
+		return false, fmt.Errorf("something went wrong, expected ep.pair to match one of parent pairs, got ep.pair %+v and parent %+v", ep.pair, ep.pair.parent)
+	}
+	return true, nil
 }
 
 type SplittingPair struct {
 	pair *Pair
-}
-
-func (p *Pair) findSplittingPair(sp *SplittingPair) *SplittingPair {
-	if sp.foundSplittingPair() {
-		return sp
-	}
-	if p.leftVal != nil && *p.leftVal > 9 {
-		sp.pair = p
-		return sp
-	}
-	if p.leftPair != nil {
-		p.leftPair.findSplittingPair(sp)
-	}
-	if sp.foundSplittingPair() {
-		return sp
-	}
-	if p.rightVal != nil && *p.rightVal > 9 {
-		sp.pair = p
-		return sp
-	}
-	if p.rightPair != nil {
-		p.rightPair.findSplittingPair(sp)
-	}
-	return sp
 }
 
 func (p *Pair) split() (bool, error) {
@@ -202,6 +149,30 @@ func (p *Pair) split() (bool, error) {
 		return true, nil
 	}
 	return false, fmt.Errorf("not got correct splittingPair, leftVal: %v, rightVal: %v", sp.leftVal, sp.rightVal)
+}
+
+func (p *Pair) findSplittingPair(sp *SplittingPair) *SplittingPair {
+	if sp.pair != nil {
+		return sp
+	}
+	if p.leftVal != nil && *p.leftVal > 9 {
+		sp.pair = p
+		return sp
+	}
+	if p.leftPair != nil {
+		p.leftPair.findSplittingPair(sp)
+	}
+	if sp.pair != nil {
+		return sp
+	}
+	if p.rightVal != nil && *p.rightVal > 9 {
+		sp.pair = p
+		return sp
+	}
+	if p.rightPair != nil {
+		p.rightPair.findSplittingPair(sp)
+	}
+	return sp
 }
 
 func (p *Pair) addPair(pair *Pair) *Pair {
@@ -323,3 +294,28 @@ func main() {
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)
 }
+
+// Debugging
+// func buildPair(pair *Pair, b *strings.Builder) {
+// 	b.WriteString("[")
+// 	if pair.leftPair != nil {
+// 		buildPair(pair.leftPair, b)
+// 	} else if pair.leftVal != nil {
+// 		b.WriteString(fmt.Sprintf("%v", *pair.leftVal))
+// 	}
+// 	b.WriteString(",")
+// 	if pair.rightPair != nil {
+// 		buildPair(pair.rightPair, b)
+// 	} else if pair.rightVal != nil {
+// 		b.WriteString(fmt.Sprintf("%v", *pair.rightVal))
+// 	}
+// 	b.WriteString("]")
+// }
+
+// func printPair(pair *Pair) *strings.Builder {
+// 	b := &strings.Builder{}
+// 	if pair != nil {
+// 		buildPair(pair, b)
+// 	}
+// 	return b
+// }
