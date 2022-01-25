@@ -5,7 +5,6 @@ import (
 	"fmt"
 	"math"
 	"strconv"
-	"strings"
 )
 
 type Pair struct {
@@ -57,29 +56,30 @@ func parseLine(line string, i *int) (*Pair, error) {
 	}
 }
 
-func printPair(pair *Pair, b *strings.Builder) {
-	b.WriteString("[")
-	if pair.leftPair != nil {
-		printPair(pair.leftPair, b)
-	} else if pair.leftVal != nil {
-		b.WriteString(fmt.Sprintf("%v", *pair.leftVal))
-	}
-	b.WriteString(",")
-	if pair.rightPair != nil {
-		printPair(pair.rightPair, b)
-	} else if pair.rightVal != nil {
-		b.WriteString(fmt.Sprintf("%v", *pair.rightVal))
-	}
-	b.WriteString("]")
-}
+// Debugging
+// func buildPair(pair *Pair, b *strings.Builder) {
+// 	b.WriteString("[")
+// 	if pair.leftPair != nil {
+// 		buildPair(pair.leftPair, b)
+// 	} else if pair.leftVal != nil {
+// 		b.WriteString(fmt.Sprintf("%v", *pair.leftVal))
+// 	}
+// 	b.WriteString(",")
+// 	if pair.rightPair != nil {
+// 		buildPair(pair.rightPair, b)
+// 	} else if pair.rightVal != nil {
+// 		b.WriteString(fmt.Sprintf("%v", *pair.rightVal))
+// 	}
+// 	b.WriteString("]")
+// }
 
-func debug(pair *Pair) *strings.Builder {
-	b := &strings.Builder{}
-	if pair != nil {
-		printPair(pair, b)
-	}
-	return b
-}
+// func printPair(pair *Pair) *strings.Builder {
+// 	b := &strings.Builder{}
+// 	if pair != nil {
+// 		buildPair(pair, b)
+// 	}
+// 	return b
+// }
 
 func (p *Pair) explode() (bool, error) {
 	ep := p.findExplodingPair(&ExplodingPair{}, 0)
@@ -108,7 +108,6 @@ func (p *Pair) explode() (bool, error) {
 	return true, nil
 }
 
-// TODO something dodgy happening here, not getting correct left/right vals?
 func (p *Pair) findExplodingPair(ep *ExplodingPair, level int) *ExplodingPair {
 	if ep.right != nil {
 		return ep
@@ -216,7 +215,6 @@ func (p *Pair) addPair(pair *Pair) *Pair {
 
 func (p *Pair) doSum(newPair *Pair) (*Pair, error) {
 	p = p.addPair(newPair)
-	fmt.Printf("after addition: %v\n", debug(p))
 	for {
 		for {
 			didExplode, err := p.explode()
@@ -226,7 +224,6 @@ func (p *Pair) doSum(newPair *Pair) (*Pair, error) {
 			if !didExplode {
 				break
 			}
-			fmt.Printf("after explode:  %v\n", debug(p))
 		}
 		didSplit, err := p.split()
 		if err != nil {
@@ -235,8 +232,51 @@ func (p *Pair) doSum(newPair *Pair) (*Pair, error) {
 		if !didSplit {
 			return p, nil
 		}
-		fmt.Printf("after split:    %v\n", debug(p))
 	}
+}
+
+func (p *Pair) findMagnitude() int {
+	mag := 0
+	if p.leftVal != nil {
+		mag += 3 * *p.leftVal
+	} else {
+		mag += 3 * p.leftPair.findMagnitude()
+	}
+	if p.rightVal != nil {
+		mag += 2 * *p.rightVal
+	} else {
+		mag += 2 * p.rightPair.findMagnitude()
+	}
+	return mag
+}
+
+func findGreatestMag(input []string) (int, error) {
+	greatestMag := 0
+	for i := 0; i < len(input); i++ {
+		for j := 0; j < len(input); j++ {
+			if i != j {
+				idx := 0
+				pair1, err := parseLine(input[i], &idx)
+				if err != nil {
+					return -1, err
+				}
+				idx = 0
+				pair2, err := parseLine(input[j], &idx)
+				if err != nil {
+					return -1, err
+				}
+				sum, err := pair1.doSum(pair2)
+				if err != nil {
+					return -1, err
+				}
+				mag := sum.findMagnitude()
+				if mag > greatestMag {
+					greatestMag = mag
+				}
+			}
+		}
+	}
+	return greatestMag, nil
 }
 
 func main() {
@@ -249,21 +289,21 @@ func main() {
 			fmt.Println(err)
 			return
 		}
-		// fmt.Println(debug(pair))
 		numbers = append(numbers, pair)
 	}
 	pair := numbers[0]
-	// fmt.Println(debug(pair))
-	// pair.explode()
-	// fmt.Println(debug(pair))
 	var err error
 	for i := 1; i < len(numbers); i++ {
-		fmt.Println(debug(numbers[i]))
 		pair, err = pair.doSum(numbers[i])
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
 	}
-	fmt.Println("finished:      ", debug(pair))
+	fmt.Println("Part 1:", pair.findMagnitude())
+	part2, err := findGreatestMag(input)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println("Part 2:", part2)
 }
