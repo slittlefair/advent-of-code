@@ -4,6 +4,7 @@ import (
 	"Advent-of-Code/utils"
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 type Pair struct {
@@ -55,22 +56,31 @@ func parseLine(line string, i *int) (*Pair, error) {
 	}
 }
 
-func printPair(pair *Pair) {
-	fmt.Printf("[")
+func printPair(pair *Pair, b *strings.Builder) error {
+	b.WriteString("[")
 	if pair.leftPair != nil {
-		printPair(pair.leftPair)
+		printPair(pair.leftPair, b)
 	} else if pair.leftVal != nil {
-		fmt.Printf("%v", *pair.leftVal)
+		b.WriteString(fmt.Sprintf("%v", *pair.leftVal))
 	} else {
-		fmt.Print("ERRORRRRRR")
+		return fmt.Errorf("got no leftPair or leftVal: %+v", pair)
 	}
-	fmt.Printf(",")
+	b.WriteString(",")
 	if pair.rightPair != nil {
-		printPair(pair.rightPair)
+		printPair(pair.rightPair, b)
+	} else if pair.rightVal != nil {
+		b.WriteString(fmt.Sprintf("%v", *pair.rightVal))
 	} else {
-		fmt.Printf("%v", *pair.rightVal)
+		return fmt.Errorf("got no rightPair or rightVal: %+v", pair)
 	}
-	fmt.Printf("]")
+	b.WriteString("]")
+	return nil
+}
+
+func debug(pair *Pair) (*strings.Builder, error) {
+	b := &strings.Builder{}
+	err := printPair(pair, b)
+	return b, err
 }
 
 func (p *Pair) explode() error {
@@ -129,11 +139,6 @@ func (p *Pair) findExplodingPair(ep *ExplodingPair, level int) *ExplodingPair {
 	return ep
 }
 
-func debug(pair *Pair) {
-	printPair(pair)
-	fmt.Println()
-}
-
 type ExplodingPair struct {
 	pair        *Pair
 	left, right *int
@@ -149,12 +154,22 @@ func main() {
 			return
 		}
 		fmt.Println()
-		debug(pair)
+		b, err := debug(pair)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(b)
 		err = pair.explode()
 		if err != nil {
 			fmt.Println(err)
 			return
 		}
-		debug(pair)
+		b, err = debug(pair)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		fmt.Println(b)
 	}
 }
