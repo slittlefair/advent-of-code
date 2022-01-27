@@ -1,12 +1,9 @@
 name: Go lint
 on:
   push:
-    tags:
-      - v*
-    branches:
-      - master
-      - main
+    branches: [master]
   pull_request:
+    branches: [master]
 permissions:
   contents: read
 jobs:
