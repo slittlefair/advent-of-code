@@ -59,7 +59,7 @@ func (t Tile) IsAdjacentTop(tile Tile) bool {
 	return true
 }
 
-// IsAdjacentTop returns whether the tile "t" is directly below the tile "tile"
+// IsAdjacentBottom returns whether the tile "t" is directly below the tile "tile"
 func (t Tile) IsAdjacentBottom(tile Tile) bool {
 	for x := 0; x <= t.Width; x++ {
 		if t.Pixels[utils.Co{X: x, Y: 0}] != tile.Pixels[utils.Co{X: x, Y: tile.Height}] {
@@ -69,7 +69,7 @@ func (t Tile) IsAdjacentBottom(tile Tile) bool {
 	return true
 }
 
-// IsAdjacentTop returns whether the tile "t" is directly to the left of tile "tile"
+// IsAdjacentLeft returns whether the tile "t" is directly to the left of tile "tile"
 func (t Tile) IsAdjacentLeft(tile Tile) bool {
 	for y := 0; y <= t.Height; y++ {
 		if t.Pixels[utils.Co{X: t.Width, Y: y}] != tile.Pixels[utils.Co{X: 0, Y: y}] {
@@ -79,7 +79,7 @@ func (t Tile) IsAdjacentLeft(tile Tile) bool {
 	return true
 }
 
-// IsAdjacentTop returns whether the tile "t" is directly to the right of tile "tile"
+// IsAdjacentRight returns whether the tile "t" is directly to the right of tile "tile"
 func (t Tile) IsAdjacentRight(tile Tile) bool {
 	for y := 0; y <= t.Height; y++ {
 		if t.Pixels[utils.Co{X: 0, Y: y}] != tile.Pixels[utils.Co{X: tile.Width, Y: y}] {
@@ -89,7 +89,7 @@ func (t Tile) IsAdjacentRight(tile Tile) bool {
 	return true
 }
 
-// isAdjacentTo returns whether the tile "tile" is adjacent to the tile "t"
+// IsAdjacentTo returns whether the tile "tile" is adjacent to the tile "t"
 func (t Tile) IsAdjacentTo(tile Tile) bool {
 	if t.AdjacentTiles.Top == tile.ID {
 		return true

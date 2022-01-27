@@ -37,7 +37,7 @@ func (pq *PriorityQueue) Pop() interface{} {
 	return node
 }
 
-// Debugging
+// PrintGrid is used for debugging
 func (g Graph) PrintGrid() {
 	for y := 0; y <= g.MaxY; y++ {
 		for x := 0; x <= g.MaxX; x++ {

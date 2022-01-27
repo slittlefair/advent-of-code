@@ -106,7 +106,11 @@ func (l *Lights) countDigitalBrightness() int {
 func main() {
 	input := utils.ReadFile()
 	lights := populateLights()
-	lights.followInstructions(input)
+	err := lights.followInstructions(input)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("Part 1:", lights.countAnalogueBrightness())
 	fmt.Println("Part 2:", lights.countDigitalBrightness())
 }

@@ -47,7 +47,7 @@ func (ec EggnogContainers) CountPermutations() int {
 }
 
 func (ec EggnogContainers) CountSmallestContainersPermutations() int {
-	smallestPermutations := utils.Infinty
+	smallestPermutations := utils.Infinity
 	count := 0
 	for numContainers, freq := range ec.Ways {
 		if numContainers < smallestPermutations {

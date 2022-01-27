@@ -38,7 +38,10 @@ func ParseInput(input []string) (*Game, error) {
 	reNum := regexp.MustCompile(`\d+`)
 	for i := 1; i < len(input); i += 6 {
 		card := &card.Card{Numbers: make(map[utils.Co]*card.Number)}
-		card.ParseCard(input[i:i+6], reNum)
+		err := card.ParseCard(input[i:i+6], reNum)
+		if err != nil {
+			return nil, err
+		}
 		g.Cards = append(g.Cards, card)
 	}
 	g.CardsNotWon = make(map[*card.Card]struct{})

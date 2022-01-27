@@ -81,8 +81,7 @@ func (p Paper) printPaper() {
 }
 
 func (p *Paper) doFold(idx int) {
-	inst := p.Instructions[idx]
-	if inst.Dir == "x" {
+	if inst := p.Instructions[idx]; inst.Dir == "x" {
 		p.doFoldLeft(inst.Val)
 	} else {
 		p.doFoldUp(inst.Val)

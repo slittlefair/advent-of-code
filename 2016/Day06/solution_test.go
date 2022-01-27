@@ -5,7 +5,7 @@ import (
 	"testing"
 )
 
-var f []map[string]int = []map[string]int{
+var f = []map[string]int{
 	{"a": 1, "d": 2, "e": 3, "n": 2, "r": 2, "s": 2, "t": 2, "v": 2},
 	{"a": 3, "d": 1, "e": 2, "n": 2, "r": 2, "s": 2, "t": 2, "v": 2},
 	{"a": 2, "d": 2, "e": 2, "n": 2, "r": 2, "s": 3, "t": 2, "v": 1},

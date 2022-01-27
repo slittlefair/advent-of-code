@@ -38,7 +38,7 @@ func parseInput(entries []string) (int, Buses, error) {
 }
 
 func (b *Buses) part1(arrivalTime int) int {
-	smallestTimeToWait := utils.Infinty
+	smallestTimeToWait := utils.Infinity
 	var busToWaitFor int
 	for _, bus := range *b {
 		timeToWait := bus.id - (arrivalTime % bus.id)

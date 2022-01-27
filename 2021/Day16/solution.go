@@ -168,7 +168,7 @@ func (p *Packet) getValue() error {
 			p.value *= sp.value
 		}
 	case 2:
-		p.value = utils.Infinty
+		p.value = utils.Infinity
 		for _, sp := range p.subPackets {
 			if err := sp.getValue(); err != nil {
 				return err

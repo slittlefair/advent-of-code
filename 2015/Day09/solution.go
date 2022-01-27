@@ -90,7 +90,10 @@ func (g *Graph) findMinimumAndMaximumPaths() (int, int) {
 func main() {
 	input := utils.ReadFile()
 	graph := Graph{}
-	graph.parseInput(input)
+	if err := graph.parseInput(input); err != nil {
+		fmt.Println(err)
+		return
+	}
 	minPathDistance, maxPathDistance := graph.findMinimumAndMaximumPaths()
 	fmt.Println("Part 1:", minPathDistance)
 	fmt.Println("Part 2:", maxPathDistance)

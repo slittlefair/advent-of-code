@@ -95,7 +95,7 @@ func (f fullMap) printMap() {
 			if val, ok := f[coordinate{x, y}]; !ok {
 				fmt.Printf("#")
 			} else {
-				fmt.Printf(val)
+				fmt.Print(val)
 			}
 		}
 		fmt.Println()
@@ -117,12 +117,13 @@ func checkLimits(co coordinate) {
 	}
 }
 
-func printLimits() {
-	fmt.Println("minX:", minX)
-	fmt.Println("maxX:", maxX)
-	fmt.Println("minY:", minY)
-	fmt.Println("maxY:", maxY)
-}
+// for debugging
+// func printLimits() {
+// 	fmt.Println("minX:", minX)
+// 	fmt.Println("maxX:", maxX)
+// 	fmt.Println("minY:", minY)
+// 	fmt.Println("maxY:", maxY)
+// }
 
 func (dm distanceMap) greatestDistance() {
 	greatestDistance := 0

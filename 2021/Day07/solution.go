@@ -14,7 +14,7 @@ func calculateFuelSpend(x int) int {
 }
 
 func findMinFuelSpend(input []int, min, max int, part2 bool) int {
-	minDist := utils.Infinty
+	minDist := utils.Infinity
 	for x := min; x <= max; x++ {
 		dist := 0
 		for _, i := range input {

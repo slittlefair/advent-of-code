@@ -27,20 +27,19 @@ func groupSum(packages []int) int {
 }
 
 func getLowestQuantumEntanglement(combos [][]int) (int, error) {
-	lowestQE := utils.Infinty
+	lowestQE := utils.Infinity
 	for _, c := range combos {
 		if qe := calculateQuantumEntanglement(c); qe < lowestQE {
 			lowestQE = qe
 		}
 	}
-	if lowestQE == utils.Infinty {
+	if lowestQE == utils.Infinity {
 		return -1, fmt.Errorf("could not find lowestQE of groups %v", combos)
 	}
 	return lowestQE, nil
 }
 
-func (vc *ValidCombos) iterate(remainingPackages, bucket []int, weight, maxLevel int) ([]int, []int) {
-	var newRemainingPackages, newBucket []int
+func (vc *ValidCombos) iterate(remainingPackages, bucket []int, weight, maxLevel int) {
 	for i, rp := range remainingPackages {
 		newBucket := append(bucket, rp)
 		newRemainingPackages := utils.Remove(remainingPackages, i)
@@ -48,13 +47,12 @@ func (vc *ValidCombos) iterate(remainingPackages, bucket []int, weight, maxLevel
 			vc.iterate(newRemainingPackages, newBucket, weight, maxLevel)
 		}
 		if sum := groupSum(newBucket); sum > weight {
-			return newRemainingPackages, newBucket
+			return
 		} else if sum == weight {
 			*vc = append(*vc, newBucket)
-			return newRemainingPackages, newBucket
+			return
 		}
 	}
-	return newRemainingPackages, newBucket
 }
 
 func validPermutations(input []int, weight int) ([][]int, error) {

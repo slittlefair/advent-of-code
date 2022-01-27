@@ -24,19 +24,19 @@ func Test_parseInput(t *testing.T) {
 			wantErr: true,
 		},
 		{
-			name:    "returns slice binary form of the given hexidecimal string, advent of code example 1",
+			name:    "returns slice binary form of the given hexadecimal string, advent of code example 1",
 			input:   "D2FE28",
 			want:    exampleBits1,
 			wantErr: false,
 		},
 		{
-			name:    "returns slice binary form of the given hexidecimal string, advent of code example 2",
+			name:    "returns slice binary form of the given hexadecimal string, advent of code example 2",
 			input:   "38006F45291200",
 			want:    exampleBits2,
 			wantErr: false,
 		},
 		{
-			name:    "returns slice binary form of the given hexidecimal string, advent of code example 3",
+			name:    "returns slice binary form of the given hexadecimal string, advent of code example 3",
 			input:   "EE00D40C823060",
 			want:    exampleBits3,
 			wantErr: false,
@@ -709,7 +709,7 @@ func TestPacket_getValue(t *testing.T) {
 			packet: &Packet{typeID: 2, value: -1, subPackets: []Packet{
 				{value: -1, typeID: 8},
 			}},
-			want: &Packet{typeID: 2, value: utils.Infinty, subPackets: []Packet{
+			want: &Packet{typeID: 2, value: utils.Infinity, subPackets: []Packet{
 				{value: -1, typeID: 8},
 			}},
 			wantErr: true,

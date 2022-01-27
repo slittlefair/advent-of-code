@@ -47,8 +47,6 @@ func stringsShareParts(str1, str2 string, wantEqual bool) bool {
 	return true
 }
 
-type ConversionMap map[string]string
-
 type ValueMap []string
 
 func (vm ValueMap) find3Letter(signalPatterns SignalPatterns) error {
@@ -122,53 +120,53 @@ func (vm ValueMap) find6Letter(signalPatterns SignalPatterns) error {
 	return fmt.Errorf("find6Letter: could not find 6 letter")
 }
 
-func (vMap ValueMap) assignValues(signalPatterns SignalPatterns) error {
+func (vm ValueMap) assignValues(signalPatterns SignalPatterns) error {
 	// Get simple values
 	for i := range signalPatterns {
 		if l := len(i); l == 2 {
-			vMap[1] = i
+			vm[1] = i
 			delete(signalPatterns, i)
 		} else if l == 3 {
-			vMap[7] = i
+			vm[7] = i
 			delete(signalPatterns, i)
 		} else if l == 4 {
-			vMap[4] = i
+			vm[4] = i
 			delete(signalPatterns, i)
 		} else if l == 7 {
-			vMap[8] = i
+			vm[8] = i
 			delete(signalPatterns, i)
 		}
 	}
-	err := vMap.find3Letter(signalPatterns)
+	err := vm.find3Letter(signalPatterns)
 	if err != nil {
 		return err
 	}
-	err = vMap.find9Letter(signalPatterns)
+	err = vm.find9Letter(signalPatterns)
 	if err != nil {
 		return err
 	}
-	err = vMap.find5Letter(signalPatterns)
+	err = vm.find5Letter(signalPatterns)
 	if err != nil {
 		return err
 	}
-	err = vMap.find2Letter(signalPatterns)
+	err = vm.find2Letter(signalPatterns)
 	if err != nil {
 		return err
 	}
-	err = vMap.find6Letter(signalPatterns)
+	err = vm.find6Letter(signalPatterns)
 	if err != nil {
 		return err
 	}
 	for sp := range signalPatterns {
-		vMap[0] = sp
+		vm[0] = sp
 	}
 	return err
 }
 
-func (vMap ValueMap) decodeOutputValue(outputValue []string) int {
+func (vm ValueMap) decodeOutputValue(outputValue []string) int {
 	value := 0
 	for i, v := range outputValue {
-		for j, vv := range vMap {
+		for j, vv := range vm {
 			if stringsShareParts(v, vv, true) {
 				value += (j * int(math.Pow(10, float64(3-i))))
 				break

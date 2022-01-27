@@ -1,4 +1,4 @@
-name: Go
+name: Go build & test
 
 on:
   push:
@@ -17,7 +17,6 @@ jobs:
         with:
           go-version: 1.15
 
-      # TODO tidy up so this can be run for whole directory (remove TypeScript attempts)
       - name: Build
         run: go build -v ./...
 

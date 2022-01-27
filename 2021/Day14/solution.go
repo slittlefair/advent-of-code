@@ -13,7 +13,7 @@ type PolymerizationEquipment struct {
 }
 
 func combineLetters(l1, l2 string) string {
-	return fmt.Sprintf("%v%v", string(l1), string(l2))
+	return fmt.Sprintf("%v%v", l1, l2)
 }
 
 func parseInput(input []string) (*PolymerizationEquipment, error) {
@@ -52,7 +52,7 @@ func (pe *PolymerizationEquipment) followInstructions() {
 }
 
 func (pe PolymerizationEquipment) getVal() int {
-	minVal := utils.Infinty
+	minVal := utils.Infinity
 	maxVal := 0
 	for _, v := range pe.lf {
 		minVal = utils.Min(minVal, v)

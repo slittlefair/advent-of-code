@@ -18,7 +18,7 @@ var coords []co
 
 var inf = make(map[co]bool)
 
-var re = regexp.MustCompile("\\d+")
+var re = regexp.MustCompile(`\d+`)
 
 var maxX, maxY float64
 

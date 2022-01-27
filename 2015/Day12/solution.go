@@ -19,10 +19,13 @@ func countNumbers(input string) int {
 	return sum
 }
 
-func findNonRedNumbers(input string) int {
+func findNonRedNumbers(input string) (int, error) {
 	var result interface{}
-	json.Unmarshal([]byte(input), &result)
-	return recursive(result)
+	err := json.Unmarshal([]byte(input), &result)
+	if err != nil {
+		return -1, err
+	}
+	return recursive(result), nil
 }
 
 func recursive(r interface{}) int {
@@ -51,5 +54,10 @@ out:
 func main() {
 	input := utils.ReadFile()[0]
 	fmt.Println("Part 1:", countNumbers(input))
-	fmt.Println("Part 2:", findNonRedNumbers(input))
+	part2, err := findNonRedNumbers(input)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
+	fmt.Println("Part 2:", part2)
 }
