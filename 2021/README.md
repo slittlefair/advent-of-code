@@ -17,3 +17,4 @@
 - [x] Day 15 - Chiton :shell: :shell:
 - [x] Day 16 - Packet Decoder :package: :jigsaw:
 - [x] Day 17 - Trick Shot :magic_wand: :dart:
+- [x] Day 18 - Snailfish :snail: :fish:
