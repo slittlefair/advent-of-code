@@ -105,7 +105,10 @@ func (g Graph) FindGreatestHappiness() int {
 func main() {
 	input := utils.ReadFile()
 	graph := Graph{}
-	graph.ParseInput(input)
+	if err := graph.ParseInput(input); err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("Part 1:", graph.FindGreatestHappiness())
 	graph.AddMe()
 	fmt.Println("Part 2:", graph.FindGreatestHappiness())

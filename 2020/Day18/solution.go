@@ -17,7 +17,7 @@ func evaluateCoreSum(sum string) string {
 	currentOperator := ""
 	sumParts := reChars.FindAllString(sum, -1)
 	for _, char := range sumParts {
-		if s := string(char); s == "+" {
+		if s := char; s == "+" {
 			currentOperator = "+"
 		} else if s == "*" {
 			currentOperator = "*"

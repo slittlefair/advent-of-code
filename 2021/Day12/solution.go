@@ -105,7 +105,7 @@ func canVisitPart2(cave *Cave, path Path) bool {
 // 	fmt.Println(path[len(path)-1].id)
 // }
 
-func (s *System) getNextCave(currentCave *Cave, currentPath Path, allPaths []Path, canVisit canVisit) {
+func (s *System) getNextCave(currentCave *Cave, currentPath Path, canVisit canVisit) {
 	currentPath = append(currentPath, currentCave)
 	if currentCave == s.caves["end"] {
 		s.paths = append(s.paths, currentPath)
@@ -113,13 +113,13 @@ func (s *System) getNextCave(currentCave *Cave, currentPath Path, allPaths []Pat
 	}
 	for _, n := range currentCave.neighbours {
 		if canVisit(n, currentPath) {
-			s.getNextCave(n, currentPath, allPaths, canVisit)
+			s.getNextCave(n, currentPath, canVisit)
 		}
 	}
 }
 
 func (s *System) findNumberOfPaths(canVisit canVisit) int {
-	s.getNextCave(s.caves["start"], Path{}, []Path{}, canVisit)
+	s.getNextCave(s.caves["start"], Path{}, canVisit)
 	return len(s.paths)
 }
 

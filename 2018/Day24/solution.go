@@ -132,7 +132,7 @@ func opponent(army int) (opponent int) {
 	return ImmuneSystem
 }
 
-func killUnits(attack group, defence group, damage int) (group, int) {
+func killUnits(defence group, damage int) (group, int) {
 	killed := damage / defence.hp
 	if killed > defence.units {
 		killed = defence.units
@@ -220,7 +220,7 @@ func battle(boost int) (int, int) {
 				alreadyTargets[val] = true
 			}
 
-			// Now we know which group we're using, decide who they're targetting
+			// Now we know which group we're using, decide who they're targeting
 			potentialTargets := []string{}
 			opponent := opponent(attackingGroup.army)
 
@@ -266,7 +266,7 @@ func battle(boost int) (int, int) {
 				attack := allGroups[g]
 				defence := allGroups[targets[g]]
 				damage := calculateDamage(attack, defence)
-				defence, killed := killUnits(attack, defence, damage)
+				defence, killed := killUnits(defence, damage)
 				unitsKilled += killed
 				defence.effectivePower = defence.units * defence.attackDamage
 				// Remove the group if units are zero

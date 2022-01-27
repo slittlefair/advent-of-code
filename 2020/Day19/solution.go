@@ -94,7 +94,7 @@ func (i Input) evaluateMessages() int {
 	seen := map[string]bool{}
 
 	for _, message := range i.Messages {
-		seen = i.iterateMessages(i.Rules["0"].subRules[0][0], i.Rules["0"].subRules[0][1:], string(message), 0, seen)
+		seen = i.iterateMessages(i.Rules["0"].subRules[0][0], i.Rules["0"].subRules[0][1:], message, 0, seen)
 		_, ok := seen[message]
 		if ok {
 			count++

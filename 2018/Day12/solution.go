@@ -52,7 +52,7 @@ func main() {
 		for i := 2; i < len(pots)-2; i++ {
 			matchingSequence := ""
 			for j := i - 2; j <= i+2; j++ {
-				matchingSequence += string(pots[j])
+				matchingSequence += pots[j]
 			}
 			changes[i] = rules[matchingSequence]
 		}

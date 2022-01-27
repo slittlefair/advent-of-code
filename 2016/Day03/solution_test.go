@@ -114,7 +114,7 @@ func Test_validateHorizontalTriangles(t *testing.T) {
 		want  int
 	}{
 		{
-			name: "returns number of valid horizontal traingles in input",
+			name: "returns number of valid horizontal triangles in input",
 			input: []string{
 				"2  4  3",
 				"56  62  99",
@@ -141,7 +141,7 @@ func Test_validateVerticalTriangles(t *testing.T) {
 		want  int
 	}{
 		{
-			name: "returns number of valid vertical traingles in input",
+			name: "returns number of valid vertical triangles in input",
 			input: []string{
 				"2  4  11",
 				"56  62  99",

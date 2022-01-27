@@ -49,7 +49,6 @@ func (g Grid) evaluateEmptySeat(co utils.Co, part int) string {
 // Decide what state an occupied seat should be in at the next stage
 func (g Grid) evaluateOccupiedSeat(co utils.Co, part int) string {
 	// If part 1 empty seat if 4 occupied, if part 2 empty seat if 5 occupied
-	adjacentThreshold := 3 + part
 	adjacentOccupied := 0
 	for _, d := range directions {
 		startingCo := co
@@ -71,7 +70,7 @@ func (g Grid) evaluateOccupiedSeat(co utils.Co, part int) string {
 			}
 		}
 	}
-	if adjacentOccupied >= adjacentThreshold {
+	if adjacentOccupied >= 3+part {
 		return "L"
 	}
 	return "#"

@@ -119,8 +119,7 @@ func (u *Unit) Move(c *Cave) {
 	if u.EnemyNeighbor(c) != nil {
 		return
 	}
-	next, _ := u.NextTile(c)
-	if next != nil {
+	if next, _ := u.NextTile(c); next != nil {
 		next.Unit = u
 		next.Kind = u.Kind
 		u.Tile.Kind = KindSpace
@@ -130,8 +129,7 @@ func (u *Unit) Move(c *Cave) {
 }
 
 func (u *Unit) Attack(c *Cave) bool {
-	enemy := u.EnemyNeighbor(c)
-	if enemy != nil {
+	if enemy := u.EnemyNeighbor(c); enemy != nil {
 		killed := enemy.Damage(c, u.Power)
 		return killed && enemy.Kind == KindElf
 	}

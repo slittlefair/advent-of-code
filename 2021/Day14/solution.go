@@ -13,7 +13,7 @@ type PolymerizationEquipment struct {
 }
 
 func combineLetters(l1, l2 string) string {
-	return fmt.Sprintf("%v%v", string(l1), string(l2))
+	return fmt.Sprintf("%v%v", l1, l2)
 }
 
 func parseInput(input []string) (*PolymerizationEquipment, error) {

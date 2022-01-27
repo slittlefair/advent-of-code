@@ -261,7 +261,7 @@ func TestSpellAttack(t *testing.T) {
 	}
 }
 
-func compareEffects(want, got mage.Effect, mage *mage.Mage, boss *martial.Martial) bool {
+func compareEffects(want, got mage.Effect) bool {
 	if want.Active != got.Active {
 		return false
 	}
@@ -514,7 +514,7 @@ func TestApplyEffects(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := ApplyEffects(tt.args.player, tt.args.boss, tt.args.effects)
 			for k, e := range got {
-				if !compareEffects(tt.want[k], e, tt.args.player, tt.args.boss) {
+				if !compareEffects(tt.want[k], e) {
 					t.Errorf("ApplyEffects() = %v, want %v", e, tt.want[k])
 				}
 			}
