@@ -6,13 +6,7 @@ import (
 	"regexp"
 )
 
-var (
-	inputs  = make(map[int][]int)
-	process = make(map[int][]int)
-	outputs = make(map[int][]int)
-)
-
-var re = regexp.MustCompile("\\d+")
+var re = regexp.MustCompile(`\d+`)
 
 type sample struct {
 	input        []int

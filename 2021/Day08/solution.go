@@ -47,8 +47,6 @@ func stringsShareParts(str1, str2 string, wantEqual bool) bool {
 	return true
 }
 
-type ConversionMap map[string]string
-
 type ValueMap []string
 
 func (vm ValueMap) find3Letter(signalPatterns SignalPatterns) error {
