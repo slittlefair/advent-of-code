@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code/2015/Day22/spellfight"
+	spellfight "Advent-of-Code/2015/Day22/spells"
 	utils "Advent-of-Code/utils"
 	"fmt"
 )
