@@ -1,4 +1,4 @@
-package spellFight
+package spellfight
 
 import (
 	"Advent-of-Code/2015/Day21/martial"

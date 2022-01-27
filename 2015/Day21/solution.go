@@ -15,7 +15,7 @@ func runFights(input []string) (int, int, error) {
 	}
 	bossHP := boss.HP
 	s := shop.PopulateShop()
-	cheapestVictory := utils.Infinty
+	cheapestVictory := utils.Infinity
 	dearestLoss := 0
 	// Loop through all combinations of armour, rings and weapons and work out their cost as well
 	// as who wins the fight

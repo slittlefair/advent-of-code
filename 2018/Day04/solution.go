@@ -14,10 +14,10 @@ func main() {
 	lines := utils.ReadFile()
 	sort.Sort(sort.Reverse(sort.StringSlice(lines)))
 
-	reGuard := regexp.MustCompile("Guard \\#(\\d+)")
+	reGuard := regexp.MustCompile(`Guard \#(\d+)`)
 	reAsleep := regexp.MustCompile("asleep")
 	reWakes := regexp.MustCompile("wakes")
-	reMinute := regexp.MustCompile(":[\\d]+")
+	reMinute := regexp.MustCompile(`:[\d]+`)
 
 	var asleepMin, awakeMin int
 	var sleepMins [60]int
@@ -45,7 +45,6 @@ func main() {
 			} else {
 				guards[id] = sleepMins
 			}
-			asleepMin, awakeMin = 0, 0
 			sleepMins = [60]int{}
 		}
 	}

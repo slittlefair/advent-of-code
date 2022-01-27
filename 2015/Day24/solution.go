@@ -27,13 +27,13 @@ func groupSum(packages []int) int {
 }
 
 func getLowestQuantumEntanglement(combos [][]int) (int, error) {
-	lowestQE := utils.Infinty
+	lowestQE := utils.Infinity
 	for _, c := range combos {
 		if qe := calculateQuantumEntanglement(c); qe < lowestQE {
 			lowestQE = qe
 		}
 	}
-	if lowestQE == utils.Infinty {
+	if lowestQE == utils.Infinity {
 		return -1, fmt.Errorf("could not find lowestQE of groups %v", combos)
 	}
 	return lowestQE, nil

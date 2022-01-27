@@ -34,13 +34,13 @@ func (p *Position) turnRight() {
 func (p *Position) move() {
 	switch p.direction {
 	case 0:
-		p.location.Y += 1
+		p.location.Y++
 	case 1:
-		p.location.X += 1
+		p.location.X++
 	case 2:
-		p.location.Y -= 1
+		p.location.Y--
 	case 3:
-		p.location.X -= 1
+		p.location.X--
 	}
 	// assume that we don't start at the hq
 	if p.seen[p.location] && p.hq.X == 0 && p.hq.Y == 0 {
@@ -72,7 +72,6 @@ func (p *Position) followInstruction(inst string) error {
 	for i := 0; i < intConv; i++ {
 		p.move()
 	}
-	// p.move(intConv)
 	return nil
 }
 

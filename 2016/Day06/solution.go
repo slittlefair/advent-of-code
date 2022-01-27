@@ -38,7 +38,7 @@ func getWordLeastCommon(f []map[string]int) string {
 	w := ""
 	for _, m := range f {
 		mode := ""
-		modeVal := utils.Infinty
+		modeVal := utils.Infinity
 		for k, v := range m {
 			if v < modeVal {
 				modeVal = v

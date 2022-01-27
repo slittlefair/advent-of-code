@@ -1,4 +1,4 @@
-package spellFight
+package spellfight
 
 import (
 	"Advent-of-Code/2015/Day21/martial"
@@ -112,7 +112,7 @@ func (ms *ManaSpent) SpellRound(player mage.Mage, boss martial.Martial, spell *m
 
 func SpellFight(boss martial.Martial, bossHP int, hardMode bool) int {
 	ms := ManaSpent{
-		LowestManaSpent: utils.Infinty,
+		LowestManaSpent: utils.Infinity,
 	}
 
 	spells := mage.SpellList

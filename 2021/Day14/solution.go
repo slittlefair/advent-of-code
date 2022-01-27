@@ -52,7 +52,7 @@ func (pe *PolymerizationEquipment) followInstructions() {
 }
 
 func (pe PolymerizationEquipment) getVal() int {
-	minVal := utils.Infinty
+	minVal := utils.Infinity
 	maxVal := 0
 	for _, v := range pe.lf {
 		minVal = utils.Min(minVal, v)

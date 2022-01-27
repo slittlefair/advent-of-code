@@ -25,9 +25,9 @@ var allGroupsOriginal = make(map[string]group)
 var allGroups = make(map[string]group)
 
 func readData(lines []string) {
-	reStats := regexp.MustCompile("\\d+")
-	reWeaknessesImmunities := regexp.MustCompile("\\((.*?)\\)")
-	reDamage := regexp.MustCompile("(?s)does (\\d+ )(.*) damage")
+	reStats := regexp.MustCompile(`\d+`)
+	reWeaknessesImmunities := regexp.MustCompile(`\((.*?)\)`)
+	reDamage := regexp.MustCompile(`(?s)does (\d+ )(.*) damage`)
 
 	var activeArmy = "immuneSystem"
 	i := 1

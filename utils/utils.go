@@ -180,7 +180,7 @@ func IntSlicesAreEqual(slice1, slice2 []int) bool {
 }
 
 // Infinity is the int value of infinity, useful for looping over a range and trying to get the lowest value
-var Infinty = int(^uint(0) >> 1)
+var Infinity = int(^uint(0) >> 1)
 
 // Remove removes the element at index i from slice s and returns that slice, whilst keeping the original in tact
 func Remove(s []int, i int) []int {
@@ -202,7 +202,7 @@ func CalculateManhattanDistance(co1, co2 Co) int {
 	return x + y
 }
 
-// CaeserCipher applies a Caeser Cipher to the given text, shifted shiftNum times
+// CaesarCipher applies a Caesar Cipher to the given text, shifted shiftNum times
 func CaesarCipher(text string, shiftNum int) string {
 	shift, offset := rune(shiftNum%26), rune(26)
 
@@ -238,9 +238,9 @@ func Median(nums []int) float64 {
 	return (midWay1 + midWay2) / 2
 }
 
-// FindExtremeties returns the max and min value from a slice of ints
+// FindExtremities returns the max and min value from a slice of ints
 func FindExtremities(nums []int) (int, int) {
-	min := Infinty
+	min := Infinity
 	max := 0
 	for _, n := range nums {
 		if n > max {
@@ -253,7 +253,7 @@ func FindExtremities(nums []int) (int, int) {
 	return min, max
 }
 
-// AdjactedCos returns all adjacent coordinates for the given coordinate, including diagonals
+// AdjacentCos returns all adjacent coordinates for the given coordinate, including diagonals
 func AdjacentCos(co Co, includeDiagonals bool) []Co {
 	cos := []Co{
 		{X: co.X, Y: co.Y - 1},
