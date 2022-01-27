@@ -18,5 +18,5 @@ jobs:
       - name: golangci-lint
         uses: golangci/golangci-lint-action@v2
         with:
-          version: `latest`
+          version: latest
           args: --enable goconst,ifshort,misspell,revive,unconvert,unparam
