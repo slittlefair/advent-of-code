@@ -17,3 +17,4 @@ jobs:
         with:
           version: latest
           args: --enable goconst,ifshort,misspell,revive,unconvert,unparam
+          only-new-issues: true
