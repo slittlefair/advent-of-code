@@ -1,6 +1,5 @@
 package day15
 
-
 import (
 	"math"
 	"sort"
@@ -107,8 +106,7 @@ func (u *Unit) Enemies(c *Cave) SortableUnits {
 func (u *Unit) EnemyNeighbor(c *Cave) *Unit {
 	var target *Unit
 	for _, offset := range offsets {
-		if t := c.Map.Tile(u.Tile.X+offset.X, u.Tile.Y+offset.Y);
-			t != nil && t.Unit != nil && t.Unit.Kind != u.Kind && t.Unit.Hitpoints > 0 {
+		if t := c.Map.Tile(u.Tile.X+offset.X, u.Tile.Y+offset.Y); t != nil && t.Unit != nil && t.Unit.Kind != u.Kind && t.Unit.Hitpoints > 0 {
 			if target == nil || t.Unit.Hitpoints < target.Hitpoints {
 				target = t.Unit
 			}
