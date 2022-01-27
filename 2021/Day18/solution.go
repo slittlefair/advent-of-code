@@ -24,9 +24,11 @@ func parseLine(line string, i *int) (*Pair, error) {
 	currentPair := &Pair{}
 	for {
 		if *i > len(line)-1 {
-			return currentPair, nil
+			return nil, fmt.Errorf("expected line to end with closing bracket: %s", line)
 		}
-		if char := string(line[*i]); char == "[" {
+		char := string(line[*i])
+		switch char {
+		case "[":
 			newPair, err := parseLine(line, i)
 			if err != nil {
 				return nil, err
@@ -37,11 +39,11 @@ func parseLine(line string, i *int) (*Pair, error) {
 				currentPair.rightPair = newPair
 			}
 			newPair.parent = currentPair
-		} else if char == "]" {
+		case "]":
 			return currentPair, nil
-		} else if char == "," {
-			// skip
-		} else {
+		case ",":
+			// do nothing
+		default:
 			val, err := strconv.Atoi(char)
 			if err != nil {
 				return nil, fmt.Errorf("expected int, got %s", char)
@@ -90,13 +92,10 @@ func (p *Pair) findExplodingPair(ep *ExplodingPair, level int) *ExplodingPair {
 	return ep
 }
 
-func (p *Pair) explode() (bool, error) {
+func (p *Pair) explode() bool {
 	ep := p.findExplodingPair(&ExplodingPair{}, 0)
 	if ep.pair == nil {
-		return false, nil
-	}
-	if ep.pair.leftVal == nil || ep.pair.rightVal == nil {
-		return false, fmt.Errorf("something went wrong, expected valid ep.pair, got %+v", ep.pair)
+		return false
 	}
 	if ep.left != nil {
 		*ep.left += *ep.pair.leftVal
@@ -111,20 +110,18 @@ func (p *Pair) explode() (bool, error) {
 	} else if ep.pair == ep.pair.parent.rightPair {
 		ep.pair.parent.rightPair = nil
 		ep.pair.parent.rightVal = &newVal
-	} else {
-		return false, fmt.Errorf("something went wrong, expected ep.pair to match one of parent pairs, got ep.pair %+v and parent %+v", ep.pair, ep.pair.parent)
 	}
-	return true, nil
+	return true
 }
 
 type SplittingPair struct {
 	pair *Pair
 }
 
-func (p *Pair) split() (bool, error) {
+func (p *Pair) split() bool {
 	sp := p.findSplittingPair(&SplittingPair{}).pair
 	if sp == nil {
-		return false, nil
+		return false
 	}
 	if sp.leftVal != nil && *sp.leftVal > 9 {
 		lVal := int(math.Floor(float64(*sp.leftVal) / 2))
@@ -135,7 +132,7 @@ func (p *Pair) split() (bool, error) {
 			parent:   sp,
 		}
 		sp.leftVal = nil
-		return true, nil
+		return true
 	}
 	if sp.rightVal != nil && *sp.rightVal > 9 {
 		lVal := int(math.Floor(float64(*sp.rightVal) / 2))
@@ -146,15 +143,12 @@ func (p *Pair) split() (bool, error) {
 			parent:   sp,
 		}
 		sp.rightVal = nil
-		return true, nil
+		return true
 	}
-	return false, fmt.Errorf("not got correct splittingPair, leftVal: %v, rightVal: %v", sp.leftVal, sp.rightVal)
+	return false
 }
 
 func (p *Pair) findSplittingPair(sp *SplittingPair) *SplittingPair {
-	if sp.pair != nil {
-		return sp
-	}
 	if p.leftVal != nil && *p.leftVal > 9 {
 		sp.pair = p
 		return sp
@@ -184,24 +178,18 @@ func (p *Pair) addPair(pair *Pair) *Pair {
 	return parent
 }
 
-func (p *Pair) doSum(newPair *Pair) (*Pair, error) {
+func (p *Pair) doSum(newPair *Pair) *Pair {
 	p = p.addPair(newPair)
 	for {
 		for {
-			didExplode, err := p.explode()
-			if err != nil {
-				return nil, err
-			}
+			didExplode := p.explode()
 			if !didExplode {
 				break
 			}
 		}
-		didSplit, err := p.split()
-		if err != nil {
-			return nil, err
-		}
+		didSplit := p.split()
 		if !didSplit {
-			return p, nil
+			return p
 		}
 	}
 }
@@ -232,12 +220,8 @@ func part1(input []string) (int, error) {
 		numbers = append(numbers, pair)
 	}
 	pair := numbers[0]
-	var err error
 	for i := 1; i < len(numbers); i++ {
-		pair, err = pair.doSum(numbers[i])
-		if err != nil {
-			return -1, err
-		}
+		pair = pair.doSum(numbers[i])
 	}
 	return pair.findMagnitude(), nil
 }
@@ -257,10 +241,7 @@ func part2(input []string) (int, error) {
 				if err != nil {
 					return -1, err
 				}
-				sum, err := pair1.doSum(pair2)
-				if err != nil {
-					return -1, err
-				}
+				sum := pair1.doSum(pair2)
 				mag := sum.findMagnitude()
 				if mag > greatestMag {
 					greatestMag = mag
@@ -276,10 +257,10 @@ func findSolutions(input []string) (int, int, error) {
 	if err != nil {
 		return -1, -1, err
 	}
-	part2, err := part2(input)
-	if err != nil {
-		return -1, -1, err
-	}
+	// Any error obtained by part2 is from parseLine, which would have already returned an error
+	// from part1. So if part1 does not return an error, then part2 won't either, so it can be
+	// safely ignored.
+	part2, _ := part2(input)
 	return part1, part2, nil
 }
 
