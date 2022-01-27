@@ -7,7 +7,7 @@ import (
 )
 
 var reWord = regexp.MustCompile("[a-z]+")
-var reNum = regexp.MustCompile("\\d+")
+var reNum = regexp.MustCompile(`\d+`)
 
 type instructions struct {
 	inst      string

@@ -90,7 +90,7 @@ func updatePositions() {
 
 func main() {
 	lines := utils.ReadFile()
-	re := regexp.MustCompile("-?\\d+")
+	re := regexp.MustCompile(`-?\d+`)
 	for _, v := range lines {
 		conv := re.FindAllString(v, -1)
 		var points []int

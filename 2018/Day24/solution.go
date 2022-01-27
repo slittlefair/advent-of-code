@@ -18,22 +18,27 @@ type group struct {
 	attackType     string
 	initiative     int
 	effectivePower int
-	army           string
+	army           int
 }
 
 var allGroupsOriginal = make(map[string]group)
 var allGroups = make(map[string]group)
+
+const (
+	Infection = iota
+	ImmuneSystem
+)
 
 func readData(lines []string) {
 	reStats := regexp.MustCompile(`\d+`)
 	reWeaknessesImmunities := regexp.MustCompile(`\((.*?)\)`)
 	reDamage := regexp.MustCompile(`(?s)does (\d+ )(.*) damage`)
 
-	var activeArmy = "immuneSystem"
+	var activeArmy = ImmuneSystem
 	i := 1
 	for _, line := range lines {
 		if line == "Infection:" {
-			activeArmy = "infection"
+			activeArmy = Infection
 		} else if line == "" || line == "Immune System:" {
 			continue
 		} else {
@@ -64,7 +69,7 @@ func readData(lines []string) {
 			}
 			attackType := reDamage.FindStringSubmatch(line)
 			var id string
-			if activeArmy == "immuneSystem" {
+			if activeArmy == ImmuneSystem {
 				id = "System_" + strconv.Itoa(i)
 			} else {
 				id = "Infection_" + strconv.Itoa(i-10)
@@ -101,30 +106,30 @@ func calculateDamage(attack group, defence group) int {
 	return attack.effectivePower
 }
 
-func bothArmiesHaveUnits() (bool, string) {
+func bothArmiesHaveUnits() (bool, int) {
 	numImmuneSystem := 0
 	numInfections := 0
 	for _, g := range allGroups {
-		if g.army == "immuneSystem" {
+		if g.army == ImmuneSystem {
 			numImmuneSystem++
 		} else {
 			numInfections++
 		}
 	}
 	if numImmuneSystem == 0 {
-		return false, "infection"
+		return false, Infection
 	} else if numInfections == 0 {
-		return false, "immuneSystem"
+		return false, ImmuneSystem
 	} else {
-		return true, ""
+		return true, -1
 	}
 }
 
-func opponent(army string) (opponent string) {
-	if army == "immuneSystem" {
-		return "infection"
+func opponent(army int) (opponent int) {
+	if army == ImmuneSystem {
+		return Infection
 	}
-	return "immuneSystem"
+	return ImmuneSystem
 }
 
 func killUnits(attack group, defence group, damage int) (group, int) {
@@ -184,11 +189,11 @@ func decideWhichOpponentToAttack(attack group, potentialTargets []string) group 
 	return toAttack
 }
 
-func battle(boost int) (int, string) {
+func battle(boost int) (int, int) {
 	fighting := true
-	survivingArmy := ""
+	survivingArmy := -1
 	for k, v := range allGroupsOriginal {
-		if v.army == "immuneSystem" {
+		if v.army == ImmuneSystem {
 			v.attackDamage += boost
 			v.effectivePower = v.attackDamage * v.units
 		}
@@ -278,7 +283,7 @@ func battle(boost int) (int, string) {
 		}
 		if unitsKilled == 0 {
 			fighting = false
-			survivingArmy = "infection"
+			survivingArmy = Infection
 		}
 	}
 	unitsLeft := 0
@@ -294,7 +299,7 @@ func main() {
 	boost := 0
 	unitsLeft, survivingArmy := battle(boost)
 	fmt.Println("Part 1:", unitsLeft)
-	for survivingArmy != "immuneSystem" {
+	for survivingArmy != ImmuneSystem {
 		boost++
 		unitsLeft, survivingArmy = battle(boost)
 	}
