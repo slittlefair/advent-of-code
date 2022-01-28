@@ -1,7 +1,9 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/maths"
+	"Advent-of-Code/slice"
 	"fmt"
 )
 
@@ -14,14 +16,14 @@ func calculateFuelSpend(x int) int {
 }
 
 func findMinFuelSpend(input []int, min, max int, part2 bool) int {
-	minDist := utils.Infinity
+	minDist := maths.Infinity
 	for x := min; x <= max; x++ {
 		dist := 0
 		for _, i := range input {
 			if part2 {
-				dist += calculateFuelSpend(utils.Abs(i - x))
+				dist += calculateFuelSpend(maths.Abs(i - x))
 			} else {
-				dist += utils.Abs(i - x)
+				dist += maths.Abs(i - x)
 			}
 
 		}
@@ -33,12 +35,12 @@ func findMinFuelSpend(input []int, min, max int, part2 bool) int {
 }
 
 func main() {
-	input, err := utils.ReadFileSingleLineAsInts()
+	input, err := file.ReadSingleLineAsInts()
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	min, max := utils.FindExtremities(input)
+	min, max := slice.FindExtremities(input)
 	fmt.Println("Part 1:", findMinFuelSpend(input, min, max, false))
 	fmt.Println("Part 2:", findMinFuelSpend(input, min, max, true))
 }

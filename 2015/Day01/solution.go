@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
@@ -33,7 +33,7 @@ func getFirstInstanceOfBasement(instructions string) (int, error) {
 }
 
 func main() {
-	instructions := utils.ReadFile()[0]
+	instructions := file.Read()[0]
 	fmt.Println("Part 1:", getFloorFromInstructions(instructions))
 	basementIndex, err := getFirstInstanceOfBasement(instructions)
 	if err != nil {

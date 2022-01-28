@@ -2,12 +2,12 @@ package main
 
 import (
 	sp "Advent-of-Code/2015/Day22/spellfight"
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	lowestManaSpent, lowestManaSpentHardMode, err := sp.RunSpellFights(input)
 	if err != nil {
 		fmt.Println(err)

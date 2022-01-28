@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
@@ -46,7 +46,7 @@ func (lf Lanternfish) findSolution() (int, int) {
 }
 
 func main() {
-	input, err := utils.ReadFileSingleLineAsInts()
+	input, err := file.ReadSingleLineAsInts()
 	if err != nil {
 		fmt.Println(err)
 		return

@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 )
@@ -106,7 +106,7 @@ func getNiceStringCount(input []string) (int, int) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1Count, part2Count := getNiceStringCount(input)
 	fmt.Println("Part 1:", part1Count)
 	fmt.Println("Part 2:", part2Count)

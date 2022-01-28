@@ -1,7 +1,8 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -9,16 +10,16 @@ import (
 )
 
 type Lights struct {
-	Pixels map[utils.Co]string
+	Pixels map[graph.Co]string
 	Height int
 	Width  int
 }
 
 func constructLights(height, width int) *Lights {
-	pixels := make(map[utils.Co]string)
+	pixels := make(map[graph.Co]string)
 	for x := 0; x < width; x++ {
 		for y := 0; y < height; y++ {
-			pixels[utils.Co{X: x, Y: y}] = " "
+			pixels[graph.Co{X: x, Y: y}] = " "
 		}
 	}
 	return &Lights{
@@ -40,24 +41,24 @@ func (l *Lights) followInstruction(inst string) error {
 	if strings.Contains(inst, "rect") {
 		for x := 0; x < n1; x++ {
 			for y := 0; y < n2; y++ {
-				l.Pixels[utils.Co{X: x, Y: y}] = "#"
+				l.Pixels[graph.Co{X: x, Y: y}] = "#"
 			}
 		}
 		return nil
 	}
-	pixels := map[utils.Co]string{}
+	pixels := map[graph.Co]string{}
 	for k, v := range l.Pixels {
 		pixels[k] = v
 	}
 	if strings.Contains(inst, "column") {
 		for y := 0; y < l.Height; y++ {
-			pixels[utils.Co{X: n1, Y: (y + n2) % l.Height}] = l.Pixels[utils.Co{X: n1, Y: y}]
+			pixels[graph.Co{X: n1, Y: (y + n2) % l.Height}] = l.Pixels[graph.Co{X: n1, Y: y}]
 		}
 		l.Pixels = pixels
 		return nil
 	}
 	for x := 0; x < l.Width; x++ {
-		pixels[utils.Co{X: (x + n2) % l.Width, Y: n1}] = l.Pixels[utils.Co{X: x, Y: n1}]
+		pixels[graph.Co{X: (x + n2) % l.Width, Y: n1}] = l.Pixels[graph.Co{X: x, Y: n1}]
 	}
 	l.Pixels = pixels
 	return nil
@@ -83,17 +84,18 @@ func (l Lights) countLightsOn() int {
 	return count
 }
 
-func (l Lights) printLights() {
-	for y := 0; y < l.Height; y++ {
-		for x := 0; x < l.Width; x++ {
-			fmt.Print(l.Pixels[utils.Co{X: x, Y: y}])
-		}
-		fmt.Println()
-	}
-}
+// debugging
+// func (l Lights) printLights() {
+// 	for y := 0; y < l.Height; y++ {
+// 		for x := 0; x < l.Width; x++ {
+// 			fmt.Print(l.Pixels[graph.Co{X: x, Y: y}])
+// 		}
+// 		fmt.Println()
+// 	}
+// }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	lights := constructLights(6, 50)
 	err := lights.followInstructions(input)
 	if err != nil {
@@ -102,5 +104,4 @@ func main() {
 	}
 	fmt.Println("Part 1:", lights.countLightsOn())
 	fmt.Println("Part 2:")
-	lights.printLights()
 }

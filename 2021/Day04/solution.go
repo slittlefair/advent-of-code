@@ -2,12 +2,12 @@ package main
 
 import (
 	"Advent-of-Code/2021/Day04/game"
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	g, err := game.ParseInput(input)
 	if err != nil {
 		fmt.Println(err)

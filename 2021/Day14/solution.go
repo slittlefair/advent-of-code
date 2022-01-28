@@ -1,7 +1,8 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/maths"
 	"fmt"
 	"regexp"
 )
@@ -52,11 +53,11 @@ func (pe *PolymerizationEquipment) followInstructions() {
 }
 
 func (pe PolymerizationEquipment) getVal() int {
-	minVal := utils.Infinity
+	minVal := maths.Infinity
 	maxVal := 0
 	for _, v := range pe.lf {
-		minVal = utils.Min(minVal, v)
-		maxVal = utils.Max(maxVal, v)
+		minVal = maths.Min(minVal, v)
+		maxVal = maths.Max(maxVal, v)
 	}
 	return maxVal - minVal
 }
@@ -77,7 +78,7 @@ func findSolutions(input []string) (int, int, error) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1, part2, err := findSolutions(input)
 	if err != nil {
 		fmt.Println(err)

@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"sort"
 )
@@ -45,7 +45,7 @@ func part2(adapters []int) int {
 }
 
 func main() {
-	input := utils.ReadFileAsInts()
+	input := file.ReadAsInts()
 	joltages := Joltages{
 		1: 0,
 		2: 0,

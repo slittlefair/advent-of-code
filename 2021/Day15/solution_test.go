@@ -1,8 +1,8 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
-	djk "Advent-of-Code/utils/dijkstra"
+	"Advent-of-Code/graph"
+	djk "Advent-of-Code/graph/dijkstra"
 	"reflect"
 	"testing"
 )
@@ -27,17 +27,17 @@ func Test_parseInput(t *testing.T) {
 				factor: 1,
 			},
 			want: &djk.Graph{
-				Grid: map[utils.Co]int{
+				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}: 2,
 					{X: 1, Y: 0}: 7,
 					{X: 0, Y: 1}: 1,
 					{X: 1, Y: 1}: 9,
 				},
-				Nodes: map[utils.Co][]djk.Edge{
-					{X: 0, Y: 0}: {{Node: utils.Co{X: 0, Y: 1}, Weight: 1}, {Node: utils.Co{X: 1, Y: 0}, Weight: 7}},
-					{X: 1, Y: 0}: {{Node: utils.Co{X: 0, Y: 0}, Weight: 2}, {Node: utils.Co{X: 1, Y: 1}, Weight: 9}},
-					{X: 0, Y: 1}: {{Node: utils.Co{X: 1, Y: 1}, Weight: 9}, {Node: utils.Co{X: 0, Y: 0}, Weight: 2}},
-					{X: 1, Y: 1}: {{Node: utils.Co{X: 0, Y: 1}, Weight: 1}, {Node: utils.Co{X: 1, Y: 0}, Weight: 7}},
+				Nodes: map[graph.Co][]djk.Edge{
+					{X: 0, Y: 0}: {{Node: graph.Co{X: 0, Y: 1}, Weight: 1}, {Node: graph.Co{X: 1, Y: 0}, Weight: 7}},
+					{X: 1, Y: 0}: {{Node: graph.Co{X: 0, Y: 0}, Weight: 2}, {Node: graph.Co{X: 1, Y: 1}, Weight: 9}},
+					{X: 0, Y: 1}: {{Node: graph.Co{X: 1, Y: 1}, Weight: 9}, {Node: graph.Co{X: 0, Y: 0}, Weight: 2}},
+					{X: 1, Y: 1}: {{Node: graph.Co{X: 0, Y: 1}, Weight: 1}, {Node: graph.Co{X: 1, Y: 0}, Weight: 7}},
 				},
 				MaxX: 1,
 				MaxY: 1,
@@ -53,7 +53,7 @@ func Test_parseInput(t *testing.T) {
 				factor: 2,
 			},
 			want: &djk.Graph{
-				Grid: map[utils.Co]int{
+				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}: 2,
 					{X: 1, Y: 0}: 7,
 					{X: 2, Y: 0}: 3,
@@ -71,26 +71,26 @@ func Test_parseInput(t *testing.T) {
 					{X: 2, Y: 3}: 3,
 					{X: 3, Y: 3}: 2,
 				},
-				Nodes: map[utils.Co][]djk.Edge{
-					{X: 0, Y: 0}: {{Node: utils.Co{X: 1, Y: 0}, Weight: 7}, {Node: utils.Co{X: 0, Y: 1}, Weight: 1}},
-					{X: 1, Y: 0}: {{Node: utils.Co{X: 0, Y: 0}, Weight: 2}, {Node: utils.Co{X: 2, Y: 0}, Weight: 3}, {Node: utils.Co{X: 1, Y: 1}, Weight: 9}},
-					{X: 2, Y: 0}: {{Node: utils.Co{X: 1, Y: 0}, Weight: 7}, {Node: utils.Co{X: 3, Y: 0}, Weight: 8}, {Node: utils.Co{X: 2, Y: 1}, Weight: 2}},
-					{X: 3, Y: 0}: {{Node: utils.Co{X: 2, Y: 0}, Weight: 3}, {Node: utils.Co{X: 3, Y: 1}, Weight: 1}},
+				Nodes: map[graph.Co][]djk.Edge{
+					{X: 0, Y: 0}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 7}, {Node: graph.Co{X: 0, Y: 1}, Weight: 1}},
+					{X: 1, Y: 0}: {{Node: graph.Co{X: 0, Y: 0}, Weight: 2}, {Node: graph.Co{X: 2, Y: 0}, Weight: 3}, {Node: graph.Co{X: 1, Y: 1}, Weight: 9}},
+					{X: 2, Y: 0}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 7}, {Node: graph.Co{X: 3, Y: 0}, Weight: 8}, {Node: graph.Co{X: 2, Y: 1}, Weight: 2}},
+					{X: 3, Y: 0}: {{Node: graph.Co{X: 2, Y: 0}, Weight: 3}, {Node: graph.Co{X: 3, Y: 1}, Weight: 1}},
 
-					{X: 0, Y: 1}: {{Node: utils.Co{X: 0, Y: 0}, Weight: 2}, {Node: utils.Co{X: 0, Y: 2}, Weight: 3}, {Node: utils.Co{X: 1, Y: 1}, Weight: 9}},
-					{X: 1, Y: 1}: {{Node: utils.Co{X: 1, Y: 0}, Weight: 7}, {Node: utils.Co{X: 1, Y: 2}, Weight: 8}, {Node: utils.Co{X: 0, Y: 1}, Weight: 1}, {Node: utils.Co{X: 2, Y: 1}, Weight: 2}},
-					{X: 2, Y: 1}: {{Node: utils.Co{X: 2, Y: 0}, Weight: 3}, {Node: utils.Co{X: 2, Y: 2}, Weight: 4}, {Node: utils.Co{X: 1, Y: 1}, Weight: 9}, {Node: utils.Co{X: 3, Y: 1}, Weight: 1}},
-					{X: 3, Y: 1}: {{Node: utils.Co{X: 3, Y: 0}, Weight: 8}, {Node: utils.Co{X: 3, Y: 2}, Weight: 9}, {Node: utils.Co{X: 2, Y: 1}, Weight: 2}},
+					{X: 0, Y: 1}: {{Node: graph.Co{X: 0, Y: 0}, Weight: 2}, {Node: graph.Co{X: 0, Y: 2}, Weight: 3}, {Node: graph.Co{X: 1, Y: 1}, Weight: 9}},
+					{X: 1, Y: 1}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 7}, {Node: graph.Co{X: 1, Y: 2}, Weight: 8}, {Node: graph.Co{X: 0, Y: 1}, Weight: 1}, {Node: graph.Co{X: 2, Y: 1}, Weight: 2}},
+					{X: 2, Y: 1}: {{Node: graph.Co{X: 2, Y: 0}, Weight: 3}, {Node: graph.Co{X: 2, Y: 2}, Weight: 4}, {Node: graph.Co{X: 1, Y: 1}, Weight: 9}, {Node: graph.Co{X: 3, Y: 1}, Weight: 1}},
+					{X: 3, Y: 1}: {{Node: graph.Co{X: 3, Y: 0}, Weight: 8}, {Node: graph.Co{X: 3, Y: 2}, Weight: 9}, {Node: graph.Co{X: 2, Y: 1}, Weight: 2}},
 
-					{X: 0, Y: 2}: {{Node: utils.Co{X: 0, Y: 1}, Weight: 1}, {Node: utils.Co{X: 0, Y: 3}, Weight: 2}, {Node: utils.Co{X: 1, Y: 2}, Weight: 8}},
-					{X: 1, Y: 2}: {{Node: utils.Co{X: 1, Y: 1}, Weight: 9}, {Node: utils.Co{X: 1, Y: 3}, Weight: 1}, {Node: utils.Co{X: 0, Y: 2}, Weight: 3}, {Node: utils.Co{X: 2, Y: 2}, Weight: 4}},
-					{X: 2, Y: 2}: {{Node: utils.Co{X: 2, Y: 1}, Weight: 2}, {Node: utils.Co{X: 2, Y: 3}, Weight: 3}, {Node: utils.Co{X: 1, Y: 2}, Weight: 8}, {Node: utils.Co{X: 3, Y: 2}, Weight: 9}},
-					{X: 3, Y: 2}: {{Node: utils.Co{X: 3, Y: 1}, Weight: 1}, {Node: utils.Co{X: 3, Y: 3}, Weight: 2}, {Node: utils.Co{X: 2, Y: 2}, Weight: 4}},
+					{X: 0, Y: 2}: {{Node: graph.Co{X: 0, Y: 1}, Weight: 1}, {Node: graph.Co{X: 0, Y: 3}, Weight: 2}, {Node: graph.Co{X: 1, Y: 2}, Weight: 8}},
+					{X: 1, Y: 2}: {{Node: graph.Co{X: 1, Y: 1}, Weight: 9}, {Node: graph.Co{X: 1, Y: 3}, Weight: 1}, {Node: graph.Co{X: 0, Y: 2}, Weight: 3}, {Node: graph.Co{X: 2, Y: 2}, Weight: 4}},
+					{X: 2, Y: 2}: {{Node: graph.Co{X: 2, Y: 1}, Weight: 2}, {Node: graph.Co{X: 2, Y: 3}, Weight: 3}, {Node: graph.Co{X: 1, Y: 2}, Weight: 8}, {Node: graph.Co{X: 3, Y: 2}, Weight: 9}},
+					{X: 3, Y: 2}: {{Node: graph.Co{X: 3, Y: 1}, Weight: 1}, {Node: graph.Co{X: 3, Y: 3}, Weight: 2}, {Node: graph.Co{X: 2, Y: 2}, Weight: 4}},
 
-					{X: 0, Y: 3}: {{Node: utils.Co{X: 0, Y: 2}, Weight: 3}, {Node: utils.Co{X: 1, Y: 3}, Weight: 1}},
-					{X: 1, Y: 3}: {{Node: utils.Co{X: 0, Y: 3}, Weight: 2}, {Node: utils.Co{X: 2, Y: 3}, Weight: 3}, {Node: utils.Co{X: 1, Y: 2}, Weight: 8}},
-					{X: 2, Y: 3}: {{Node: utils.Co{X: 1, Y: 3}, Weight: 1}, {Node: utils.Co{X: 3, Y: 3}, Weight: 2}, {Node: utils.Co{X: 2, Y: 2}, Weight: 4}},
-					{X: 3, Y: 3}: {{Node: utils.Co{X: 3, Y: 2}, Weight: 9}, {Node: utils.Co{X: 2, Y: 3}, Weight: 3}},
+					{X: 0, Y: 3}: {{Node: graph.Co{X: 0, Y: 2}, Weight: 3}, {Node: graph.Co{X: 1, Y: 3}, Weight: 1}},
+					{X: 1, Y: 3}: {{Node: graph.Co{X: 0, Y: 3}, Weight: 2}, {Node: graph.Co{X: 2, Y: 3}, Weight: 3}, {Node: graph.Co{X: 1, Y: 2}, Weight: 8}},
+					{X: 2, Y: 3}: {{Node: graph.Co{X: 1, Y: 3}, Weight: 1}, {Node: graph.Co{X: 3, Y: 3}, Weight: 2}, {Node: graph.Co{X: 2, Y: 2}, Weight: 4}},
+					{X: 3, Y: 3}: {{Node: graph.Co{X: 3, Y: 2}, Weight: 9}, {Node: graph.Co{X: 2, Y: 3}, Weight: 3}},
 				},
 				MaxX: 3,
 				MaxY: 3,

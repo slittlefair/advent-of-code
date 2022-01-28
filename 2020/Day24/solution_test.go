@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/graph"
 	"fmt"
 	"reflect"
 	"testing"
@@ -36,7 +36,7 @@ func Test_parseInput(t *testing.T) {
 	}
 }
 
-var simpleMap = map[utils.Co]bool{
+var simpleMap = map[graph.Co]bool{
 	{X: 0, Y: 0}: true,
 	{X: 1, Y: 0}: false,
 	{X: 2, Y: 0}: true,
@@ -54,20 +54,20 @@ var simpleMap = map[utils.Co]bool{
 func TestTiles_getETile(t *testing.T) {
 	tests := []struct {
 		name  string
-		co    utils.Co
-		want  utils.Co
+		co    graph.Co
+		want  graph.Co
 		want1 bool
 	}{
 		{
 			name:  "returns co and value of east tile of an even row co",
-			co:    utils.Co{X: 2, Y: 2},
-			want:  utils.Co{X: 3, Y: 2},
+			co:    graph.Co{X: 2, Y: 2},
+			want:  graph.Co{X: 3, Y: 2},
 			want1: false,
 		},
 		{
 			name:  "returns co and value of east tile of an odd row co",
-			co:    utils.Co{X: 2, Y: 1},
-			want:  utils.Co{X: 3, Y: 1},
+			co:    graph.Co{X: 2, Y: 1},
+			want:  graph.Co{X: 3, Y: 1},
 			want1: true,
 		},
 	}
@@ -90,20 +90,20 @@ func TestTiles_getETile(t *testing.T) {
 func TestTiles_getSETile(t *testing.T) {
 	tests := []struct {
 		name  string
-		co    utils.Co
-		want  utils.Co
+		co    graph.Co
+		want  graph.Co
 		want1 bool
 	}{
 		{
 			name:  "returns co and value of south east tile of an even row co",
-			co:    utils.Co{X: 0, Y: 0},
-			want:  utils.Co{X: 0, Y: 1},
+			co:    graph.Co{X: 0, Y: 0},
+			want:  graph.Co{X: 0, Y: 1},
 			want1: false,
 		},
 		{
 			name:  "returns co and value of south east tile of an odd row co",
-			co:    utils.Co{X: 0, Y: 1},
-			want:  utils.Co{X: 1, Y: 2},
+			co:    graph.Co{X: 0, Y: 1},
+			want:  graph.Co{X: 1, Y: 2},
 			want1: false,
 		},
 	}
@@ -126,20 +126,20 @@ func TestTiles_getSETile(t *testing.T) {
 func TestTiles_getNETile(t *testing.T) {
 	tests := []struct {
 		name  string
-		co    utils.Co
-		want  utils.Co
+		co    graph.Co
+		want  graph.Co
 		want1 bool
 	}{
 		{
 			name:  "returns co and value of north east tile of an even row co",
-			co:    utils.Co{X: 0, Y: 2},
-			want:  utils.Co{X: 0, Y: 1},
+			co:    graph.Co{X: 0, Y: 2},
+			want:  graph.Co{X: 0, Y: 1},
 			want1: false,
 		},
 		{
 			name:  "returns co and value of north east tile of an odd row co",
-			co:    utils.Co{X: 0, Y: 1},
-			want:  utils.Co{X: 1, Y: 0},
+			co:    graph.Co{X: 0, Y: 1},
+			want:  graph.Co{X: 1, Y: 0},
 			want1: false,
 		},
 	}
@@ -162,20 +162,20 @@ func TestTiles_getNETile(t *testing.T) {
 func TestTiles_getWTile(t *testing.T) {
 	tests := []struct {
 		name  string
-		co    utils.Co
-		want  utils.Co
+		co    graph.Co
+		want  graph.Co
 		want1 bool
 	}{
 		{
 			name:  "returns co and value of west tile of an even row co",
-			co:    utils.Co{X: 3, Y: 0},
-			want:  utils.Co{X: 2, Y: 0},
+			co:    graph.Co{X: 3, Y: 0},
+			want:  graph.Co{X: 2, Y: 0},
 			want1: true,
 		},
 		{
 			name:  "returns co and value of west tile of an odd row co",
-			co:    utils.Co{X: 1, Y: 1},
-			want:  utils.Co{X: 0, Y: 1},
+			co:    graph.Co{X: 1, Y: 1},
+			want:  graph.Co{X: 0, Y: 1},
 			want1: false,
 		},
 	}
@@ -198,20 +198,20 @@ func TestTiles_getWTile(t *testing.T) {
 func TestTiles_getSWTile(t *testing.T) {
 	tests := []struct {
 		name  string
-		co    utils.Co
-		want  utils.Co
+		co    graph.Co
+		want  graph.Co
 		want1 bool
 	}{
 		{
 			name:  "returns co and value of south west tile of an even row co",
-			co:    utils.Co{X: 2, Y: 0},
-			want:  utils.Co{X: 1, Y: 1},
+			co:    graph.Co{X: 2, Y: 0},
+			want:  graph.Co{X: 1, Y: 1},
 			want1: true,
 		},
 		{
 			name:  "returns co and value of south west tile of an odd row co",
-			co:    utils.Co{X: 1, Y: 1},
-			want:  utils.Co{X: 1, Y: 2},
+			co:    graph.Co{X: 1, Y: 1},
+			want:  graph.Co{X: 1, Y: 2},
 			want1: false,
 		},
 	}
@@ -234,20 +234,20 @@ func TestTiles_getSWTile(t *testing.T) {
 func TestTiles_getNWTile(t *testing.T) {
 	tests := []struct {
 		name  string
-		co    utils.Co
-		want  utils.Co
+		co    graph.Co
+		want  graph.Co
 		want1 bool
 	}{
 		{
 			name:  "returns co and value of north west tile of an even row co",
-			co:    utils.Co{X: 2, Y: 2},
-			want:  utils.Co{X: 1, Y: 1},
+			co:    graph.Co{X: 2, Y: 2},
+			want:  graph.Co{X: 1, Y: 1},
 			want1: true,
 		},
 		{
 			name:  "returns co and value of north west tile of an odd row co",
-			co:    utils.Co{X: 1, Y: 1},
-			want:  utils.Co{X: 1, Y: 0},
+			co:    graph.Co{X: 1, Y: 1},
+			want:  graph.Co{X: 1, Y: 0},
 			want1: false,
 		},
 	}
@@ -269,8 +269,8 @@ func TestTiles_getNWTile(t *testing.T) {
 
 func TestTiles_moveTile(t *testing.T) {
 	type fields struct {
-		Map         map[utils.Co]bool
-		CurrentTile utils.Co
+		Map         map[graph.Co]bool
+		CurrentTile graph.Co
 		MaxX        int
 		MaxY        int
 		MinX        int
@@ -286,7 +286,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "changes current tile to east tile",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 1, Y: 1},
+				CurrentTile: graph.Co{X: 1, Y: 1},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -295,7 +295,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "e",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 2, Y: 1},
+				CurrentTile: graph.Co{X: 2, Y: 1},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -306,7 +306,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "changes current tile to south east tile",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 1, Y: 1},
+				CurrentTile: graph.Co{X: 1, Y: 1},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -315,7 +315,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "se",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 2, Y: 2},
+				CurrentTile: graph.Co{X: 2, Y: 2},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -326,7 +326,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "changes current tile to north east tile",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 1, Y: 1},
+				CurrentTile: graph.Co{X: 1, Y: 1},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -335,7 +335,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "ne",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 2, Y: 0},
+				CurrentTile: graph.Co{X: 2, Y: 0},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -346,7 +346,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "changes current tile to west tile",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 1, Y: 1},
+				CurrentTile: graph.Co{X: 1, Y: 1},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -355,7 +355,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "w",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 0, Y: 1},
+				CurrentTile: graph.Co{X: 0, Y: 1},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -366,7 +366,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "changes current tile to south west tile",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 1, Y: 1},
+				CurrentTile: graph.Co{X: 1, Y: 1},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -375,7 +375,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "sw",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 1, Y: 2},
+				CurrentTile: graph.Co{X: 1, Y: 2},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -386,7 +386,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "changes current tile to west tile",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 1, Y: 1},
+				CurrentTile: graph.Co{X: 1, Y: 1},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -395,7 +395,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "nw",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 1, Y: 0},
+				CurrentTile: graph.Co{X: 1, Y: 0},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -406,7 +406,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "descreases minX if currentTile.X moves below it",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 0, Y: 0},
+				CurrentTile: graph.Co{X: 0, Y: 0},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -415,7 +415,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "w",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: -1, Y: 0},
+				CurrentTile: graph.Co{X: -1, Y: 0},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        -1,
@@ -426,7 +426,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "descreases minY if currentTile.Y moves below it",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 0, Y: 0},
+				CurrentTile: graph.Co{X: 0, Y: 0},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -435,7 +435,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "ne",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 0, Y: -1},
+				CurrentTile: graph.Co{X: 0, Y: -1},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -446,7 +446,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "increases maxX if currentTile.X moves above it",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 3, Y: 0},
+				CurrentTile: graph.Co{X: 3, Y: 0},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -455,7 +455,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "e",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 4, Y: 0},
+				CurrentTile: graph.Co{X: 4, Y: 0},
 				MaxX:        4,
 				MaxY:        2,
 				MinX:        0,
@@ -466,7 +466,7 @@ func TestTiles_moveTile(t *testing.T) {
 			name: "increases maxY if currentTile.Y moves above it",
 			fields: fields{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 0, Y: 2},
+				CurrentTile: graph.Co{X: 0, Y: 2},
 				MaxX:        3,
 				MaxY:        2,
 				MinX:        0,
@@ -475,7 +475,7 @@ func TestTiles_moveTile(t *testing.T) {
 			dir: "se",
 			want: &Tiles{
 				Map:         simpleMap,
-				CurrentTile: utils.Co{X: 0, Y: 3},
+				CurrentTile: graph.Co{X: 0, Y: 3},
 				MaxX:        3,
 				MaxY:        3,
 				MinX:        0,
@@ -504,14 +504,14 @@ func TestTiles_moveTile(t *testing.T) {
 func TestTiles_flipTiles(t *testing.T) {
 	tests := []struct {
 		name string
-		co   utils.Co
-		Map  map[utils.Co]bool
+		co   graph.Co
+		Map  map[graph.Co]bool
 		want *Tiles
 	}{
 		{
 			name: "a tile not in the map is added as flipped to black",
-			co:   utils.Co{X: 5, Y: 5},
-			Map: map[utils.Co]bool{
+			co:   graph.Co{X: 5, Y: 5},
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: true,
 				{X: 1, Y: 0}: false,
 				{X: 2, Y: 0}: true,
@@ -526,7 +526,7 @@ func TestTiles_flipTiles(t *testing.T) {
 				{X: 3, Y: 2}: false,
 			},
 			want: &Tiles{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 1, Y: 0}: false,
 					{X: 2, Y: 0}: true,
@@ -545,8 +545,8 @@ func TestTiles_flipTiles(t *testing.T) {
 		},
 		{
 			name: "a white tile gets flipped to black",
-			co:   utils.Co{X: 0, Y: 1},
-			Map: map[utils.Co]bool{
+			co:   graph.Co{X: 0, Y: 1},
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: true,
 				{X: 1, Y: 0}: false,
 				{X: 2, Y: 0}: true,
@@ -561,7 +561,7 @@ func TestTiles_flipTiles(t *testing.T) {
 				{X: 3, Y: 2}: false,
 			},
 			want: &Tiles{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 1, Y: 0}: false,
 					{X: 2, Y: 0}: true,
@@ -579,8 +579,8 @@ func TestTiles_flipTiles(t *testing.T) {
 		},
 		{
 			name: "a black tile gets flipped to white",
-			co:   utils.Co{X: 3, Y: 2},
-			Map: map[utils.Co]bool{
+			co:   graph.Co{X: 3, Y: 2},
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: true,
 				{X: 1, Y: 0}: false,
 				{X: 2, Y: 0}: true,
@@ -595,7 +595,7 @@ func TestTiles_flipTiles(t *testing.T) {
 				{X: 3, Y: 2}: false,
 			},
 			want: &Tiles{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 1, Y: 0}: false,
 					{X: 2, Y: 0}: true,
@@ -627,7 +627,7 @@ func TestTiles_flipTiles(t *testing.T) {
 
 func TestTiles_moveThroughList(t *testing.T) {
 	type fields struct {
-		Map  map[utils.Co]bool
+		Map  map[graph.Co]bool
 		MaxX int
 		MaxY int
 	}
@@ -640,14 +640,14 @@ func TestTiles_moveThroughList(t *testing.T) {
 		{
 			name: "advent of code example 1",
 			fields: fields{
-				Map: make(map[utils.Co]bool),
+				Map: make(map[graph.Co]bool),
 			},
 			tiles: []string{"e", "se", "ne", "e"},
 			want: &Tiles{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 3, Y: 0}: true,
 				},
-				CurrentTile: utils.Co{X: 3, Y: 0},
+				CurrentTile: graph.Co{X: 3, Y: 0},
 				MaxX:        3,
 				MaxY:        1,
 			},
@@ -655,18 +655,18 @@ func TestTiles_moveThroughList(t *testing.T) {
 		{
 			name: "advent of code example 2",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 3, Y: 0}: true,
 				},
 				MaxX: 3,
 			},
 			tiles: []string{"e", "se", "w"},
 			want: &Tiles{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 3, Y: 0}: true,
 					{X: 0, Y: 1}: true,
 				},
-				CurrentTile: utils.Co{X: 0, Y: 1},
+				CurrentTile: graph.Co{X: 0, Y: 1},
 				MaxX:        3,
 				MaxY:        1,
 			},
@@ -674,7 +674,7 @@ func TestTiles_moveThroughList(t *testing.T) {
 		{
 			name: "advent of code example 3",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 3, Y: 0}: true,
 					{X: 0, Y: 1}: true,
 				},
@@ -683,12 +683,12 @@ func TestTiles_moveThroughList(t *testing.T) {
 			},
 			tiles: []string{"nw", "w", "sw", "e", "e"},
 			want: &Tiles{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 3, Y: 0}: true,
 					{X: 0, Y: 1}: true,
 					{X: 0, Y: 0}: true,
 				},
-				CurrentTile: utils.Co{X: 0, Y: 0},
+				CurrentTile: graph.Co{X: 0, Y: 0},
 				MaxX:        3,
 				MaxY:        1,
 				MinY:        -1,
@@ -714,17 +714,17 @@ func TestTiles_moveThroughList(t *testing.T) {
 func TestTiles_countTiles(t *testing.T) {
 	tests := []struct {
 		name string
-		Map  map[utils.Co]bool
+		Map  map[graph.Co]bool
 		want int
 	}{
 		{
 			name: "returns 0 if there are no tiles in the map",
-			Map:  map[utils.Co]bool{},
+			Map:  map[graph.Co]bool{},
 			want: 0,
 		},
 		{
 			name: "returns 0 if there are no black tiles in the map",
-			Map: map[utils.Co]bool{
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: false,
 				{X: 1, Y: 0}: false,
 				{X: 2, Y: 0}: false,
@@ -734,7 +734,7 @@ func TestTiles_countTiles(t *testing.T) {
 		},
 		{
 			name: "returns the number of tiles if all tiles in the map are black",
-			Map: map[utils.Co]bool{
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: true,
 				{X: 1, Y: 0}: true,
 				{X: 2, Y: 0}: true,
@@ -744,7 +744,7 @@ func TestTiles_countTiles(t *testing.T) {
 		},
 		{
 			name: "returns the number of black tiles if some of the tiles in the map are black",
-			Map: map[utils.Co]bool{
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: true,
 				{X: 1, Y: 0}: false,
 				{X: 2, Y: 0}: true,
@@ -767,8 +767,8 @@ func TestTiles_countTiles(t *testing.T) {
 
 func TestTiles_populateMissingTiles(t *testing.T) {
 	type fields struct {
-		Map         map[utils.Co]bool
-		CurrentTile utils.Co
+		Map         map[graph.Co]bool
+		CurrentTile graph.Co
 		MaxX        int
 		MaxY        int
 		MinX        int
@@ -786,7 +786,7 @@ func TestTiles_populateMissingTiles(t *testing.T) {
 				MaxY: 1,
 				MinX: 0,
 				MinY: -1,
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: -1}: true,
 					{X: 0, Y: 0}:  true,
 					{X: 0, Y: 1}:  false,
@@ -800,7 +800,7 @@ func TestTiles_populateMissingTiles(t *testing.T) {
 				MaxY: 2,
 				MinX: -1,
 				MinY: -2,
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: -1, Y: -2}: false,
 					{X: -1, Y: -1}: false,
 					{X: -1, Y: 0}:  false,
@@ -831,7 +831,7 @@ func TestTiles_populateMissingTiles(t *testing.T) {
 				MaxY: 1,
 				MinX: 0,
 				MinY: -1,
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: -1}: true,
 					{X: 1, Y: -1}: true,
 					{X: 1, Y: 0}:  true,
@@ -843,7 +843,7 @@ func TestTiles_populateMissingTiles(t *testing.T) {
 				MaxY: 2,
 				MinX: -1,
 				MinY: -2,
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: -1, Y: -2}: false,
 					{X: -1, Y: -1}: false,
 					{X: -1, Y: 0}:  false,
@@ -888,8 +888,8 @@ func TestTiles_populateMissingTiles(t *testing.T) {
 
 func TestTiles_shouldFlip(t *testing.T) {
 	type fields struct {
-		Map         map[utils.Co]bool
-		CurrentTile utils.Co
+		Map         map[graph.Co]bool
+		CurrentTile graph.Co
 		MaxX        int
 		MaxY        int
 		MinX        int
@@ -898,49 +898,49 @@ func TestTiles_shouldFlip(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-		co     utils.Co
+		co     graph.Co
 		want   bool
 	}{
 		{
 			name: "returns true if a white tile is adjacent to two black tiles, east and south east",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 1, Y: 0}: true,
 					{X: 0, Y: 1}: true,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: true,
 		},
 		{
 			name: "returns true if a white tile is adjacent to two black tiles, north east and west",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:  false,
 					{X: 0, Y: -1}: true,
 					{X: -1, Y: 0}: true,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: true,
 		},
 		{
 			name: "returns true if a white tile is adjacent to two black tiles, south west and north west",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   false,
 					{X: -1, Y: 1}:  true,
 					{X: -1, Y: -1}: true,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: true,
 		},
 		{
 			name: "returns false if a white tile is adjacent to no black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   false,
 					{X: 1, Y: 0}:   false,
 					{X: 0, Y: 1}:   false,
@@ -950,13 +950,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: false,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: false,
 		},
 		{
 			name: "returns false if a white tile is adjacent to one black tile",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   false,
 					{X: 1, Y: 0}:   true,
 					{X: 0, Y: 1}:   false,
@@ -966,13 +966,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: false,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: false,
 		},
 		{
 			name: "returns false if a white tile is adjacent to three black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   false,
 					{X: 1, Y: 0}:   true,
 					{X: 0, Y: 1}:   true,
@@ -982,13 +982,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: false,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: false,
 		},
 		{
 			name: "returns false if a white tile is adjacent to four black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   false,
 					{X: 1, Y: 0}:   true,
 					{X: 0, Y: 1}:   false,
@@ -998,13 +998,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: true,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: false,
 		},
 		{
 			name: "returns false if a white tile is adjacent to five black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   false,
 					{X: 1, Y: 0}:   true,
 					{X: 0, Y: 1}:   true,
@@ -1014,13 +1014,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: true,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: false,
 		},
 		{
 			name: "returns false if a white tile is adjacent to six black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   false,
 					{X: 1, Y: 0}:   true,
 					{X: 0, Y: 1}:   false,
@@ -1030,13 +1030,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: true,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: false,
 		},
 		{
 			name: "returns true if a black tile is adjacent to no black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   true,
 					{X: 1, Y: 0}:   false,
 					{X: 0, Y: 1}:   false,
@@ -1046,13 +1046,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: false,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: true,
 		},
 		{
 			name: "returns true if a black tile is adjacent to three black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   true,
 					{X: 1, Y: 0}:   true,
 					{X: 0, Y: 1}:   true,
@@ -1062,13 +1062,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: false,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: true,
 		},
 		{
 			name: "returns true if a black tile is adjacent to four black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   true,
 					{X: 1, Y: 0}:   true,
 					{X: 0, Y: 1}:   true,
@@ -1078,13 +1078,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: false,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: true,
 		},
 		{
 			name: "returns true if a black tile is adjacent to five black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   true,
 					{X: 1, Y: 0}:   true,
 					{X: 0, Y: 1}:   true,
@@ -1094,13 +1094,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: false,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: true,
 		},
 		{
 			name: "returns true if a black tile is adjacent to six black tiles",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   true,
 					{X: 1, Y: 0}:   true,
 					{X: 0, Y: 1}:   true,
@@ -1110,13 +1110,13 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: true,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: true,
 		},
 		{
 			name: "returns false if a black tile is adjacent to one black tile",
 			fields: fields{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}:   true,
 					{X: 1, Y: 0}:   false,
 					{X: 0, Y: 1}:   true,
@@ -1126,7 +1126,7 @@ func TestTiles_shouldFlip(t *testing.T) {
 					{X: -1, Y: -1}: false,
 				},
 			},
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: false,
 		},
 	}
@@ -1150,12 +1150,12 @@ func TestTiles_shouldFlip(t *testing.T) {
 func TestTiles_decideWhichTilesToFlip(t *testing.T) {
 	tests := []struct {
 		name string
-		Map  map[utils.Co]bool
-		want []utils.Co
+		Map  map[graph.Co]bool
+		want []graph.Co
 	}{
 		{
 			name: "returns list of tiles to be flipped, advent of code example",
-			Map: map[utils.Co]bool{
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: true,
 				{X: 1, Y: 0}: false,
 				{X: 2, Y: 0}: false,
@@ -1182,7 +1182,7 @@ func TestTiles_decideWhichTilesToFlip(t *testing.T) {
 				{X: 3, Y: 4}: true,
 				{X: 4, Y: 4}: false,
 			},
-			want: []utils.Co{
+			want: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 2, Y: 0},
 				{X: 4, Y: 0},
@@ -1220,12 +1220,12 @@ func TestTiles_decideWhichTilesToFlip(t *testing.T) {
 func TestTiles_doFlips(t *testing.T) {
 	tests := []struct {
 		name string
-		Map  map[utils.Co]bool
+		Map  map[graph.Co]bool
 		want *Tiles
 	}{
 		{
 			name: "flips the correct tiles",
-			Map: map[utils.Co]bool{
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: true,
 				{X: 1, Y: 0}: false,
 				{X: 2, Y: 0}: false,
@@ -1253,7 +1253,7 @@ func TestTiles_doFlips(t *testing.T) {
 				{X: 4, Y: 4}: false,
 			},
 			want: &Tiles{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 1, Y: 0}: false,
 					{X: 2, Y: 0}: true,
@@ -1382,7 +1382,7 @@ func TestTiles_countTilesAfterDays(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(fmt.Sprintf("advent of code example, %d days", tt.days), func(t *testing.T) {
 			tr := &Tiles{
-				Map: map[utils.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: -2, Y: -1}: true,
 					{X: -2, Y: 0}:  true,
 					{X: -2, Y: 1}:  true,

@@ -1,13 +1,13 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
 func main() {
 	var twoOfLetterSum, threeOfLetterSum int
-	lines := utils.ReadFile()
+	lines := file.Read()
 	for _, id := range lines {
 		m := make(map[string]int)
 		var twoOfLetter, threeOfLetter = false, false

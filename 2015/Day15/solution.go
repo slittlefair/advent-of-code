@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -122,7 +122,7 @@ func (in *Ingredients) findOptimumSpoonfuls(spoonfuls SpoonfulsMap, level int) (
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	ingredients := parseInput(input)
 	ingredients.findOptimumSpoonfuls(SpoonfulsMap{}, len(ingredients.Ingredients)-1)
 	fmt.Println("Part 1:", ingredients.MaxScore)

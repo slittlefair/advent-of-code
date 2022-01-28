@@ -1,23 +1,24 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
 	"fmt"
 	"sort"
 )
 
-type HeightMap map[utils.Co]int
+type HeightMap map[graph.Co]int
 
-type LowPoints map[utils.Co]int
+type LowPoints map[graph.Co]int
 
-type Basin map[utils.Co]struct{}
+type Basin map[graph.Co]struct{}
 type Basins []int
 
 func parseInput(input []string) HeightMap {
 	hm := HeightMap{}
 	for y := 0; y < len(input); y++ {
 		for x := 0; x < len(input[0]); x++ {
-			hm[utils.Co{X: x, Y: y}] = int(input[y][x] - '0')
+			hm[graph.Co{X: x, Y: y}] = int(input[y][x] - '0')
 		}
 	}
 	return hm
@@ -26,7 +27,7 @@ func parseInput(input []string) HeightMap {
 func (hm HeightMap) findLowPoints() LowPoints {
 	lowPoints := LowPoints{}
 	for co, v := range hm {
-		for _, adjCo := range utils.AdjacentCos(co, false) {
+		for _, adjCo := range graph.AdjacentCos(co, false) {
 			if val, ok := hm[adjCo]; ok && val <= v {
 				goto out
 			}
@@ -45,7 +46,7 @@ func calculateRiskLevels(lowPoints LowPoints) int {
 	return risk
 }
 
-func (hm HeightMap) coIsPartOfBasin(b Basin, co utils.Co) bool {
+func (hm HeightMap) coIsPartOfBasin(b Basin, co graph.Co) bool {
 	if _, ok := b[co]; !ok {
 		if v, ok := hm[co]; ok && v != 9 {
 			return true
@@ -54,14 +55,14 @@ func (hm HeightMap) coIsPartOfBasin(b Basin, co utils.Co) bool {
 	return false
 }
 
-func (hm HeightMap) calculateBasin(co utils.Co) int {
+func (hm HeightMap) calculateBasin(co graph.Co) int {
 	b := Basin{
 		co: {},
 	}
 	for {
-		newCos := []utils.Co{}
+		newCos := []graph.Co{}
 		for co := range b {
-			for _, newCo := range utils.AdjacentCos(co, false) {
+			for _, newCo := range graph.AdjacentCos(co, false) {
 				if hm.coIsPartOfBasin(b, newCo) {
 					newCos = append(newCos, newCo)
 				}
@@ -92,7 +93,7 @@ func findSolutions(input []string) (int, int) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1, part2 := findSolutions(input)
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)

@@ -1,17 +1,20 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"strconv"
 )
 
 func main() {
-	lines := utils.ReadFile()
+	lines := file.Read()
 	var sum int
 	for _, val := range lines {
 		n, err := strconv.Atoi(val)
-		utils.Check(err)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		sum = sum + n
 	}
 	fmt.Println(sum)

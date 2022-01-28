@@ -1,7 +1,7 @@
 package card
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/graph"
 	"regexp"
 	"testing"
 )
@@ -21,7 +21,7 @@ func TestCard_ParseCard(t *testing.T) {
 		{
 			name: "returns an error if match from regex can't be converted to int",
 			card: &Card{
-				Numbers: make(map[utils.Co]*Number),
+				Numbers: make(map[graph.Co]*Number),
 			},
 			args: args{
 				lines: []string{
@@ -32,7 +32,7 @@ func TestCard_ParseCard(t *testing.T) {
 				reNum: regexp.MustCompile(`\w`),
 			},
 			want: &Card{
-				Numbers: map[utils.Co]*Number{
+				Numbers: map[graph.Co]*Number{
 					{X: 0, Y: 0}: {Val: 1},
 					{X: 1, Y: 0}: {Val: 2},
 				},
@@ -42,7 +42,7 @@ func TestCard_ParseCard(t *testing.T) {
 		{
 			name: "returns a parsed card from input, advent of code example 1",
 			card: &Card{
-				Numbers: make(map[utils.Co]*Number),
+				Numbers: make(map[graph.Co]*Number),
 			},
 			args: args{
 				lines: []string{
@@ -56,7 +56,7 @@ func TestCard_ParseCard(t *testing.T) {
 				reNum: regexp.MustCompile(`\d+`),
 			},
 			want: &Card{
-				Numbers: map[utils.Co]*Number{
+				Numbers: map[graph.Co]*Number{
 					{X: 0, Y: 0}: {Val: 22},
 					{X: 0, Y: 1}: {Val: 8},
 					{X: 0, Y: 2}: {Val: 21},
@@ -89,7 +89,7 @@ func TestCard_ParseCard(t *testing.T) {
 		{
 			name: "returns a parsed card from input, advent of code example 2",
 			card: &Card{
-				Numbers: make(map[utils.Co]*Number),
+				Numbers: make(map[graph.Co]*Number),
 			},
 			args: args{
 				lines: []string{
@@ -103,7 +103,7 @@ func TestCard_ParseCard(t *testing.T) {
 				reNum: regexp.MustCompile(`\d+`),
 			},
 			want: &Card{
-				Numbers: map[utils.Co]*Number{
+				Numbers: map[graph.Co]*Number{
 					{X: 0, Y: 0}: {Val: 3},
 					{X: 0, Y: 1}: {Val: 9},
 					{X: 0, Y: 2}: {Val: 19},
@@ -136,7 +136,7 @@ func TestCard_ParseCard(t *testing.T) {
 		{
 			name: "returns a parsed card from input, advent of code example 3",
 			card: &Card{
-				Numbers: make(map[utils.Co]*Number),
+				Numbers: make(map[graph.Co]*Number),
 			},
 			args: args{
 				lines: []string{
@@ -150,7 +150,7 @@ func TestCard_ParseCard(t *testing.T) {
 				reNum: regexp.MustCompile(`\d+`),
 			},
 			want: &Card{
-				Numbers: map[utils.Co]*Number{
+				Numbers: map[graph.Co]*Number{
 					{X: 0, Y: 0}: {Val: 14},
 					{X: 0, Y: 1}: {Val: 10},
 					{X: 0, Y: 2}: {Val: 18},
@@ -194,12 +194,12 @@ func TestCard_ParseCard(t *testing.T) {
 func TestCard_CardIsWinner(t *testing.T) {
 	tests := []struct {
 		name    string
-		numbers map[utils.Co]*Number
+		numbers map[graph.Co]*Number
 		want    bool
 	}{
 		{
 			name: "returns false if card has no winning rows or columns",
-			numbers: map[utils.Co]*Number{
+			numbers: map[graph.Co]*Number{
 				{X: 0, Y: 0}: {Val: 14, Called: true},
 				{X: 0, Y: 1}: {Val: 10},
 				{X: 0, Y: 2}: {Val: 18},
@@ -230,7 +230,7 @@ func TestCard_CardIsWinner(t *testing.T) {
 		},
 		{
 			name: "returns true if card has a winning column",
-			numbers: map[utils.Co]*Number{
+			numbers: map[graph.Co]*Number{
 				{X: 0, Y: 0}: {Val: 14, Called: true},
 				{X: 0, Y: 1}: {Val: 10, Called: true},
 				{X: 0, Y: 2}: {Val: 18},
@@ -261,7 +261,7 @@ func TestCard_CardIsWinner(t *testing.T) {
 		},
 		{
 			name: "returns true if card has a winning row",
-			numbers: map[utils.Co]*Number{
+			numbers: map[graph.Co]*Number{
 				{X: 0, Y: 0}: {Val: 14, Called: true},
 				{X: 0, Y: 1}: {Val: 10, Called: true},
 				{X: 0, Y: 2}: {Val: 18},
@@ -306,13 +306,13 @@ func TestCard_CardIsWinner(t *testing.T) {
 func TestCard_CalculateScore(t *testing.T) {
 	tests := []struct {
 		name    string
-		numbers map[utils.Co]*Number
+		numbers map[graph.Co]*Number
 		num     int
 		want    int
 	}{
 		{
 			name: "returns the product of given num and uncalled numbers from card, advent of code example 1",
-			numbers: map[utils.Co]*Number{
+			numbers: map[graph.Co]*Number{
 				{X: 0, Y: 0}: {Val: 14, Called: true},
 				{X: 0, Y: 1}: {Val: 10},
 				{X: 0, Y: 2}: {Val: 18},
@@ -344,7 +344,7 @@ func TestCard_CalculateScore(t *testing.T) {
 		},
 		{
 			name: "returns the product of given num and uncalled numbers from card, advent of code example 2",
-			numbers: map[utils.Co]*Number{
+			numbers: map[graph.Co]*Number{
 				{X: 0, Y: 0}: {Val: 3},
 				{X: 0, Y: 1}: {Val: 9, Called: true},
 				{X: 0, Y: 2}: {Val: 19},

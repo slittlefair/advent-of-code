@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code/utils"
+	"Advent-of-Code/graph"
 	"reflect"
 	"testing"
 )
@@ -55,32 +55,32 @@ func Test_parseInput(t *testing.T) {
 func TestTargetArea_isInTargetArea(t *testing.T) {
 	tests := []struct {
 		name string
-		co   utils.Co
+		co   graph.Co
 		want bool
 	}{
 		{
 			name: "returns false if co X value too low for target area",
-			co:   utils.Co{X: 10, Y: -8},
+			co:   graph.Co{X: 10, Y: -8},
 			want: false,
 		},
 		{
 			name: "returns false if co XX value too high for target area",
-			co:   utils.Co{X: 100, Y: -8},
+			co:   graph.Co{X: 100, Y: -8},
 			want: false,
 		},
 		{
 			name: "returns false if co Y value too low for target area",
-			co:   utils.Co{X: 23, Y: 9},
+			co:   graph.Co{X: 23, Y: 9},
 			want: false,
 		},
 		{
 			name: "returns false if co Y value too high for target area",
-			co:   utils.Co{X: 24, Y: -89},
+			co:   graph.Co{X: 24, Y: -89},
 			want: false,
 		},
 		{
 			name: "returns true if co is in target area",
-			co:   utils.Co{X: 20, Y: -8},
+			co:   graph.Co{X: 20, Y: -8},
 			want: true,
 		},
 	}

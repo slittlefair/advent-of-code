@@ -1,7 +1,9 @@
 package main
 
 import (
-	"Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
+	"Advent-of-Code/maths"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -35,18 +37,18 @@ func parseInput(input string) (*TargetArea, error) {
 	return ta, nil
 }
 
-func (ta TargetArea) isInTargetArea(co utils.Co) bool {
+func (ta TargetArea) isInTargetArea(co graph.Co) bool {
 	return co.X >= ta.MinX && co.X <= ta.MaxX && co.Y >= ta.MinY && co.Y <= ta.MaxY
 }
 
 func (ta *TargetArea) evaluateTrajectory(x, y int) {
-	velocity := utils.Co{X: x, Y: y}
-	currentPosition := utils.Co{X: 0, Y: 0}
+	velocity := graph.Co{X: x, Y: y}
+	currentPosition := graph.Co{X: 0, Y: 0}
 	highestYForShot := y
 	for {
 		currentPosition.X += velocity.X
 		currentPosition.Y += velocity.Y
-		highestYForShot = utils.Max(highestYForShot, currentPosition.Y)
+		highestYForShot = maths.Max(highestYForShot, currentPosition.Y)
 		if ta.isInTargetArea(currentPosition) {
 			ta.SuccessfulTrajectories++
 			ta.GreatestSuccessfulY = highestYForShot
@@ -88,7 +90,7 @@ func findTrajectories(input []string) (int, int, error) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1, part2, err := findTrajectories(input)
 	if err != nil {
 		fmt.Println(err)

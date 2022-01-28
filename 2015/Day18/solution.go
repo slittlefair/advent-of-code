@@ -1,11 +1,12 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
 	"fmt"
 )
 
-type Lights map[utils.Co]string
+type Lights map[graph.Co]string
 
 type Grid struct {
 	Lights Lights
@@ -21,7 +22,7 @@ func parseInput(input []string) Grid {
 	for y, row := range input {
 		grid.Width = len(row) - 1
 		for x, col := range row {
-			grid.Lights[utils.Co{X: x, Y: y}] = string(col)
+			grid.Lights[graph.Co{X: x, Y: y}] = string(col)
 		}
 	}
 	return grid
@@ -31,16 +32,16 @@ func parseInput(input []string) Grid {
 // func (g Grid) PrintLights() {
 // 	for y := 0; y <= g.Height; y++ {
 // 		for x := 0; x <= g.Width; x++ {
-// 			fmt.Printf(g.Lights[utils.Co{X: x, Y: y}])
+// 			fmt.Printf(g.Lights[graph.Co{X: x, Y: y}])
 // 		}
 // 		fmt.Println()
 // 	}
 // 	fmt.Println()
 // }
 
-func (g *Grid) LightStaysOn(co utils.Co) bool {
+func (g *Grid) LightStaysOn(co graph.Co) bool {
 	count := 0
-	for _, adjCo := range utils.AdjacentCos(co, true) {
+	for _, adjCo := range graph.AdjacentCos(co, true) {
 		if g.Lights[adjCo] == "#" {
 			count++
 		}
@@ -77,10 +78,10 @@ func (g Grid) CountLightsOn() int {
 }
 
 func (g *Grid) TurnCornersOn() {
-	g.Lights[utils.Co{X: 0, Y: 0}] = "#"
-	g.Lights[utils.Co{X: 0, Y: g.Height}] = "#"
-	g.Lights[utils.Co{X: g.Width, Y: 0}] = "#"
-	g.Lights[utils.Co{X: g.Width, Y: g.Height}] = "#"
+	g.Lights[graph.Co{X: 0, Y: 0}] = "#"
+	g.Lights[graph.Co{X: 0, Y: g.Height}] = "#"
+	g.Lights[graph.Co{X: g.Width, Y: 0}] = "#"
+	g.Lights[graph.Co{X: g.Width, Y: g.Height}] = "#"
 }
 
 func (g *Grid) RunStepsPart1(steps int) {
@@ -110,7 +111,7 @@ func runAndCountLightsPart2(input []string, steps int) int {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	fmt.Println("Part 1:", runAndCountLightsPart1(input, 100))
 	fmt.Println("Part 2:", runAndCountLightsPart2(input, 100))
 }

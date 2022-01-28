@@ -1,7 +1,8 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -10,9 +11,9 @@ import (
 
 type Position struct {
 	direction int
-	location  utils.Co
-	seen      map[utils.Co]bool
-	hq        utils.Co
+	location  graph.Co
+	seen      map[graph.Co]bool
+	hq        graph.Co
 }
 
 func (p *Position) turnLeft() {
@@ -82,13 +83,13 @@ func (p *Position) followSteps(input []string) (int, error) {
 			return -1, err
 		}
 	}
-	return utils.CalculateManhattanDistance(p.location, utils.Co{}), nil
+	return graph.CalculateManhattanDistance(p.location, graph.Co{}), nil
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	p := &Position{
-		seen: map[utils.Co]bool{
+		seen: map[graph.Co]bool{
 			{X: 0, Y: 0}: true,
 		},
 	}
@@ -98,5 +99,5 @@ func main() {
 		return
 	}
 	fmt.Println("Part 1:", part1)
-	fmt.Println("Part 2:", utils.CalculateManhattanDistance(p.hq, utils.Co{}))
+	fmt.Println("Part 2:", graph.CalculateManhattanDistance(p.hq, graph.Co{}))
 }

@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -57,7 +57,7 @@ func (bm BagMap) countBags(bag string) int {
 }
 
 func main() {
-	entries := utils.ReadFile()
+	entries := file.Read()
 	bagMap := &BagMap{}
 	bagMap.parseBag(entries)
 	myBag := "shiny gold"

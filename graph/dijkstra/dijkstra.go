@@ -1,14 +1,14 @@
 package dijkstra
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/graph"
 	"container/heap"
 	"fmt"
 )
 
 type Path struct {
 	Value int
-	Nodes []utils.Co
+	Nodes []graph.Co
 }
 
 type PriorityQueue []*Path
@@ -41,45 +41,45 @@ func (pq *PriorityQueue) Pop() interface{} {
 func (g Graph) PrintGrid() {
 	for y := 0; y <= g.MaxY; y++ {
 		for x := 0; x <= g.MaxX; x++ {
-			fmt.Print(g.Grid[utils.Co{X: x, Y: y}])
+			fmt.Print(g.Grid[graph.Co{X: x, Y: y}])
 		}
 		fmt.Println()
 	}
 }
 
 type Edge struct {
-	Node   utils.Co
+	Node   graph.Co
 	Weight int
 }
 
 type Graph struct {
-	Grid       map[utils.Co]int
-	Nodes      map[utils.Co][]Edge
+	Grid       map[graph.Co]int
+	Nodes      map[graph.Co][]Edge
 	MaxX, MaxY int
 }
 
 func NewGraph(maxX, maxY int) *Graph {
 	return &Graph{
-		Grid:  make(map[utils.Co]int),
-		Nodes: make(map[utils.Co][]Edge),
+		Grid:  make(map[graph.Co]int),
+		Nodes: make(map[graph.Co][]Edge),
 		MaxX:  maxX,
 		MaxY:  maxY,
 	}
 }
 
-func (g *Graph) AddEdge(origin, destination utils.Co, weight int) {
+func (g *Graph) AddEdge(origin, destination graph.Co, weight int) {
 	g.Nodes[origin] = append(g.Nodes[origin], Edge{Node: destination, Weight: weight})
 	if _, ok := g.Grid[destination]; !ok {
 		g.Grid[destination] = weight
 	}
 }
 
-func (g *Graph) GetEdges(node utils.Co) []Edge {
+func (g *Graph) GetEdges(node graph.Co) []Edge {
 	return g.Nodes[node]
 }
 
 func (g *Graph) ExtendGrid(factor int) {
-	newGrid := map[utils.Co]int{}
+	newGrid := map[graph.Co]int{}
 	for y := 0; y < factor; y++ {
 		for x := 0; x < factor; x++ {
 			for co, val := range g.Grid {
@@ -87,7 +87,7 @@ func (g *Graph) ExtendGrid(factor int) {
 				for risk > 9 {
 					risk -= 9
 				}
-				newGrid[utils.Co{X: co.X + ((g.MaxX + 1) * x), Y: co.Y + ((g.MaxY + 1) * y)}] = risk
+				newGrid[graph.Co{X: co.X + ((g.MaxX + 1) * x), Y: co.Y + ((g.MaxY + 1) * y)}] = risk
 			}
 		}
 	}
@@ -96,14 +96,14 @@ func (g *Graph) ExtendGrid(factor int) {
 	g.MaxY = factor*g.MaxY + factor - 1
 }
 
-func (g Graph) GetPath(origin, destination utils.Co) (*Path, error) {
+func (g Graph) GetPath(origin, destination graph.Co) (*Path, error) {
 	pq := PriorityQueue{}
 	heap.Init(&pq)
 	heap.Push(&pq, &Path{
 		Value: 0,
-		Nodes: []utils.Co{origin},
+		Nodes: []graph.Co{origin},
 	})
-	visited := map[utils.Co]struct{}{}
+	visited := map[graph.Co]struct{}{}
 	for pq.Len() > 0 {
 		p := heap.Pop(&pq).(*Path)
 		node := p.Nodes[len(p.Nodes)-1]
@@ -117,7 +117,7 @@ func (g Graph) GetPath(origin, destination utils.Co) (*Path, error) {
 			if _, ok := visited[n.Node]; !ok {
 				heap.Push(&pq, &Path{
 					Value: p.Value + n.Weight,
-					Nodes: append([]utils.Co{}, append(p.Nodes, n.Node)...),
+					Nodes: append([]graph.Co{}, append(p.Nodes, n.Node)...),
 				})
 			}
 		}

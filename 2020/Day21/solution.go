@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"sort"
@@ -106,7 +106,7 @@ func (f Foods) createDangerousIngredientsList() string {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	f := Foods{
 		AllergenToIngredient: make(map[string]string),
 		Contains:             make(map[string]map[string]bool),

@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -22,7 +22,7 @@ type co struct {
 var coords = make(map[co][]int)
 
 func main() {
-	lines := utils.ReadFile()
+	lines := file.Read()
 	var matches int
 	var ids []int
 	// cycle through cuts (or claims) and pick out the relevant information
@@ -33,7 +33,10 @@ func main() {
 		// convert strings from regex match to int
 		for _, v := range s {
 			v, err := strconv.Atoi(v)
-			utils.Check(err)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 			t = append(t, v)
 		}
 		// make a claim with top left and bottom right coordinates

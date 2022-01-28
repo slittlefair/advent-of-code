@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
@@ -134,7 +134,7 @@ func moveCart(cart cart) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	validCarts["^"] = true
 	validCarts[">"] = true
 	validCarts["v"] = true

@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -91,7 +91,7 @@ func findSolutions(sums []string) (int, int) {
 }
 
 func main() {
-	sums := utils.ReadFile()
+	sums := file.Read()
 	part1Sol, part2Sol := findSolutions(sums)
 	fmt.Println("Part 1:", part1Sol)
 	fmt.Println("Part 2:", part2Sol)

@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
@@ -146,7 +146,7 @@ func (dm distanceMap) distancesOver1000() {
 }
 
 func main() {
-	str := utils.ReadFile()
+	str := file.Read()
 	co := coordinate{0, 0}
 	for i := 1; i < len(str[0])-1; i++ {
 		co = f.fillInMap(string(str[0][i]), co)
