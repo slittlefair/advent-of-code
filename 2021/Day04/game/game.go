@@ -38,7 +38,8 @@ func ParseInput(input []string) (*Game, error) {
 	reNum := regexp.MustCompile(`\d+`)
 	for i := 1; i < len(input); i += 6 {
 		card := &card.Card{Numbers: make(map[graph.Co]*card.Number)}
-		err := card.ParseCard(input[i:i+6], reNum)
+		// We pass in a regex match we know ParseCard can handle, so we can ignore the error
+		_ = card.ParseCard(input[i:i+6], reNum)
 		if err != nil {
 			return nil, err
 		}

@@ -84,14 +84,15 @@ func (l Lights) countLightsOn() int {
 	return count
 }
 
-func (l Lights) printLights() {
-	for y := 0; y < l.Height; y++ {
-		for x := 0; x < l.Width; x++ {
-			fmt.Print(l.Pixels[graph.Co{X: x, Y: y}])
-		}
-		fmt.Println()
-	}
-}
+// debugging
+// func (l Lights) printLights() {
+// 	for y := 0; y < l.Height; y++ {
+// 		for x := 0; x < l.Width; x++ {
+// 			fmt.Print(l.Pixels[graph.Co{X: x, Y: y}])
+// 		}
+// 		fmt.Println()
+// 	}
+// }
 
 func main() {
 	input := file.Read()
@@ -103,5 +104,4 @@ func main() {
 	}
 	fmt.Println("Part 1:", lights.countLightsOn())
 	fmt.Println("Part 2:")
-	lights.printLights()
 }

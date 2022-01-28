@@ -25,30 +25,23 @@ func populatePasswordCollection(input []string) ([]passwords, error) {
 		if len(match) != 5 {
 			return nil, errors.New("match is not 5 items long")
 		}
-		password, err := readPassword(match)
-		if err != nil {
-			return nil, err
-		}
-		passwordCollection = append(passwordCollection, *password)
+		password := readPassword(match)
+		passwordCollection = append(passwordCollection, password)
 	}
 	return passwordCollection, nil
 }
 
-func readPassword(match []string) (*passwords, error) {
-	min, err := strconv.Atoi(match[1])
-	if err != nil {
-		return nil, err
-	}
-	max, err := strconv.Atoi(match[2])
-	if err != nil {
-		return nil, err
-	}
-	return &passwords{
+func readPassword(match []string) passwords {
+	// We only pass in match from regex, so we know items and indices 1 and 2 can be converted to
+	// an int, so the error here can be safely ignored
+	min, _ := strconv.Atoi(match[1])
+	max, _ := strconv.Atoi(match[2])
+	return passwords{
 		min:      min,
 		max:      max,
 		letter:   match[3],
 		password: match[4],
-	}, nil
+	}
 }
 
 func getSolutions(passwordCollection []passwords) (int, int) {

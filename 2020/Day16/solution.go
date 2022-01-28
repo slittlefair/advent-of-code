@@ -29,10 +29,8 @@ var re = regexp.MustCompile(`\d+`)
 // is valid for a field
 func (tf TicketFields) populateField(field []string) error {
 	rangeLimits := re.FindAllString(field[1], -1)
-	rangeLimitsNums, err := slice.StringSliceToIntSlice(rangeLimits)
-	if err != nil {
-		return err
-	}
+	// We know we won't get errors due to regex matching
+	rangeLimitsNums, _ := slice.StringSliceToIntSlice(rangeLimits)
 	if len(rangeLimitsNums) != 4 {
 		return errors.New("range limits not as expected")
 	}
@@ -150,10 +148,8 @@ func (tf TicketFields) runSolution(entries []string) ([]int, int, TicketCollecti
 				return nil, 0, nil, err
 			}
 		} else {
-			nums, err := slice.StringSliceToIntSlice(re.FindAllString(entry, -1))
-			if err != nil {
-				return nil, 0, nil, err
-			}
+			// We know we won't get errors due to regex matching
+			nums, _ := slice.StringSliceToIntSlice(re.FindAllString(entry, -1))
 			if len(myTicket) == 0 {
 				myTicket = nums
 				tf.populatePossibleValueIndices(len(myTicket))

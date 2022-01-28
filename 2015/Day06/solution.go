@@ -69,10 +69,9 @@ func (l *Lights) followInstructions(input []string) error {
 		if len(nums) != 4 {
 			return fmt.Errorf("something went wrong, got nums %v", nums)
 		}
-		intNums, err := slice.StringSliceToIntSlice(nums)
-		if err != nil {
-			return err
-		}
+		// Due to regex match we know the slice of strings can be converted to ints, so the error
+		// can be safely ignored
+		intNums, _ := slice.StringSliceToIntSlice(nums)
 		if reOn.MatchString(inst) {
 			l.turnLightsOn(intNums)
 			continue
