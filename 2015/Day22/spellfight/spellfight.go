@@ -3,7 +3,7 @@ package spellfight
 import (
 	"Advent-of-Code/2015/Day21/martial"
 	"Advent-of-Code/2015/Day22/mage"
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/maths"
 )
 
 func MartialAttack(boss *martial.Martial, player *mage.Mage) {
@@ -112,7 +112,7 @@ func (ms *ManaSpent) SpellRound(player mage.Mage, boss martial.Martial, spell *m
 
 func SpellFight(boss martial.Martial, bossHP int, hardMode bool) int {
 	ms := ManaSpent{
-		LowestManaSpent: utils.Infinity,
+		LowestManaSpent: maths.Infinity,
 	}
 
 	spells := mage.SpellList

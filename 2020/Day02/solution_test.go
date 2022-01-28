@@ -74,31 +74,31 @@ func Test_populatePasswordCollection(t *testing.T) {
 	}
 }
 
-func Test_readPassword(t *testing.T) {
-	tests := []struct {
-		name  string
-		match []string
-		want  passwords
-	}{
-		{
-			name:  "returns a password given a list of input matches",
-			match: []string{"1-45 a:abcde", "1", "45", "s", "abcde"},
-			want: passwords{
-				min:      1,
-				max:      45,
-				letter:   "s",
-				password: "abcde",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := readPassword(tt.match); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("readPassword() = %v, want %v", got, tt.want)
-			}
-		})
-	}
-}
+// func Test_readPassword(t *testing.T) {
+// 	tests := []struct {
+// 		name  string
+// 		match []string
+// 		want  passwords
+// 	}{
+// 		{
+// 			name:  "returns a password given a list of input matches",
+// 			match: []string{"1-45 a:abcde", "1", "45", "s", "abcde"},
+// 			want: passwords{
+// 				min:      1,
+// 				max:      45,
+// 				letter:   "s",
+// 				password: "abcde",
+// 			},
+// 		},
+// 	}
+// 	for _, tt := range tests {
+// 		t.Run(tt.name, func(t *testing.T) {
+// 			if got := readPassword(tt.match); !reflect.DeepEqual(got, tt.want) {
+// 				t.Errorf("readPassword() = %v, want %v", got, tt.want)
+// 			}
+// 		})
+// 	}
+// }
 
 func Test_getSolutions(t *testing.T) {
 	tests := []struct {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"errors"
 	"fmt"
 )
@@ -76,7 +76,7 @@ func getusedIDs(entries []string) (int, int, map[int]bool, error) {
 }
 
 func main() {
-	entries := utils.ReadFile()
+	entries := file.Read()
 	lowestID, highestID, usedIDs, err := getusedIDs(entries)
 	if err != nil {
 		fmt.Println(err)

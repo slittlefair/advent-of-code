@@ -1,7 +1,8 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/maths"
 	"fmt"
 )
 
@@ -38,7 +39,7 @@ func getWordLeastCommon(f []map[string]int) string {
 	w := ""
 	for _, m := range f {
 		mode := ""
-		modeVal := utils.Infinity
+		modeVal := maths.Infinity
 		for k, v := range m {
 			if v < modeVal {
 				modeVal = v
@@ -51,7 +52,7 @@ func getWordLeastCommon(f []map[string]int) string {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	f := compileFrequencies(input)
 	fmt.Println(f)
 	fmt.Println("Part 1:", getWordMostCommon(f))

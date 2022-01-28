@@ -1,7 +1,9 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/maths"
+	"Advent-of-Code/slice"
 	"fmt"
 )
 
@@ -27,13 +29,13 @@ func groupSum(packages []int) int {
 }
 
 func getLowestQuantumEntanglement(combos [][]int) (int, error) {
-	lowestQE := utils.Infinity
+	lowestQE := maths.Infinity
 	for _, c := range combos {
 		if qe := calculateQuantumEntanglement(c); qe < lowestQE {
 			lowestQE = qe
 		}
 	}
-	if lowestQE == utils.Infinity {
+	if lowestQE == maths.Infinity {
 		return -1, fmt.Errorf("could not find lowestQE of groups %v", combos)
 	}
 	return lowestQE, nil
@@ -42,7 +44,7 @@ func getLowestQuantumEntanglement(combos [][]int) (int, error) {
 func (vc *ValidCombos) iterate(remainingPackages, bucket []int, weight, maxLevel int) {
 	for i, rp := range remainingPackages {
 		newBucket := append(bucket, rp)
-		newRemainingPackages := utils.Remove(remainingPackages, i)
+		newRemainingPackages := slice.Remove(remainingPackages, i)
 		if len(newBucket) < maxLevel {
 			vc.iterate(newRemainingPackages, newBucket, weight, maxLevel)
 		}
@@ -87,7 +89,7 @@ func findSolutions(input []int, part1Sections, part2Sections int) (int, int, err
 }
 
 func main() {
-	input := utils.ReadFileAsInts()
+	input := file.ReadAsInts()
 	part1Sol, part2Sol, err := findSolutions(input, 3, 4)
 	if err != nil {
 		fmt.Println(err)

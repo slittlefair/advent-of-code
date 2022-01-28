@@ -1,26 +1,28 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
+	"Advent-of-Code/maths"
 	"fmt"
 	"regexp"
 	"strconv"
 )
 
-type Grid map[utils.Co]int
+type Grid map[graph.Co]int
 
-func convertToCos(minX, maxX, minY, maxY int) []utils.Co {
-	cos := []utils.Co{}
+func convertToCos(minX, maxX, minY, maxY int) []graph.Co {
+	cos := []graph.Co{}
 	for x := minX; x <= maxX; x++ {
 		for y := minY; y <= maxY; y++ {
-			cos = append(cos, utils.Co{X: x, Y: y})
+			cos = append(cos, graph.Co{X: x, Y: y})
 		}
 	}
 	return cos
 }
 
-func convertDiagonalToCos(startX, endX, startY, endY int) []utils.Co {
-	cos := []utils.Co{}
+func convertDiagonalToCos(startX, endX, startY, endY int) []graph.Co {
+	cos := []graph.Co{}
 	xCoords := []int{}
 	yCoords := []int{}
 	if startX < endX {
@@ -42,13 +44,13 @@ func convertDiagonalToCos(startX, endX, startY, endY int) []utils.Co {
 		}
 	}
 	for i := 0; i < len(xCoords); i++ {
-		cos = append(cos, utils.Co{X: xCoords[i], Y: yCoords[i]})
+		cos = append(cos, graph.Co{X: xCoords[i], Y: yCoords[i]})
 	}
 	return cos
 }
 
-func validCos(input []string, part2 bool) ([]utils.Co, error) {
-	cos := []utils.Co{}
+func validCos(input []string, part2 bool) ([]graph.Co, error) {
+	cos := []graph.Co{}
 	reNum := regexp.MustCompile(`\d+`)
 	for _, line := range input {
 		matches := reNum.FindAllString(line, -1)
@@ -66,7 +68,7 @@ func validCos(input []string, part2 bool) ([]utils.Co, error) {
 		m2 := matchInts[2]
 		m3 := matchInts[3]
 		if m0 == m2 || m1 == m3 {
-			cos = append(cos, convertToCos(utils.Min(m0, m2), utils.Max(m0, m2), utils.Min(m1, m3), utils.Max(m1, m3))...)
+			cos = append(cos, convertToCos(maths.Min(m0, m2), maths.Max(m0, m2), maths.Min(m1, m3), maths.Max(m1, m3))...)
 		} else if part2 {
 			cos = append(cos, convertDiagonalToCos(m0, m2, m1, m3)...)
 		}
@@ -74,7 +76,7 @@ func validCos(input []string, part2 bool) ([]utils.Co, error) {
 	return cos, nil
 }
 
-func populateGrid(cos []utils.Co) Grid {
+func populateGrid(cos []graph.Co) Grid {
 	g := Grid{}
 	for _, co := range cos {
 		if val, ok := g[co]; !ok {
@@ -106,7 +108,7 @@ func findSolution(input []string, part2 bool) (int, error) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1, err := findSolution(input, false)
 	if err != nil {
 		fmt.Println(err)

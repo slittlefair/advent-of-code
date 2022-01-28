@@ -1,19 +1,20 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
 	"fmt"
 )
 
 type VisitedHouses struct {
-	Map       map[utils.Co]bool
-	Santa     utils.Co
-	RoboSanta utils.Co
+	Map       map[graph.Co]bool
+	Santa     graph.Co
+	RoboSanta graph.Co
 }
 
 func createVisitedHouses() *VisitedHouses {
 	return &VisitedHouses{
-		Map: map[utils.Co]bool{
+		Map: map[graph.Co]bool{
 			{X: 0, Y: 0}: true,
 		},
 	}
@@ -43,7 +44,7 @@ func (vh *VisitedHouses) moveRoboSanta(dir string) {
 	}
 }
 
-func (vh *VisitedHouses) alreadyVisitedHouse(santa utils.Co) bool {
+func (vh *VisitedHouses) alreadyVisitedHouse(santa graph.Co) bool {
 	return vh.Map[santa]
 }
 
@@ -69,7 +70,7 @@ func (vh *VisitedHouses) countUniqueHousesVisited(input string, part1 bool) int 
 }
 
 func main() {
-	input := utils.ReadFile()[0]
+	input := file.Read()[0]
 	visitedHouses := createVisitedHouses()
 	fmt.Println("Part 1:", visitedHouses.countUniqueHousesVisited(input, true))
 	visitedHouses = createVisitedHouses()

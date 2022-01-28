@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"math"
 )
@@ -55,7 +55,7 @@ func (c creature) nearestEnemy() (e creature) {
 }
 
 func populateMap() {
-	for j, row := range utils.ReadFile() {
+	for j, row := range file.Read() {
 		for i, col := range row {
 			if i > maxRow {
 				maxRow = i

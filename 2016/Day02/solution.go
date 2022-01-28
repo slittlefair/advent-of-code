@@ -1,17 +1,18 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
 	"fmt"
 )
 
 type CodeConstructor struct {
-	currentCo utils.Co
+	currentCo graph.Co
 	code      []string
 }
 
-func (cc *CodeConstructor) move(dir string, keypad map[utils.Co]string) {
-	newCo := utils.Co{X: cc.currentCo.X, Y: cc.currentCo.Y}
+func (cc *CodeConstructor) move(dir string, keypad map[graph.Co]string) {
+	newCo := graph.Co{X: cc.currentCo.X, Y: cc.currentCo.Y}
 	if dir == "U" {
 		newCo.Y--
 	}
@@ -29,7 +30,7 @@ func (cc *CodeConstructor) move(dir string, keypad map[utils.Co]string) {
 	}
 }
 
-func (cc *CodeConstructor) followDirections(line string, keypad map[utils.Co]string) {
+func (cc *CodeConstructor) followDirections(line string, keypad map[graph.Co]string) {
 	for _, d := range line {
 		cc.move(string(d), keypad)
 	}
@@ -44,7 +45,7 @@ func (cc CodeConstructor) getCode() string {
 	return code
 }
 
-func getSolution(input []string, keypad map[utils.Co]string, startingCo utils.Co) string {
+func getSolution(input []string, keypad map[graph.Co]string, startingCo graph.Co) string {
 	cc := &CodeConstructor{
 		currentCo: startingCo,
 	}
@@ -55,8 +56,8 @@ func getSolution(input []string, keypad map[utils.Co]string, startingCo utils.Co
 }
 
 func main() {
-	input := utils.ReadFile()
-	keypad := map[utils.Co]string{
+	input := file.Read()
+	keypad := map[graph.Co]string{
 		{X: 0, Y: 0}: "1",
 		{X: 1, Y: 0}: "2",
 		{X: 2, Y: 0}: "3",
@@ -67,8 +68,8 @@ func main() {
 		{X: 1, Y: 2}: "8",
 		{X: 2, Y: 2}: "9",
 	}
-	fmt.Println("Part 1:", getSolution(input, keypad, utils.Co{X: 1, Y: 1}))
-	keypad = map[utils.Co]string{
+	fmt.Println("Part 1:", getSolution(input, keypad, graph.Co{X: 1, Y: 1}))
+	keypad = map[graph.Co]string{
 		{X: 2, Y: 0}: "1",
 		{X: 1, Y: 1}: "2",
 		{X: 2, Y: 1}: "3",
@@ -83,5 +84,5 @@ func main() {
 		{X: 3, Y: 3}: "C",
 		{X: 2, Y: 4}: "D",
 	}
-	fmt.Println("Part 2:", getSolution(input, keypad, utils.Co{X: 0, Y: 2}))
+	fmt.Println("Part 2:", getSolution(input, keypad, graph.Co{X: 0, Y: 2}))
 }

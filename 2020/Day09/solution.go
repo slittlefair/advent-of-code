@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"errors"
 	"fmt"
 	"sort"
@@ -55,7 +55,7 @@ func (n Numbers) part2(part1Sol int) (int, error) {
 }
 
 func main() {
-	entries := utils.ReadFileAsInts()
+	entries := file.ReadAsInts()
 	numbers := Numbers{}
 	for _, e := range entries {
 		numbers = append(numbers, e)

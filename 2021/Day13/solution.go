@@ -1,7 +1,9 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
+	"Advent-of-Code/maths"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -12,7 +14,7 @@ type Instruction struct {
 	Val int
 }
 
-type Dots map[utils.Co]struct{}
+type Dots map[graph.Co]struct{}
 
 type Paper struct {
 	Dots         Dots
@@ -32,7 +34,7 @@ func parseInput(input []string) (*Paper, error) {
 		return nil, fmt.Errorf("expected blank line, couldn't find one")
 	}
 	p := &Paper{
-		Dots: map[utils.Co]struct{}{},
+		Dots: map[graph.Co]struct{}{},
 	}
 	reNum := regexp.MustCompile(`\d+`)
 	for i := 0; i < blankIndex; i++ {
@@ -43,9 +45,9 @@ func parseInput(input []string) (*Paper, error) {
 		// We know that matches can be converted to ints due to regex matching, so errors here will be nil
 		x, _ := strconv.Atoi(matches[0])
 		y, _ := strconv.Atoi(matches[1])
-		p.Dots[utils.Co{X: x, Y: y}] = struct{}{}
-		p.MaxX = utils.Max(p.MaxX, x)
-		p.MaxY = utils.Max(p.MaxY, y)
+		p.Dots[graph.Co{X: x, Y: y}] = struct{}{}
+		p.MaxX = maths.Max(p.MaxX, x)
+		p.MaxY = maths.Max(p.MaxY, y)
 	}
 	reFold := regexp.MustCompile(`(\w)=(\d+)`)
 	for i := blankIndex + 1; i < len(input); i++ {
@@ -70,7 +72,7 @@ func parseInput(input []string) (*Paper, error) {
 func (p Paper) printPaper() {
 	for y := 0; y <= p.MaxY; y++ {
 		for x := 0; x <= p.MaxX; x++ {
-			if _, ok := p.Dots[utils.Co{X: x, Y: y}]; ok {
+			if _, ok := p.Dots[graph.Co{X: x, Y: y}]; ok {
 				fmt.Print("\u2588")
 			} else {
 				fmt.Print(" ")
@@ -94,7 +96,7 @@ func (p *Paper) doFoldUp(v int) {
 		if co.Y < v {
 			newDots[co] = struct{}{}
 		} else {
-			newDots[utils.Co{X: co.X, Y: v - (co.Y - v)}] = struct{}{}
+			newDots[graph.Co{X: co.X, Y: v - (co.Y - v)}] = struct{}{}
 		}
 	}
 	p.Dots = newDots
@@ -107,7 +109,7 @@ func (p *Paper) doFoldLeft(v int) {
 		if co.X < v {
 			newDots[co] = struct{}{}
 		} else {
-			newDots[utils.Co{X: v - (co.X - v), Y: co.Y}] = struct{}{}
+			newDots[graph.Co{X: v - (co.X - v), Y: co.Y}] = struct{}{}
 		}
 	}
 	p.Dots = newDots
@@ -128,7 +130,7 @@ func findSolutions(input []string) (int, *Paper, error) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1, part2, err := findSolutions(input)
 	if err != nil {
 		fmt.Println(err)

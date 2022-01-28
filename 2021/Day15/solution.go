@@ -1,8 +1,9 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
-	djk "Advent-of-Code/utils/dijkstra"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
+	djk "Advent-of-Code/graph/dijkstra"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -16,12 +17,12 @@ func parseInput(input []string, factor int) *djk.Graph {
 		for x, m := range matches {
 			// All matches can be converted to an int due to regex matching, so we know we won't get an error
 			n, _ := strconv.Atoi(m)
-			cave.Grid[utils.Co{X: x, Y: y}] = n
+			cave.Grid[graph.Co{X: x, Y: y}] = n
 		}
 	}
 	cave.ExtendGrid(factor)
 	for co, risk := range cave.Grid {
-		for _, adjCo := range utils.AdjacentCos(co, false) {
+		for _, adjCo := range graph.AdjacentCos(co, false) {
 			if _, ok := cave.Grid[adjCo]; ok {
 				cave.AddEdge(adjCo, co, risk)
 			}
@@ -33,8 +34,8 @@ func parseInput(input []string, factor int) *djk.Graph {
 func findSolutions(input []string) (int, int, error) {
 	// Part 1
 	cave := parseInput(input, 1)
-	origin := utils.Co{X: 0, Y: 0}
-	destination := utils.Co{X: cave.MaxX, Y: cave.MaxY}
+	origin := graph.Co{X: 0, Y: 0}
+	destination := graph.Co{X: cave.MaxX, Y: cave.MaxY}
 	path1, err := cave.GetPath(origin, destination)
 	if err != nil {
 		return -1, -1, err
@@ -42,8 +43,8 @@ func findSolutions(input []string) (int, int, error) {
 
 	// Part 2
 	cave = parseInput(input, 5)
-	origin = utils.Co{X: 0, Y: 0}
-	destination = utils.Co{X: cave.MaxX, Y: cave.MaxY}
+	origin = graph.Co{X: 0, Y: 0}
+	destination = graph.Co{X: cave.MaxX, Y: cave.MaxY}
 	path2, err := cave.GetPath(origin, destination)
 	if err != nil {
 		return -1, -1, err
@@ -52,7 +53,7 @@ func findSolutions(input []string) (int, int, error) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1, part2, err := findSolutions(input)
 	if err != nil {
 		fmt.Println(err)

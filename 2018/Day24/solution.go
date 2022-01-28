@@ -1,7 +1,8 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/slice"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -29,7 +30,7 @@ const (
 	ImmuneSystem
 )
 
-func readData(lines []string) {
+func readData(lines []string) error {
 	reStats := regexp.MustCompile(`\d+`)
 	reWeaknessesImmunities := regexp.MustCompile(`\((.*?)\)`)
 	reDamage := regexp.MustCompile(`(?s)does (\d+ )(.*) damage`)
@@ -42,7 +43,10 @@ func readData(lines []string) {
 		} else if line == "" || line == "Immune System:" {
 			continue
 		} else {
-			stats := utils.StringSliceToIntSlice(reStats.FindAllString(line, -1))
+			stats, err := slice.StringSliceToIntSlice(reStats.FindAllString(line, -1))
+			if err != nil {
+				return err
+			}
 			var weaknesses []string
 			var immunities []string
 			wi := reWeaknessesImmunities.FindStringSubmatch(line)
@@ -89,6 +93,7 @@ func readData(lines []string) {
 			i++
 		}
 	}
+	return nil
 }
 
 func calculateDamage(attack group, defence group) int {
@@ -294,8 +299,11 @@ func battle(boost int) (int, int) {
 }
 
 func main() {
-	lines := utils.ReadFile()
-	readData(lines)
+	lines := file.Read()
+	if err := readData(lines); err != nil {
+		fmt.Println(err)
+		return
+	}
 	boost := 0
 	unitsLeft, survivingArmy := battle(boost)
 	fmt.Println("Part 1:", unitsLeft)

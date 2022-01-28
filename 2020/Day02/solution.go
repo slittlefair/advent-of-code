@@ -1,10 +1,11 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"errors"
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -24,19 +25,30 @@ func populatePasswordCollection(input []string) ([]passwords, error) {
 		if len(match) != 5 {
 			return nil, errors.New("match is not 5 items long")
 		}
-		password := readPassword(match)
-		passwordCollection = append(passwordCollection, password)
+		password, err := readPassword(match)
+		if err != nil {
+			return nil, err
+		}
+		passwordCollection = append(passwordCollection, *password)
 	}
 	return passwordCollection, nil
 }
 
-func readPassword(match []string) passwords {
-	return passwords{
-		min:      utils.StringToInt(match[1]),
-		max:      utils.StringToInt(match[2]),
+func readPassword(match []string) (*passwords, error) {
+	min, err := strconv.Atoi(match[1])
+	if err != nil {
+		return nil, err
+	}
+	max, err := strconv.Atoi(match[2])
+	if err != nil {
+		return nil, err
+	}
+	return &passwords{
+		min:      min,
+		max:      max,
 		letter:   match[3],
 		password: match[4],
-	}
+	}, nil
 }
 
 func getSolutions(passwordCollection []passwords) (int, int) {
@@ -56,7 +68,7 @@ func getSolutions(passwordCollection []passwords) (int, int) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	passwordCollection, err := populatePasswordCollection(input)
 	if err != nil {
 		fmt.Println(err)

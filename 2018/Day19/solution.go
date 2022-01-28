@@ -1,9 +1,11 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/slice"
 	"fmt"
 	"regexp"
+	"strconv"
 )
 
 var reWord = regexp.MustCompile("[a-z]+")
@@ -156,22 +158,30 @@ var functionsMap = map[string]func([]int, []int) []int{
 }
 
 func main() {
-	lines := utils.ReadFile()
+	lines := file.Read()
 	ipString := reNum.FindAllString(lines[0], -1)
-	// fmt.Println(ip)
 
 	for i := 1; i < len(lines); i++ {
 		instText := reWord.FindAllString(lines[i], -1)
 		instNums := reNum.FindAllString(lines[i], -1)
+		registers, err := slice.StringSliceToIntSlice(instNums)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
 		inst := instructions{
 			inst:      instText[0],
-			registers: utils.StringSliceToIntSlice(instNums),
+			registers: registers,
 		}
 		allInstructions = append(allInstructions, inst)
 	}
 
 	ip := 0
-	ipRegister := utils.StringToInt(ipString[0])
+	ipRegister, err := strconv.Atoi(ipString[0])
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	registers := []int{1, 0, 0, 0, 0, 0}
 	for ip >= 0 && ip < len(allInstructions) {
 		registers[ipRegister] = ip

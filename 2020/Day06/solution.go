@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 )
@@ -39,7 +39,7 @@ func getSolution(entries []string) (int, int) {
 }
 
 func main() {
-	entries := utils.ReadFile()
+	entries := file.Read()
 
 	part1Sol, part2Sol := getSolution(entries)
 

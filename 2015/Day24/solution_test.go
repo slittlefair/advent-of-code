@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/maths"
 	"reflect"
 	"testing"
 )
@@ -246,7 +246,7 @@ func Test_findSolution(t *testing.T) {
 		{
 			name: "returns an error if getLowestQuantumEntanglement returns an error for part1",
 			args: args{
-				input:         []int{utils.Infinity},
+				input:         []int{maths.Infinity},
 				part1Sections: 1,
 				part2Sections: 1,
 			},

@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"strconv"
 )
@@ -32,7 +32,7 @@ func getEncryptionKey(subjectNumber int, loopSize int) int {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	cardKey, err := strconv.Atoi(input[0])
 	if err != nil {
 		fmt.Println(err)

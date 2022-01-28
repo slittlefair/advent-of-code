@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"strconv"
 )
@@ -89,7 +89,7 @@ func (g Game) getProductOfLabels() int {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	g := createGame(input[0], len(input[0]))
 	g.playGame(100)
 	fmt.Println("Part 1:", g.getOrderString())

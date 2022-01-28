@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"strconv"
 )
@@ -112,7 +112,7 @@ func part2(input []string) (int64, error) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1, err := part1(input)
 	if err != nil {
 		fmt.Println(err)

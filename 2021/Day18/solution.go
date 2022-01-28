@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"math"
 	"strconv"
@@ -265,7 +265,7 @@ func findSolutions(input []string) (int, int, error) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1, part2, err := findSolutions(input)
 
 	if err != nil {

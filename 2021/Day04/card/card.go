@@ -1,7 +1,7 @@
 package card
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/graph"
 	"regexp"
 	"strconv"
 )
@@ -12,7 +12,7 @@ type Number struct {
 }
 
 type Card struct {
-	Numbers map[utils.Co]*Number
+	Numbers map[graph.Co]*Number
 }
 
 func (c *Card) ParseCard(lines []string, reNum *regexp.Regexp) error {
@@ -25,7 +25,7 @@ func (c *Card) ParseCard(lines []string, reNum *regexp.Regexp) error {
 			if err != nil {
 				return err
 			}
-			c.Numbers[utils.Co{X: j, Y: i - 1}] = &Number{Val: val}
+			c.Numbers[graph.Co{X: j, Y: i - 1}] = &Number{Val: val}
 		}
 	}
 	return nil
@@ -35,7 +35,7 @@ func (c *Card) CardIsWinner() bool {
 	for x := 0; x < 5; x++ {
 		winner := true
 		for y := 0; y < 5; y++ {
-			if !c.Numbers[utils.Co{X: x, Y: y}].Called {
+			if !c.Numbers[graph.Co{X: x, Y: y}].Called {
 				winner = false
 				break
 			}
@@ -47,7 +47,7 @@ func (c *Card) CardIsWinner() bool {
 	for y := 0; y < 5; y++ {
 		winner := true
 		for x := 0; x < 5; x++ {
-			if !c.Numbers[utils.Co{X: x, Y: y}].Called {
+			if !c.Numbers[graph.Co{X: x, Y: y}].Called {
 				winner = false
 				break
 			}

@@ -1,8 +1,9 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
+	"strconv"
 	"strings"
 )
 
@@ -46,10 +47,15 @@ func nodeLength(n node) int {
 }
 
 func main() {
-	oldTree := utils.ReadFile()
+	oldTree := file.Read()
 	oldTree = strings.Split(oldTree[0], " ")
 	for _, v := range oldTree {
-		tree = append(tree, utils.StringToInt(v))
+		t, err := strconv.Atoi(v)
+		if err != nil {
+			fmt.Println(err)
+			return
+		}
+		tree = append(tree, t)
 	}
 	createNodes(0)
 	fmt.Println(metaDataTotal)

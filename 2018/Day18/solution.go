@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
@@ -104,7 +104,7 @@ func (forest forestTemplate) countTotal() {
 }
 
 func main() {
-	forest := populateForest(utils.ReadFile())
+	forest := populateForest(file.Read())
 	// forest.printForest()
 	newForest := make(forestTemplate)
 	iterations := 1000000000

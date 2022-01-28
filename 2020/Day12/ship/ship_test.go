@@ -1,7 +1,7 @@
 package ship
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/graph"
 	"fmt"
 	"reflect"
 	"strings"
@@ -90,7 +90,7 @@ func TestShip_turnShip(t *testing.T) {
 
 func TestShip_MoveShip(t *testing.T) {
 	type fields struct {
-		Co        utils.Co
+		Co        graph.Co
 		FacingDir string
 	}
 	type args struct {
@@ -106,7 +106,7 @@ func TestShip_MoveShip(t *testing.T) {
 		{
 			name: "correctly moves the ship north the given amount when told to",
 			fields: fields{
-				Co:        utils.Co{X: 3, Y: 11},
+				Co:        graph.Co{X: 3, Y: 11},
 				FacingDir: "E",
 			},
 			args: args{
@@ -114,14 +114,14 @@ func TestShip_MoveShip(t *testing.T) {
 				val: 34,
 			},
 			want: &Ship{
-				Co:        utils.Co{X: 3, Y: 45},
+				Co:        graph.Co{X: 3, Y: 45},
 				FacingDir: "E",
 			},
 		},
 		{
 			name: "correctly moves the ship east the given amount when told to",
 			fields: fields{
-				Co:        utils.Co{X: 21, Y: 37},
+				Co:        graph.Co{X: 21, Y: 37},
 				FacingDir: "N",
 			},
 			args: args{
@@ -129,14 +129,14 @@ func TestShip_MoveShip(t *testing.T) {
 				val: 88,
 			},
 			want: &Ship{
-				Co:        utils.Co{X: 109, Y: 37},
+				Co:        graph.Co{X: 109, Y: 37},
 				FacingDir: "N",
 			},
 		},
 		{
 			name: "correctly moves the ship south the given amount when told to",
 			fields: fields{
-				Co:        utils.Co{X: 12, Y: 67},
+				Co:        graph.Co{X: 12, Y: 67},
 				FacingDir: "N",
 			},
 			args: args{
@@ -144,14 +144,14 @@ func TestShip_MoveShip(t *testing.T) {
 				val: 49,
 			},
 			want: &Ship{
-				Co:        utils.Co{X: 12, Y: 18},
+				Co:        graph.Co{X: 12, Y: 18},
 				FacingDir: "N",
 			},
 		},
 		{
 			name: "correctly moves the ship west the given amount when told to",
 			fields: fields{
-				Co:        utils.Co{X: 41, Y: 7},
+				Co:        graph.Co{X: 41, Y: 7},
 				FacingDir: "E",
 			},
 			args: args{
@@ -159,14 +159,14 @@ func TestShip_MoveShip(t *testing.T) {
 				val: 53,
 			},
 			want: &Ship{
-				Co:        utils.Co{X: -12, Y: 7},
+				Co:        graph.Co{X: -12, Y: 7},
 				FacingDir: "E",
 			},
 		},
 		{
 			name: "correctly turns the ship left the given amount when told to",
 			fields: fields{
-				Co:        utils.Co{X: 21, Y: 79},
+				Co:        graph.Co{X: 21, Y: 79},
 				FacingDir: "W",
 			},
 			args: args{
@@ -174,14 +174,14 @@ func TestShip_MoveShip(t *testing.T) {
 				val: 270,
 			},
 			want: &Ship{
-				Co:        utils.Co{X: 21, Y: 79},
+				Co:        graph.Co{X: 21, Y: 79},
 				FacingDir: "N",
 			},
 		},
 		{
 			name: "correctly turns the ship right the given amount when told to",
 			fields: fields{
-				Co:        utils.Co{X: 21, Y: 79},
+				Co:        graph.Co{X: 21, Y: 79},
 				FacingDir: "N",
 			},
 			args: args{
@@ -189,14 +189,14 @@ func TestShip_MoveShip(t *testing.T) {
 				val: 180,
 			},
 			want: &Ship{
-				Co:        utils.Co{X: 21, Y: 79},
+				Co:        graph.Co{X: 21, Y: 79},
 				FacingDir: "S",
 			},
 		},
 		{
 			name: "correctly moves the ship forward the given amount when told to",
 			fields: fields{
-				Co:        utils.Co{X: -19, Y: 66},
+				Co:        graph.Co{X: -19, Y: 66},
 				FacingDir: "E",
 			},
 			args: args{
@@ -204,7 +204,7 @@ func TestShip_MoveShip(t *testing.T) {
 				val: 187,
 			},
 			want: &Ship{
-				Co:        utils.Co{X: 168, Y: 66},
+				Co:        graph.Co{X: 168, Y: 66},
 				FacingDir: "E",
 			},
 		},
@@ -225,7 +225,7 @@ func TestShip_MoveShip(t *testing.T) {
 
 func TestShip_CalculateDistance(t *testing.T) {
 	type fields struct {
-		Co        utils.Co
+		Co        graph.Co
 		FacingDir string
 	}
 	tests := []struct {
@@ -236,63 +236,63 @@ func TestShip_CalculateDistance(t *testing.T) {
 		{
 			name: "returns 0 when ship is on the origin",
 			fields: fields{
-				Co: utils.Co{X: 0, Y: 0},
+				Co: graph.Co{X: 0, Y: 0},
 			},
 			want: 0,
 		},
 		{
 			name: "returns distance when ship is north of the origin",
 			fields: fields{
-				Co: utils.Co{X: 0, Y: 17},
+				Co: graph.Co{X: 0, Y: 17},
 			},
 			want: 17,
 		},
 		{
 			name: "returns distance when ship is east of the origin",
 			fields: fields{
-				Co: utils.Co{X: 99, Y: 0},
+				Co: graph.Co{X: 99, Y: 0},
 			},
 			want: 99,
 		},
 		{
 			name: "returns distance when ship is south of the origin",
 			fields: fields{
-				Co: utils.Co{X: 0, Y: -981},
+				Co: graph.Co{X: 0, Y: -981},
 			},
 			want: 981,
 		},
 		{
 			name: "returns distance when ship is west of the origin",
 			fields: fields{
-				Co: utils.Co{X: -1, Y: 0},
+				Co: graph.Co{X: -1, Y: 0},
 			},
 			want: 1,
 		},
 		{
 			name: "returns distance when ship is north-east of the origin",
 			fields: fields{
-				Co: utils.Co{X: 31, Y: 17},
+				Co: graph.Co{X: 31, Y: 17},
 			},
 			want: 48,
 		},
 		{
 			name: "returns distance when ship is south-east of the origin",
 			fields: fields{
-				Co: utils.Co{X: 42, Y: -65},
+				Co: graph.Co{X: 42, Y: -65},
 			},
 			want: 107,
 		},
 		{
 			name: "returns distance when ship is south-west of the origin",
 			fields: fields{
-				Co: utils.Co{X: -301, Y: -67},
+				Co: graph.Co{X: -301, Y: -67},
 			},
 			want: 368,
 		},
 		{
 			name: "returns distance when ship is north-west of the origin",
 			fields: fields{
-				Co: utils.Co{X: -10, Y: 54},
+				Co: graph.Co{X: -10, Y: 54},
 			},
 			want: 64,
 		},

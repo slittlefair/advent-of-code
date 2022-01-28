@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -112,7 +112,7 @@ func (w Wires) followInstructions(instructions []string) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	wires := Wires{}
 	wires.followInstructions(input)
 	fmt.Println("Part 1:", wires["a"])

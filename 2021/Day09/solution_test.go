@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/graph"
 	"reflect"
 	"testing"
 )
@@ -202,7 +202,7 @@ func Test_calculateRiskLevels(t *testing.T) {
 func TestHeightMap_coIsPartOfBasin(t *testing.T) {
 	type args struct {
 		b  Basin
-		co utils.Co
+		co graph.Co
 	}
 	tests := []struct {
 		name string
@@ -220,7 +220,7 @@ func TestHeightMap_coIsPartOfBasin(t *testing.T) {
 					{X: 0, Y: 9}: {},
 					{X: 4, Y: 5}: {},
 				},
-				co: utils.Co{X: 0, Y: 9},
+				co: graph.Co{X: 0, Y: 9},
 			},
 			want: false,
 		},
@@ -235,7 +235,7 @@ func TestHeightMap_coIsPartOfBasin(t *testing.T) {
 					{X: 0, Y: 9}: {},
 					{X: 4, Y: 5}: {},
 				},
-				co: utils.Co{X: 0, Y: 10},
+				co: graph.Co{X: 0, Y: 10},
 			},
 			want: false,
 		},
@@ -250,7 +250,7 @@ func TestHeightMap_coIsPartOfBasin(t *testing.T) {
 					{X: 0, Y: 9}: {},
 					{X: 4, Y: 5}: {},
 				},
-				co: utils.Co{X: 0, Y: 10},
+				co: graph.Co{X: 0, Y: 10},
 			},
 			want: false,
 		},
@@ -265,7 +265,7 @@ func TestHeightMap_coIsPartOfBasin(t *testing.T) {
 					{X: 0, Y: 9}: {},
 					{X: 4, Y: 5}: {},
 				},
-				co: utils.Co{X: 3, Y: 4},
+				co: graph.Co{X: 3, Y: 4},
 			},
 			want: false,
 		},
@@ -280,7 +280,7 @@ func TestHeightMap_coIsPartOfBasin(t *testing.T) {
 					{X: 0, Y: 9}: {},
 					{X: 4, Y: 5}: {},
 				},
-				co: utils.Co{X: 8, Y: 0},
+				co: graph.Co{X: 8, Y: 0},
 			},
 			want: true,
 		},
@@ -297,27 +297,27 @@ func TestHeightMap_coIsPartOfBasin(t *testing.T) {
 func TestHeightMap_calculateBasin(t *testing.T) {
 	tests := []struct {
 		name string
-		co   utils.Co
+		co   graph.Co
 		want int
 	}{
 		{
 			name: "calculates correct basin size, advent of code example 1",
-			co:   utils.Co{X: 0, Y: 0},
+			co:   graph.Co{X: 0, Y: 0},
 			want: 3,
 		},
 		{
 			name: "calculates correct basin size, advent of code example 2",
-			co:   utils.Co{X: 9, Y: 0},
+			co:   graph.Co{X: 9, Y: 0},
 			want: 9,
 		},
 		{
 			name: "calculates correct basin size, advent of code example 3",
-			co:   utils.Co{X: 0, Y: 3},
+			co:   graph.Co{X: 0, Y: 3},
 			want: 14,
 		},
 		{
 			name: "calculates correct basin size, advent of code example 4",
-			co:   utils.Co{X: 9, Y: 4},
+			co:   graph.Co{X: 9, Y: 4},
 			want: 9,
 		},
 	}

@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 	"sort"
 )
@@ -67,7 +67,7 @@ func findSolutions(input []string) (int, int) {
 }
 
 func main() {
-	input := utils.ReadFile()
+	input := file.Read()
 	part1, part2 := findSolutions(input)
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)

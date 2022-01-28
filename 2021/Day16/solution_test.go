@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code/utils"
+	"Advent-of-Code/maths"
 	"reflect"
 	"testing"
 )
@@ -709,7 +709,7 @@ func TestPacket_getValue(t *testing.T) {
 			packet: &Packet{typeID: 2, value: -1, subPackets: []Packet{
 				{value: -1, typeID: 8},
 			}},
-			want: &Packet{typeID: 2, value: utils.Infinity, subPackets: []Packet{
+			want: &Packet{typeID: 2, value: maths.Infinity, subPackets: []Packet{
 				{value: -1, typeID: 8},
 			}},
 			wantErr: true,

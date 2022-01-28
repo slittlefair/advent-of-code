@@ -1,7 +1,7 @@
 package main
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
@@ -32,7 +32,7 @@ func part2(input []int) int {
 }
 
 func main() {
-	input := utils.ReadFileAsInts()
+	input := file.ReadAsInts()
 	fmt.Println("Part 1:", part1(input))
 	fmt.Println("Part 2:", part2(input))
 }

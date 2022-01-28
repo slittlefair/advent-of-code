@@ -1,7 +1,8 @@
 package main
 
 import (
-	"Advent-of-Code/utils"
+	"Advent-of-Code/file"
+	"Advent-of-Code/maths"
 	"fmt"
 	"strconv"
 	"strings"
@@ -168,7 +169,7 @@ func (p *Packet) getValue() error {
 			p.value *= sp.value
 		}
 	case 2:
-		p.value = utils.Infinity
+		p.value = maths.Infinity
 		for _, sp := range p.subPackets {
 			if err := sp.getValue(); err != nil {
 				return err
@@ -260,7 +261,7 @@ func findSolutions(input string) (int, int, error) {
 }
 
 func main() {
-	input := utils.ReadFile()[0]
+	input := file.Read()[0]
 	part1, part2, err := findSolutions(input)
 	if err != nil {
 		fmt.Println(err)

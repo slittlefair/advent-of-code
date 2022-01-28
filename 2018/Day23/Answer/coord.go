@@ -1,7 +1,7 @@
 package day23
 
 import (
-	utils "Advent-of-Code/utils"
+	"Advent-of-Code/maths"
 )
 
 type Coordinate struct {
@@ -11,5 +11,5 @@ type Coordinate struct {
 var Zero = Coordinate{X: 0, Y: 0, Z: 0}
 
 func (c Coordinate) Distance(a Coordinate) int {
-	return utils.Abs(c.X-a.X) + utils.Abs(c.Y-a.Y) + utils.Abs(c.Z-a.Z)
+	return maths.Abs(c.X-a.X) + maths.Abs(c.Y-a.Y) + maths.Abs(c.Z-a.Z)
 }
