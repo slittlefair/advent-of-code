@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
@@ -29,7 +29,7 @@ func (tm TreeMap) part2() int {
 }
 
 func main() {
-	var tm TreeMap = helpers.ReadFile()
+	var tm TreeMap = file.Read()
 	fmt.Println("Part 1:", tm.part1())
 	fmt.Println("Part 2:", tm.part2())
 }

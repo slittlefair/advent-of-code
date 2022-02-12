@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -66,7 +66,7 @@ func validateVerticalTriangles(input []string) int {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := file.Read()
 	fmt.Println("Part 1:", validateHorizontalTriangles(input))
 	fmt.Println("Part 2:", validateVerticalTriangles(input))
 }

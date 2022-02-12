@@ -1,14 +1,14 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
-	"Advent-of-Code/2015/Day22/spellFight"
+	sp "Advent-of-Code/2015/Day22/spellfight"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
 func main() {
-	input := helpers.ReadFile()
-	lowestManaSpent, lowestManaSpentHardMode, err := spellFight.RunSpellFights(input)
+	input := file.Read()
+	lowestManaSpent, lowestManaSpentHardMode, err := sp.RunSpellFights(input)
 	if err != nil {
 		fmt.Println(err)
 		return

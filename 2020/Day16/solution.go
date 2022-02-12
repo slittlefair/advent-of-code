@@ -1,7 +1,8 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
+	"Advent-of-Code/slice"
 	"errors"
 	"fmt"
 	"regexp"
@@ -28,7 +29,8 @@ var re = regexp.MustCompile(`\d+`)
 // is valid for a field
 func (tf TicketFields) populateField(field []string) error {
 	rangeLimits := re.FindAllString(field[1], -1)
-	rangeLimitsNums := helpers.StringSliceToIntSlice(rangeLimits)
+	// We know we won't get errors due to regex matching
+	rangeLimitsNums, _ := slice.StringSliceToIntSlice(rangeLimits)
 	if len(rangeLimitsNums) != 4 {
 		return errors.New("range limits not as expected")
 	}
@@ -146,7 +148,8 @@ func (tf TicketFields) runSolution(entries []string) ([]int, int, TicketCollecti
 				return nil, 0, nil, err
 			}
 		} else {
-			nums := helpers.StringSliceToIntSlice(re.FindAllString(entry, -1))
+			// We know we won't get errors due to regex matching
+			nums, _ := slice.StringSliceToIntSlice(re.FindAllString(entry, -1))
 			if len(myTicket) == 0 {
 				myTicket = nums
 				tf.populatePossibleValueIndices(len(myTicket))
@@ -160,7 +163,7 @@ func (tf TicketFields) runSolution(entries []string) ([]int, int, TicketCollecti
 }
 
 func main() {
-	entries := helpers.ReadFile()
+	entries := file.Read()
 	tFields := TicketFields{}
 	myTicket, errorRate, allValidTickets, err := tFields.runSolution(entries)
 	if err != nil {

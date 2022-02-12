@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"crypto/md5"
 	"fmt"
 	"strconv"
@@ -81,7 +81,7 @@ func findDifficultPassword(id string) string {
 }
 
 func main() {
-	input := helpers.ReadFile()[0]
+	input := file.Read()[0]
 	fmt.Print("Part 1: ________")
 	fmt.Printf("\rPart 1: %s UNLOCKED\nPart 2: ________", findEasyPassword(input))
 	fmt.Printf("\rPart 2: %s UNLOCKED\n", findDifficultPassword(input))

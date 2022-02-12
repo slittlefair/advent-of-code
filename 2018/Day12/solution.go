@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 )
 
@@ -32,7 +32,7 @@ func addPotBuffers() {
 }
 
 func main() {
-	initialRules := helpers.ReadFile()
+	initialRules := file.Read()
 	for _, v := range initialRules {
 		rules[v[:5]] = v[9:]
 	}
@@ -52,7 +52,7 @@ func main() {
 		for i := 2; i < len(pots)-2; i++ {
 			matchingSequence := ""
 			for j := i - 2; j <= i+2; j++ {
-				matchingSequence += string(pots[j])
+				matchingSequence += pots[j]
 			}
 			changes[i] = rules[matchingSequence]
 		}

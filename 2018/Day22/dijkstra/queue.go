@@ -43,7 +43,7 @@ func (q *Queue) Set(key string, priority int) {
 	sort.Sort(q)
 }
 
-// Next removes the first element from the queue and retuns it's key and priority
+// Next removes the first element from the queue and returns it's key and priority
 func (q *Queue) Next() (key string, priority int) {
 	// shift the key form the queue
 	key, keys := q.keys[0], q.keys[1:]

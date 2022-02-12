@@ -1,7 +1,8 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -10,9 +11,9 @@ import (
 
 type Position struct {
 	direction int
-	location  helpers.Co
-	seen      map[helpers.Co]bool
-	hq        helpers.Co
+	location  graph.Co
+	seen      map[graph.Co]bool
+	hq        graph.Co
 }
 
 func (p *Position) turnLeft() {
@@ -34,13 +35,13 @@ func (p *Position) turnRight() {
 func (p *Position) move() {
 	switch p.direction {
 	case 0:
-		p.location.Y += 1
+		p.location.Y++
 	case 1:
-		p.location.X += 1
+		p.location.X++
 	case 2:
-		p.location.Y -= 1
+		p.location.Y--
 	case 3:
-		p.location.X -= 1
+		p.location.X--
 	}
 	// assume that we don't start at the hq
 	if p.seen[p.location] && p.hq.X == 0 && p.hq.Y == 0 {
@@ -72,7 +73,6 @@ func (p *Position) followInstruction(inst string) error {
 	for i := 0; i < intConv; i++ {
 		p.move()
 	}
-	// p.move(intConv)
 	return nil
 }
 
@@ -83,13 +83,13 @@ func (p *Position) followSteps(input []string) (int, error) {
 			return -1, err
 		}
 	}
-	return helpers.CalculateManhattanDistance(p.location, helpers.Co{}), nil
+	return graph.CalculateManhattanDistance(p.location, graph.Co{}), nil
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := file.Read()
 	p := &Position{
-		seen: map[helpers.Co]bool{
+		seen: map[graph.Co]bool{
 			{X: 0, Y: 0}: true,
 		},
 	}
@@ -99,5 +99,5 @@ func main() {
 		return
 	}
 	fmt.Println("Part 1:", part1)
-	fmt.Println("Part 2:", helpers.CalculateManhattanDistance(p.hq, helpers.Co{}))
+	fmt.Println("Part 2:", graph.CalculateManhattanDistance(p.hq, graph.Co{}))
 }

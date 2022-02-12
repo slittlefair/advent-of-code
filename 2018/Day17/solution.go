@@ -1,17 +1,14 @@
 package main
 
 import (
-	"Advent-of-Code"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
 	"fmt"
 	"regexp"
+	"strconv"
 )
 
-type coordinate struct {
-	X int
-	Y int
-}
-
-var allCoords = map[coordinate]string{coordinate{500, 0}: "+"}
+var allCoords = map[graph.Co]string{{X: 500, Y: 0}: "+"}
 
 var (
 	minX = 10000000
@@ -20,9 +17,9 @@ var (
 	maxY = 0
 )
 
-var boundaryCheck = make(map[coordinate]bool)
+var boundaryCheck = make(map[graph.Co]bool)
 
-func updateBoundaries(co coordinate) {
+func updateBoundaries(co graph.Co) {
 	if co.X < minX {
 		minX = co.X
 	}
@@ -34,13 +31,16 @@ func updateBoundaries(co coordinate) {
 	}
 }
 
-func populateRocks(lines []string) {
-	re, err := regexp.Compile("[xy]|\\d+")
-	helpers.Check(err)
+func populateRocks(lines []string) error {
+	re, err := regexp.Compile(`[xy]|\d+`)
+	if err != nil {
+		fmt.Println(err)
+		return err
+	}
 	for _, line := range lines {
 		match := re.FindAllString(line, -1)
 		if len(match) == 6 {
-			fmt.Println("PANIC!!!!", line)
+			return fmt.Errorf("got six matches for line %s", line)
 		} else if len(match) == 5 {
 			xIndex, yIndex := 0, 0
 			for i, v := range match {
@@ -51,50 +51,115 @@ func populateRocks(lines []string) {
 				}
 			}
 			if yIndex == 2 {
-				for y := helpers.StringToInt(match[3]); y <= helpers.StringToInt(match[4]); y++ {
-					co := coordinate{X: helpers.StringToInt(match[1]), Y: y}
+				min, err := strconv.Atoi(match[3])
+				if err != nil {
+					return err
+				}
+				max, err := strconv.Atoi(match[4])
+				if err != nil {
+					return err
+				}
+				for y := min; y <= max; y++ {
+					x, err := strconv.Atoi(match[1])
+					if err != nil {
+						return err
+					}
+					co := graph.Co{X: x, Y: y}
 					allCoords[co] = "#"
 					updateBoundaries(co)
 				}
 			} else if yIndex == 3 {
-				for x := helpers.StringToInt(match[1]); x <= helpers.StringToInt(match[2]); x++ {
-					co := coordinate{X: x, Y: helpers.StringToInt(match[4])}
+				min, err := strconv.Atoi(match[1])
+				if err != nil {
+					return err
+				}
+				max, err := strconv.Atoi(match[2])
+				if err != nil {
+					return err
+				}
+				for x := min; x <= max; x++ {
+					y, err := strconv.Atoi(match[4])
+					if err != nil {
+						return err
+					}
+					co := graph.Co{X: x, Y: y}
 					allCoords[co] = "#"
 					updateBoundaries(co)
 				}
 			} else if xIndex == 2 {
-				for x := helpers.StringToInt(match[3]); x <= helpers.StringToInt(match[4]); x++ {
-					co := coordinate{X: x, Y: helpers.StringToInt(match[1])}
+				min, err := strconv.Atoi(match[3])
+				if err != nil {
+					return err
+				}
+				max, err := strconv.Atoi(match[4])
+				if err != nil {
+					return err
+				}
+				for x := min; x <= max; x++ {
+					y, err := strconv.Atoi(match[1])
+					if err != nil {
+						return err
+					}
+					co := graph.Co{X: x, Y: y}
 					allCoords[co] = "#"
 					updateBoundaries(co)
 				}
 			} else if xIndex == 3 {
-				for y := helpers.StringToInt(match[1]); y <= helpers.StringToInt(match[2]); y++ {
-					co := coordinate{X: helpers.StringToInt(match[4]), Y: y}
+				min, err := strconv.Atoi(match[1])
+				if err != nil {
+					return err
+				}
+				max, err := strconv.Atoi(match[2])
+				if err != nil {
+					return err
+				}
+				for y := min; y <= max; y++ {
+					x, err := strconv.Atoi(match[4])
+					if err != nil {
+						return err
+					}
+					co := graph.Co{X: x, Y: y}
 					allCoords[co] = "#"
 					updateBoundaries(co)
 				}
 			} else {
-				fmt.Println("PANIC!!!!!!", line)
+				return fmt.Errorf("something went wrong, line : %s", line)
 			}
 		} else {
 			if match[0] == "x" {
-				co := coordinate{X: helpers.StringToInt(match[1]), Y: helpers.StringToInt(match[3])}
+				x, err := strconv.Atoi(match[1])
+				if err != nil {
+					return err
+				}
+				y, err := strconv.Atoi(match[3])
+				if err != nil {
+					return err
+				}
+				co := graph.Co{X: x, Y: y}
 				allCoords[co] = "#"
 				updateBoundaries(co)
 			} else {
-				co := coordinate{X: helpers.StringToInt(match[3]), Y: helpers.StringToInt(match[1])}
+				x, err := strconv.Atoi(match[3])
+				if err != nil {
+					return err
+				}
+				y, err := strconv.Atoi(match[1])
+				if err != nil {
+					return err
+				}
+				co := graph.Co{X: x, Y: y}
 				allCoords[co] = "#"
 				updateBoundaries(co)
 			}
 		}
 	}
+	return fmt.Errorf("something went wrong for line: %v", lines)
 }
 
 func populateSand() {
 	for x := minX; x <= maxX; x++ {
 		for y := minY; y <= maxY; y++ {
-			co := coordinate{x, y}
+			co := graph.Co{X: x, Y: y}
 			if _, ok := allCoords[co]; !ok {
 				allCoords[co] = "."
 			}
@@ -105,7 +170,7 @@ func populateSand() {
 func printLandscape(part1 bool) {
 	for y := minY; y <= maxY; y++ {
 		for x := minX; x <= maxX; x++ {
-			co := coordinate{x, y}
+			co := graph.Co{X: x, Y: y}
 			if allCoords[co] == "." {
 				fmt.Printf(" ")
 			} else if part1 {
@@ -123,29 +188,29 @@ func printLandscape(part1 bool) {
 	fmt.Println()
 }
 
-func nextWater(c []coordinate) (newCoords []coordinate) {
+func nextWater(c []graph.Co) (newCoords []graph.Co) {
 	for _, co := range c {
 		if _, ok := boundaryCheck[co]; ok {
-			newCo := coordinate{X: co.X, Y: co.Y + 1}
+			newCo := graph.Co{X: co.X, Y: co.Y + 1}
 			if allCoords[co] == "~" {
-				newCoords = append(newCoords, coordinate{co.X, co.Y - 1})
+				newCoords = append(newCoords, graph.Co{X: co.X, Y: co.Y - 1})
 			} else if allCoords[newCo] == "|" {
 			} else if allCoords[newCo] == "." {
 				allCoords[newCo] = "|"
 				newCoords = append(newCoords, newCo)
 			} else {
-				layer := []coordinate{coordinate{co.X, co.Y}}
+				layer := []graph.Co{{X: co.X, Y: co.Y}}
 				fullLayer := true
 				offsets := [2]int{-1, 1}
 				for _, direction := range offsets {
 					traversing := true
-					directionCo := coordinate{X: co.X + direction, Y: co.Y}
+					directionCo := graph.Co{X: co.X + direction, Y: co.Y}
 					for traversing {
-						if (allCoords[directionCo] == "." || allCoords[directionCo] == "|") && allCoords[coordinate{X: directionCo.X, Y: directionCo.Y + 1}] != "." {
+						if (allCoords[directionCo] == "." || allCoords[directionCo] == "|") && allCoords[graph.Co{X: directionCo.X, Y: directionCo.Y + 1}] != "." {
 							layer = append(layer, directionCo)
-							directionCo = coordinate{X: directionCo.X + direction, Y: directionCo.Y}
-						} else if (allCoords[directionCo] == "." || allCoords[directionCo] == "|") && allCoords[coordinate{X: directionCo.X, Y: directionCo.Y + 1}] == "." {
-							if allCoords[coordinate{X: directionCo.X - direction, Y: directionCo.Y + 1}] == "|" {
+							directionCo = graph.Co{X: directionCo.X + direction, Y: directionCo.Y}
+						} else if (allCoords[directionCo] == "." || allCoords[directionCo] == "|") && allCoords[graph.Co{X: directionCo.X, Y: directionCo.Y + 1}] == "." {
+							if allCoords[graph.Co{X: directionCo.X - direction, Y: directionCo.Y + 1}] == "|" {
 								fullLayer = false
 								traversing = false
 							} else {
@@ -163,7 +228,7 @@ func nextWater(c []coordinate) (newCoords []coordinate) {
 					for _, cell := range layer {
 						allCoords[cell] = "~"
 					}
-					newCoords = append(newCoords, coordinate{co.X, co.Y - 1})
+					newCoords = append(newCoords, graph.Co{X: co.X, Y: co.Y - 1})
 				} else {
 					for _, cell := range layer {
 						allCoords[cell] = "|"
@@ -172,7 +237,7 @@ func nextWater(c []coordinate) (newCoords []coordinate) {
 			}
 		}
 	}
-	boundaryCheck = make(map[coordinate]bool)
+	boundaryCheck = make(map[graph.Co]bool)
 	for _, c := range newCoords {
 		if c.Y != maxY && c.Y >= minY {
 			boundaryCheck[c] = false
@@ -191,7 +256,6 @@ func calculateTotal() {
 			}
 		}
 	}
-	// printLandscape(true)
 	printLandscape(false)
 	fmt.Println("Part1:", total)
 	for co, val := range allCoords {
@@ -202,21 +266,22 @@ func calculateTotal() {
 		}
 	}
 	fmt.Println("Part2:", total)
-	return
 }
 
 func main() {
-	lines := helpers.ReadFile()
-	populateRocks(lines)
+	lines := file.Read()
+	if err := populateRocks(lines); err != nil {
+		fmt.Println(err)
+		return
+	}
 	populateSand()
-	co := []coordinate{coordinate{500, 0}}
-	boundaryCheck[coordinate{500, 0}] = false
+	co := []graph.Co{{X: 500, Y: 0}}
+	boundaryCheck[graph.Co{X: 500, Y: 0}] = false
 	for {
 		if len(boundaryCheck) == 0 {
 			calculateTotal()
 			return
 		}
-		// printLandscape()
 		co = nextWater(co)
 	}
 }

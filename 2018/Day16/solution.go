@@ -1,18 +1,13 @@
 package main
 
 import (
-	"Advent-of-Code"
+	"Advent-of-Code/file"
+	"Advent-of-Code/slice"
 	"fmt"
 	"regexp"
 )
 
-var (
-	inputs  = make(map[int][]int)
-	process = make(map[int][]int)
-	outputs = make(map[int][]int)
-)
-
-var re = regexp.MustCompile("\\d+")
+var re = regexp.MustCompile(`\d+`)
 
 type sample struct {
 	input        []int
@@ -20,20 +15,32 @@ type sample struct {
 	output       [4]int
 }
 
-func populateSamplesPart1(lines []string) (samples []sample) {
+func populateSamplesPart1(lines []string) ([]sample, error) {
+	samples := []sample{}
 	for i := 0; i < len(lines); {
-		o := helpers.StringSliceToIntSlice(re.FindAllString(lines[i+2], -1))
+		o, err := slice.StringSliceToIntSlice(re.FindAllString(lines[i+2], -1))
+		if err != nil {
+			return nil, err
+		}
 		var output [4]int
 		copy(output[:], o)
+		input, err := slice.StringSliceToIntSlice(re.FindAllString(lines[i], -1))
+		if err != nil {
+			return nil, err
+		}
+		instructions, err := slice.StringSliceToIntSlice(re.FindAllString(lines[i+1], -1))
+		if err != nil {
+			return nil, err
+		}
 		s := sample{
-			input:        helpers.StringSliceToIntSlice(re.FindAllString(lines[i], -1)),
-			instructions: helpers.StringSliceToIntSlice(re.FindAllString(lines[i+1], -1)),
+			input:        input,
+			instructions: instructions,
 			output:       output,
 		}
 		samples = append(samples, s)
 		i += 4
 	}
-	return samples
+	return samples, nil
 }
 
 func addr(input []int, instructions []int) (output [4]int) {
@@ -210,19 +217,27 @@ func assignOpcodeNumbers(samples []sample) (numbersToOpcodes [16]func([]int, []i
 	}
 }
 
-func populatePrograms(lines []string) (programs [][]int) {
+func populatePrograms(lines []string) ([][]int, error) {
+	programs := [][]int{}
 	for _, line := range lines {
-		o := helpers.StringSliceToIntSlice(re.FindAllString(line, -1))
+		o, err := slice.StringSliceToIntSlice(re.FindAllString(line, -1))
+		if err != nil {
+			return nil, err
+		}
 		output := make([]int, 4)
 		copy(output[:], o)
 		programs = append(programs, output)
 	}
-	return programs
+	return programs, nil
 }
 
 func main() {
-	lines := helpers.ReadFile()
-	samples := populateSamplesPart1(lines[:3352])
+	lines := file.Read()
+	samples, err := populateSamplesPart1(lines[:3352])
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	var total int
 	for _, s := range samples {
 		var matchingOutputs int
@@ -238,7 +253,11 @@ func main() {
 	fmt.Println("Part1:", total)
 	numbersToOpcodes := assignOpcodeNumbers(samples)
 	fmt.Println(numbersToOpcodes)
-	programs := populatePrograms(lines[3354:])
+	programs, err := populatePrograms(lines[3354:])
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	input := []int{0, 0, 0, 0}
 	var output [4]int
 	for _, p := range programs {

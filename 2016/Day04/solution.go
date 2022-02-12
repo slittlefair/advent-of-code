@@ -1,7 +1,8 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/cipher"
+	"Advent-of-Code/file"
 	"fmt"
 	"reflect"
 	"regexp"
@@ -70,7 +71,7 @@ func validateRooms(input []string, reNum *regexp.Regexp) (string, error) {
 	for _, room := range input {
 		num := reNum.FindString(room)
 		n, _ := strconv.Atoi(num)
-		decrypted := helpers.CaesarCipher(room, n)
+		decrypted := cipher.CaesarCipher(room, n)
 		if strings.Contains(decrypted, "northpole") {
 			return num, nil
 		}
@@ -79,7 +80,7 @@ func validateRooms(input []string, reNum *regexp.Regexp) (string, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := file.Read()
 	reNum := regexp.MustCompile(`\d+`)
 	validRooms, sum := getValidRooms(input, reNum)
 	fmt.Println("Part 1:", sum)

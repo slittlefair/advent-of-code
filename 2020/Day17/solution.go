@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"reflect"
 )
@@ -103,7 +103,7 @@ func (g Grid) findSolution(is4D bool, iterations int) int {
 }
 
 func main() {
-	pocketDimension := helpers.ReadFile()
+	pocketDimension := file.Read()
 	iterations := 6
 	g := Grid{}
 	g.parseInput(pocketDimension, iterations)

@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -17,7 +17,7 @@ func evaluateCoreSum(sum string) string {
 	currentOperator := ""
 	sumParts := reChars.FindAllString(sum, -1)
 	for _, char := range sumParts {
-		if s := string(char); s == "+" {
+		if s := char; s == "+" {
 			currentOperator = "+"
 		} else if s == "*" {
 			currentOperator = "*"
@@ -91,7 +91,7 @@ func findSolutions(sums []string) (int, int) {
 }
 
 func main() {
-	sums := helpers.ReadFile()
+	sums := file.Read()
 	part1Sol, part2Sol := findSolutions(sums)
 	fmt.Println("Part 1:", part1Sol)
 	fmt.Println("Part 2:", part2Sol)

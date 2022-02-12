@@ -6,7 +6,7 @@ import (
 	"testing"
 )
 
-var bab [][]byte = [][]byte{
+var bab = [][]byte{
 	[]byte("hah"),
 	[]byte("vgv"),
 	[]byte("hnh"),

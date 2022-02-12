@@ -1,10 +1,11 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"errors"
 	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -31,9 +32,13 @@ func populatePasswordCollection(input []string) ([]passwords, error) {
 }
 
 func readPassword(match []string) passwords {
+	// We only pass in match from regex, so we know items and indices 1 and 2 can be converted to
+	// an int, so the error here can be safely ignored
+	min, _ := strconv.Atoi(match[1])
+	max, _ := strconv.Atoi(match[2])
 	return passwords{
-		min:      helpers.StringToInt(match[1]),
-		max:      helpers.StringToInt(match[2]),
+		min:      min,
+		max:      max,
 		letter:   match[3],
 		password: match[4],
 	}
@@ -56,7 +61,7 @@ func getSolutions(passwordCollection []passwords) (int, int) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := file.Read()
 	passwordCollection, err := populatePasswordCollection(input)
 	if err != nil {
 		fmt.Println(err)

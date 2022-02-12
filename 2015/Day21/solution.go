@@ -1,10 +1,11 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
 	"Advent-of-Code/2015/Day21/fight"
 	"Advent-of-Code/2015/Day21/martial"
 	"Advent-of-Code/2015/Day21/shop"
+	"Advent-of-Code/file"
+	"Advent-of-Code/maths"
 	"fmt"
 )
 
@@ -15,7 +16,7 @@ func runFights(input []string) (int, int, error) {
 	}
 	bossHP := boss.HP
 	s := shop.PopulateShop()
-	cheapestVictory := helpers.Infinty
+	cheapestVictory := maths.Infinity
 	dearestLoss := 0
 	// Loop through all combinations of armour, rings and weapons and work out their cost as well
 	// as who wins the fight
@@ -47,7 +48,7 @@ func runFights(input []string) (int, int, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := file.Read()
 	cheapestVictory, dearestLoss, err := runFights(input)
 	if err != nil {
 		fmt.Println(err)

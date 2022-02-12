@@ -1,7 +1,8 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
+	"Advent-of-Code/slice"
 	"errors"
 	"fmt"
 	"strconv"
@@ -14,6 +15,11 @@ type Game struct {
 	player1 Deck
 	player2 Deck
 }
+
+const (
+	Player1 = 1
+	Player2 = 2
+)
 
 func (g *Game) parseInput(input []string) error {
 	var deck Deck
@@ -45,13 +51,13 @@ func (g *Game) player2Wins() {
 	g.player1 = g.player1[1:]
 }
 
-func (g *Game) playNormalRound() string {
+func (g *Game) playNormalRound() int {
 	if g.player1[0] > g.player2[0] {
 		g.player1Wins()
-		return "player1"
+		return Player1
 	}
 	g.player2Wins()
-	return "player2"
+	return Player2
 }
 
 func (g *Game) playNormalGame() Deck {
@@ -68,7 +74,7 @@ func (g *Game) playNormalGame() Deck {
 
 func (g Game) deckSeen(seen []Game) bool {
 	for _, game := range seen {
-		if helpers.IntSlicesAreEqual(game.player1, g.player1) && helpers.IntSlicesAreEqual(game.player2, g.player2) {
+		if slice.IntSlicesAreEqual(game.player1, g.player1) && slice.IntSlicesAreEqual(game.player2, g.player2) {
 			return true
 		}
 	}
@@ -86,7 +92,7 @@ func (g *Game) playRecursiveRound(seen []Game) []Game {
 			player2: append(Deck{}, g.player2[1:g.player2[0]+1]...),
 		}
 		winner, _ := g2.playRecursiveGame()
-		if winner == "player1" {
+		if winner == Player1 {
 			g.player1Wins()
 		} else {
 			g.player2Wins()
@@ -97,18 +103,18 @@ func (g *Game) playRecursiveRound(seen []Game) []Game {
 	return seen
 }
 
-func (g *Game) playRecursiveGame() (string, Deck) {
+func (g *Game) playRecursiveGame() (int, Deck) {
 	seen := []Game{}
 	roundNum := 1
 	for {
 		if g.deckSeen(seen) {
-			return "player1", g.player1
+			return Player1, g.player1
 		}
 		if len(g.player1) == 0 {
-			return "player2", g.player2
+			return Player2, g.player2
 		}
 		if len(g.player2) == 0 {
-			return "player1", g.player1
+			return Player1, g.player1
 		}
 		seen = g.playRecursiveRound(seen)
 		roundNum++
@@ -127,7 +133,7 @@ func calculateWinningScore(deck Deck) (int, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := file.Read()
 	game := Game{}
 	err := game.parseInput(input)
 	if err != nil {

@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/graph"
 	"reflect"
 	"testing"
 )
@@ -14,7 +14,7 @@ func Test_createVisitedHouses(t *testing.T) {
 		{
 			name: "creates a basic VisitedHouse object",
 			want: &VisitedHouses{
-				Map: map[helpers.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 				},
 			},
@@ -32,33 +32,33 @@ func Test_createVisitedHouses(t *testing.T) {
 func TestVisitedHouses_moveSanta(t *testing.T) {
 	tests := []struct {
 		name  string
-		Santa helpers.Co
+		Santa graph.Co
 		dir   string
-		want  helpers.Co
+		want  graph.Co
 	}{
 		{
 			name:  "subtracts 1 from currentHouse.X if moving west",
-			Santa: helpers.Co{X: 0, Y: 0},
+			Santa: graph.Co{X: 0, Y: 0},
 			dir:   "<",
-			want:  helpers.Co{X: -1, Y: 0},
+			want:  graph.Co{X: -1, Y: 0},
 		},
 		{
 			name:  "adds 1 to currentHouse.X if moving east",
-			Santa: helpers.Co{X: 0, Y: 0},
+			Santa: graph.Co{X: 0, Y: 0},
 			dir:   ">",
-			want:  helpers.Co{X: 1, Y: 0},
+			want:  graph.Co{X: 1, Y: 0},
 		},
 		{
 			name:  "subtracts 1 from currentHouse.Y if moving north",
-			Santa: helpers.Co{X: 0, Y: 0},
+			Santa: graph.Co{X: 0, Y: 0},
 			dir:   "^",
-			want:  helpers.Co{X: 0, Y: -1},
+			want:  graph.Co{X: 0, Y: -1},
 		},
 		{
 			name:  "adds 1 from currentHouse.Y if moving south",
-			Santa: helpers.Co{X: 0, Y: 0},
+			Santa: graph.Co{X: 0, Y: 0},
 			dir:   "v",
-			want:  helpers.Co{X: 0, Y: 1},
+			want:  graph.Co{X: 0, Y: 1},
 		},
 	}
 	for _, tt := range tests {
@@ -77,33 +77,33 @@ func TestVisitedHouses_moveSanta(t *testing.T) {
 func TestVisitedHouses_moveRoboSanta(t *testing.T) {
 	tests := []struct {
 		name      string
-		RoboSanta helpers.Co
+		RoboSanta graph.Co
 		dir       string
-		want      helpers.Co
+		want      graph.Co
 	}{
 		{
 			name:      "subtracts 1 from currentHouse.X if moving west",
-			RoboSanta: helpers.Co{X: 0, Y: 0},
+			RoboSanta: graph.Co{X: 0, Y: 0},
 			dir:       "<",
-			want:      helpers.Co{X: -1, Y: 0},
+			want:      graph.Co{X: -1, Y: 0},
 		},
 		{
 			name:      "adds 1 to currentHouse.X if moving east",
-			RoboSanta: helpers.Co{X: 0, Y: 0},
+			RoboSanta: graph.Co{X: 0, Y: 0},
 			dir:       ">",
-			want:      helpers.Co{X: 1, Y: 0},
+			want:      graph.Co{X: 1, Y: 0},
 		},
 		{
 			name:      "subtracts 1 from currentHouse.Y if moving north",
-			RoboSanta: helpers.Co{X: 0, Y: 0},
+			RoboSanta: graph.Co{X: 0, Y: 0},
 			dir:       "^",
-			want:      helpers.Co{X: 0, Y: -1},
+			want:      graph.Co{X: 0, Y: -1},
 		},
 		{
 			name:      "adds 1 from currentHouse.Y if moving south",
-			RoboSanta: helpers.Co{X: 0, Y: 0},
+			RoboSanta: graph.Co{X: 0, Y: 0},
 			dir:       "v",
-			want:      helpers.Co{X: 0, Y: 1},
+			want:      graph.Co{X: 0, Y: 1},
 		},
 	}
 	for _, tt := range tests {
@@ -122,30 +122,30 @@ func TestVisitedHouses_moveRoboSanta(t *testing.T) {
 func TestVisitedHouses_alreadyVisitedHouse(t *testing.T) {
 	tests := []struct {
 		name  string
-		Map   map[helpers.Co]bool
-		santa helpers.Co
+		Map   map[graph.Co]bool
+		santa graph.Co
 		want  bool
 	}{
 		{
 			name: "returns true if the current house has been seen",
-			Map: map[helpers.Co]bool{
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}:  true,
 				{X: 1, Y: 99}: true,
 				{X: -2, Y: 1}: true,
 				{X: 1, Y: 1}:  true,
 			},
-			santa: helpers.Co{X: 1, Y: 99},
+			santa: graph.Co{X: 1, Y: 99},
 			want:  true,
 		},
 		{
 			name: "returns false if the current house has not been seen",
-			Map: map[helpers.Co]bool{
+			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}:  true,
 				{X: 1, Y: 99}: true,
 				{X: -2, Y: 1}: true,
 				{X: 1, Y: 1}:  true,
 			},
-			santa: helpers.Co{X: 2, Y: 1},
+			santa: graph.Co{X: 2, Y: 1},
 			want:  false,
 		},
 	}
@@ -208,7 +208,7 @@ func TestVisitedHouses_countUniqueHousesVisited(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			vh := &VisitedHouses{
-				Map: map[helpers.Co]bool{
+				Map: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 				},
 			}

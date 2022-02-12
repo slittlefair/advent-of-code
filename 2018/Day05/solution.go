@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"strings"
 	"unicode"
@@ -30,7 +30,7 @@ func react(polymer string) int {
 
 func removeCharacters(input string, characters string) string {
 	filter := func(r rune) rune {
-		if strings.IndexRune(characters, r) < 0 {
+		if !strings.ContainsRune(characters, r) {
 			return r
 		}
 		return -1
@@ -41,7 +41,7 @@ func removeCharacters(input string, characters string) string {
 var alphabet = strings.Split("abcdefghijklmnopqrstuvwxyz", "")
 
 func main() {
-	polymer := helpers.ReadFile()[0]
+	polymer := file.Read()[0]
 	length := react(polymer)
 	fmt.Println("Part 1:", length)
 	var minLength = 1000000

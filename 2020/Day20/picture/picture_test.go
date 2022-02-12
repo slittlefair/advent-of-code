@@ -1,8 +1,8 @@
 package picture
 
 import (
-	helpers "Advent-of-Code"
 	tile "Advent-of-Code/2020/Day20/tile"
+	"Advent-of-Code/graph"
 	"reflect"
 	"testing"
 )
@@ -38,7 +38,7 @@ func TestPicture_PopulateTiles(t *testing.T) {
 						ID:     "7",
 						Height: 1,
 						Width:  1,
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: ".",
 							{X: 0, Y: 1}: "#",
@@ -49,7 +49,7 @@ func TestPicture_PopulateTiles(t *testing.T) {
 						ID:     "5",
 						Height: 1,
 						Width:  1,
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: "#",
 							{X: 0, Y: 1}: "#",
@@ -60,7 +60,7 @@ func TestPicture_PopulateTiles(t *testing.T) {
 						ID:     "11",
 						Height: 1,
 						Width:  1,
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: "#",
 							{X: 0, Y: 1}: ".",
@@ -71,7 +71,7 @@ func TestPicture_PopulateTiles(t *testing.T) {
 						ID:     "3",
 						Height: 1,
 						Width:  1,
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: ".",
 							{X: 0, Y: 1}: ".",
@@ -212,7 +212,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-1",
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: "#",
 							{X: 0, Y: 1}: "#",
@@ -223,7 +223,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 					},
 					{
 						ID: "tile-2",
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: ".",
 							{X: 0, Y: 1}: ".",
@@ -234,7 +234,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 					},
 					{
 						ID: "tile-3",
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: "#",
 							{X: 1, Y: 0}: "#",
 							{X: 0, Y: 1}: "#",
@@ -247,7 +247,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 			},
 			t: tile.Tile{
 				ID: "tile-1",
-				Pixels: map[helpers.Co]string{
+				Pixels: map[graph.Co]string{
 					{X: 0, Y: 0}: ".",
 					{X: 1, Y: 0}: "#",
 					{X: 0, Y: 1}: "#",
@@ -261,7 +261,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-1",
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: "#",
 							{X: 0, Y: 1}: "#",
@@ -272,7 +272,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 					},
 					{
 						ID: "tile-2",
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: ".",
 							{X: 0, Y: 1}: ".",
@@ -283,7 +283,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 					},
 					{
 						ID: "tile-3",
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: "#",
 							{X: 1, Y: 0}: "#",
 							{X: 0, Y: 1}: "#",
@@ -307,15 +307,15 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 
 	tests2 := []struct {
 		name          string
-		tile1Pixels   map[helpers.Co]string
-		tile2Pixels   map[helpers.Co]string
-		wantPixels    map[helpers.Co]string
+		tile1Pixels   map[graph.Co]string
+		tile2Pixels   map[graph.Co]string
+		wantPixels    map[graph.Co]string
 		want1Adjacent tile.AdjacentTiles
 		want2Adjacent tile.AdjacentTiles
 	}{
 		{
 			name: "successfully edits adajcent tiles when tile1 is above tile2, rotate = 0, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "-",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "-",
@@ -326,7 +326,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -337,7 +337,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -357,7 +357,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is below tile2, rotate = 0, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -368,7 +368,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: "-",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -379,7 +379,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -399,7 +399,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the left of tile2, rotate = 0, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "#",
@@ -410,7 +410,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -421,7 +421,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -441,7 +441,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the right of tile2, rotate = 0, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -452,7 +452,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: "-",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -463,7 +463,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: "#",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -483,7 +483,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is above tile2, rotate = 1, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -494,7 +494,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -505,7 +505,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -525,7 +525,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is below tile2, rotate = 1, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -536,7 +536,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -547,7 +547,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -567,7 +567,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the left of tile2, rotate = 1, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -578,7 +578,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -589,7 +589,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -609,7 +609,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the right of tile2, rotate = 1, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -620,7 +620,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -631,7 +631,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -651,7 +651,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is above tile2, rotate = 2, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -662,7 +662,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -673,7 +673,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -693,7 +693,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is below tile2, rotate = 2, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -704,7 +704,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -715,7 +715,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -735,7 +735,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the left of tile2, rotate = 2, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -746,7 +746,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -757,7 +757,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -777,7 +777,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the right of tile2, rotate = 2, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -788,7 +788,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -799,7 +799,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -819,7 +819,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is above tile2, rotate = 1, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -830,7 +830,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -841,7 +841,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -861,7 +861,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is below tile2, rotate = 1, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -872,7 +872,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -883,7 +883,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -903,7 +903,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the left of tile2, rotate = 1, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -914,7 +914,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -925,7 +925,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -945,7 +945,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the right of tile2, rotate = 1, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -956,7 +956,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -967,7 +967,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -987,7 +987,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is above tile2, rotate = 0, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "-",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "-",
@@ -998,7 +998,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -1009,7 +1009,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -1029,7 +1029,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is below tile2, rotate = 0, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -1040,7 +1040,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1051,7 +1051,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1071,7 +1071,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the left of tile2, rotate = 0, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "-",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "#",
@@ -1082,7 +1082,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -1093,7 +1093,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1113,7 +1113,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the right of tile2, rotate = 0, flip = 0",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "-",
@@ -1124,7 +1124,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: "-",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1135,7 +1135,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -1155,7 +1155,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is above tile2, rotate = 1, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "-",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "-",
@@ -1166,7 +1166,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1177,7 +1177,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -1197,7 +1197,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is below tile2, rotate = 1, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -1208,7 +1208,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: "-",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1219,7 +1219,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: "#",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1239,7 +1239,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the left of tile2, rotate = 1, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "-",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "#",
@@ -1250,7 +1250,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1261,7 +1261,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1281,7 +1281,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the right of tile2, rotate = 1, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "-",
@@ -1292,7 +1292,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: "-",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -1303,7 +1303,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -1323,7 +1323,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is above tile2, rotate = 2, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "-",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "-",
@@ -1334,7 +1334,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1345,7 +1345,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -1365,7 +1365,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is below tile2, rotate = 2, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -1376,7 +1376,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: "-",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -1387,7 +1387,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1407,7 +1407,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the left of tile2, rotate = 2, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "-",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "#",
@@ -1418,7 +1418,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -1429,7 +1429,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1449,7 +1449,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the right of tile2, rotate = 2, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "-",
@@ -1460,7 +1460,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: "-",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1471,7 +1471,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -1491,7 +1491,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is above tile2, rotate = 3, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "-",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "-",
@@ -1502,7 +1502,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1513,7 +1513,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: "#",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -1533,7 +1533,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is below tile2, rotate = 3, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -1544,7 +1544,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: "-",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1555,7 +1555,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1575,7 +1575,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the left of tile2, rotate = 3, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "-",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "#",
@@ -1586,7 +1586,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: ".",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1597,7 +1597,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -1617,7 +1617,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "successfully edits adajcent tiles when tile1 is to the right of tile2, rotate = 3, flip = 1",
-			tile1Pixels: map[helpers.Co]string{
+			tile1Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "-",
 				{X: 2, Y: 0}: "-",
@@ -1628,7 +1628,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: "-",
 				{X: 2, Y: 2}: "-",
 			},
-			tile2Pixels: map[helpers.Co]string{
+			tile2Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -1639,7 +1639,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			wantPixels: map[helpers.Co]string{
+			wantPixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -2198,7 +2198,7 @@ func TestPicture_populatePictureWithTile(t *testing.T) {
 			args: args{
 				t: tile.Tile{
 					ID: "123",
-					Pixels: map[helpers.Co]string{
+					Pixels: map[graph.Co]string{
 						{X: 0, Y: 0}: ".",
 						{X: 1, Y: 0}: "#",
 						{X: 2, Y: 0}: "#",
@@ -2225,16 +2225,16 @@ func TestPicture_populatePictureWithTile(t *testing.T) {
 			want: Picture{
 				Height: 5,
 				Width:  5,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[graph.Co]string{
 					{X: 4, Y: 4}: "#",
 					{X: 5, Y: 4}: ".",
 					{X: 4, Y: 5}: ".",
 					{X: 5, Y: 5}: "#",
 				},
-				TileMap: map[helpers.Co]tile.Tile{
+				TileMap: map[graph.Co]tile.Tile{
 					{X: 2, Y: 2}: {
 						ID: "123",
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: "#",
 							{X: 2, Y: 0}: "#",
@@ -2259,7 +2259,7 @@ func TestPicture_populatePictureWithTile(t *testing.T) {
 				Tiles: []tile.Tile{
 					{
 						ID: "123",
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: "#",
 							{X: 2, Y: 0}: "#",
@@ -2287,12 +2287,12 @@ func TestPicture_populatePictureWithTile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Picture{
-				Pixels:  make(map[helpers.Co]string),
-				TileMap: make(map[helpers.Co]tile.Tile),
+				Pixels:  make(map[graph.Co]string),
+				TileMap: make(map[graph.Co]tile.Tile),
 				Tiles: []tile.Tile{
 					{
 						ID: "123",
-						Pixels: map[helpers.Co]string{
+						Pixels: map[graph.Co]string{
 							{X: 0, Y: 0}: ".",
 							{X: 1, Y: 0}: "#",
 							{X: 2, Y: 0}: "#",
@@ -2332,7 +2332,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			Bottom: "4",
 			Right:  "2",
 		},
-		Pixels: map[helpers.Co]string{
+		Pixels: map[graph.Co]string{
 			{X: 0, Y: 0}: ".",
 			{X: 1, Y: 0}: "#",
 			{X: 2, Y: 0}: "#",
@@ -2353,7 +2353,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			Right:  "3",
 			Left:   "1",
 		},
-		Pixels: map[helpers.Co]string{
+		Pixels: map[graph.Co]string{
 			{X: 0, Y: 0}: "#",
 			{X: 1, Y: 0}: "#",
 			{X: 2, Y: 0}: ".",
@@ -2373,7 +2373,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			Bottom: "6",
 			Left:   "2",
 		},
-		Pixels: map[helpers.Co]string{
+		Pixels: map[graph.Co]string{
 			{X: 0, Y: 0}: ".",
 			{X: 1, Y: 0}: "#",
 			{X: 2, Y: 0}: "#",
@@ -2394,7 +2394,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			Right:  "5",
 			Bottom: "7",
 		},
-		Pixels: map[helpers.Co]string{
+		Pixels: map[graph.Co]string{
 			{X: 0, Y: 0}: ".",
 			{X: 1, Y: 0}: ".",
 			{X: 2, Y: 0}: "#",
@@ -2416,7 +2416,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			Right:  "6",
 			Bottom: "8",
 		},
-		Pixels: map[helpers.Co]string{
+		Pixels: map[graph.Co]string{
 			{X: 0, Y: 0}: "#",
 			{X: 1, Y: 0}: ".",
 			{X: 2, Y: 0}: ".",
@@ -2437,7 +2437,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			Left:   "5",
 			Bottom: "9",
 		},
-		Pixels: map[helpers.Co]string{
+		Pixels: map[graph.Co]string{
 			{X: 0, Y: 0}: ".",
 			{X: 1, Y: 0}: ".",
 			{X: 2, Y: 0}: ".",
@@ -2457,7 +2457,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			Top:   "4",
 			Right: "8",
 		},
-		Pixels: map[helpers.Co]string{
+		Pixels: map[graph.Co]string{
 			{X: 0, Y: 0}: ".",
 			{X: 1, Y: 0}: "#",
 			{X: 2, Y: 0}: ".",
@@ -2478,7 +2478,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			Left:  "7",
 			Right: "9",
 		},
-		Pixels: map[helpers.Co]string{
+		Pixels: map[graph.Co]string{
 			{X: 0, Y: 0}: ".",
 			{X: 1, Y: 0}: "#",
 			{X: 2, Y: 0}: "#",
@@ -2498,7 +2498,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			Top:  "6",
 			Left: "8",
 		},
-		Pixels: map[helpers.Co]string{
+		Pixels: map[graph.Co]string{
 			{X: 0, Y: 0}: "#",
 			{X: 1, Y: 0}: "#",
 			{X: 2, Y: 0}: ".",
@@ -2513,8 +2513,8 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 	type want struct {
 		Height  int
 		Width   int
-		Pixels  map[helpers.Co]string
-		TileMap map[helpers.Co]tile.Tile
+		Pixels  map[graph.Co]string
+		TileMap map[graph.Co]tile.Tile
 		wantErr bool
 	}
 	tests := []struct {
@@ -2540,8 +2540,8 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 				},
 			},
 			want: want{
-				Pixels:  make(map[helpers.Co]string),
-				TileMap: make(map[helpers.Co]tile.Tile),
+				Pixels:  make(map[graph.Co]string),
+				TileMap: make(map[graph.Co]tile.Tile),
 				wantErr: true,
 			},
 		},
@@ -2569,8 +2569,8 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 				},
 			},
 			want: want{
-				Pixels: make(map[helpers.Co]string),
-				TileMap: map[helpers.Co]tile.Tile{
+				Pixels: make(map[graph.Co]string),
+				TileMap: map[graph.Co]tile.Tile{
 					{X: 0, Y: 0}: {
 						ID: "2",
 						AdjacentTiles: tile.AdjacentTiles{
@@ -2607,8 +2607,8 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 				},
 			},
 			want: want{
-				Pixels: make(map[helpers.Co]string),
-				TileMap: map[helpers.Co]tile.Tile{
+				Pixels: make(map[graph.Co]string),
+				TileMap: map[graph.Co]tile.Tile{
 					{X: 0, Y: 0}: {
 						ID: "2",
 						AdjacentTiles: tile.AdjacentTiles{
@@ -2633,7 +2633,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 			want: want{
 				Height: 2,
 				Width:  2,
-				Pixels: map[helpers.Co]string{
+				Pixels: map[graph.Co]string{
 					{X: 0, Y: 0}: "#",
 					{X: 1, Y: 0}: ".",
 					{X: 2, Y: 0}: "#",
@@ -2644,7 +2644,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 					{X: 1, Y: 2}: "#",
 					{X: 2, Y: 2}: ".",
 				},
-				TileMap: map[helpers.Co]tile.Tile{
+				TileMap: map[graph.Co]tile.Tile{
 					{X: 0, Y: 0}: tile1,
 					{X: 1, Y: 0}: tile2,
 					{X: 2, Y: 0}: tile3,
@@ -2662,8 +2662,8 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			p := &Picture{
-				Pixels:  make(map[helpers.Co]string),
-				TileMap: make(map[helpers.Co]tile.Tile),
+				Pixels:  make(map[graph.Co]string),
+				TileMap: make(map[graph.Co]tile.Tile),
 				Tiles:   tt.Tiles,
 			}
 			if err := p.PopulateTileMap(); (err != nil) != tt.want.wantErr {
@@ -2688,19 +2688,19 @@ func TestPicture_rotatePicture90(t *testing.T) {
 		name   string
 		Height int
 		Width  int
-		Pixels map[helpers.Co]string
-		want   map[helpers.Co]string
+		Pixels map[graph.Co]string
+		want   map[graph.Co]string
 	}{
 		{name: "test1",
 			Height: 1,
 			Width:  1,
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 0, Y: 1}: ".",
 				{X: 1, Y: 1}: ".",
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 0, Y: 1}: ".",
@@ -2711,7 +2711,7 @@ func TestPicture_rotatePicture90(t *testing.T) {
 			name:   "test2",
 			Height: 2,
 			Width:  2,
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -2722,7 +2722,7 @@ func TestPicture_rotatePicture90(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -2754,19 +2754,19 @@ func TestPicture_flipPicture(t *testing.T) {
 	tests := []struct {
 		name   string
 		Width  int
-		Pixels map[helpers.Co]string
-		want   map[helpers.Co]string
+		Pixels map[graph.Co]string
+		want   map[graph.Co]string
 	}{
 		{
 			name:  "test1",
 			Width: 1,
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 0, Y: 1}: ".",
 				{X: 1, Y: 1}: ".",
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 0, Y: 1}: ".",
@@ -2776,7 +2776,7 @@ func TestPicture_flipPicture(t *testing.T) {
 		{
 			name:  "test2",
 			Width: 2,
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -2787,7 +2787,7 @@ func TestPicture_flipPicture(t *testing.T) {
 				{X: 1, Y: 2}: ".",
 				{X: 2, Y: 2}: ".",
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -2817,20 +2817,20 @@ func TestPicture_flipPicture(t *testing.T) {
 func TestPicture_markSeaMonster(t *testing.T) {
 	tests := []struct {
 		name       string
-		co         helpers.Co
-		seaMonster []helpers.Co
-		pixels     map[helpers.Co]string
-		want       map[helpers.Co]string
+		co         graph.Co
+		seaMonster []graph.Co
+		pixels     map[graph.Co]string
+		want       map[graph.Co]string
 	}{
 		{
 			name: "it marks pixels as sea monster at the given coordinate",
-			co:   helpers.Co{X: 1, Y: 1},
-			seaMonster: []helpers.Co{
+			co:   graph.Co{X: 1, Y: 1},
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 1, Y: 1},
 			},
-			pixels: map[helpers.Co]string{
+			pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -2841,7 +2841,7 @@ func TestPicture_markSeaMonster(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -2870,15 +2870,15 @@ func TestPicture_markSeaMonster(t *testing.T) {
 func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
 	tests := []struct {
 		name       string
-		Pixels     map[helpers.Co]string
-		co         helpers.Co
-		seaMonster []helpers.Co
+		Pixels     map[graph.Co]string
+		co         graph.Co
+		seaMonster []graph.Co
 		want       bool
-		want1      map[helpers.Co]string
+		want1      map[graph.Co]string
 	}{
 		{
 			name: "it doesn't mark a sea monster at the given co if the sea monster isn't there",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -2889,14 +2889,14 @@ func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			co: helpers.Co{X: 1, Y: 1},
-			seaMonster: []helpers.Co{
+			co: graph.Co{X: 1, Y: 1},
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 1, Y: 1},
 			},
 			want: false,
-			want1: map[helpers.Co]string{
+			want1: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -2910,7 +2910,7 @@ func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
 		},
 		{
 			name: "it doesn't mark a sea monster at the given co if the sea monster runs out the the pixel's boundaries",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -2921,14 +2921,14 @@ func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: ".",
 			},
-			co: helpers.Co{X: 1, Y: 1},
-			seaMonster: []helpers.Co{
+			co: graph.Co{X: 1, Y: 1},
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 100, Y: 1},
 			},
 			want: false,
-			want1: map[helpers.Co]string{
+			want1: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -2942,13 +2942,13 @@ func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
 		},
 		{
 			name: "returns true and marks a sea monster if one is found in the picture",
-			co:   helpers.Co{X: 1, Y: 1},
-			seaMonster: []helpers.Co{
+			co:   graph.Co{X: 1, Y: 1},
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 1, Y: 1},
 			},
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -2960,7 +2960,7 @@ func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
 				{X: 2, Y: 2}: "#",
 			},
 			want: true,
-			want1: map[helpers.Co]string{
+			want1: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -2991,13 +2991,13 @@ func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
 func TestPicture_FindSeaMonster(t *testing.T) {
 	tests := []struct {
 		name       string
-		Pixels     map[helpers.Co]string
-		seaMonster []helpers.Co
-		want       map[helpers.Co]string
+		Pixels     map[graph.Co]string
+		seaMonster []graph.Co
+		want       map[graph.Co]string
 	}{
 		{
 			name: "does not affect the picture's pixels if sea monster is not present",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -3015,12 +3015,12 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				{X: 2, Y: 3}: ".",
 				{X: 3, Y: 3}: "#",
 			},
-			seaMonster: []helpers.Co{
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 2, Y: 0},
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -3041,7 +3041,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 		},
 		{
 			name: "marks a found sea monster in the picture, rotate = 0, flip = 0",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -3059,14 +3059,14 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				{X: 2, Y: 3}: ".",
 				{X: 3, Y: 3}: ".",
 			},
-			seaMonster: []helpers.Co{
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 2, Y: 0},
 				{X: 3, Y: 0},
 				{X: 1, Y: 1},
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -3087,7 +3087,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 		},
 		{
 			name: "marks a found sea monster in the picture, rotate = 1, flip = 0",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -3105,14 +3105,14 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				{X: 2, Y: 3}: ".",
 				{X: 3, Y: 3}: "#",
 			},
-			seaMonster: []helpers.Co{
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 2, Y: 0},
 				{X: 3, Y: 0},
 				{X: 1, Y: 1},
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: "O",
 				{X: 1, Y: 0}: "O",
 				{X: 2, Y: 0}: "O",
@@ -3133,7 +3133,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 		},
 		{
 			name: "marks a found sea monster in the picture, rotate = 2, flip = 0",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -3151,14 +3151,14 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				{X: 2, Y: 3}: "#",
 				{X: 3, Y: 3}: "#",
 			},
-			seaMonster: []helpers.Co{
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 2, Y: 0},
 				{X: 3, Y: 0},
 				{X: 1, Y: 1},
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -3179,7 +3179,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 		},
 		{
 			name: "marks a found sea monster in the picture, rotate = 3, flip = 0",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -3197,14 +3197,14 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				{X: 2, Y: 3}: "#",
 				{X: 3, Y: 3}: "#",
 			},
-			seaMonster: []helpers.Co{
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 2, Y: 0},
 				{X: 3, Y: 0},
 				{X: 1, Y: 1},
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -3225,7 +3225,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 		},
 		{
 			name: "marks a found sea monster in the picture, rotate = 0, flip = 1",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -3243,14 +3243,14 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				{X: 2, Y: 3}: "#",
 				{X: 3, Y: 3}: ".",
 			},
-			seaMonster: []helpers.Co{
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 2, Y: 0},
 				{X: 3, Y: 0},
 				{X: 1, Y: 1},
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -3271,7 +3271,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 		},
 		{
 			name: "marks a found sea monster in the picture, rotate = 1, flip = 1",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -3289,14 +3289,14 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				{X: 2, Y: 3}: ".",
 				{X: 3, Y: 3}: ".",
 			},
-			seaMonster: []helpers.Co{
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 2, Y: 0},
 				{X: 3, Y: 0},
 				{X: 1, Y: 1},
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: "O",
 				{X: 1, Y: 0}: "O",
 				{X: 2, Y: 0}: "O",
@@ -3317,7 +3317,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 		},
 		{
 			name: "marks a found sea monster in the picture, rotate = 2, flip = 1",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -3335,14 +3335,14 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				{X: 2, Y: 3}: "#",
 				{X: 3, Y: 3}: "#",
 			},
-			seaMonster: []helpers.Co{
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 2, Y: 0},
 				{X: 3, Y: 0},
 				{X: 1, Y: 1},
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: "O",
 				{X: 1, Y: 0}: "O",
 				{X: 2, Y: 0}: "O",
@@ -3363,7 +3363,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 		},
 		{
 			name: "marks a found sea monster in the picture, rotate = 3, flip = 1",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: "#",
@@ -3381,14 +3381,14 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				{X: 2, Y: 3}: "#",
 				{X: 3, Y: 3}: ".",
 			},
-			seaMonster: []helpers.Co{
+			seaMonster: []graph.Co{
 				{X: 0, Y: 0},
 				{X: 1, Y: 0},
 				{X: 2, Y: 0},
 				{X: 3, Y: 0},
 				{X: 1, Y: 1},
 			},
-			want: map[helpers.Co]string{
+			want: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -3426,12 +3426,12 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 func TestPicture_CountWaterRoughness(t *testing.T) {
 	tests := []struct {
 		name   string
-		Pixels map[helpers.Co]string
+		Pixels map[graph.Co]string
 		want   int
 	}{
 		{
 			name: "returns 0 if there are no water symbols",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -3453,7 +3453,7 @@ func TestPicture_CountWaterRoughness(t *testing.T) {
 		},
 		{
 			name: "returns 1 if there is 1 water symbol",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: ".",
 				{X: 2, Y: 0}: ".",
@@ -3475,7 +3475,7 @@ func TestPicture_CountWaterRoughness(t *testing.T) {
 		},
 		{
 			name: "returns the correct number of water symbols in the picture",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: ".",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",
@@ -3497,7 +3497,7 @@ func TestPicture_CountWaterRoughness(t *testing.T) {
 		},
 		{
 			name: "returns the maximum nunber (number of pixels) if all are water symbols",
-			Pixels: map[helpers.Co]string{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: "#",

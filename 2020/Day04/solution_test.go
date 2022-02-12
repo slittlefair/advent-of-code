@@ -108,7 +108,7 @@ func Test_validateHgt(t *testing.T) {
 			want: false,
 		},
 		{
-			name: "returns false if given val contains cm or in and is not preceeded by an int",
+			name: "returns false if given val contains cm or in and is not preceded by an int",
 			val:  "159~cm",
 			want: false,
 		},

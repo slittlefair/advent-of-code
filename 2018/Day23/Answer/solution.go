@@ -15,7 +15,7 @@ package day23
 
 // func makeNano(line string) nano {
 // 	re := regexp.MustCompile("-?\\d+")
-// 	nums := helpers.StringSliceToIntSlice(re.FindAllString(line, -1))
+// 	nums := slice.StringSliceToIntSlice(re.FindAllString(line, -1))
 // 	return nano{
 // 		r:  nums[3],
 // 		co: coordinate{X: nums[0], Y: nums[1], Z: nums[2]},
@@ -30,7 +30,7 @@ package day23
 // }
 
 // func main() {
-// 	lines := helpers.ReadFile()
+// 	lines := file.Read()
 // 	for _, l := range lines {
 // 		allNanos = append(allNanos, makeNano(l))
 // 	}

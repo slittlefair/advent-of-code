@@ -1,7 +1,7 @@
 package tile
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/graph"
 	"fmt"
 )
 
@@ -14,7 +14,7 @@ type AdjacentTiles struct {
 
 type Tile struct {
 	ID            string
-	Pixels        map[helpers.Co]string
+	Pixels        map[graph.Co]string
 	Height        int
 	Width         int
 	AdjacentTiles AdjacentTiles
@@ -25,7 +25,7 @@ type Tile struct {
 func (t Tile) PrintPixels() {
 	for h := 0; h <= t.Height; h++ {
 		for w := 0; w <= t.Width; w++ {
-			fmt.Print(t.Pixels[helpers.Co{X: w, Y: h}])
+			fmt.Print(t.Pixels[graph.Co{X: w, Y: h}])
 		}
 		fmt.Println()
 	}
@@ -33,18 +33,18 @@ func (t Tile) PrintPixels() {
 
 // RotateTile90 rotates the pixels of a tile by 90 degrees
 func (t *Tile) RotateTile90() {
-	newPixels := make(map[helpers.Co]string)
+	newPixels := make(map[graph.Co]string)
 	for co, val := range t.Pixels {
-		newPixels[helpers.Co{X: t.Width - co.Y, Y: co.X}] = val
+		newPixels[graph.Co{X: t.Width - co.Y, Y: co.X}] = val
 	}
 	t.Pixels = newPixels
 }
 
 // FlipTile flips (reflects) the pixels of a tile along the vertical centre
 func (t *Tile) FlipTile() {
-	newPixels := make(map[helpers.Co]string)
+	newPixels := make(map[graph.Co]string)
 	for co, val := range t.Pixels {
-		newPixels[helpers.Co{X: t.Width - co.X, Y: co.Y}] = val
+		newPixels[graph.Co{X: t.Width - co.X, Y: co.Y}] = val
 	}
 	t.Pixels = newPixels
 }
@@ -52,44 +52,44 @@ func (t *Tile) FlipTile() {
 // IsAdjacentTop returns whether the tile "t" is directly above the tile "tile"
 func (t Tile) IsAdjacentTop(tile Tile) bool {
 	for x := 0; x <= t.Width; x++ {
-		if t.Pixels[helpers.Co{X: x, Y: t.Height}] != tile.Pixels[helpers.Co{X: x, Y: 0}] {
+		if t.Pixels[graph.Co{X: x, Y: t.Height}] != tile.Pixels[graph.Co{X: x, Y: 0}] {
 			return false
 		}
 	}
 	return true
 }
 
-// IsAdjacentTop returns whether the tile "t" is directly below the tile "tile"
+// IsAdjacentBottom returns whether the tile "t" is directly below the tile "tile"
 func (t Tile) IsAdjacentBottom(tile Tile) bool {
 	for x := 0; x <= t.Width; x++ {
-		if t.Pixels[helpers.Co{X: x, Y: 0}] != tile.Pixels[helpers.Co{X: x, Y: tile.Height}] {
+		if t.Pixels[graph.Co{X: x, Y: 0}] != tile.Pixels[graph.Co{X: x, Y: tile.Height}] {
 			return false
 		}
 	}
 	return true
 }
 
-// IsAdjacentTop returns whether the tile "t" is directly to the left of tile "tile"
+// IsAdjacentLeft returns whether the tile "t" is directly to the left of tile "tile"
 func (t Tile) IsAdjacentLeft(tile Tile) bool {
 	for y := 0; y <= t.Height; y++ {
-		if t.Pixels[helpers.Co{X: t.Width, Y: y}] != tile.Pixels[helpers.Co{X: 0, Y: y}] {
+		if t.Pixels[graph.Co{X: t.Width, Y: y}] != tile.Pixels[graph.Co{X: 0, Y: y}] {
 			return false
 		}
 	}
 	return true
 }
 
-// IsAdjacentTop returns whether the tile "t" is directly to the right of tile "tile"
+// IsAdjacentRight returns whether the tile "t" is directly to the right of tile "tile"
 func (t Tile) IsAdjacentRight(tile Tile) bool {
 	for y := 0; y <= t.Height; y++ {
-		if t.Pixels[helpers.Co{X: 0, Y: y}] != tile.Pixels[helpers.Co{X: tile.Width, Y: y}] {
+		if t.Pixels[graph.Co{X: 0, Y: y}] != tile.Pixels[graph.Co{X: tile.Width, Y: y}] {
 			return false
 		}
 	}
 	return true
 }
 
-// isAdjacentTo returns whether the tile "tile" is adjacent to the tile "t"
+// IsAdjacentTo returns whether the tile "tile" is adjacent to the tile "t"
 func (t Tile) IsAdjacentTo(tile Tile) bool {
 	if t.AdjacentTiles.Top == tile.ID {
 		return true

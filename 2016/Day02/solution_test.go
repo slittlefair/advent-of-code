@@ -1,12 +1,12 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/graph"
 	"reflect"
 	"testing"
 )
 
-var keypad map[helpers.Co]string = map[helpers.Co]string{
+var keypad map[graph.Co]string = map[graph.Co]string{
 	{X: 0, Y: 0}: "1",
 	{X: 1, Y: 0}: "2",
 	{X: 2, Y: 0}: "3",
@@ -21,57 +21,57 @@ var keypad map[helpers.Co]string = map[helpers.Co]string{
 func TestCodeConstructor_move(t *testing.T) {
 	tests := []struct {
 		name      string
-		currentCo helpers.Co
+		currentCo graph.Co
 		dir       string
-		want      helpers.Co
+		want      graph.Co
 	}{
 		{
 			name:      "sets a new coordinate moving up",
-			currentCo: helpers.Co{X: 1, Y: 2},
+			currentCo: graph.Co{X: 1, Y: 2},
 			dir:       "U",
-			want:      helpers.Co{X: 1, Y: 1},
+			want:      graph.Co{X: 1, Y: 1},
 		},
 		{
 			name:      "does not set a new coordinate moving up if off the keyboard",
-			currentCo: helpers.Co{X: 1, Y: 0},
+			currentCo: graph.Co{X: 1, Y: 0},
 			dir:       "U",
-			want:      helpers.Co{X: 1, Y: 0},
+			want:      graph.Co{X: 1, Y: 0},
 		},
 		{
 			name:      "sets a new coordinate moving down",
-			currentCo: helpers.Co{X: 0, Y: 0},
+			currentCo: graph.Co{X: 0, Y: 0},
 			dir:       "D",
-			want:      helpers.Co{X: 0, Y: 1},
+			want:      graph.Co{X: 0, Y: 1},
 		},
 		{
 			name:      "does not set a new coordinate moving down if off the keyboard",
-			currentCo: helpers.Co{X: 1, Y: 2},
+			currentCo: graph.Co{X: 1, Y: 2},
 			dir:       "D",
-			want:      helpers.Co{X: 1, Y: 2},
+			want:      graph.Co{X: 1, Y: 2},
 		},
 		{
 			name:      "sets a new coordinate moving left",
-			currentCo: helpers.Co{X: 1, Y: 2},
+			currentCo: graph.Co{X: 1, Y: 2},
 			dir:       "L",
-			want:      helpers.Co{X: 0, Y: 2},
+			want:      graph.Co{X: 0, Y: 2},
 		},
 		{
 			name:      "does not set a new coordinate moving left if off the keyboard",
-			currentCo: helpers.Co{X: 0, Y: 0},
+			currentCo: graph.Co{X: 0, Y: 0},
 			dir:       "L",
-			want:      helpers.Co{X: 0, Y: 0},
+			want:      graph.Co{X: 0, Y: 0},
 		},
 		{
 			name:      "sets a new coordinate moving right",
-			currentCo: helpers.Co{X: 1, Y: 2},
+			currentCo: graph.Co{X: 1, Y: 2},
 			dir:       "R",
-			want:      helpers.Co{X: 2, Y: 2},
+			want:      graph.Co{X: 2, Y: 2},
 		},
 		{
 			name:      "does not set a new coordinate moving right if off the keyboard",
-			currentCo: helpers.Co{X: 2, Y: 0},
+			currentCo: graph.Co{X: 2, Y: 0},
 			dir:       "R",
-			want:      helpers.Co{X: 2, Y: 0},
+			want:      graph.Co{X: 2, Y: 0},
 		},
 	}
 	for _, tt := range tests {
@@ -89,7 +89,7 @@ func TestCodeConstructor_move(t *testing.T) {
 
 func TestCodeConstructor_followDirections(t *testing.T) {
 	type fields struct {
-		currentCo helpers.Co
+		currentCo graph.Co
 		code      []string
 	}
 	tests := []struct {
@@ -101,48 +101,48 @@ func TestCodeConstructor_followDirections(t *testing.T) {
 		{
 			name: "appends a number to the code after following instructions, advent of code example 1",
 			fields: fields{
-				currentCo: helpers.Co{X: 1, Y: 1},
+				currentCo: graph.Co{X: 1, Y: 1},
 				code:      []string{},
 			},
 			line: "ULL",
 			want: &CodeConstructor{
-				currentCo: helpers.Co{X: 0, Y: 0},
+				currentCo: graph.Co{X: 0, Y: 0},
 				code:      []string{"1"},
 			},
 		},
 		{
 			name: "appends a number to the code after following instructions, advent of code example 2",
 			fields: fields{
-				currentCo: helpers.Co{X: 0, Y: 0},
+				currentCo: graph.Co{X: 0, Y: 0},
 				code:      []string{"1"},
 			},
 			line: "RRDDD",
 			want: &CodeConstructor{
-				currentCo: helpers.Co{X: 2, Y: 2},
+				currentCo: graph.Co{X: 2, Y: 2},
 				code:      []string{"1", "9"},
 			},
 		},
 		{
 			name: "appends a number to the code after following instructions, advent of code example 3",
 			fields: fields{
-				currentCo: helpers.Co{X: 2, Y: 2},
+				currentCo: graph.Co{X: 2, Y: 2},
 				code:      []string{"1", "9"},
 			},
 			line: "LURDL",
 			want: &CodeConstructor{
-				currentCo: helpers.Co{X: 1, Y: 2},
+				currentCo: graph.Co{X: 1, Y: 2},
 				code:      []string{"1", "9", "8"},
 			},
 		},
 		{
 			name: "appends a number to the code after following instructions, advent of code example 4",
 			fields: fields{
-				currentCo: helpers.Co{X: 1, Y: 2},
+				currentCo: graph.Co{X: 1, Y: 2},
 				code:      []string{"1", "9", "8"},
 			},
 			line: "UUUUD",
 			want: &CodeConstructor{
-				currentCo: helpers.Co{X: 1, Y: 1},
+				currentCo: graph.Co{X: 1, Y: 1},
 				code:      []string{"1", "9", "8", "5"},
 			},
 		},
@@ -193,8 +193,8 @@ func TestCodeConstructor_getCode(t *testing.T) {
 func Test_getSolution(t *testing.T) {
 	type args struct {
 		input      []string
-		keypad     map[helpers.Co]string
-		startingCo helpers.Co
+		keypad     map[graph.Co]string
+		startingCo graph.Co
 	}
 	tests := []struct {
 		name string
@@ -211,7 +211,7 @@ func Test_getSolution(t *testing.T) {
 					"UUUUD",
 				},
 				keypad:     keypad,
-				startingCo: helpers.Co{X: 1, Y: 1},
+				startingCo: graph.Co{X: 1, Y: 1},
 			},
 			want: "1985",
 		},
@@ -224,7 +224,7 @@ func Test_getSolution(t *testing.T) {
 					"LURDL",
 					"UUUUD",
 				},
-				keypad: map[helpers.Co]string{
+				keypad: map[graph.Co]string{
 					{X: 2, Y: 0}: "1",
 					{X: 1, Y: 1}: "2",
 					{X: 2, Y: 1}: "3",
@@ -239,7 +239,7 @@ func Test_getSolution(t *testing.T) {
 					{X: 3, Y: 3}: "C",
 					{X: 2, Y: 4}: "D",
 				},
-				startingCo: helpers.Co{X: 0, Y: 2},
+				startingCo: graph.Co{X: 0, Y: 2},
 			},
 			want: "5DB3",
 		},

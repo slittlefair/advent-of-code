@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	// cave := helpers.ReadFile()
+	// cave := file.Read()
 
 	// fmt.Printf("Combat: %d\n", day15.Combat(cave))
 	// fmt.Printf("CheatingElves: %d\n", day15.CheatingElves(cave))

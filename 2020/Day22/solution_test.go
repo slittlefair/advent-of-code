@@ -191,7 +191,7 @@ func TestGame_playNormalRound(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-		want   string
+		want   int
 		want1  *Game
 	}{
 		{
@@ -200,7 +200,7 @@ func TestGame_playNormalRound(t *testing.T) {
 				player1: Deck{9, 2, 3, 6, 1},
 				player2: Deck{5, 8, 4, 7, 10},
 			},
-			want: "player1",
+			want: Player1,
 			want1: &Game{
 				player1: Deck{2, 3, 6, 1, 9, 5},
 				player2: Deck{8, 4, 7, 10},
@@ -212,7 +212,7 @@ func TestGame_playNormalRound(t *testing.T) {
 				player1: Deck{8, 4, 2, 3, 6, 1, 9, 5},
 				player2: Deck{7, 10},
 			},
-			want: "player1",
+			want: Player1,
 			want1: &Game{
 				player1: Deck{4, 2, 3, 6, 1, 9, 5, 8, 7},
 				player2: Deck{10},
@@ -224,7 +224,7 @@ func TestGame_playNormalRound(t *testing.T) {
 				player1: Deck{3, 1, 9, 5, 6, 4},
 				player2: Deck{7, 10, 8, 2},
 			},
-			want: "player2",
+			want: Player2,
 			want1: &Game{
 				player1: Deck{1, 9, 5, 6, 4},
 				player2: Deck{10, 8, 2, 7, 3},
@@ -236,7 +236,7 @@ func TestGame_playNormalRound(t *testing.T) {
 				player1: Deck{1},
 				player2: Deck{7, 3, 2, 10, 6, 8, 5, 9, 4},
 			},
-			want: "player2",
+			want: Player2,
 			want1: &Game{
 				player1: Deck{},
 				player2: Deck{3, 2, 10, 6, 8, 5, 9, 4, 7, 1},
@@ -585,7 +585,7 @@ func TestGame_playRecursiveGame(t *testing.T) {
 	tests := []struct {
 		name   string
 		fields fields
-		want   string
+		want   int
 		want1  Deck
 	}{
 		{
@@ -594,7 +594,7 @@ func TestGame_playRecursiveGame(t *testing.T) {
 				player1: Deck{9, 2, 6, 3, 1},
 				player2: Deck{5, 8, 4, 7, 10},
 			},
-			want:  "player2",
+			want:  Player2,
 			want1: Deck{7, 5, 6, 2, 4, 1, 10, 8, 9, 3},
 		},
 		{
@@ -603,7 +603,7 @@ func TestGame_playRecursiveGame(t *testing.T) {
 				player1: Deck{43, 19},
 				player2: Deck{2, 29, 14},
 			},
-			want:  "player1",
+			want:  Player1,
 			want1: Deck{43, 19},
 		},
 	}

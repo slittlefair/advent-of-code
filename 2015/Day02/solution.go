@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"sort"
@@ -39,7 +39,7 @@ func totalPaperForPresents(presents []string) (int, int, error) {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := file.Read()
 	paper, ribbon, err := totalPaperForPresents(input)
 	if err != nil {
 		fmt.Println(err)

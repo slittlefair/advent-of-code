@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"errors"
 	"fmt"
 )
@@ -21,7 +21,7 @@ func halfSeats(dirs string, min int, max int) (string, int, int, error) {
 	} else {
 		min = min + ((max - min + 1) / 2)
 	}
-	return string(dirs[1:]), min, max, nil
+	return dirs[1:], min, max, nil
 }
 
 // findMyID takes a map of IDs we know are taken, the lowest and the highest IDs in the map. It then
@@ -76,7 +76,7 @@ func getusedIDs(entries []string) (int, int, map[int]bool, error) {
 }
 
 func main() {
-	entries := helpers.ReadFile()
+	entries := file.Read()
 	lowestID, highestID, usedIDs, err := getusedIDs(entries)
 	if err != nil {
 		fmt.Println(err)

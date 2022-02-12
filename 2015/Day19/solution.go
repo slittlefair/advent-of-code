@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"strings"
 	"unicode"
@@ -83,7 +83,7 @@ func (m Medicine) GetNumberOfSubs() int {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := file.Read()
 	med := parseInput(input)
 	med.ReplaceAndFindNewMolecules()
 	fmt.Println("Part 1:", len(med.DistinctNewMolecules))

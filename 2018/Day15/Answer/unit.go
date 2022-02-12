@@ -1,6 +1,5 @@
 package day15
 
-
 import (
 	"math"
 	"sort"
@@ -107,8 +106,7 @@ func (u *Unit) Enemies(c *Cave) SortableUnits {
 func (u *Unit) EnemyNeighbor(c *Cave) *Unit {
 	var target *Unit
 	for _, offset := range offsets {
-		if t := c.Map.Tile(u.Tile.X+offset.X, u.Tile.Y+offset.Y);
-			t != nil && t.Unit != nil && t.Unit.Kind != u.Kind && t.Unit.Hitpoints > 0 {
+		if t := c.Map.Tile(u.Tile.X+offset.X, u.Tile.Y+offset.Y); t != nil && t.Unit != nil && t.Unit.Kind != u.Kind && t.Unit.Hitpoints > 0 {
 			if target == nil || t.Unit.Hitpoints < target.Hitpoints {
 				target = t.Unit
 			}
@@ -121,8 +119,7 @@ func (u *Unit) Move(c *Cave) {
 	if u.EnemyNeighbor(c) != nil {
 		return
 	}
-	next, _ := u.NextTile(c)
-	if next != nil {
+	if next, _ := u.NextTile(c); next != nil {
 		next.Unit = u
 		next.Kind = u.Kind
 		u.Tile.Kind = KindSpace
@@ -132,8 +129,7 @@ func (u *Unit) Move(c *Cave) {
 }
 
 func (u *Unit) Attack(c *Cave) bool {
-	enemy := u.EnemyNeighbor(c)
-	if enemy != nil {
+	if enemy := u.EnemyNeighbor(c); enemy != nil {
 		killed := enemy.Damage(c, u.Power)
 		return killed && enemy.Kind == KindElf
 	}

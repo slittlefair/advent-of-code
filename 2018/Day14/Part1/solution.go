@@ -23,18 +23,19 @@ func moveElf(elf int) int {
 	return (elfScore % len(recipes))
 }
 
-func printRecipes() {
-	for i, v := range recipes {
-		if i == elf1 {
-			fmt.Printf("(%v)", v)
-		} else if i == elf2 {
-			fmt.Printf("[%v]", v)
-		} else {
-			fmt.Printf(" %v ", v)
-		}
-	}
-	fmt.Println()
-}
+// for debugging
+// func printRecipes() {
+// 	for i, v := range recipes {
+// 		if i == elf1 {
+// 			fmt.Printf("(%v)", v)
+// 		} else if i == elf2 {
+// 			fmt.Printf("[%v]", v)
+// 		} else {
+// 			fmt.Printf(" %v ", v)
+// 		}
+// 	}
+// 	fmt.Println()
+// }
 
 func main() {
 	for {

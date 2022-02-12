@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"strings"
 )
@@ -94,7 +94,7 @@ func (i Input) evaluateMessages() int {
 	seen := map[string]bool{}
 
 	for _, message := range i.Messages {
-		seen = i.iterateMessages(i.Rules["0"].subRules[0][0], i.Rules["0"].subRules[0][1:], string(message), 0, seen)
+		seen = i.iterateMessages(i.Rules["0"].subRules[0][0], i.Rules["0"].subRules[0][1:], message, 0, seen)
 		_, ok := seen[message]
 		if ok {
 			count++
@@ -105,7 +105,7 @@ func (i Input) evaluateMessages() int {
 }
 
 func main() {
-	rawInput := helpers.ReadFile()
+	rawInput := file.Read()
 	i := &Input{
 		Rules: map[string]Rule{},
 	}

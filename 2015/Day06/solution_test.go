@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/graph"
 	"reflect"
 	"testing"
 )
@@ -17,15 +17,15 @@ func Test_populateLights(t *testing.T) {
 		}
 		for x := 0; x < 1000; x++ {
 			for y := 0; y < 1000; y++ {
-				if val, ok := lights.Analogue[helpers.Co{X: x, Y: y}]; !ok {
-					t.Errorf("analogue light %v not in lights map", helpers.Co{X: x, Y: y})
+				if val, ok := lights.Analogue[graph.Co{X: x, Y: y}]; !ok {
+					t.Errorf("analogue light %v not in lights map", graph.Co{X: x, Y: y})
 				} else if val != false {
-					t.Errorf("analogue light %v has the incorrect value, got %t, want false", helpers.Co{X: x, Y: y}, val)
+					t.Errorf("analogue light %v has the incorrect value, got %t, want false", graph.Co{X: x, Y: y}, val)
 				}
-				if val, ok := lights.Digital[helpers.Co{X: x, Y: y}]; !ok {
-					t.Errorf("digital light %v not in lights map", helpers.Co{X: x, Y: y})
+				if val, ok := lights.Digital[graph.Co{X: x, Y: y}]; !ok {
+					t.Errorf("digital light %v not in lights map", graph.Co{X: x, Y: y})
 				} else if val != 0 {
-					t.Errorf("digital light %v has the incorrect value, got %d, want 0", helpers.Co{X: x, Y: y}, val)
+					t.Errorf("digital light %v has the incorrect value, got %d, want 0", graph.Co{X: x, Y: y}, val)
 				}
 			}
 		}
@@ -34,8 +34,8 @@ func Test_populateLights(t *testing.T) {
 
 func TestLights_turnLightsOn(t *testing.T) {
 	type fields struct {
-		Analogue map[helpers.Co]bool
-		Digital  map[helpers.Co]int
+		Analogue map[graph.Co]bool
+		Digital  map[graph.Co]int
 	}
 	tests := []struct {
 		name   string
@@ -46,7 +46,7 @@ func TestLights_turnLightsOn(t *testing.T) {
 		{
 			name: "turns on analogue and digital lights",
 			fields: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 1, Y: 0}: true,
 					{X: 2, Y: 0}: false,
@@ -54,7 +54,7 @@ func TestLights_turnLightsOn(t *testing.T) {
 					{X: 1, Y: 1}: false,
 					{X: 2, Y: 1}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 0,
 					{X: 1, Y: 0}: 0,
 					{X: 2, Y: 0}: 0,
@@ -65,7 +65,7 @@ func TestLights_turnLightsOn(t *testing.T) {
 			},
 			nums: []int{0, 0, 1, 1},
 			want: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 1, Y: 0}: true,
 					{X: 2, Y: 0}: false,
@@ -73,7 +73,7 @@ func TestLights_turnLightsOn(t *testing.T) {
 					{X: 1, Y: 1}: true,
 					{X: 2, Y: 1}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 1, Y: 0}: 1,
 					{X: 2, Y: 0}: 0,
@@ -104,8 +104,8 @@ func TestLights_turnLightsOn(t *testing.T) {
 
 func TestLights_turnLightsOff(t *testing.T) {
 	type fields struct {
-		Analogue map[helpers.Co]bool
-		Digital  map[helpers.Co]int
+		Analogue map[graph.Co]bool
+		Digital  map[graph.Co]int
 	}
 	tests := []struct {
 		name   string
@@ -116,7 +116,7 @@ func TestLights_turnLightsOff(t *testing.T) {
 		{
 			name: "turns off analogue and digital lights",
 			fields: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 1, Y: 0}: true,
 					{X: 2, Y: 0}: false,
@@ -124,7 +124,7 @@ func TestLights_turnLightsOff(t *testing.T) {
 					{X: 1, Y: 1}: false,
 					{X: 2, Y: 1}: true,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 1, Y: 0}: 0,
 					{X: 2, Y: 0}: 3,
@@ -135,7 +135,7 @@ func TestLights_turnLightsOff(t *testing.T) {
 			},
 			nums: []int{0, 0, 1, 1},
 			want: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 1, Y: 0}: false,
 					{X: 2, Y: 0}: false,
@@ -143,7 +143,7 @@ func TestLights_turnLightsOff(t *testing.T) {
 					{X: 1, Y: 1}: false,
 					{X: 2, Y: 1}: true,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 0,
 					{X: 1, Y: 0}: 0,
 					{X: 2, Y: 0}: 3,
@@ -174,8 +174,8 @@ func TestLights_turnLightsOff(t *testing.T) {
 
 func TestLights_toggleLights(t *testing.T) {
 	type fields struct {
-		Analogue map[helpers.Co]bool
-		Digital  map[helpers.Co]int
+		Analogue map[graph.Co]bool
+		Digital  map[graph.Co]int
 	}
 	tests := []struct {
 		name   string
@@ -186,7 +186,7 @@ func TestLights_toggleLights(t *testing.T) {
 		{
 			name: "toggles analogue and digital lights",
 			fields: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 1, Y: 0}: true,
 					{X: 2, Y: 0}: false,
@@ -194,7 +194,7 @@ func TestLights_toggleLights(t *testing.T) {
 					{X: 1, Y: 1}: false,
 					{X: 2, Y: 1}: true,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 1, Y: 0}: 0,
 					{X: 2, Y: 0}: 3,
@@ -205,7 +205,7 @@ func TestLights_toggleLights(t *testing.T) {
 			},
 			nums: []int{0, 0, 1, 1},
 			want: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 1, Y: 0}: false,
 					{X: 2, Y: 0}: false,
@@ -213,7 +213,7 @@ func TestLights_toggleLights(t *testing.T) {
 					{X: 1, Y: 1}: true,
 					{X: 2, Y: 1}: true,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 3,
 					{X: 1, Y: 0}: 2,
 					{X: 2, Y: 0}: 3,
@@ -244,8 +244,8 @@ func TestLights_toggleLights(t *testing.T) {
 
 func TestLights_followInstructions(t *testing.T) {
 	type fields struct {
-		Analogue map[helpers.Co]bool
-		Digital  map[helpers.Co]int
+		Analogue map[graph.Co]bool
+		Digital  map[graph.Co]int
 	}
 	tests := []struct {
 		name    string
@@ -257,14 +257,14 @@ func TestLights_followInstructions(t *testing.T) {
 		{
 			name: "returns an error if a row of instructions has less than 4 numbers",
 			fields: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 0, Y: 1}: false,
 					{X: 1, Y: 0}: false,
 					{X: 1, Y: 1}: false,
 					{X: 3, Y: 3}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 0,
 					{X: 0, Y: 1}: 0,
 					{X: 1, Y: 0}: 0,
@@ -279,14 +279,14 @@ func TestLights_followInstructions(t *testing.T) {
 				"turn off 0,1 through 0,1",
 			},
 			want: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 0, Y: 1}: false,
 					{X: 1, Y: 0}: true,
 					{X: 1, Y: 1}: false,
 					{X: 3, Y: 3}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 0, Y: 1}: 3,
 					{X: 1, Y: 0}: 1,
@@ -299,14 +299,14 @@ func TestLights_followInstructions(t *testing.T) {
 		{
 			name: "returns an error if a row of instructions has more than 4 numbers",
 			fields: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 0, Y: 1}: false,
 					{X: 1, Y: 0}: false,
 					{X: 1, Y: 1}: false,
 					{X: 3, Y: 3}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 0,
 					{X: 0, Y: 1}: 0,
 					{X: 1, Y: 0}: 0,
@@ -321,14 +321,14 @@ func TestLights_followInstructions(t *testing.T) {
 				"turn off 0,1 through 0,1",
 			},
 			want: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 0, Y: 1}: true,
 					{X: 1, Y: 0}: true,
 					{X: 1, Y: 1}: true,
 					{X: 3, Y: 3}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 0, Y: 1}: 1,
 					{X: 1, Y: 0}: 1,
@@ -341,14 +341,14 @@ func TestLights_followInstructions(t *testing.T) {
 		{
 			name: "returns an error if an instruction doesn't contain 'on', 'off' or 'toggle' keywords",
 			fields: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 0, Y: 1}: false,
 					{X: 1, Y: 0}: false,
 					{X: 1, Y: 1}: false,
 					{X: 3, Y: 3}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 0,
 					{X: 0, Y: 1}: 0,
 					{X: 1, Y: 0}: 0,
@@ -363,14 +363,14 @@ func TestLights_followInstructions(t *testing.T) {
 				"do something to 0,1 through 0,1",
 			},
 			want: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 0, Y: 1}: false,
 					{X: 1, Y: 0}: true,
 					{X: 1, Y: 1}: false,
 					{X: 3, Y: 3}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 0, Y: 1}: 3,
 					{X: 1, Y: 0}: 1,
@@ -383,14 +383,14 @@ func TestLights_followInstructions(t *testing.T) {
 		{
 			name: "follows a valid list of instructions",
 			fields: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: false,
 					{X: 0, Y: 1}: false,
 					{X: 1, Y: 0}: false,
 					{X: 1, Y: 1}: false,
 					{X: 3, Y: 3}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 0,
 					{X: 0, Y: 1}: 0,
 					{X: 1, Y: 0}: 0,
@@ -405,14 +405,14 @@ func TestLights_followInstructions(t *testing.T) {
 				"turn off 0,1 through 0,1",
 			},
 			want: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 0, Y: 1}: false,
 					{X: 1, Y: 0}: true,
 					{X: 1, Y: 1}: false,
 					{X: 3, Y: 3}: false,
 				},
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 0, Y: 1}: 2,
 					{X: 1, Y: 0}: 1,
@@ -447,8 +447,8 @@ func TestLights_followInstructions(t *testing.T) {
 
 func TestLights_countAnalogueBrightness(t *testing.T) {
 	type fields struct {
-		Analogue map[helpers.Co]bool
-		Digital  map[helpers.Co]int
+		Analogue map[graph.Co]bool
+		Digital  map[graph.Co]int
 	}
 	tests := []struct {
 		name   string
@@ -458,7 +458,7 @@ func TestLights_countAnalogueBrightness(t *testing.T) {
 		{
 			name: "returns number of analogue lights that are on (count of true)",
 			fields: fields{
-				Analogue: map[helpers.Co]bool{
+				Analogue: map[graph.Co]bool{
 					{X: 0, Y: 0}: true,
 					{X: 0, Y: 1}: false,
 					{X: 1, Y: 0}: true,
@@ -484,8 +484,8 @@ func TestLights_countAnalogueBrightness(t *testing.T) {
 
 func TestLights_countDigitalBrightness(t *testing.T) {
 	type fields struct {
-		Analogue map[helpers.Co]bool
-		Digital  map[helpers.Co]int
+		Analogue map[graph.Co]bool
+		Digital  map[graph.Co]int
 	}
 	tests := []struct {
 		name   string
@@ -495,7 +495,7 @@ func TestLights_countDigitalBrightness(t *testing.T) {
 		{
 			name: "returns brightness of digital lights that are on (count of values)",
 			fields: fields{
-				Digital: map[helpers.Co]int{
+				Digital: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 0, Y: 1}: 2,
 					{X: 1, Y: 0}: 1,

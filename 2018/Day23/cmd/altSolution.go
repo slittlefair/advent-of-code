@@ -5,7 +5,7 @@ import (
 )
 
 func main() {
-	// input := helpers.ReadFile()
+	// input := file.Read()
 
 	// nanobots := day23.NewBots(input)
 

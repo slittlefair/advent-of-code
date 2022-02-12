@@ -1,25 +1,27 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
+	"Advent-of-Code/graph"
+	"Advent-of-Code/slice"
 	"fmt"
 	"regexp"
 )
 
 type Lights struct {
-	Analogue map[helpers.Co]bool
-	Digital  map[helpers.Co]int
+	Analogue map[graph.Co]bool
+	Digital  map[graph.Co]int
 }
 
 func populateLights() *Lights {
 	lights := Lights{
-		Analogue: make(map[helpers.Co]bool),
-		Digital:  make(map[helpers.Co]int),
+		Analogue: make(map[graph.Co]bool),
+		Digital:  make(map[graph.Co]int),
 	}
 	for x := 0; x < 1000; x++ {
 		for y := 0; y < 1000; y++ {
-			lights.Analogue[helpers.Co{X: x, Y: y}] = false
-			lights.Digital[helpers.Co{X: x, Y: y}] = 0
+			lights.Analogue[graph.Co{X: x, Y: y}] = false
+			lights.Digital[graph.Co{X: x, Y: y}] = 0
 		}
 	}
 	return &lights
@@ -28,7 +30,7 @@ func populateLights() *Lights {
 func (l Lights) turnLightsOn(nums []int) {
 	for x := nums[0]; x <= nums[2]; x++ {
 		for y := nums[1]; y <= nums[3]; y++ {
-			co := helpers.Co{X: x, Y: y}
+			co := graph.Co{X: x, Y: y}
 			l.Analogue[co] = true
 			l.Digital[co]++
 		}
@@ -38,7 +40,7 @@ func (l Lights) turnLightsOn(nums []int) {
 func (l Lights) turnLightsOff(nums []int) {
 	for x := nums[0]; x <= nums[2]; x++ {
 		for y := nums[1]; y <= nums[3]; y++ {
-			co := helpers.Co{X: x, Y: y}
+			co := graph.Co{X: x, Y: y}
 			l.Analogue[co] = false
 			if l.Digital[co] > 0 {
 				l.Digital[co]--
@@ -50,7 +52,7 @@ func (l Lights) turnLightsOff(nums []int) {
 func (l Lights) toggleLights(nums []int) {
 	for x := nums[0]; x <= nums[2]; x++ {
 		for y := nums[1]; y <= nums[3]; y++ {
-			co := helpers.Co{X: x, Y: y}
+			co := graph.Co{X: x, Y: y}
 			l.Analogue[co] = !l.Analogue[co]
 			l.Digital[co] += 2
 		}
@@ -67,7 +69,9 @@ func (l *Lights) followInstructions(input []string) error {
 		if len(nums) != 4 {
 			return fmt.Errorf("something went wrong, got nums %v", nums)
 		}
-		intNums := helpers.StringSliceToIntSlice(nums)
+		// Due to regex match we know the slice of strings can be converted to ints, so the error
+		// can be safely ignored
+		intNums, _ := slice.StringSliceToIntSlice(nums)
 		if reOn.MatchString(inst) {
 			l.turnLightsOn(intNums)
 			continue
@@ -104,9 +108,13 @@ func (l *Lights) countDigitalBrightness() int {
 }
 
 func main() {
-	input := helpers.ReadFile()
+	input := file.Read()
 	lights := populateLights()
-	lights.followInstructions(input)
+	err := lights.followInstructions(input)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("Part 1:", lights.countAnalogueBrightness())
 	fmt.Println("Part 2:", lights.countDigitalBrightness())
 }

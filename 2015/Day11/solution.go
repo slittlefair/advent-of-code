@@ -1,7 +1,7 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"strings"
 )
@@ -103,7 +103,7 @@ func makePassword(passString string) *Password {
 }
 
 func main() {
-	input := helpers.ReadFile()[0]
+	input := file.Read()[0]
 	password := makePassword(input)
 	password.GetNextValidPassword()
 	fmt.Println("Part 1:", password.ConvertToString())

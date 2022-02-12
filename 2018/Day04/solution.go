@@ -1,7 +1,7 @@
 package main
 
 import (
-	"Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
 	"sort"
@@ -11,13 +11,13 @@ import (
 var guards = make(map[string][60]int)
 
 func main() {
-	lines := helpers.ReadFile()
+	lines := file.Read()
 	sort.Sort(sort.Reverse(sort.StringSlice(lines)))
 
-	reGuard := regexp.MustCompile("Guard \\#(\\d+)")
+	reGuard := regexp.MustCompile(`Guard \#(\d+)`)
 	reAsleep := regexp.MustCompile("asleep")
 	reWakes := regexp.MustCompile("wakes")
-	reMinute := regexp.MustCompile(":[\\d]+")
+	reMinute := regexp.MustCompile(`:[\d]+`)
 
 	var asleepMin, awakeMin int
 	var sleepMins [60]int
@@ -25,12 +25,18 @@ func main() {
 		if ok := reWakes.MatchString(entry); ok {
 			minute := reMinute.FindString(entry)[1:]
 			m, err := strconv.Atoi(minute)
-			helpers.Check(err)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 			awakeMin = m
 		} else if ok := reAsleep.MatchString(entry); ok {
 			minute := reMinute.FindString(entry)[1:]
 			m, err := strconv.Atoi(minute)
-			helpers.Check(err)
+			if err != nil {
+				fmt.Println(err)
+				return
+			}
 			asleepMin = m
 			for i := asleepMin; i < awakeMin; i++ {
 				sleepMins[i]++
@@ -45,7 +51,6 @@ func main() {
 			} else {
 				guards[id] = sleepMins
 			}
-			asleepMin, awakeMin = 0, 0
 			sleepMins = [60]int{}
 		}
 	}
@@ -69,7 +74,10 @@ func main() {
 		}
 	}
 	guardID, err := strconv.Atoi(heaviestSleeper)
-	helpers.Check(err)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("Part 1:", guardID*modalMinute)
 
 	// Part 2
@@ -85,6 +93,9 @@ func main() {
 		}
 	}
 	guardID, err = strconv.Atoi(commonestSleeper)
-	helpers.Check(err)
+	if err != nil {
+		fmt.Println(err)
+		return
+	}
 	fmt.Println("Part 2:", guardID*commonestMinute)
 }
