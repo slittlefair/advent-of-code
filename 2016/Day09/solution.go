@@ -1,52 +1,42 @@
 package main
 
 import (
-	helpers "Advent-of-Code"
+	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
+	"strconv"
 )
 
-func handleMarker(s string, startingIndex int, re *regexp.Regexp) (string, int) {
-	values := re.FindAllString(s, 2)
-	fmt.Println("handleMarker", s)
-	numValues := helpers.StringSliceToIntSlice(values)
-	var endIndex int
+func decompress(s string, part1 bool) int {
+	re := regexp.MustCompile(`\d+`)
+	length := 0
 	for i := 0; i < len(s); i++ {
-		if string(s[i]) == ")" {
-			endIndex = i + 1
-			break
-		}
-	}
-	repeatedString := s[endIndex : endIndex+numValues[0]]
-	newString := ""
-	fmt.Println(repeatedString, numValues)
-	for i := 0; i < numValues[1]; i++ {
-		newString += repeatedString
-		fmt.Println(newString)
-	}
-	return newString, startingIndex + endIndex + numValues[0]
-}
-
-func decompress(s string, re *regexp.Regexp) string {
-	newString := ""
-	for i := 0; i < len(s); i++ {
-		char := s[i]
-		if string(char) == "(" {
-			postMarker, j := handleMarker(s[i:], i, re)
-			i = j
-			newString += postMarker
+		if string(s[i]) == "(" {
+			nums := re.FindAllString(s[i:], 2)
+			n0, _ := strconv.Atoi(nums[0])
+			n1, _ := strconv.Atoi(nums[1])
+			for {
+				if string(s[i]) == ")" {
+					i++
+					break
+				}
+				i++
+			}
+			if part1 {
+				length += (n0 * n1)
+			} else {
+				length += decompress(s[i:i+n0], false) * n1
+			}
+			i += n0 - 1
 		} else {
-			newString += string(char)
+			length++
 		}
 	}
-	return newString
+	return length
 }
 
 func main() {
-	input := helpers.ReadFile()
-	re := regexp.MustCompile(`\d+`)
-	for _, i := range input {
-		newString := decompress(i, re)
-		fmt.Println(i, newString, len(newString))
-	}
+	input := file.Read()[0]
+	fmt.Println("Part 1:", decompress(input, true))
+	fmt.Println("Part 2:", decompress(input, false))
 }
