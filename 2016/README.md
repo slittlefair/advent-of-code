@@ -8,3 +8,4 @@
 - [x] Day 6 - Signals and Noise :children_crossing: :loudspeaker:
 - [x] Day 7 - Internet Protocol Version 7 :computer: :seven:
 - [x] Day 8 - Two-Factor Authentication :1234: :asterisk:
+- [x] Day 9 - Explosives in Cyberspace :bomb: :milky_way:
