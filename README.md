@@ -1,6 +1,6 @@
 # advent-of-code
 
-:christmas_tree: A collection of attempts at the Advent of Code programming puzzles :christmas_tree:
+🎄 Solutions to the Advent of Code programming puzzles in Go ⭐
 
 TODO:
 
