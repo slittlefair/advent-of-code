@@ -9,3 +9,4 @@
 - [x] Day 7 - Internet Protocol Version 7 :computer: :seven:
 - [x] Day 8 - Two-Factor Authentication :1234: :asterisk:
 - [x] Day 9 - Explosives in Cyberspace :bomb: :milky_way:
+- [x] Day 10 - Balance Bots :balance_scale: :robot:

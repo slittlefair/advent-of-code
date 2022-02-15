@@ -90,12 +90,14 @@ func findSolution(input []string, expectedChips []int) (string, int, error) {
 	bots := bots{}
 	i := 0
 	var part1 string
+	// Keep running until we have run all of the instructions
 	for {
 		for _, bot := range bots {
 			if slice.IntSlicesAreEqual(bot.vals, expectedChips) {
 				part1 = strings.Split(bot.id, " ")[1]
 			}
 		}
+		// If all instructions are run then there must be values in outputs 0, 1 and 2
 		if len(input) == 0 {
 			return part1, bots.getPart2Solution(), nil
 		}
@@ -105,6 +107,7 @@ func findSolution(input []string, expectedChips []int) (string, int, error) {
 			if err != nil {
 				return "", -1, err
 			}
+			// Once the value has been allocated we remove this instruction and start again
 			input = append(input[:i], input[i+1:]...)
 			i = 0
 		} else {
@@ -113,6 +116,8 @@ func findSolution(input []string, expectedChips []int) (string, int, error) {
 				return "", -1, err
 			}
 			if didGiveValues {
+				// Once the value has been allocated we remove this instruction and start again,
+				// otherwise we move onto the next instruction
 				input = append(input[:i], input[i+1:]...)
 				i = 0
 			} else {
