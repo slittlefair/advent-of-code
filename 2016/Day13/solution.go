@@ -37,7 +37,6 @@ func populateOffice(target graph.Co, num int) *djk.Graph {
 			if isSpace(co, num) {
 				office.Grid[co] = 1
 			}
-
 		}
 	}
 	for co, risk := range office.Grid {
@@ -59,7 +58,6 @@ func findSolutions(input []string) (int, int, error) {
 	origin := graph.Co{X: 1, Y: 1}
 	path1, err := office.GetPath(origin, target)
 	if err != nil {
-		fmt.Println(err)
 		return -1, -1, err
 	}
 	distinctCos := map[graph.Co]struct{}{}
