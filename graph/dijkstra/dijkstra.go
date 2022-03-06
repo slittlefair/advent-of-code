@@ -38,10 +38,18 @@ func (pq *PriorityQueue) Pop() interface{} {
 }
 
 // PrintGrid is used for debugging
-func (g Graph) PrintGrid() {
+func (g Graph) PrintGrid(riskMode bool) {
 	for y := 0; y <= g.MaxY; y++ {
 		for x := 0; x <= g.MaxX; x++ {
-			fmt.Print(g.Grid[graph.Co{X: x, Y: y}])
+			if riskMode {
+				fmt.Print(g.Grid[graph.Co{X: x, Y: y}])
+			} else {
+				if _, ok := g.Grid[graph.Co{X: x, Y: y}]; ok {
+					fmt.Printf(".")
+				} else {
+					fmt.Printf("#")
+				}
+			}
 		}
 		fmt.Println()
 	}
