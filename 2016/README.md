@@ -10,3 +10,4 @@
 - [x] Day 8 - Two-Factor Authentication :1234: :asterisk:
 - [x] Day 9 - Explosives in Cyberspace :bomb: :milky_way:
 - [x] Day 12 - Leonardo's Monorail :man_artist: :monorail:
+- [x] Day 13 - A Maze of Twisty Little Cubicles :twisted_rightwards_arrows: :office:
