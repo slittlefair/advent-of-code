@@ -12,3 +12,4 @@
 - [x] Day 10 - Balance Bots :balance_scale: :robot:
 - [x] Day 12 - Leonardo's Monorail :man_artist: :monorail:
 - [x] Day 13 - A Maze of Twisty Little Cubicles :twisted_rightwards_arrows: :office:
+- [x] Day 14 - One-Time Pad :clock1: :spiral_notepad:
