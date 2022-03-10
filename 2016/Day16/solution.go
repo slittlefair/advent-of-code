@@ -16,7 +16,7 @@ func generateDataStep(input string) (string, error) {
 		case '1':
 			reverse = append(reverse, '0')
 		default:
-			return "", fmt.Errorf("invalid character: %b", char)
+			return "", fmt.Errorf("invalid character: %s", string(char))
 		}
 	}
 	return new + string(reverse), nil
