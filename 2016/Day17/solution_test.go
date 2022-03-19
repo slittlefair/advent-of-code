@@ -59,16 +59,6 @@ func Test_setupSolution(t *testing.T) {
 }
 
 func Test_solution_reachedEnd(t *testing.T) {
-	type fields struct {
-		input              string
-		currentRoom        graph.Co
-		currentPath        string
-		shortestPathLength int
-		shortestPath       string
-		directions         directions
-		floors             floors
-		longestPath        string
-	}
 	tests := []struct {
 		name  string
 		s     *solution
