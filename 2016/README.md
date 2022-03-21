@@ -17,3 +17,4 @@
 - [x] Day 16 - Dragon Checksum :dragon: :white_check_mark:
 - [x] Day 17 - Two Steps Forward :footprints: :fast_forward:
 - [x] Day 18 - Like a Rogue :coat: :dagger:
+- [x] Day 20 - Firewall Rules :fire: :bricks:
