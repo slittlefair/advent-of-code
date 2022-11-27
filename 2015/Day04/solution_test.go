@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_hashIsValidPart1(t *testing.T) {
@@ -38,9 +40,8 @@ func Test_hashIsValidPart1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := hashIsValidPart1(tt.hash); got != tt.want {
-				t.Errorf("hashIsValid() = %v, want %v", got, tt.want)
-			}
+			got := hashIsValidPart1(tt.hash)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -69,9 +70,8 @@ func Test_hashIsValidPart2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := hashIsValidPart2(tt.hash); got != tt.want {
-				t.Errorf("hashIsValidPart2() = %v, want %v", got, tt.want)
-			}
+			got := hashIsValidPart2(tt.hash)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -110,9 +110,8 @@ func Test_findValidHash(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := findValidHash(tt.input, tt.part1); got != tt.want {
-				t.Errorf("findValidHash() = %v, want %v", got, tt.want)
-			}
+			got := findValidHash(tt.input, tt.part1)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

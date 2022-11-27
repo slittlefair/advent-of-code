@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestReindeer_move(t *testing.T) {
@@ -50,9 +51,7 @@ func TestReindeer_move(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := tt.r
 			r.move()
-			if !reflect.DeepEqual(r, tt.want) {
-				t.Errorf("Reindeer.move() = %v, want %v", r, tt.want)
-			}
+			assert.Equal(t, tt.want, r)
 		})
 	}
 }
@@ -94,9 +93,7 @@ func TestReindeer_rest(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			r := tt.r
 			r.rest()
-			if !reflect.DeepEqual(r, tt.want) {
-				t.Errorf("Reindeer.rest() = %v, want %v", r, tt.want)
-			}
+			assert.Equal(t, tt.want, r)
 		})
 	}
 }
@@ -186,92 +183,58 @@ func TestRacers_givePoints(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			rc := tt.rc
 			rc.givePoints()
-			if !reflect.DeepEqual(rc, tt.want) {
-				t.Errorf("Racers.givePoints() = %v, want %v", rc, tt.want)
-			}
+			assert.Equal(t, tt.want, rc)
 		})
 	}
 }
 
 func TestRacers_runRace(t *testing.T) {
-	tests := []struct {
-		name  string
-		rc    Racers
-		arg   int
-		want  int
-		want1 int
-	}{
-		{
-			name: "returns winning distance and points, advent of code example",
-			rc: Racers{
-				"Comet": {
-					Name:     "Comet",
-					Speed:    14,
-					Duration: 10,
-					Rest:     127,
-					IsFlying: true,
-				},
-				"Dancer": {
-					Name:     "Dancer",
-					Speed:    16,
-					Duration: 11,
-					Rest:     162,
-					IsFlying: true,
-				},
+	t.Run("returns winning distance and points, advent of code example", func(t *testing.T) {
+		rc := Racers{
+			"Comet": {
+				Name:     "Comet",
+				Speed:    14,
+				Duration: 10,
+				Rest:     127,
+				IsFlying: true,
 			},
-			arg:   1000,
-			want:  1120,
-			want1: 689,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := tt.rc.runRace(tt.arg)
-			if got != tt.want {
-				t.Errorf("Racers.runRace() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Racers.runRace() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+			"Dancer": {
+				Name:     "Dancer",
+				Speed:    16,
+				Duration: 11,
+				Rest:     162,
+				IsFlying: true,
+			},
+		}
+		got, got1 := rc.runRace(1000)
+		assert.Equal(t, 1120, got)
+		assert.Equal(t, 689, got1)
+	})
 }
 
 func Test_parseInput(t *testing.T) {
-	tests := []struct {
-		name string
-		arg  []string
-		want Racers
-	}{
-		{
-			name: "corretcly parses input to create reindeer and racers, advent of code example",
-			arg: []string{
-				"Comet can fly 14 km/s for 10 seconds, but then must rest for 127 seconds.",
-				"Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.",
+	t.Run("corretcly parses input to create reindeer and racers, advent of code example", func(t *testing.T) {
+		arg := []string{
+			"Comet can fly 14 km/s for 10 seconds, but then must rest for 127 seconds.",
+			"Dancer can fly 16 km/s for 11 seconds, but then must rest for 162 seconds.",
+		}
+		want := Racers{
+			"Comet": {
+				Name:     "Comet",
+				Speed:    14,
+				Duration: 10,
+				Rest:     127,
+				IsFlying: true,
 			},
-			want: Racers{
-				"Comet": {
-					Name:     "Comet",
-					Speed:    14,
-					Duration: 10,
-					Rest:     127,
-					IsFlying: true,
-				},
-				"Dancer": {
-					Name:     "Dancer",
-					Speed:    16,
-					Duration: 11,
-					Rest:     162,
-					IsFlying: true,
-				},
+			"Dancer": {
+				Name:     "Dancer",
+				Speed:    16,
+				Duration: 11,
+				Rest:     162,
+				IsFlying: true,
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := parseInput(tt.arg); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		}
+		got := parseInput(arg)
+		assert.Equal(t, want, got)
+	})
 }

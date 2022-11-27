@@ -1,20 +1,24 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func Test_runFights(t *testing.T) {
 	tests := []struct {
-		name    string
-		arg     []string
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		arg                []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if there is an error parsing the Boss",
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			name:               "returns an error if there is an error parsing the Boss",
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		// don't have a good example, so just use the real advent of code questions since we know
 		// we got the correct solution. It's too much to compare everything, so just make sure the
@@ -26,24 +30,18 @@ func Test_runFights(t *testing.T) {
 				"Damage: 8",
 				"Armor: 2",
 			},
-			want:    111,
-			want1:   188,
-			wantErr: false,
+			want:               111,
+			want1:              188,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := runFights(tt.arg)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("runFights() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("runFights() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("runFights() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
+
 }
