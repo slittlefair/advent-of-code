@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_lookAndSay(t *testing.T) {
@@ -39,9 +40,8 @@ func Test_lookAndSay(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := lookAndSay(tt.arg); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("lookAndSay() = %v, want %v", got, tt.want)
-			}
+			got := lookAndSay(tt.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

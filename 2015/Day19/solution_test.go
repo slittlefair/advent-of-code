@@ -1,42 +1,31 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
-	tests := []struct {
-		name string
-		arg  []string
-		want *Medicine
-	}{
-		{
-			name: "correctly parses input, advent of code example",
-			arg: []string{
-				"H => HO",
-				"H => OH",
-				"O => HH",
-				"",
-				"HOH",
+	t.Run("correctly parses input, advent of code example", func(t *testing.T) {
+		arg := []string{
+			"H => HO",
+			"H => OH",
+			"O => HH",
+			"",
+			"HOH",
+		}
+		want := &Medicine{
+			Replacements: Replacements{
+				"H": {"HO", "OH"},
+				"O": {"HH"},
 			},
-			want: &Medicine{
-				Replacements: Replacements{
-					"H": {"HO", "OH"},
-					"O": {"HH"},
-				},
-				Molecule:             "HOH",
-				DistinctNewMolecules: make(map[string]bool),
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := parseInput(tt.arg); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+			Molecule:             "HOH",
+			DistinctNewMolecules: make(map[string]bool),
+		}
+		got := parseInput(arg)
+		assert.Equal(t, want, got)
+	})
 }
 
 func TestMedicine_FindIndicesOfStringInMolecule(t *testing.T) {
@@ -84,9 +73,8 @@ func TestMedicine_FindIndicesOfStringInMolecule(t *testing.T) {
 				Molecule:             tt.fields.Molecule,
 				DistinctNewMolecules: tt.fields.DistinctNewMolecules,
 			}
-			if got := m.FindIndicesOfStringInMolecule(tt.arg); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Medicine.FindIndicesOfStringInMolecule() = %v, want %v", got, tt.want)
-			}
+			got := m.FindIndicesOfStringInMolecule(tt.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -192,9 +180,7 @@ func TestMedicine_ReplaceAndFindNewMolecules(t *testing.T) {
 				DistinctNewMolecules: tt.fields.DistinctNewMolecules,
 			}
 			m.ReplaceAndFindNewMolecules()
-			if !reflect.DeepEqual(m, tt.want) {
-				t.Errorf("Medicine.FindIndicesOfStringInMolecule() = %v, want %v", m, tt.want)
-			}
+			assert.Equal(t, tt.want, m)
 		})
 	}
 }
@@ -228,9 +214,8 @@ func Test_countUpper(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := countUpper(tt.arg); got != tt.want {
-				t.Errorf("countUpper() = %v, want %v", got, tt.want)
-			}
+			got := countUpper(tt.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -268,9 +253,8 @@ func TestMedicine_GetNumberOfSubs(t *testing.T) {
 				Molecule:             tt.fields.Molecule,
 				DistinctNewMolecules: tt.fields.DistinctNewMolecules,
 			}
-			if got := m.GetNumberOfSubs(); got != tt.want {
-				t.Errorf("Medicine.GetNumberOfSubs() = %v, want %v", got, tt.want)
-			}
+			got := m.GetNumberOfSubs()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

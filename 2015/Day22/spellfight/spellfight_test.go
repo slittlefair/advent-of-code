@@ -3,8 +3,9 @@ package spellfight
 import (
 	"Advent-of-Code/2015/Day21/martial"
 	"Advent-of-Code/2015/Day22/mage"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMartialAttack(t *testing.T) {
@@ -58,12 +59,8 @@ func TestMartialAttack(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			MartialAttack(tt.args.boss, tt.args.player)
-			if !reflect.DeepEqual(tt.args.boss, tt.want) {
-				t.Errorf("MartialAttack() = %v, want %v", tt.args.boss, tt.want)
-			}
-			if !reflect.DeepEqual(tt.args.player, tt.want1) {
-				t.Errorf("MartialAttack() = %v, want %v", tt.args.player, tt.want1)
-			}
+			assert.Equal(t, tt.want, tt.args.boss)
+			assert.Equal(t, tt.want1, tt.args.player)
 		})
 	}
 }
@@ -248,33 +245,12 @@ func TestSpellAttack(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SpellAttack(tt.args.player, tt.args.boss, tt.args.spell, tt.args.effects); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("SpellAttack() = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(tt.args.player, tt.want1) {
-				t.Errorf("SpellAttack().player = %+v, want %+v", tt.args.player, tt.want1)
-			}
-			if !reflect.DeepEqual(tt.args.boss, tt.want2) {
-				t.Errorf("SpellAttack().boss = %v, want %v", tt.args.boss, tt.want2)
-			}
+			got := SpellAttack(tt.args.player, tt.args.boss, tt.args.spell, tt.args.effects)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, tt.args.player)
+			assert.Equal(t, tt.want2, tt.args.boss)
 		})
 	}
-}
-
-func compareEffects(want, got mage.Effect) bool {
-	if want.Active != got.Active {
-		return false
-	}
-	if want.Duration != got.Duration {
-		return false
-	}
-	if want.DurationRemaining != got.DurationRemaining {
-		return false
-	}
-	if reflect.ValueOf(want.Effect).Pointer() != reflect.ValueOf(got.Effect).Pointer() {
-		return false
-	}
-	return true
 }
 
 func TestApplyEffects(t *testing.T) {
@@ -514,16 +490,12 @@ func TestApplyEffects(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := ApplyEffects(tt.args.player, tt.args.boss, tt.args.effects)
 			for k, e := range got {
-				if !compareEffects(tt.want[k], e) {
-					t.Errorf("ApplyEffects() = %v, want %v", e, tt.want[k])
-				}
+				assert.Equal(t, tt.want[k].Active, e.Active)
+				assert.Equal(t, tt.want[k].Duration, e.Duration)
+				assert.Equal(t, tt.want[k].DurationRemaining, e.DurationRemaining)
 			}
-			if !reflect.DeepEqual(tt.args.player, tt.want1) {
-				t.Errorf("ApplyEffects() player = %v, want %v", tt.args.player, tt.want1)
-			}
-			if !reflect.DeepEqual(tt.args.boss, tt.want2) {
-				t.Errorf("ApplyEffects() boss = %v, want %v", tt.args.boss, tt.want2)
-			}
+			assert.Equal(t, tt.want1, tt.args.player)
+			assert.Equal(t, tt.want2, tt.args.boss)
 		})
 	}
 }
@@ -560,9 +532,7 @@ func TestManaSpent_CompareMana(t *testing.T) {
 				LowestManaSpent: tt.LowestManaSpent,
 			}
 			ms.CompareMana(tt.currentMana)
-			if ms.LowestManaSpent != tt.want {
-				t.Errorf("ManaSpent.CompareMana().LowestManaSpent = %d, want %d", ms.LowestManaSpent, tt.want)
-			}
+			assert.Equal(t, tt.want, ms.LowestManaSpent)
 		})
 	}
 }
@@ -695,9 +665,7 @@ func TestManaSpent_SpellRound(t *testing.T) {
 				LowestManaSpent: tt.LowestManaSpent,
 			}
 			ms.SpellRound(tt.args.player, tt.args.boss, tt.args.spell, tt.args.effects, tt.args.hardMode)
-			if ms.LowestManaSpent != tt.want {
-				t.Errorf("ManaSpent.SpellRound() = %d, want %d", ms.LowestManaSpent, tt.want)
-			}
+			assert.Equal(t, tt.want, ms.LowestManaSpent)
 		})
 	}
 }
@@ -736,9 +704,8 @@ func TestSpellFight(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := SpellFight(tt.args.boss, tt.args.bossHP, tt.args.hardMode); got != tt.want {
-				t.Errorf("SpellFight() = %v, want %v", got, tt.want)
-			}
+			got := SpellFight(tt.args.boss, tt.args.bossHP, tt.args.hardMode)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -747,17 +714,17 @@ func TestRunSpellFights(t *testing.T) {
 	// we don't really have any useful examples to copmpare, so just use the actual puzzle inputs
 	// since we already know it works.
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if boss cannot be parsed",
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			name:               "returns an error if boss cannot be parsed",
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns expected lowest mana for both difficulty modes for a given boss input",
@@ -765,24 +732,17 @@ func TestRunSpellFights(t *testing.T) {
 				"Hit Points: 71",
 				"Damage: 10",
 			},
-			want:    1824,
-			want1:   1937,
-			wantErr: false,
+			want:               1824,
+			want1:              1937,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := RunSpellFights(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("RunSpellFights() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("RunSpellFights() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("RunSpellFights() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

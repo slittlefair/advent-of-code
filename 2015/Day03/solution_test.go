@@ -2,31 +2,21 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_createVisitedHouses(t *testing.T) {
-	tests := []struct {
-		name string
-		want *VisitedHouses
-	}{
-		{
-			name: "creates a basic VisitedHouse object",
-			want: &VisitedHouses{
-				Map: map[graph.Co]bool{
-					{X: 0, Y: 0}: true,
-				},
+	t.Run("creates a basic VisitedHouse object", func(t *testing.T) {
+		got := createVisitedHouses()
+		expected := &VisitedHouses{
+			Map: map[graph.Co]bool{
+				{X: 0, Y: 0}: true,
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := createVisitedHouses(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("createVisitedHouses() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		}
+		assert.Equal(t, got, expected)
+	})
 }
 
 func TestVisitedHouses_moveSanta(t *testing.T) {
@@ -67,9 +57,7 @@ func TestVisitedHouses_moveSanta(t *testing.T) {
 				Santa: tt.Santa,
 			}
 			vh.moveSanta(tt.dir)
-			if !reflect.DeepEqual(vh.Santa, tt.want) {
-				t.Errorf("VisitedHouses.moveSanta() = %v, want %v", vh.Santa, tt.want)
-			}
+			assert.Equal(t, tt.want, vh.Santa)
 		})
 	}
 }
@@ -112,9 +100,7 @@ func TestVisitedHouses_moveRoboSanta(t *testing.T) {
 				RoboSanta: tt.RoboSanta,
 			}
 			vh.moveRoboSanta(tt.dir)
-			if !reflect.DeepEqual(vh.RoboSanta, tt.want) {
-				t.Errorf("VisitedHouses.moveRoboSanta() = %v, want %v", vh.RoboSanta, tt.want)
-			}
+			assert.Equal(t, tt.want, vh.RoboSanta)
 		})
 	}
 }
@@ -154,9 +140,8 @@ func TestVisitedHouses_alreadyVisitedHouse(t *testing.T) {
 			vh := &VisitedHouses{
 				Map: tt.Map,
 			}
-			if got := vh.alreadyVisitedHouse(tt.santa); got != tt.want {
-				t.Errorf("VisitedHouses.alreadyVisitedHouse() = %v, want %v", got, tt.want)
-			}
+			got := vh.alreadyVisitedHouse(tt.santa)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -212,9 +197,8 @@ func TestVisitedHouses_countUniqueHousesVisited(t *testing.T) {
 					{X: 0, Y: 0}: true,
 				},
 			}
-			if got := vh.countUniqueHousesVisited(tt.input, tt.part1); got != tt.want {
-				t.Errorf("VisitedHouses.countUniqueHousesVisited() = %v, want %v", got, tt.want)
-			}
+			got := vh.countUniqueHousesVisited(tt.input, tt.part1)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

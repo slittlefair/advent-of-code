@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_readInputForPart1(t *testing.T) {
@@ -59,9 +61,8 @@ func Test_readInputForPart1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := readInputForPart1(tt.input); got != tt.want {
-				t.Errorf("readInputForPart1() = %v, want %v", got, tt.want)
-			}
+			got := readInputForPart1(tt.input)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -121,9 +122,8 @@ func Test_readInputForPart2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := readInputForPart2(tt.input); got != tt.want {
-				t.Errorf("readInputForPart2() = %v, want %v", got, tt.want)
-			}
+			got := readInputForPart2(tt.input)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

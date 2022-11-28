@@ -1,8 +1,9 @@
 package martial
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestParseBoss(t *testing.T) {
@@ -11,10 +12,10 @@ func TestParseBoss(t *testing.T) {
 		hasArmour bool
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    *Martial
-		wantErr bool
+		name               string
+		args               args
+		want               *Martial
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if function expects an armour line but only has 2 lines",
@@ -25,8 +26,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if function expects an armour line but has 4 lines",
@@ -39,8 +40,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if function doesn't expect an armour line but has 1 line",
@@ -50,8 +51,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: false,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if function doesn't expect an armour line but has 3 lines",
@@ -63,8 +64,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: false,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: `returns an error if the Hit Points line in input doesn't have substring "Hit Points: "`,
@@ -75,8 +76,8 @@ func TestParseBoss(t *testing.T) {
 					"Armor: 8",
 				},
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: `returns an error if the Damage line in input doesn't have substring "Damage: "`,
@@ -88,8 +89,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: `returns an error if the Armour line in input doesn't have substring "Armor: "`,
@@ -101,8 +102,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if the Hit Points line doesn't split correctly",
@@ -114,8 +115,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if the Damage line doesn't split correctly",
@@ -127,8 +128,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if the Armour line doesn't split correctly",
@@ -140,8 +141,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if the Hit Points line doesn't yield a numeric value",
@@ -153,8 +154,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if the Damage line doesn't yield a numeric value",
@@ -166,8 +167,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if the Armour line doesn't yield a numeric value",
@@ -179,8 +180,8 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns a constructed Boss from valid input when expecting Armour",
@@ -195,7 +196,7 @@ func TestParseBoss(t *testing.T) {
 			want: &Martial{
 				HP: 3, Damage: 9, Armour: 8,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns a constructed Boss from valid input when not expecting Armour",
@@ -209,19 +210,14 @@ func TestParseBoss(t *testing.T) {
 			want: &Martial{
 				HP: 10, Damage: 1001,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := ParseBoss(tt.args.input, tt.args.hasArmour)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ParseBoss() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("ParseBoss() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

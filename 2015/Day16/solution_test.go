@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_findExactMatch(t *testing.T) {
@@ -10,10 +12,10 @@ func Test_findExactMatch(t *testing.T) {
 		ticker map[string]int
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    string
-		wantErr bool
+		name               string
+		args               args
+		want               string
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if a line has mismatched number of words and numbers",
@@ -23,8 +25,8 @@ func Test_findExactMatch(t *testing.T) {
 					"Sue 2: akitas: 10, perfumes: 10, children: about 5",
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if no matches are found",
@@ -34,8 +36,8 @@ func Test_findExactMatch(t *testing.T) {
 					"Sue 2: akitas: 10, perfumes: 10, children: 5",
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns a matching sue",
@@ -52,20 +54,15 @@ func Test_findExactMatch(t *testing.T) {
 					"cars":     9,
 				},
 			},
-			want:    "2",
-			wantErr: false,
+			want:               "2",
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := findExactMatch(tt.args.input, tt.args.ticker)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findExactMatch() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findExactMatch() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -76,10 +73,10 @@ func Test_findRangedMatch(t *testing.T) {
 		ticker map[string]int
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    string
-		wantErr bool
+		name               string
+		args               args
+		want               string
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if a line has mismatched number of words and numbers",
@@ -89,8 +86,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"Sue 2: akitas: 10, perfumes: 10, children: about 5",
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if no matches are found",
@@ -100,8 +97,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"Sue 2: akitas: 10, perfumes: 10, children: 5",
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "doesn't match on cats if sue value is equal to ticker value",
@@ -118,8 +115,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":  7,
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "doesn't match on cats if sue value is less than ticker value",
@@ -136,8 +133,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":  7,
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "does match on cats if sue value is greater than ticker value",
@@ -154,8 +151,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":  7,
 				},
 			},
-			want:    "1",
-			wantErr: false,
+			want:               "1",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "doesn't match on trees if sue value is equal to ticker value",
@@ -172,8 +169,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":  6,
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "doesn't match on trees if sue value is less than ticker value",
@@ -190,8 +187,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":  6,
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "does match on trees if sue value is greater than ticker value",
@@ -208,8 +205,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":  6,
 				},
 			},
-			want:    "2",
-			wantErr: false,
+			want:               "2",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "doesn't match on pomeranians if sue value is equal to ticker value",
@@ -226,8 +223,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":     6,
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "doesn't match on pomeranians if sue value is greater than ticker value",
@@ -244,8 +241,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":     6,
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "does match on pomeranians if sue value is less than ticker value",
@@ -262,8 +259,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":     6,
 				},
 			},
-			want:    "2",
-			wantErr: false,
+			want:               "2",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "doesn't match on goldfish if sue value is equal to ticker value",
@@ -280,8 +277,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":  6,
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "doesn't match on goldfish if sue value is greater than ticker value",
@@ -298,8 +295,8 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":  6,
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "does match on goldfish if sue value is less than ticker value",
@@ -316,20 +313,15 @@ func Test_findRangedMatch(t *testing.T) {
 					"vizslas":  6,
 				},
 			},
-			want:    "2",
-			wantErr: false,
+			want:               "2",
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := findRangedMatch(tt.args.input, tt.args.ticker)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findRangedMatch() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findRangedMatch() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

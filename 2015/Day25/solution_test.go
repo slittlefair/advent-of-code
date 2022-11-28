@@ -2,51 +2,46 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if there are less than 2 numbers in the row",
-			input:   []string{"row 3, first column"},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			name:               "returns an error if there are less than 2 numbers in the row",
+			input:              []string{"row 3, first column"},
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns an error if there are more than 2 numbers in the row",
-			input:   []string{"row 3, column 4 or 5"},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			name:               "returns an error if there are more than 2 numbers in the row",
+			input:              []string{"row 3, column 4 or 5"},
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns column and row from given input",
-			input:   []string{"row 3, column 4"},
-			want:    3,
-			want1:   4,
-			wantErr: false,
+			name:               "returns column and row from given input",
+			input:              []string{"row 3, column 4"},
+			want:               3,
+			want1:              4,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := parseInput(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseInput() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("parseInput() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("parseInput() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
@@ -88,9 +83,8 @@ func Test_nthNumber(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := nthNumber(tt.args.row, tt.args.col); got != tt.want {
-				t.Errorf("nthNumber() = %v, want %v", got, tt.want)
-			}
+			got := nthNumber(tt.args.row, tt.args.col)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -124,43 +118,37 @@ func Test_getCodeAt(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getCodeAt(tt.args.row, tt.args.col); got != tt.want {
-				t.Errorf("getCodeAt() = %v, want %v", got, tt.want)
-			}
+			got := getCodeAt(tt.args.row, tt.args.col)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_getSolution(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error from a dodgy input",
-			input:   []string{"this won't work"},
-			want:    -1,
-			wantErr: true,
+			name:               "returns an error from a dodgy input",
+			input:              []string{"this won't work"},
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns correct code from input line",
-			input:   []string{"To continue, please consult the code grid in the manual.  Enter the code at row 6, column 4."},
-			want:    24659492,
-			wantErr: false,
+			name:               "returns correct code from input line",
+			input:              []string{"To continue, please consult the code grid in the manual.  Enter the code at row 6, column 4."},
+			want:               24659492,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := getSolution(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("getSolution() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("getSolution() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
