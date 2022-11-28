@@ -1,9 +1,10 @@
 package main
 
 import (
-	"reflect"
 	"regexp"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var bab = [][]byte{
@@ -46,9 +47,8 @@ func Test_containsABBA(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := containsABBA(tt.s); got != tt.want {
-				t.Errorf("containsABBA() = %v, want %v", got, tt.want)
-			}
+			got := containsABBA(tt.s)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -80,39 +80,26 @@ func Test_tlsValidation(t *testing.T) {
 			want: false,
 		},
 	}
+	re := regexp.MustCompile(`\[\w+\]`)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tlsValidation(tt.s, regexp.MustCompile(`\[\w+\]`)); got != tt.want {
-				t.Errorf("tlsValidation() = %v, want %v", got, tt.want)
-			}
+			got := tlsValidation(tt.s, re)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_compileBAB(t *testing.T) {
-	tests := []struct {
-		name string
-		ip   []string
-		want [][]byte
-	}{
-		{
-			name: "returns a slice of byte slices of bab pairs to aba strings in the given slice",
-			ip: []string{
-				"iygsfrrtahawqyhgvgcbnhnsss",
-				"asdf",
-				"asadsde",
-				"tggftythsnhngggffgfssa",
-			},
-			want: bab,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := compileBAB(tt.ip); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("compileBAB() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns a slice of byte slices of bab pairs to aba strings in the given slice", func(t *testing.T) {
+		input := []string{
+			"iygsfrrtahawqyhgvgcbnhnsss",
+			"asdf",
+			"asadsde",
+			"tggftythsnhngggffgfssa",
+		}
+		got := compileBAB(input)
+		assert.Equal(t, bab, got)
+	})
 }
 
 func Test_hasBABMatch(t *testing.T) {
@@ -156,9 +143,8 @@ func Test_hasBABMatch(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := hasBABMatch(tt.args.sn, tt.args.bab); got != tt.want {
-				t.Errorf("hasBABMatch() = %v, want %v", got, tt.want)
-			}
+			got := hasBABMatch(tt.args.sn, tt.args.bab)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -180,46 +166,28 @@ func Test_sslValidation(t *testing.T) {
 			want: true,
 		},
 	}
+	re := regexp.MustCompile(`\[\w+\]`)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := sslValidation(tt.s, regexp.MustCompile(`\[\w+\]`)); got != tt.want {
-				t.Errorf("sslValidation() = %v, want %v", got, tt.want)
-			}
+			got := sslValidation(tt.s, re)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_countValidIPs(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  int
-		want1 int
-	}{
-		{
-			name: "returns the counts of ips that pass tls and ssl validations",
-			input: []string{
-				"xyx[xyx]xyx",
-				"aaa[kek]eke",
-				"aba[bab]xyz",
-				"atgdlld[trgpo]tyhgffvcv[cvcop]",
-				"ioxxoj[asdfgh]zxcvbn",
-				"iuh[ldnsl]oioppos[plgghgwwgdj]ksnvsitp[ioitfsgxvcz]",
-				"abba[mnop]qrst",
-			},
-			want:  3,
-			want1: 4,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := countValidIPs(tt.input)
-			if got != tt.want {
-				t.Errorf("countValidIPs() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("countValidIPs() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+	t.Run("returns the counts of ips that pass tls and ssl validations", func(t *testing.T) {
+		input := []string{
+			"xyx[xyx]xyx",
+			"aaa[kek]eke",
+			"aba[bab]xyz",
+			"atgdlld[trgpo]tyhgffvcv[cvcop]",
+			"ioxxoj[asdfgh]zxcvbn",
+			"iuh[ldnsl]oioppos[plgghgwwgdj]ksnvsitp[ioitfsgxvcz]",
+			"abba[mnop]qrst",
+		}
+		got, got1 := countValidIPs(input)
+		assert.Equal(t, 3, got)
+		assert.Equal(t, 4, got1)
+	})
 }

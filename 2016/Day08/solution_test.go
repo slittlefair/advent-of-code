@@ -2,49 +2,31 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_constructLights(t *testing.T) {
-	type args struct {
-		height int
-		width  int
-	}
-	tests := []struct {
-		name string
-		args args
-		want *Lights
-	}{
-		{
-			name: "constructs a set of lights with the given height and width",
-			args: args{
-				height: 2,
-				width:  4,
+	t.Run("constructs a set of lights with the given height and width", func(t *testing.T) {
+		want := &Lights{
+			Pixels: map[graph.Co]string{
+				{X: 0, Y: 0}: " ",
+				{X: 1, Y: 0}: " ",
+				{X: 2, Y: 0}: " ",
+				{X: 3, Y: 0}: " ",
+				{X: 0, Y: 1}: " ",
+				{X: 1, Y: 1}: " ",
+				{X: 2, Y: 1}: " ",
+				{X: 3, Y: 1}: " ",
 			},
-			want: &Lights{
-				Pixels: map[graph.Co]string{
-					{X: 0, Y: 0}: " ",
-					{X: 1, Y: 0}: " ",
-					{X: 2, Y: 0}: " ",
-					{X: 3, Y: 0}: " ",
-					{X: 0, Y: 1}: " ",
-					{X: 1, Y: 1}: " ",
-					{X: 2, Y: 1}: " ",
-					{X: 3, Y: 1}: " ",
-				},
-				Height: 2,
-				Width:  4,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := constructLights(tt.args.height, tt.args.width); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("constructLights() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+			Height: 2,
+			Width:  4,
+		}
+		got := constructLights(2, 4)
+		assert.Equal(t, want, got)
+
+	})
 }
 
 func TestLights_followInstruction(t *testing.T) {
@@ -54,33 +36,33 @@ func TestLights_followInstruction(t *testing.T) {
 		Width  int
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		inst    string
-		wantErr bool
-		want    *Lights
+		name               string
+		fields             fields
+		inst               string
+		errorAssertionFunc assert.ErrorAssertionFunc
+		want               *Lights
 	}{
 		{
-			name:    "returns an error if an instruction contains fewer than 2 numbers",
-			fields:  fields{},
-			inst:    "rotate column x=1 by a few",
-			wantErr: true,
-			want:    &Lights{},
+			name:               "returns an error if an instruction contains fewer than 2 numbers",
+			fields:             fields{},
+			inst:               "rotate column x=1 by a few",
+			errorAssertionFunc: assert.Error,
+			want:               &Lights{},
 		},
 		{
-			name:    "returns an error if an instruction contains more than 2 numbers",
-			fields:  fields{},
-			inst:    "rect 3x2x1",
-			wantErr: true,
-			want:    &Lights{},
+			name:               "returns an error if an instruction contains more than 2 numbers",
+			fields:             fields{},
+			inst:               "rect 3x2x1",
+			errorAssertionFunc: assert.Error,
+			want:               &Lights{},
 		},
 		{
 			name: "it follows a rect instruction",
 			fields: fields{
 				Pixels: map[graph.Co]string{},
 			},
-			inst:    "rect 3x2",
-			wantErr: false,
+			inst:               "rect 3x2",
+			errorAssertionFunc: assert.NoError,
 			want: &Lights{
 				Pixels: map[graph.Co]string{
 					{X: 0, Y: 0}: "#",
@@ -108,8 +90,8 @@ func TestLights_followInstruction(t *testing.T) {
 				Height: 2,
 				Width:  4,
 			},
-			inst:    "rotate column x=1 by 1",
-			wantErr: false,
+			inst:               "rotate column x=1 by 1",
+			errorAssertionFunc: assert.NoError,
 			want: &Lights{
 				Pixels: map[graph.Co]string{
 					{X: 0, Y: 0}: "#",
@@ -141,8 +123,8 @@ func TestLights_followInstruction(t *testing.T) {
 				Height: 2,
 				Width:  4,
 			},
-			inst:    "rotate row y=0 by 6",
-			wantErr: false,
+			inst:               "rotate row y=0 by 6",
+			errorAssertionFunc: assert.NoError,
 			want: &Lights{
 				Pixels: map[graph.Co]string{
 					{X: 0, Y: 0}: " ",
@@ -166,12 +148,9 @@ func TestLights_followInstruction(t *testing.T) {
 				Height: tt.fields.Height,
 				Width:  tt.fields.Width,
 			}
-			if err := l.followInstruction(tt.inst); (err != nil) != tt.wantErr {
-				t.Errorf("Lights.followInstruction() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if !reflect.DeepEqual(l, tt.want) {
-				t.Errorf("Lights.followInstructions() = %v, want %v", l, tt.want)
-			}
+			err := l.followInstruction(tt.inst)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, l)
 		})
 	}
 }
@@ -183,11 +162,11 @@ func TestLights_followInstructions(t *testing.T) {
 		Width  int
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		input   []string
-		wantErr bool
-		want    *Lights
+		name               string
+		fields             fields
+		input              []string
+		errorAssertionFunc assert.ErrorAssertionFunc
+		want               *Lights
 	}{
 		{
 			name:   "returns an error if an instruction contains fewer than 2 numbers",
@@ -195,8 +174,8 @@ func TestLights_followInstructions(t *testing.T) {
 			input: []string{
 				"rotate column x=1 by a few",
 			},
-			wantErr: true,
-			want:    &Lights{},
+			errorAssertionFunc: assert.Error,
+			want:               &Lights{},
 		},
 		{
 			name:   "returns an error if an instruction contains more than 2 numbers",
@@ -204,8 +183,8 @@ func TestLights_followInstructions(t *testing.T) {
 			input: []string{
 				"rect 3x2x1",
 			},
-			wantErr: true,
-			want:    &Lights{},
+			errorAssertionFunc: assert.Error,
+			want:               &Lights{},
 		},
 		{
 			name: "follows a set of instructions",
@@ -228,7 +207,7 @@ func TestLights_followInstructions(t *testing.T) {
 				"rotate column x=1 by 1",
 				"rotate row y=0 by 2",
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 			want: &Lights{
 				Pixels: map[graph.Co]string{
 					{X: 0, Y: 0}: " ",
@@ -252,58 +231,32 @@ func TestLights_followInstructions(t *testing.T) {
 				Height: tt.fields.Height,
 				Width:  tt.fields.Width,
 			}
-			if err := l.followInstructions(tt.input); (err != nil) != tt.wantErr {
-				t.Errorf("Lights.followInstructions() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if !reflect.DeepEqual(l, tt.want) {
-				t.Errorf("Lights.followInstructions() = %v, want %v", l, tt.want)
-			}
+			err := l.followInstructions(tt.input)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, l)
 		})
 	}
 }
 
 func TestLights_countLightsOn(t *testing.T) {
-	type fields struct {
-		Pixels map[graph.Co]string
-		Height int
-		Width  int
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   int
-	}{
-		{
-			name: `returns number of pixels set to "#"`,
-			fields: fields{
-				Pixels: map[graph.Co]string{
-					{X: 0, Y: 0}: " ",
-					{X: 1, Y: 0}: "#",
-					{X: 2, Y: 0}: " ",
-					{X: 3, Y: 0}: "#",
-					{X: 0, Y: 1}: "#",
-					{X: 1, Y: 1}: " ",
-					{X: 2, Y: 1}: "#",
-					{X: 3, Y: 1}: " ",
-					{X: 0, Y: 2}: "#",
-					{X: 1, Y: 2}: "#",
-					{X: 2, Y: 2}: "#",
-					{X: 3, Y: 2}: " ",
-				},
+	t.Run(`returns number of pixels set to "#"`, func(t *testing.T) {
+		l := Lights{
+			Pixels: map[graph.Co]string{
+				{X: 0, Y: 0}: " ",
+				{X: 1, Y: 0}: "#",
+				{X: 2, Y: 0}: " ",
+				{X: 3, Y: 0}: "#",
+				{X: 0, Y: 1}: "#",
+				{X: 1, Y: 1}: " ",
+				{X: 2, Y: 1}: "#",
+				{X: 3, Y: 1}: " ",
+				{X: 0, Y: 2}: "#",
+				{X: 1, Y: 2}: "#",
+				{X: 2, Y: 2}: "#",
+				{X: 3, Y: 2}: " ",
 			},
-			want: 7,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			l := Lights{
-				Pixels: tt.fields.Pixels,
-				Height: tt.fields.Height,
-				Width:  tt.fields.Width,
-			}
-			if got := l.countLightsOn(); got != tt.want {
-				t.Errorf("Lights.countLightsOn() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		}
+		got := l.countLightsOn()
+		assert.Equal(t, 7, got)
+	})
 }

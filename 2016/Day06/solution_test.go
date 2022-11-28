@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var f = []map[string]int{
@@ -15,81 +16,40 @@ var f = []map[string]int{
 }
 
 func Test_compileFrequencies(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  []map[string]int
-	}{
-		{
-			name: "it compiles the frequencies of each letter in each column",
-			input: []string{
-				"eedadn",
-				"drvtee",
-				"eandsr",
-				"raavrd",
-				"atevrs",
-				"tsrnev",
-				"sdttsa",
-				"rasrtv",
-				"nssdts",
-				"ntnada",
-				"svetve",
-				"tesnvt",
-				"vntsnd",
-				"vrdear",
-				"dvrsen",
-				"enarar",
-			},
-			want: f,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := compileFrequencies(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("compileFrequencies() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("it compiles the frequencies of each letter in each column", func(t *testing.T) {
+		input := []string{
+			"eedadn",
+			"drvtee",
+			"eandsr",
+			"raavrd",
+			"atevrs",
+			"tsrnev",
+			"sdttsa",
+			"rasrtv",
+			"nssdts",
+			"ntnada",
+			"svetve",
+			"tesnvt",
+			"vntsnd",
+			"vrdear",
+			"dvrsen",
+			"enarar",
+		}
+		got := compileFrequencies(input)
+		assert.Equal(t, f, got)
+	})
 }
 
 func Test_getWordMostCommon(t *testing.T) {
-	tests := []struct {
-		name string
-		f    []map[string]int
-		want string
-	}{
-		{
-			name: "finds the word compiled with most frequent letter in each column, advent of code example 1",
-			f:    f,
-			want: "easter",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := getWordMostCommon(tt.f); got != tt.want {
-				t.Errorf("getWordMostCommon() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("finds the word compiled with most frequent letter in each column, advent of code example 1", func(t *testing.T) {
+		got := getWordMostCommon(f)
+		assert.Equal(t, "easter", got)
+	})
 }
 
 func Test_getWordLeastCommon(t *testing.T) {
-	tests := []struct {
-		name string
-		f    []map[string]int
-		want string
-	}{
-		{
-			name: "finds the word compiled with least frequent letter in each column, advent of code example 2",
-			f:    f,
-			want: "advent",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := getWordLeastCommon(tt.f); got != tt.want {
-				t.Errorf("getWordLeastCommon() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("finds the word compiled with least frequent letter in each column, advent of code example 2", func(t *testing.T) {
+		got := getWordLeastCommon(f)
+		assert.Equal(t, "advent", got)
+	})
 }

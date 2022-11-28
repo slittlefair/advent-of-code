@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_bot_addValue(t *testing.T) {
@@ -53,25 +54,8 @@ func Test_bot_addValue(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			b := tt.b
 			b.addValue(tt.v)
-			if !reflect.DeepEqual(b, tt.want) {
-				t.Errorf("bot.addValue() = %v, want %v", b, tt.want)
-			}
+			assert.Equal(t, tt.want, b)
 		})
-	}
-}
-
-func testBots(t *testing.T, fnName string, got, want bots) {
-	for id, bot := range got {
-		b, ok := want[id]
-		if !ok {
-			t.Errorf("bots.%s() id doesn't exist = %v, want %v", fnName, got, want)
-		}
-		if b.id != bot.id {
-			t.Errorf("bots.%s() ids don't match [%s] = %v, want %v", fnName, id, got, want)
-		}
-		if !reflect.DeepEqual(b.vals, bot.vals) {
-			t.Errorf("bots.%s() vals don't match [%s] = %v, want %v", fnName, id, got, want)
-		}
 	}
 }
 
@@ -132,63 +116,38 @@ func Test_bots_giveValue(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			bs := tt.bs
 			bs.giveValue(bs[tt.args.b], tt.args.recLowID, tt.args.recHighID)
-			if len(bs) != len(tt.want) {
-				t.Errorf("bots.giveValue() = %v, want %v", bs, tt.want)
-			}
-			testBots(t, "giveValue", bs, tt.want)
+			assert.Len(t, bs, len(tt.want))
+			assert.Equal(t, tt.want, bs)
 		})
 	}
 }
 
 func Test_bots_add(t *testing.T) {
-	type args struct {
-		id  string
-		val int
-	}
-	tests := []struct {
-		name string
-		bs   bots
-		args args
-		want bots
-	}{
-		{
-			name: "adds a bot to bots",
-			bs: bots{
-				"bot 5": &bot{id: "bot 5", vals: []int{2, 9}},
-				"bot 6": &bot{id: "bot 6", vals: []int{33, 0}},
-				"bot 0": &bot{id: "bot 0", vals: []int{6}},
-			},
-			args: args{
-				id:  "bot 8",
-				val: 48,
-			},
-			want: bots{
-				"bot 5": &bot{id: "bot 5", vals: []int{2, 9}},
-				"bot 6": &bot{id: "bot 6", vals: []int{33, 0}},
-				"bot 0": &bot{id: "bot 0", vals: []int{6}},
-				"bot 8": &bot{id: "bot 8", vals: []int{48}},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			bs := tt.bs
-			bs.add(tt.args.id, tt.args.val)
-			if len(bs) != len(tt.want) {
-				t.Errorf("bots.add() = %v, want %v", bs, tt.want)
-			}
-			testBots(t, "add", bs, tt.want)
-		})
-	}
+	t.Run("adds a bot to bots", func(t *testing.T) {
+		bs := bots{
+			"bot 5": &bot{id: "bot 5", vals: []int{2, 9}},
+			"bot 6": &bot{id: "bot 6", vals: []int{33, 0}},
+			"bot 0": &bot{id: "bot 0", vals: []int{6}},
+		}
+		want := bots{
+			"bot 5": &bot{id: "bot 5", vals: []int{2, 9}},
+			"bot 6": &bot{id: "bot 6", vals: []int{33, 0}},
+			"bot 0": &bot{id: "bot 0", vals: []int{6}},
+			"bot 8": &bot{id: "bot 8", vals: []int{48}},
+		}
+		bs.add("bot 8", 48)
+		assert.Len(t, bs, len(want))
+		assert.Equal(t, want, bs)
+	})
 }
 
 func Test_bots_handleValueLine(t *testing.T) {
 	tests := []struct {
-		name    string
-		bs      bots
-		split   []string
-		want    bots
-		wantErr bool
+		name               string
+		bs                 bots
+		split              []string
+		want               bots
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if split has fewer than 6 elements",
@@ -201,7 +160,7 @@ func Test_bots_handleValueLine(t *testing.T) {
 				"bot 1": &bot{id: "bot 1", vals: []int{7, 9}},
 				"bot 2": &bot{id: "bot 2", vals: []int{89}},
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if split has more than 6 elements",
@@ -214,7 +173,7 @@ func Test_bots_handleValueLine(t *testing.T) {
 				"bot 1": &bot{id: "bot 1", vals: []int{7, 9}},
 				"bot 2": &bot{id: "bot 2", vals: []int{89}},
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if value cannot be converted to int",
@@ -227,7 +186,7 @@ func Test_bots_handleValueLine(t *testing.T) {
 				"bot 1": &bot{id: "bot 1", vals: []int{7, 9}},
 				"bot 2": &bot{id: "bot 2", vals: []int{89}},
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "adds a new bot with the given value if it doesn't exist",
@@ -241,7 +200,7 @@ func Test_bots_handleValueLine(t *testing.T) {
 				"bot 2": &bot{id: "bot 2", vals: []int{89}},
 				"bot 9": &bot{id: "bot 9", vals: []int{53}},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "adds a value to the given bot if it exists",
@@ -256,28 +215,27 @@ func Test_bots_handleValueLine(t *testing.T) {
 				"bot 2": &bot{id: "bot 2", vals: []int{89}},
 				"bot 9": &bot{id: "bot 9", vals: []int{20, 53}},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			bs := tt.bs
-			if err := bs.handleValueLine(tt.split); (err != nil) != tt.wantErr {
-				t.Errorf("bots.handleValueLine() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			testBots(t, "handleValueLine", bs, tt.want)
+			err := bs.handleValueLine(tt.split)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, bs)
 		})
 	}
 }
 
 func Test_bots_handleGiveLine(t *testing.T) {
 	tests := []struct {
-		name    string
-		bs      bots
-		split   []string
-		want    bots
-		want1   bool
-		wantErr bool
+		name               string
+		bs                 bots
+		split              []string
+		want               bots
+		want1              bool
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if split has fewer than 12 elements",
@@ -292,8 +250,8 @@ func Test_bots_handleGiveLine(t *testing.T) {
 				"bot 2": &bot{id: "bot 2", vals: []int{89}},
 				"bot 9": &bot{id: "bot 9", vals: []int{53}},
 			},
-			want1:   false,
-			wantErr: true,
+			want1:              false,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if split has more than 12 elements",
@@ -308,8 +266,8 @@ func Test_bots_handleGiveLine(t *testing.T) {
 				"bot 2": &bot{id: "bot 2", vals: []int{89}},
 				"bot 9": &bot{id: "bot 9", vals: []int{53}},
 			},
-			want1:   false,
-			wantErr: true,
+			want1:              false,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns false and does nothing if bot doesn't exist",
@@ -324,8 +282,8 @@ func Test_bots_handleGiveLine(t *testing.T) {
 				"bot 2": &bot{id: "bot 2", vals: []int{89}},
 				"bot 9": &bot{id: "bot 9", vals: []int{53}},
 			},
-			want1:   false,
-			wantErr: false,
+			want1:              false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns false and does nothing if bot doesn't have two values",
@@ -342,8 +300,8 @@ func Test_bots_handleGiveLine(t *testing.T) {
 				"bot 9":  &bot{id: "bot 9", vals: []int{53}},
 				"bot 23": &bot{id: "bot 23", vals: []int{76}},
 			},
-			want1:   false,
-			wantErr: false,
+			want1:              false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns true and gives values to given bots",
@@ -361,22 +319,17 @@ func Test_bots_handleGiveLine(t *testing.T) {
 				"bot 23":    &bot{id: "bot 23", vals: []int{}},
 				"output 12": &bot{id: "output 12", vals: []int{90}},
 			},
-			want1:   true,
-			wantErr: false,
+			want1:              true,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			bs := tt.bs
 			got, err := bs.handleGiveLine(tt.split)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("bots.handleGiveLine() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			testBots(t, "handleGiveLine", bs, tt.want)
-			if got != tt.want1 {
-				t.Errorf("bots.handleGiveLine() = %v, want %v", got, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, bs)
+			assert.Equal(t, tt.want1, got)
 		})
 	}
 }
@@ -413,6 +366,24 @@ func Test_bots_getPart2Solution(t *testing.T) {
 			}
 		})
 	}
+	t.Run("returns products of values in outputs 0, 1 and 2", func(t *testing.T) {
+		bs := bots{
+			"bot 1":     &bot{id: "bot 1", vals: []int{7, 9}},
+			"bot 2":     &bot{id: "bot 2", vals: []int{899}},
+			"output 2":  &bot{id: "output 2", vals: []int{37}},
+			"bot 9":     &bot{id: "bot 9", vals: []int{1, 53}},
+			"bot 23":    &bot{id: "bot 23", vals: []int{}},
+			"output 12": &bot{id: "output 12", vals: []int{90}},
+			"bot 31":    &bot{id: "bot 31", vals: []int{6, 43}},
+			"bot 22":    &bot{id: "bot 22", vals: []int{88}},
+			"bot 16":    &bot{id: "bot 16", vals: []int{50}},
+			"output 0":  &bot{id: "output 23", vals: []int{47}},
+			"bot 12":    &bot{id: "bot 12", vals: []int{3, 9}},
+			"output 1":  &bot{id: "output 1", vals: []int{89}},
+		}
+		got := bs.getPart2Solution()
+		assert.Equal(t, 154771, got)
+	})
 }
 
 func Test_findSolution(t *testing.T) {
@@ -421,11 +392,11 @@ func Test_findSolution(t *testing.T) {
 		expectedChips []int
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    string
-		want1   int
-		wantErr bool
+		name               string
+		args               args
+		want               string
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if bots.handleLineValue returns an error",
@@ -438,9 +409,9 @@ func Test_findSolution(t *testing.T) {
 				},
 				expectedChips: []int{2, 5},
 			},
-			want:    "",
-			want1:   -1,
-			wantErr: true,
+			want:               "",
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if bots.handleLineValue returns an error",
@@ -453,9 +424,9 @@ func Test_findSolution(t *testing.T) {
 				},
 				expectedChips: []int{2, 5},
 			},
-			want:    "",
-			want1:   -1,
-			wantErr: true,
+			want:               "",
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns correct solutions to parts 1 and 2, advent of code example",
@@ -470,24 +441,17 @@ func Test_findSolution(t *testing.T) {
 				},
 				expectedChips: []int{2, 5},
 			},
-			want:    "2",
-			want1:   30,
-			wantErr: false,
+			want:               "2",
+			want1:              30,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := findSolution(tt.args.input, tt.args.expectedChips)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolution() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolution() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolution() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

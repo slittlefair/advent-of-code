@@ -2,8 +2,9 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPosition_turnLeft(t *testing.T) {
@@ -39,9 +40,7 @@ func TestPosition_turnLeft(t *testing.T) {
 				seen:      map[graph.Co]bool{{X: 0, Y: 0}: true},
 			}
 			p.turnLeft()
-			if p.direction != tt.want {
-				t.Errorf("turnLeft() == %d, want %d", p.direction, tt.want)
-			}
+			assert.Equal(t, tt.want, p.direction)
 		})
 	}
 }
@@ -79,9 +78,7 @@ func TestPosition_turnRight(t *testing.T) {
 				seen:      map[graph.Co]bool{{X: 0, Y: 0}: true},
 			}
 			p.turnRight()
-			if p.direction != tt.want {
-				t.Errorf("turnRight() == %d, want %d", p.direction, tt.want)
-			}
+			assert.Equal(t, tt.want, p.direction)
 		})
 	}
 }
@@ -178,12 +175,8 @@ func TestPosition_move(t *testing.T) {
 				hq:        tt.fields.hq,
 			}
 			p.move()
-			if p.location != tt.want {
-				t.Errorf("move() = %v, want %v", p.location, tt.want)
-			}
-			if p.hq != tt.want1 {
-				t.Errorf("move() = %v, want %v", p.hq, tt.want1)
-			}
+			assert.Equal(t, tt.want, p.location)
+			assert.Equal(t, tt.want1, p.hq)
 		})
 	}
 }
@@ -195,31 +188,23 @@ func TestPosition_followInstruction(t *testing.T) {
 		seen      map[graph.Co]bool
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		inst    string
-		want    *Position
-		wantErr bool
+		name               string
+		fields             fields
+		inst               string
+		want               *Position
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if there is more than one letter",
-			inst:    "LR1",
-			want:    &Position{},
-			wantErr: true,
+			name:               "returns an error if there is more than one letter",
+			inst:               "LR1",
+			want:               &Position{},
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns an error if the letter is not L or R",
-			inst:    "F1",
-			want:    &Position{},
-			wantErr: true,
-		},
-		{
-			name: "returns an error if there is more than one number",
-			inst: "2R1",
-			want: &Position{
-				direction: 1,
-			},
-			wantErr: true,
+			name:               "returns an error if the letter is not L or R",
+			inst:               "F1",
+			want:               &Position{},
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if there is more than one number",
@@ -227,7 +212,15 @@ func TestPosition_followInstruction(t *testing.T) {
 			want: &Position{
 				direction: 1,
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
+		},
+		{
+			name: "returns an error if there is more than one number",
+			inst: "2R1",
+			want: &Position{
+				direction: 1,
+			},
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "follows an instruction turning left",
@@ -246,7 +239,7 @@ func TestPosition_followInstruction(t *testing.T) {
 					{X: 10, Y: 10}: true,
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "follows an instruction turning right",
@@ -266,7 +259,7 @@ func TestPosition_followInstruction(t *testing.T) {
 					{X: 0, Y: 3}: true,
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
@@ -276,46 +269,43 @@ func TestPosition_followInstruction(t *testing.T) {
 				location:  tt.fields.location,
 				seen:      tt.fields.seen,
 			}
-			if err := p.followInstruction(tt.inst); (err != nil) != tt.wantErr {
-				t.Errorf("Position.followInstruction() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if !reflect.DeepEqual(p, tt.want) {
-				t.Errorf("Position.followInstruction() = %v, want %v", p, tt.want)
-			}
+			err := p.followInstruction(tt.inst)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, p)
 		})
 	}
 }
 
 func Test_followSteps(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if an instruction is malformed",
-			input:   []string{"L1, L2, R5, F5, L6"},
-			want:    -1,
-			wantErr: true,
+			name:               "returns an error if an instruction is malformed",
+			input:              []string{"L1, L2, R5, F5, L6"},
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns manhattan distance of instructions, advent of code example 1",
-			input:   []string{"R2, L3"},
-			want:    5,
-			wantErr: false,
+			name:               "returns manhattan distance of instructions, advent of code example 1",
+			input:              []string{"R2, L3"},
+			want:               5,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:    "returns manhattan distance of instructions, advent of code example 2",
-			input:   []string{"R2, R2, R2"},
-			want:    2,
-			wantErr: false,
+			name:               "returns manhattan distance of instructions, advent of code example 2",
+			input:              []string{"R2, R2, R2"},
+			want:               2,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:    "returns manhattan distance of instructions, advent of code example 2",
-			input:   []string{"R5, L5, R5, R3"},
-			want:    12,
-			wantErr: false,
+			name:               "returns manhattan distance of instructions, advent of code example 2",
+			input:              []string{"R5, L5, R5, R3"},
+			want:               12,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
@@ -324,13 +314,8 @@ func Test_followSteps(t *testing.T) {
 				seen: map[graph.Co]bool{{X: 0, Y: 0}: true},
 			}
 			got, err := p.followSteps(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Position.followSteps() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("Position.followSteps() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

@@ -1,16 +1,17 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    allDiscs
-		wantErr bool
+		name               string
+		input              []string
+		want               allDiscs
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if a line has fewer than four int matches",
@@ -20,8 +21,8 @@ func Test_parseInput(t *testing.T) {
 				"Disc #c has 7 positions; at time=0, it is at position 1.",
 				"Disc #4 has 13 positions; at time=0, it is at position 7.",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if a line has fewer than four int matches",
@@ -31,8 +32,8 @@ func Test_parseInput(t *testing.T) {
 				"Disc #3 has 7 positions; at time=0, it is at position 1.",
 				"Discs #4 and #5 have 13 positions; at time=0, they are at position 7.",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if a line has fewer than four int matches",
@@ -64,86 +65,67 @@ func Test_parseInput(t *testing.T) {
 					position:     7,
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := parseInput(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseInput() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_allDiscs_moveDiscs(t *testing.T) {
-	tests := []struct {
-		name string
-		ad   allDiscs
-		want allDiscs
-	}{
-		{
-			name: "increases the position of all discs by 1",
-			ad: allDiscs{
-				1: {
-					id:           1,
-					numPositions: 17,
-					position:     5,
-				},
-				2: {
-					id:           2,
-					numPositions: 19,
-					position:     18,
-				},
-				3: {
-					id:           3,
-					numPositions: 7,
-					position:     1,
-				},
-				4: {
-					id:           4,
-					numPositions: 13,
-					position:     7,
-				},
+	t.Run("increases the position of all discs by 1", func(t *testing.T) {
+		ad := allDiscs{
+			1: {
+				id:           1,
+				numPositions: 17,
+				position:     5,
 			},
-			want: allDiscs{
-				1: {
-					id:           1,
-					numPositions: 17,
-					position:     6,
-				},
-				2: {
-					id:           2,
-					numPositions: 19,
-					position:     0,
-				},
-				3: {
-					id:           3,
-					numPositions: 7,
-					position:     2,
-				},
-				4: {
-					id:           4,
-					numPositions: 13,
-					position:     8,
-				},
+			2: {
+				id:           2,
+				numPositions: 19,
+				position:     18,
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			ad := tt.ad
-			ad.moveDiscs()
-			if !reflect.DeepEqual(ad, tt.want) {
-				t.Errorf("allDiscs.moveDiscs() = %v, want %v", ad, tt.want)
-			}
-		})
-	}
+			3: {
+				id:           3,
+				numPositions: 7,
+				position:     1,
+			},
+			4: {
+				id:           4,
+				numPositions: 13,
+				position:     7,
+			},
+		}
+		want := allDiscs{
+			1: {
+				id:           1,
+				numPositions: 17,
+				position:     6,
+			},
+			2: {
+				id:           2,
+				numPositions: 19,
+				position:     0,
+			},
+			3: {
+				id:           3,
+				numPositions: 7,
+				position:     2,
+			},
+			4: {
+				id:           4,
+				numPositions: 13,
+				position:     8,
+			},
+		}
+		ad.moveDiscs()
+		assert.Equal(t, want, ad)
+	})
 }
 
 func Test_allDiscs_getCapsule(t *testing.T) {
@@ -207,9 +189,8 @@ func Test_allDiscs_getCapsule(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.ad.getCapsule(); got != tt.want {
-				t.Errorf("allDiscs.getCapsule() = %v, want %v", got, tt.want)
-			}
+			got := tt.ad.getCapsule()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -260,20 +241,19 @@ func Test_allDiscs_findSuccessfulTime(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.ad.findSuccessfulTime(); got != tt.want {
-				t.Errorf("allDiscs.findSuccessfulTime() = %v, want %v", got, tt.want)
-			}
+			got := tt.ad.findSuccessfulTime()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_findSolutions(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if parseInput returns an error",
@@ -283,9 +263,9 @@ func Test_findSolutions(t *testing.T) {
 				"Disc #c has 7 positions; at time=0, it is at position 1.",
 				"Disc #4 has 13 positions; at time=0, it is at position 7.",
 			},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns solutions for parts 1 and 2, advent of code example",
@@ -293,24 +273,17 @@ func Test_findSolutions(t *testing.T) {
 				"Disc #1 has 5 positions; at time=0, it is at position 4.",
 				"Disc #2 has 2 positions; at time=0, it is at position 1.",
 			},
-			want:    5,
-			want1:   85,
-			wantErr: false,
+			want:               5,
+			want1:              85,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := findSolutions(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolutions() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_triangleIsValid(t *testing.T) {
@@ -48,9 +50,8 @@ func Test_triangleIsValid(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := triangleIsValid(tt.triangle); got != tt.want {
-				t.Errorf("triangleIsValid() = %v, want %v", got, tt.want)
-			}
+			got := triangleIsValid(tt.triangle)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -100,64 +101,37 @@ func Test_checkTriangles(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := checkTriangles(tt.triangles); got != tt.want {
-				t.Errorf("checkTriangles() = %v, want %v", got, tt.want)
-			}
+			got := checkTriangles(tt.triangles)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_validateHorizontalTriangles(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  int
-	}{
-		{
-			name: "returns number of valid horizontal triangles in input",
-			input: []string{
-				"2  4  3",
-				"56  62  99",
-				"54  33  109",
-				"5  10  25",
-				"6  6  7",
-			},
-			want: 3,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := validateHorizontalTriangles(tt.input); got != tt.want {
-				t.Errorf("validateHorizontalTriangles() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns number of valid horizontal triangles in input", func(t *testing.T) {
+		input := []string{
+			"2  4  3",
+			"56  62  99",
+			"54  33  109",
+			"5  10  25",
+			"6  6  7",
+		}
+		got := validateHorizontalTriangles(input)
+		assert.Equal(t, 3, got)
+	})
 }
 
 func Test_validateVerticalTriangles(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  int
-	}{
-		{
-			name: "returns number of valid vertical triangles in input",
-			input: []string{
-				"2  4  11",
-				"56  62  99",
-				"54  33  109",
-				"5  10  25",
-				"6  6  7",
-				"7  8  19",
-			},
-			want: 4,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := validateVerticalTriangles(tt.input); got != tt.want {
-				t.Errorf("validateVerticalTriangles() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns number of valid vertical triangles in input", func(t *testing.T) {
+		input := []string{
+			"2  4  11",
+			"56  62  99",
+			"54  33  109",
+			"5  10  25",
+			"6  6  7",
+			"7  8  19",
+		}
+		got := validateVerticalTriangles(input)
+		assert.Equal(t, 4, got)
+	})
 }

@@ -2,56 +2,53 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_generateDataStep(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   string
-		want    string
-		wantErr bool
+		name               string
+		input              string
+		want               string
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if the input contains an invalid character",
-			input:   "10010010301001001110110101110101",
-			want:    "",
-			wantErr: true,
+			name:               "returns an error if the input contains an invalid character",
+			input:              "10010010301001001110110101110101",
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns correct data for input, advent of code example 1",
-			input:   "1",
-			want:    "100",
-			wantErr: false,
+			name:               "returns correct data for input, advent of code example 1",
+			input:              "1",
+			want:               "100",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:    "returns correct data for input, advent of code example 2",
-			input:   "0",
-			want:    "001",
-			wantErr: false,
+			name:               "returns correct data for input, advent of code example 2",
+			input:              "0",
+			want:               "001",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:    "returns correct data for input, advent of code example 3",
-			input:   "11111",
-			want:    "11111000000",
-			wantErr: false,
+			name:               "returns correct data for input, advent of code example 3",
+			input:              "11111",
+			want:               "11111000000",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:    "returns correct data for input, advent of code example 4",
-			input:   "111100001010",
-			want:    "1111000010100101011110000",
-			wantErr: false,
+			name:               "returns correct data for input, advent of code example 4",
+			input:              "111100001010",
+			want:               "1111000010100101011110000",
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := generateDataStep(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("generateDataStep() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("generateDataStep() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -62,10 +59,10 @@ func Test_generateData(t *testing.T) {
 		requiredLength int
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    string
-		wantErr bool
+		name               string
+		args               args
+		want               string
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if generateDataStep returns an error",
@@ -73,8 +70,8 @@ func Test_generateData(t *testing.T) {
 				input:          "10010001111010100101010101010100101010101101101031010100101010100100101",
 				requiredLength: 1000,
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns correct data for given input, advent of code example 1",
@@ -82,20 +79,15 @@ func Test_generateData(t *testing.T) {
 				input:          "10000",
 				requiredLength: 20,
 			},
-			want:    "10000011110010000111",
-			wantErr: false,
+			want:               "10000011110010000111",
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := generateData(tt.args.input, tt.args.requiredLength)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("generateData() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("generateData() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -119,9 +111,8 @@ func Test_calculateChecksum(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := calculateChecksum(tt.data); got != tt.want {
-				t.Errorf("calculateChecksum() = %v, want %v", got, tt.want)
-			}
+			got := calculateChecksum(tt.data)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -132,10 +123,10 @@ func Test_findSolution(t *testing.T) {
 		requiredDataLength int
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    string
-		wantErr bool
+		name               string
+		args               args
+		want               string
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if generateData returns an error",
@@ -143,8 +134,8 @@ func Test_findSolution(t *testing.T) {
 				input:              "1000100010001111010110010119110100010001",
 				requiredDataLength: 100,
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if generateData returns an error",
@@ -152,20 +143,15 @@ func Test_findSolution(t *testing.T) {
 				input:              "10000",
 				requiredDataLength: 20,
 			},
-			want:    "01100",
-			wantErr: false,
+			want:               "01100",
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := findSolution(tt.args.input, tt.args.requiredDataLength)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolution() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolution() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -177,11 +163,11 @@ func Test_findSolutions(t *testing.T) {
 		part2Length int
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    string
-		want1   string
-		wantErr bool
+		name               string
+		args               args
+		want               string
+		want1              string
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if findSolution returns an error",
@@ -190,9 +176,9 @@ func Test_findSolutions(t *testing.T) {
 				part1Length: 100,
 				part2Length: 1000,
 			},
-			want:    "",
-			want1:   "",
-			wantErr: true,
+			want:               "",
+			want1:              "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns correct solutions to parts 1 and 2 (real input since AoC doesn't provide part2 example)",
@@ -201,24 +187,17 @@ func Test_findSolutions(t *testing.T) {
 				part1Length: 272,
 				part2Length: 35651584,
 			},
-			want:    "10100101010101101",
-			want1:   "01100001101101001",
-			wantErr: false,
+			want:               "10100101010101101",
+			want1:              "01100001101101001",
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := findSolutions(tt.args.input, tt.args.part1Length, tt.args.part2Length)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolutions() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

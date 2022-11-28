@@ -5,6 +5,8 @@ import (
 	"Advent-of-Code/maths"
 	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_setupSolution(t *testing.T) {
@@ -159,12 +161,9 @@ func Test_solution_reachedEnd(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := tt.s
-			if got := s.reachedEnd(); got != tt.want {
-				t.Errorf("solution.reachedEnd() = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(s, tt.want1) {
-				t.Errorf("solution.reachedEnd(), solution = %v, want %v", s, tt.want)
-			}
+			got := s.reachedEnd()
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, s)
 		})
 	}
 }
@@ -218,9 +217,8 @@ func Test_solution_getLockStatus(t *testing.T) {
 				input:       tt.fields.input,
 				currentPath: tt.fields.currentPath,
 			}
-			if got := s.getLockStatus(); got != tt.want {
-				t.Errorf("solution.getLockStatus() = %v, want %v", got, tt.want)
-			}
+			got := s.getLockStatus()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -287,9 +285,8 @@ func Test_solution_isValidRoom(t *testing.T) {
 					{X: 3, Y: 3}: struct{}{},
 				},
 			}
-			if got := s.isValidRoom(tt.args.char, tt.args.diff); got != tt.want {
-				t.Errorf("solution.isValidRoom() = %v, want %v", got, tt.want)
-			}
+			got := s.isValidRoom(tt.args.char, tt.args.diff)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -323,12 +320,8 @@ func Test_findSolutions(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := findSolutions(tt.input)
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
