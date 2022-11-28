@@ -1,7 +1,6 @@
 package main
 
 import (
-	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -277,11 +276,11 @@ func TestRegisters_FollowInstruction(t *testing.T) {
 
 func TestRegisters_RunInstructions(t *testing.T) {
 	tests := []struct {
-		name    string
-		r       Registers
-		arg     []string
-		want    Registers
-		wantErr bool
+		name               string
+		r                  Registers
+		arg                []string
+		want               Registers
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "runs a set of instructions",
@@ -292,8 +291,8 @@ func TestRegisters_RunInstructions(t *testing.T) {
 				"tpl a",
 				"inc a",
 			},
-			want:    Registers{"a": 2, "b": 0},
-			wantErr: false,
+			want:               Registers{"a": 2, "b": 0},
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns an error if running a set of instructions produces an error",
@@ -305,18 +304,14 @@ func TestRegisters_RunInstructions(t *testing.T) {
 				"inc a",
 				"blah blah",
 			},
-			want:    Registers{"a": 2, "b": 0},
-			wantErr: true,
+			want:               Registers{"a": 2, "b": 0},
+			errorAssertionFunc: assert.Error,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := tt.r.RunInstructions(tt.arg); (err != nil) != tt.wantErr {
-				t.Errorf("Registers.RunInstructions() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if !reflect.DeepEqual(tt.r, tt.want) {
-				t.Errorf("Registers.RunInstructions() error = %v, wantErr %v", tt.r, tt.want)
-			}
+			err := tt.r.RunInstructions(tt.arg)
+			tt.errorAssertionFunc(t, err)
 		})
 	}
 }

@@ -222,10 +222,10 @@ func TestGraph_AddMe(t *testing.T) {
 
 func TestGraph_ParseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		arg     []string
-		want    *Graph
-		wantErr bool
+		name               string
+		arg                []string
+		want               *Graph
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an input line cost can't be converted correctly",
@@ -247,7 +247,7 @@ func TestGraph_ParseInput(t *testing.T) {
 				},
 				Nodes: []string{"Alice", "Bob"},
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns a populated graph from simple input",
@@ -287,15 +287,14 @@ func TestGraph_ParseInput(t *testing.T) {
 					{"Alice", "Carol", "Bob"},
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			g := &Graph{}
-			if err := g.ParseInput(tt.arg); (err != nil) != tt.wantErr {
-				t.Errorf("Graph.ParseInput() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			err := g.ParseInput(tt.arg)
+			tt.errorAssertionFunc(t, err)
 			assert.Equal(t, tt.want, g)
 		})
 	}
