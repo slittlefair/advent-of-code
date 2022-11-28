@@ -25,7 +25,7 @@ func TestParseInput(t *testing.T) {
 }
 
 func TestFindSolutions(t *testing.T) {
-	testCases := []struct {
+	tests := []struct {
 		part          int
 		exampleNumber int
 		input         []int
@@ -87,13 +87,13 @@ func TestFindSolutions(t *testing.T) {
 			expectedPart2: 4,
 		},
 	}
-	for _, tc := range testCases {
-		t.Run(fmt.Sprintf("returns correct part%d solution, advent of code example %d", tc.part, tc.exampleNumber), func(t *testing.T) {
-			part1, part2 := findSolution(tc.input)
-			if tc.part == 1 {
-				assert.Equal(t, tc.expectedPart1, part1)
+	for _, tt := range tests {
+		t.Run(fmt.Sprintf("returns correct part%d solution, advent of code example %d", tt.part, tt.exampleNumber), func(t *testing.T) {
+			part1, part2 := findSolution(tt.input)
+			if tt.part == 1 {
+				assert.Equal(t, tt.expectedPart1, part1)
 			} else {
-				assert.Equal(t, tc.expectedPart2, part2)
+				assert.Equal(t, tt.expectedPart2, part2)
 			}
 		})
 	}
