@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_getFloorFromInstructions(t *testing.T) {
@@ -58,55 +60,49 @@ func Test_getFloorFromInstructions(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getFloorFromInstructions(tt.instructions); got != tt.want {
-				t.Errorf("getFloorFromInstructions() = %v, want %v", got, tt.want)
-			}
+			got := getFloorFromInstructions(tt.instructions)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_getFirstInstanceOfBasement(t *testing.T) {
 	tests := []struct {
-		name         string
-		instructions string
-		want         int
-		wantErr      bool
+		name               string
+		instructions       string
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:         "returns an error if basement is never reached",
-			instructions: "(((",
-			want:         -1,
-			wantErr:      true,
+			name:               "returns an error if basement is never reached",
+			instructions:       "(((",
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:         "advent of code example 1",
-			instructions: ")",
-			want:         1,
-			wantErr:      false,
+			name:               "advent of code example 1",
+			instructions:       ")",
+			want:               1,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:         "advent of code example 2",
-			instructions: "()())",
-			want:         5,
-			wantErr:      false,
+			name:               "advent of code example 2",
+			instructions:       "()())",
+			want:               5,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:         "returns early when basement is reached",
-			instructions: "()()()()()((()()))))(())((((",
-			want:         19,
-			wantErr:      false,
+			name:               "returns early when basement is reached",
+			instructions:       "()()()()()((()()))))(())((((",
+			want:               19,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := getFirstInstanceOfBasement(tt.instructions)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("getFirstInstanceOfBasement() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("getFirstInstanceOfBasement() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

@@ -1,51 +1,40 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
-	tests := []struct {
-		name string
-		arg  []string
-		want Ingredients
-	}{
-		{
-			name: "parses a simple list of 2 ingredients, advent of code example",
-			arg: []string{
-				"Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8",
-				"Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3",
-			},
-			want: Ingredients{
-				Ingredients: []*Ingredient{
-					{
-						Name:       "Butterscotch",
-						Capacity:   -1,
-						Durability: -2,
-						Flavour:    6,
-						Texture:    3,
-						Calories:   8,
-					},
-					{
-						Name:       "Cinnamon",
-						Capacity:   2,
-						Durability: 3,
-						Flavour:    -2,
-						Texture:    -1,
-						Calories:   3,
-					},
+	t.Run("parses a simple list of 2 ingredients, advent of code example", func(t *testing.T) {
+		arg := []string{
+			"Butterscotch: capacity -1, durability -2, flavor 6, texture 3, calories 8",
+			"Cinnamon: capacity 2, durability 3, flavor -2, texture -1, calories 3",
+		}
+		want := Ingredients{
+			Ingredients: []*Ingredient{
+				{
+					Name:       "Butterscotch",
+					Capacity:   -1,
+					Durability: -2,
+					Flavour:    6,
+					Texture:    3,
+					Calories:   8,
+				},
+				{
+					Name:       "Cinnamon",
+					Capacity:   2,
+					Durability: 3,
+					Flavour:    -2,
+					Texture:    -1,
+					Calories:   3,
 				},
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := parseInput(tt.arg); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		}
+		got := parseInput(arg)
+		assert.Equal(t, want, got)
+	})
 }
 
 func TestIngredients_getScore(t *testing.T) {
@@ -198,9 +187,8 @@ func TestIngredients_getScore(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.in.getScore(tt.arg); got != tt.want {
-				t.Errorf("Ingredients.getScore() = %v, want %v", got, tt.want)
-			}
+			got := tt.in.getScore(tt.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -236,9 +224,8 @@ func TestSpoonfulsMap_countSpoonfuls(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.s.countSpoonfuls(); got != tt.want {
-				t.Errorf("SpoonfulsMap.countSpoonfuls() = %v, want %v", got, tt.want)
-			}
+			got := tt.s.countSpoonfuls()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -337,9 +324,8 @@ func TestIngredients_is500Calories(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.in.is500Calories(tt.arg); got != tt.want {
-				t.Errorf("Ingredients.is500Calories() = %v, want %v", got, tt.want)
-			}
+			got := tt.in.is500Calories(tt.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -380,9 +366,7 @@ func TestIngredients_compareMaxScore(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			in := tt.in
 			in.compareMaxScore(tt.arg)
-			if got := in.MaxScore; got != tt.want {
-				t.Errorf("Ingredients.compareMaxScore() = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want, in.MaxScore)
 		})
 	}
 }
@@ -423,67 +407,36 @@ func TestIngredients_compareMaxScoreWithCalorieLimit(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			in := tt.in
 			in.compareMaxScoreWithCalorieLimit(tt.arg)
-			if got := in.MaxScoreCalorieLimit; got != tt.want {
-				t.Errorf("Ingredients.compareMaxScoreWithCalorieLimit() = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want, in.MaxScoreCalorieLimit)
 		})
 	}
 }
 
 func TestIngredients_findOptimumSpoonfuls(t *testing.T) {
-	type args struct {
-		spoonfuls SpoonfulsMap
-		maxScore  int
-		level     int
-	}
-	tests := []struct {
-		name  string
-		in    Ingredients
-		args  args
-		want  int
-		want1 int
-	}{
-		{
-			name: "finds optimum score for two ingredient list, advent of code example 1",
-			in: Ingredients{
-				Ingredients: []*Ingredient{
-					{
-						Name:       "Butterscotch",
-						Capacity:   -1,
-						Durability: -2,
-						Flavour:    6,
-						Texture:    3,
-						Calories:   8,
-					},
-					{
-						Name:       "Cinnamon",
-						Capacity:   2,
-						Durability: 3,
-						Flavour:    -2,
-						Texture:    -1,
-						Calories:   3,
-					},
+	t.Run("finds optimum score for two ingredient list, advent of code example 1", func(t *testing.T) {
+		in := Ingredients{
+			Ingredients: []*Ingredient{
+				{
+					Name:       "Butterscotch",
+					Capacity:   -1,
+					Durability: -2,
+					Flavour:    6,
+					Texture:    3,
+					Calories:   8,
+				},
+				{
+					Name:       "Cinnamon",
+					Capacity:   2,
+					Durability: 3,
+					Flavour:    -2,
+					Texture:    -1,
+					Calories:   3,
 				},
 			},
-			args: args{
-				spoonfuls: SpoonfulsMap{},
-				maxScore:  0,
-				level:     1,
-			},
-			want:  62842880,
-			want1: 57600000,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			in := tt.in
-			in.findOptimumSpoonfuls(tt.args.spoonfuls, tt.args.level)
-			if got := in.MaxScore; got != tt.want {
-				t.Errorf("Ingredients.findOptimumSpoonfuls() got = %v, want %v", in.MaxScore, tt.want)
-			}
-			if got1 := in.MaxScoreCalorieLimit; got1 != tt.want1 {
-				t.Errorf("Ingredients.findOptimumSpoonfuls() got1 = %v, want %v", in.MaxScoreCalorieLimit, tt.want1)
-			}
-		})
-	}
+		}
+
+		in.findOptimumSpoonfuls(SpoonfulsMap{}, 1)
+		assert.Equal(t, 62842880, in.MaxScore)
+		assert.Equal(t, 57600000, in.MaxScoreCalorieLimit)
+	})
 }

@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_paperForPresent(t *testing.T) {
@@ -23,20 +25,19 @@ func Test_paperForPresent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := paperForPresent(tt.dimensions); got != tt.want {
-				t.Errorf("paperForPresent() = %v, want %v", got, tt.want)
-			}
+			got := paperForPresent(tt.dimensions)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_totalPaperForPresents(t *testing.T) {
 	tests := []struct {
-		name     string
-		presents []string
-		want     int
-		want1    int
-		wantErr  bool
+		name               string
+		presents           []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if a present has more than 3 dimensions",
@@ -46,9 +47,9 @@ func Test_totalPaperForPresents(t *testing.T) {
 				"4x3x2x1",
 				"5x6x7",
 			},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns the sum of all paper and ribbon needed, advent of code example",
@@ -56,24 +57,17 @@ func Test_totalPaperForPresents(t *testing.T) {
 				"4x3x2",
 				"1x1x10",
 			},
-			want:    101,
-			want1:   48,
-			wantErr: false,
+			want:               101,
+			want1:              48,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := totalPaperForPresents(tt.presents)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("totalPaperForPresents() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("totalPaperForPresents() = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("totalPaperForPresents() = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
+			tt.errorAssertionFunc(t, err)
 		})
 	}
 }

@@ -2,23 +2,22 @@ package main
 
 import (
 	"fmt"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_letterIndex(t *testing.T) {
 	tests := []string{"a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z"}
 	for i, tt := range tests {
 		t.Run(fmt.Sprintf("returns %d if letter is %s", i, tt), func(t *testing.T) {
-			if got := letterIndex(tt); got != i {
-				t.Errorf("letterIndex() = %v, want %v", got, i)
-			}
+			got := letterIndex(tt)
+			assert.Equal(t, i, got)
 		})
 	}
 	t.Run("returns -1 if letter is aa", func(t *testing.T) {
-		if got := letterIndex("aa"); got != -1 {
-			t.Errorf("letterIndex() = %v, want %v", got, -1)
-		}
+		got := letterIndex("aa")
+		assert.Equal(t, -1, got)
 	})
 }
 
@@ -46,9 +45,8 @@ func Test_incrementCharacter(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := incrementCharacter(tt.arg); got != tt.want {
-				t.Errorf("incrementCharacter() = %v, want %v", got, tt.want)
-			}
+			got := incrementCharacter(tt.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -84,9 +82,7 @@ func TestPassword_RemoveIllegalCharacters(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			p := tt.p
 			p.RemoveIllegalCharacters()
-			if !reflect.DeepEqual(p, tt.want) {
-				t.Errorf("Password.RemoveIllegalCharacters() = %v, want %v", p, tt.want)
-			}
+			assert.Equal(t, tt.want, p)
 		})
 	}
 }
@@ -122,9 +118,7 @@ func TestPassword_IncrementPassword(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			p := tt.p
 			p.IncrementPassword()
-			if !reflect.DeepEqual(p, tt.want) {
-				t.Errorf("Password.IncrementPassword() = %v, want %v", p, tt.want)
-			}
+			assert.Equal(t, tt.want, p)
 		})
 	}
 }
@@ -158,9 +152,8 @@ func TestPassword_HasIncreasingStraightLetters(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.p.HasIncreasingStraightLetters(); got != tt.want {
-				t.Errorf("Password.HasIncreasingStraightLetters() = %v, want %v", got, tt.want)
-			}
+			got := tt.p.HasIncreasingStraightLetters()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -199,9 +192,8 @@ func TestPassword_HasDifferentPairs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.p.HasDifferentPairs(); got != tt.want {
-				t.Errorf("Password.HasDifferentPairs() = %v, want %v", got, tt.want)
-			}
+			got := tt.p.HasDifferentPairs()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -230,9 +222,8 @@ func TestPassword_IsValid(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.p.IsValid(); got != tt.want {
-				t.Errorf("Password.IsValid() = %v, want %v", got, tt.want)
-			}
+			got := tt.p.IsValid()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -279,9 +270,7 @@ func TestPassword_GetNextValidPassword(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			p := tt.p
 			p.GetNextValidPassword()
-			if !reflect.DeepEqual(p, tt.want) {
-				t.Errorf("Password.GetNextValidPassword() = %v, want %v", p, tt.want)
-			}
+			assert.Equal(t, tt.want, p)
 		})
 	}
 }
@@ -305,9 +294,8 @@ func Test_makePassword(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := makePassword(tt.arg); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("makePassword() = %v, want %v", got, tt.want)
-			}
+			got := makePassword(tt.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

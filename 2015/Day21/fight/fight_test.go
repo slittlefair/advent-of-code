@@ -3,8 +3,9 @@ package fight
 import (
 	"Advent-of-Code/2015/Day21/martial"
 	"Advent-of-Code/2015/Day21/shop"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMartialAttack(t *testing.T) {
@@ -58,12 +59,8 @@ func TestMartialAttack(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			MartialAttack(tt.args.attacker, tt.args.defender)
-			if !reflect.DeepEqual(tt.args.attacker, tt.want) {
-				t.Errorf("MartialAttack() = %v, want %v", tt.args.attacker, tt.want)
-			}
-			if !reflect.DeepEqual(tt.args.defender, tt.want1) {
-				t.Errorf("MartialAttack() = %v, want %v", tt.args.defender, tt.want1)
-			}
+			assert.Equal(t, tt.want, tt.args.attacker)
+			assert.Equal(t, tt.want1, tt.args.defender)
 		})
 	}
 }
@@ -97,63 +94,37 @@ func TestFight(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Fight(tt.args.player, tt.args.boss); got != tt.want {
-				t.Errorf("Fight() = %v, want %v", got, tt.want)
-			}
+			got := Fight(tt.args.player, tt.args.boss)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestInitiatePlayerForFight(t *testing.T) {
-	type args struct {
-		weapon shop.Equipment
-		armour shop.Equipment
-		ring1  shop.Equipment
-		ring2  shop.Equipment
-	}
-	tests := []struct {
-		name  string
-		args  args
-		want  *martial.Martial
-		want1 int
-	}{
-		{
-			name: "correctly initiates a player's stats from given equipment",
-			args: args{
-				weapon: shop.Equipment{
-					Armour: 1,
-					Damage: 20,
-					Cost:   300,
-				},
-				armour: shop.Equipment{
-					Armour: 100,
-					Damage: 2,
-					Cost:   30,
-				},
-				ring1: shop.Equipment{
-					Armour: 10,
-					Damage: 200,
-					Cost:   3,
-				},
-				ring2: shop.Equipment{},
-			},
-			want: &martial.Martial{
-				Armour: 111,
-				Damage: 222,
-				HP:     100,
-			},
-			want1: 333,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := InitiatePlayerForFight(tt.args.weapon, tt.args.armour, tt.args.ring1, tt.args.ring2)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("InitiatePlayerForFight() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("InitiatePlayerForFight() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+	t.Run("correctly initiates a player's stats from given equipment", func(t *testing.T) {
+		weapon := shop.Equipment{
+			Armour: 1,
+			Damage: 20,
+			Cost:   300,
+		}
+		armour := shop.Equipment{
+			Armour: 100,
+			Damage: 2,
+			Cost:   30,
+		}
+		ring1 := shop.Equipment{
+			Armour: 10,
+			Damage: 200,
+			Cost:   3,
+		}
+		ring2 := shop.Equipment{}
+		want := &martial.Martial{
+			Armour: 111,
+			Damage: 222,
+			HP:     100,
+		}
+		got, got1 := InitiatePlayerForFight(weapon, armour, ring1, ring2)
+		assert.Equal(t, want, got)
+		assert.Equal(t, 333, got1)
+	})
 }

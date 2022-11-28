@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGraph_addNode(t *testing.T) {
@@ -48,9 +49,7 @@ func TestGraph_addNode(t *testing.T) {
 				Nodes: tt.nodes,
 			}
 			g.addNode(tt.n)
-			if !reflect.DeepEqual(g.Nodes, tt.want) {
-				t.Errorf("Graph.addNode() = %v, want %v", g.Nodes, tt.want)
-			}
+			assert.Equal(t, tt.want, g.Nodes)
 		})
 	}
 }
@@ -160,19 +159,17 @@ func TestGraph_addEdge(t *testing.T) {
 				Nodes: tt.fields.Nodes,
 			}
 			g.addEdge(tt.args.parent, tt.args.child, tt.args.cost)
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Graph.addEdge() = %v, want %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
 
 func TestGraph_parseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    *Graph
-		wantErr bool
+		name               string
+		input              []string
+		want               *Graph
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an input line cost can't be converted correctly",
@@ -191,7 +188,7 @@ func TestGraph_parseInput(t *testing.T) {
 				},
 				Nodes: []string{"London", "Dublin"},
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "populates graph from input",
@@ -232,18 +229,15 @@ func TestGraph_parseInput(t *testing.T) {
 					{"London", "Belfast", "Dublin"},
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			g := &Graph{}
-			if err := g.parseInput(tt.input); (err != nil) != tt.wantErr {
-				t.Errorf("Graph.parseInput() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Graph.parseInput() = %+v, want %+v", g, tt.want)
-			}
+			err := g.parseInput(tt.input)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
@@ -304,66 +298,48 @@ func TestGraph_getDistanceOfPath(t *testing.T) {
 						Cost:   141,
 					}},
 			}
-			if got := g.getDistanceOfPath(tt.arg); got != tt.want {
-				t.Errorf("Graph.getDistanceOfPath() = %v, want %v", got, tt.want)
-			}
+			got := g.getDistanceOfPath(tt.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestGraph_findMinimumAndMaximumPaths(t *testing.T) {
-	tests := []struct {
-		name  string
-		want  int
-		want1 int
-	}{
-		{
-			name:  "returns the correct minimum and maximum paths",
-			want:  605,
-			want1: 982,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			g := &Graph{
-				Edges: []Edge{
-					{
-						Parent: "London",
-						Child:  "Dublin",
-						Cost:   464,
-					},
-					{
-						Parent: "London",
-						Child:  "Belfast",
-						Cost:   518,
-					},
-					{
-						Parent: "Dublin",
-						Child:  "Belfast",
-						Cost:   141,
-					},
+	t.Run("returns the correct minimum and maximum paths", func(t *testing.T) {
+		g := &Graph{
+			Edges: []Edge{
+				{
+					Parent: "London",
+					Child:  "Dublin",
+					Cost:   464,
 				},
-				Nodes: []string{
-					"London",
-					"Dublin",
-					"Belfast",
+				{
+					Parent: "London",
+					Child:  "Belfast",
+					Cost:   518,
 				},
-				Paths: [][]string{
-					{"London", "Dublin", "Belfast"},
-					{"Dublin", "London", "Belfast"},
-					{"Belfast", "Dublin", "London"},
-					{"Dublin", "Belfast", "London"},
-					{"Belfast", "London", "Dublin"},
-					{"London", "Belfast", "Dublin"},
+				{
+					Parent: "Dublin",
+					Child:  "Belfast",
+					Cost:   141,
 				},
-			}
-			got, got1 := g.findMinimumAndMaximumPaths()
-			if got != tt.want {
-				t.Errorf("Graph.findMinimumAndMaximumPaths() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Graph.findMinimumAndMaximumPaths() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+			},
+			Nodes: []string{
+				"London",
+				"Dublin",
+				"Belfast",
+			},
+			Paths: [][]string{
+				{"London", "Dublin", "Belfast"},
+				{"Dublin", "London", "Belfast"},
+				{"Belfast", "Dublin", "London"},
+				{"Dublin", "Belfast", "London"},
+				{"Belfast", "London", "Dublin"},
+				{"London", "Belfast", "Dublin"},
+			},
+		}
+		got, got1 := g.findMinimumAndMaximumPaths()
+		assert.Equal(t, 605, got)
+		assert.Equal(t, 982, got1)
+	})
 }
