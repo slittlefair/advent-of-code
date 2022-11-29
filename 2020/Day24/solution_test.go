@@ -3,37 +3,26 @@ package main
 import (
 	"Advent-of-Code/graph"
 	"fmt"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  [][]string
-	}{
-		{
-			name: "simple parse of input",
-			input: []string{
-				"esenee",
-				"esew",
-				"nwwswee",
-			},
-			want: [][]string{
-				{"e", "se", "ne", "e"},
-				{"e", "se", "w"},
-				{"nw", "w", "sw", "e", "e"},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := parseInput(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("simple parse of input", func(t *testing.T) {
+		input := []string{
+			"esenee",
+			"esew",
+			"nwwswee",
+		}
+		want := [][]string{
+			{"e", "se", "ne", "e"},
+			{"e", "se", "w"},
+			{"nw", "w", "sw", "e", "e"},
+		}
+		got := parseInput(input)
+		assert.Equal(t, want, got)
+	})
 }
 
 var simpleMap = map[graph.Co]bool{
@@ -77,12 +66,8 @@ func TestTiles_getETile(t *testing.T) {
 				Map: simpleMap,
 			}
 			got, got1 := tr.getETile(tt.co)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Tiles.getETile() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Tiles.getETile() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
@@ -113,12 +98,8 @@ func TestTiles_getSETile(t *testing.T) {
 				Map: simpleMap,
 			}
 			got, got1 := tr.getSETile(tt.co)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Tiles.getSETile() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Tiles.getSETile() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
@@ -149,12 +130,8 @@ func TestTiles_getNETile(t *testing.T) {
 				Map: simpleMap,
 			}
 			got, got1 := tr.getNETile(tt.co)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Tiles.getNETile() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Tiles.getNETile() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
@@ -185,12 +162,8 @@ func TestTiles_getWTile(t *testing.T) {
 				Map: simpleMap,
 			}
 			got, got1 := tr.getWTile(tt.co)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Tiles.getWTile() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Tiles.getWTile() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
@@ -221,12 +194,8 @@ func TestTiles_getSWTile(t *testing.T) {
 				Map: simpleMap,
 			}
 			got, got1 := tr.getSWTile(tt.co)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Tiles.getSWTile() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Tiles.getSWTile() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
@@ -257,12 +226,8 @@ func TestTiles_getNWTile(t *testing.T) {
 				Map: simpleMap,
 			}
 			got, got1 := tr.getNWTile(tt.co)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Tiles.getNWTile() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Tiles.getNWTile() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
@@ -494,9 +459,7 @@ func TestTiles_moveTile(t *testing.T) {
 				MinY:        tt.fields.MinY,
 			}
 			tr.moveTile(tt.dir)
-			if !reflect.DeepEqual(tr, tt.want) {
-				t.Errorf("Tiles.moveTile() = %v, want %v", tr, tt.want)
-			}
+			assert.Equal(t, tt.want, tr)
 		})
 	}
 }
@@ -618,9 +581,7 @@ func TestTiles_flipTiles(t *testing.T) {
 				Map: tt.Map,
 			}
 			tr.flipTiles(tt.co)
-			if !reflect.DeepEqual(tr, tt.want) {
-				t.Errorf("Tiles.flipTiles() = %v, want %v", tr, tt.want)
-			}
+			assert.Equal(t, tt.want, tr)
 		})
 	}
 }
@@ -704,9 +665,7 @@ func TestTiles_moveThroughList(t *testing.T) {
 				MaxY: tt.fields.MaxY,
 			}
 			tr.moveThroughList(tt.tiles)
-			if !reflect.DeepEqual(tr, tt.want) {
-				t.Errorf("Tiles.flipTiles() = %v, want %v", tr, tt.want)
-			}
+			assert.Equal(t, tt.want, tr)
 		})
 	}
 }
@@ -758,9 +717,8 @@ func TestTiles_countTiles(t *testing.T) {
 			tr := Tiles{
 				Map: tt.Map,
 			}
-			if got := tr.countTiles(); got != tt.want {
-				t.Errorf("Tiles.countTiles() = %v, want %v", got, tt.want)
-			}
+			got := tr.countTiles()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -879,9 +837,7 @@ func TestTiles_populateMissingTiles(t *testing.T) {
 				MinY:        tt.fields.MinY,
 			}
 			tr.populateMissingTiles()
-			if !reflect.DeepEqual(tr, tt.want) {
-				t.Errorf("Tiles.populateMissingTiles() = %v, want %v", tr, tt.want)
-			}
+			assert.Equal(t, tt.want, tr)
 		})
 	}
 }
@@ -1140,21 +1096,15 @@ func TestTiles_shouldFlip(t *testing.T) {
 				MinX:        tt.fields.MinX,
 				MinY:        tt.fields.MinY,
 			}
-			if got := tr.shouldFlip(tt.co); got != tt.want {
-				t.Errorf("Tiles.shouldFlip() = %v, want %v", got, tt.want)
-			}
+			got := tr.shouldFlip(tt.co)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestTiles_decideWhichTilesToFlip(t *testing.T) {
-	tests := []struct {
-		name string
-		Map  map[graph.Co]bool
-		want []graph.Co
-	}{
-		{
-			name: "returns list of tiles to be flipped, advent of code example",
+	t.Run("returns list of tiles to be flipped, advent of code example", func(t *testing.T) {
+		tr := &Tiles{
 			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: true,
 				{X: 1, Y: 0}: false,
@@ -1182,49 +1132,27 @@ func TestTiles_decideWhichTilesToFlip(t *testing.T) {
 				{X: 3, Y: 4}: true,
 				{X: 4, Y: 4}: false,
 			},
-			want: []graph.Co{
-				{X: 0, Y: 0},
-				{X: 2, Y: 0},
-				{X: 4, Y: 0},
-				{X: 1, Y: 1},
-				{X: 2, Y: 2},
-				{X: 0, Y: 3},
-				{X: 1, Y: 3},
-				{X: 4, Y: 3},
-				{X: 4, Y: 4},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tr := &Tiles{
-				Map: tt.Map,
-			}
-			got := tr.decideWhichTilesToFlip()
-			if len(got) != len(tt.want) {
-				t.Errorf("Tiles.decideWhichTilesToFlip() = %v, want %v", got, tt.want)
-			}
-			for _, wantCo := range tt.want {
-				for _, gotCo := range got {
-					if wantCo == gotCo {
-						goto out
-					}
-				}
-				t.Errorf("Tiles.decideWhichTilesToFlip() = %v, want %v", got, tt.want)
-			out:
-			}
-		})
-	}
+		}
+		want := []graph.Co{
+			{X: 0, Y: 0},
+			{X: 2, Y: 0},
+			{X: 4, Y: 0},
+			{X: 1, Y: 1},
+			{X: 2, Y: 2},
+			{X: 0, Y: 3},
+			{X: 1, Y: 3},
+			{X: 4, Y: 3},
+			{X: 4, Y: 4},
+		}
+		got := tr.decideWhichTilesToFlip()
+		assert.Len(t, want, len(got))
+		assert.ElementsMatch(t, want, got)
+	})
 }
 
 func TestTiles_doFlips(t *testing.T) {
-	tests := []struct {
-		name string
-		Map  map[graph.Co]bool
-		want *Tiles
-	}{
-		{
-			name: "flips the correct tiles",
+	t.Run("flips the correct tiles", func(t *testing.T) {
+		tr := &Tiles{
 			Map: map[graph.Co]bool{
 				{X: 0, Y: 0}: true,
 				{X: 1, Y: 0}: false,
@@ -1252,48 +1180,39 @@ func TestTiles_doFlips(t *testing.T) {
 				{X: 3, Y: 4}: true,
 				{X: 4, Y: 4}: false,
 			},
-			want: &Tiles{
-				Map: map[graph.Co]bool{
-					{X: 0, Y: 0}: false,
-					{X: 1, Y: 0}: false,
-					{X: 2, Y: 0}: true,
-					{X: 3, Y: 0}: true,
-					{X: 4, Y: 0}: true,
-					{X: 0, Y: 1}: false,
-					{X: 1, Y: 1}: true,
-					{X: 2, Y: 1}: true,
-					{X: 3, Y: 1}: false,
-					{X: 4, Y: 1}: true,
-					{X: 0, Y: 2}: true,
-					{X: 1, Y: 2}: true,
-					{X: 2, Y: 2}: true,
-					{X: 3, Y: 2}: false,
-					{X: 4, Y: 2}: true,
-					{X: 0, Y: 3}: true,
-					{X: 1, Y: 3}: true,
-					{X: 2, Y: 3}: false,
-					{X: 3, Y: 3}: true,
-					{X: 4, Y: 3}: true,
-					{X: 0, Y: 4}: false,
-					{X: 1, Y: 4}: false,
-					{X: 2, Y: 4}: true,
-					{X: 3, Y: 4}: true,
-					{X: 4, Y: 4}: true,
-				},
+		}
+		want := &Tiles{
+			Map: map[graph.Co]bool{
+				{X: 0, Y: 0}: false,
+				{X: 1, Y: 0}: false,
+				{X: 2, Y: 0}: true,
+				{X: 3, Y: 0}: true,
+				{X: 4, Y: 0}: true,
+				{X: 0, Y: 1}: false,
+				{X: 1, Y: 1}: true,
+				{X: 2, Y: 1}: true,
+				{X: 3, Y: 1}: false,
+				{X: 4, Y: 1}: true,
+				{X: 0, Y: 2}: true,
+				{X: 1, Y: 2}: true,
+				{X: 2, Y: 2}: true,
+				{X: 3, Y: 2}: false,
+				{X: 4, Y: 2}: true,
+				{X: 0, Y: 3}: true,
+				{X: 1, Y: 3}: true,
+				{X: 2, Y: 3}: false,
+				{X: 3, Y: 3}: true,
+				{X: 4, Y: 3}: true,
+				{X: 0, Y: 4}: false,
+				{X: 1, Y: 4}: false,
+				{X: 2, Y: 4}: true,
+				{X: 3, Y: 4}: true,
+				{X: 4, Y: 4}: true,
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tr := &Tiles{
-				Map: tt.Map,
-			}
-			tr.doFlips()
-			if !reflect.DeepEqual(tr, tt.want) {
-				t.Errorf("Tiles.doFlips() = %v, got %v", tr, tt.want)
-			}
-		})
-	}
+		}
+		tr.doFlips()
+		assert.Equal(t, want, tr)
+	})
 }
 
 func TestTiles_countTilesAfterDays(t *testing.T) {
@@ -1404,9 +1323,8 @@ func TestTiles_countTilesAfterDays(t *testing.T) {
 				MinX: -3,
 				MinY: -6,
 			}
-			if got := tr.countTilesAfterDays(tt.days); got != tt.want {
-				t.Errorf("Tiles.countTilesAfterDays() = %v, want %v", got, tt.want)
-			}
+			got := tr.countTilesAfterDays(tt.days)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

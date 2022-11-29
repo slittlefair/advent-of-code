@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var classParams = FieldParams{
@@ -93,18 +94,18 @@ var seatParams = FieldParams{
 
 func TestTicketFields_populateField(t *testing.T) {
 	tests := []struct {
-		name    string
-		tf      TicketFields
-		field   []string
-		want    TicketFields
-		wantErr bool
+		name               string
+		tf                 TicketFields
+		field              []string
+		want               TicketFields
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if the line is not parsed correctly",
-			tf:      TicketFields{},
-			field:   []string{"class", "1-2 or a-b"},
-			want:    TicketFields{},
-			wantErr: true,
+			name:               "returns an error if the line is not parsed correctly",
+			tf:                 TicketFields{},
+			field:              []string{"class", "1-2 or a-b"},
+			want:               TicketFields{},
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name:  "advent of code example 1",
@@ -113,7 +114,7 @@ func TestTicketFields_populateField(t *testing.T) {
 			want: TicketFields{
 				"class": {vn: classParams.vn},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name:  "advent of code example 2",
@@ -122,7 +123,7 @@ func TestTicketFields_populateField(t *testing.T) {
 			want: TicketFields{
 				"row": {vn: rowParams.vn},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name:  "advent of code example 3",
@@ -131,17 +132,14 @@ func TestTicketFields_populateField(t *testing.T) {
 			want: TicketFields{
 				"seat": {vn: seatParams.vn},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := tt.tf.populateField(tt.field); (err != nil) != tt.wantErr {
-				t.Errorf("TicketFields.populateField() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if !reflect.DeepEqual(tt.tf, tt.want) {
-				t.Errorf("parseInput() tf = %v, want %v", tt.tf, tt.want)
-			}
+			err := tt.tf.populateField(tt.field)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, tt.tf)
 		})
 	}
 }
@@ -186,73 +184,57 @@ func TestTicketFields_numIsValid(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.tf.numIsValid(tt.num); got != tt.want {
-				t.Errorf("TicketFields.numIsValid() = %v, want %v", got, tt.want)
-			}
+			got := tt.tf.numIsValid(tt.num)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestTicketFields_populatePossibleValueIndices(t *testing.T) {
-	tests := []struct {
-		name     string
-		tf       TicketFields
-		maxIndex int
-		want     TicketFields
-	}{
-		{
-			name: "correctly populates PossibleValueIndices",
-			tf: TicketFields{
-				"class": FieldParams{
-					vn: ValidNumbers{
-						1: true,
-						2: true,
-						7: true,
-					},
-				},
-				"seat": FieldParams{
-					vn: ValidNumbers{
-						8: true,
-						9: true,
-					},
+	t.Run("correctly populates PossibleValueIndices", func(t *testing.T) {
+		tf := TicketFields{
+			"class": FieldParams{
+				vn: ValidNumbers{
+					1: true,
+					2: true,
+					7: true,
 				},
 			},
-			maxIndex: 3,
-			want: TicketFields{
-				"class": FieldParams{
-					vn: ValidNumbers{
-						1: true,
-						2: true,
-						7: true,
-					},
-					pvi: PossibleValueIndices{
-						0: true,
-						1: true,
-						2: true,
-					},
-				},
-				"seat": FieldParams{
-					vn: ValidNumbers{
-						8: true,
-						9: true,
-					},
-					pvi: PossibleValueIndices{
-						0: true,
-						1: true,
-						2: true,
-					},
+			"seat": FieldParams{
+				vn: ValidNumbers{
+					8: true,
+					9: true,
 				},
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.tf.populatePossibleValueIndices(tt.maxIndex)
-			if !reflect.DeepEqual(tt.tf, tt.want) {
-				t.Errorf("parseInput() tf = %v, want %v", tt.tf, tt.want)
-			}
-		})
-	}
+		}
+		want := TicketFields{
+			"class": FieldParams{
+				vn: ValidNumbers{
+					1: true,
+					2: true,
+					7: true,
+				},
+				pvi: PossibleValueIndices{
+					0: true,
+					1: true,
+					2: true,
+				},
+			},
+			"seat": FieldParams{
+				vn: ValidNumbers{
+					8: true,
+					9: true,
+				},
+				pvi: PossibleValueIndices{
+					0: true,
+					1: true,
+					2: true,
+				},
+			},
+		}
+		tf.populatePossibleValueIndices(3)
+		assert.Equal(t, want, tf)
+	})
 }
 
 func TestTicketFields_part1(t *testing.T) {
@@ -327,138 +309,115 @@ func TestTicketFields_part1(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := tt.tf.validateTicket(tt.args.nums, tt.args.allValidTickets)
-			if got != tt.want {
-				t.Errorf("TicketFields.part1() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("TicketFields.part1() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
 
 func TestTicketFields_part2(t *testing.T) {
-	type args struct {
-		myTicket        []int
-		allValidTickets TicketCollection
-	}
-	tests := []struct {
-		name string
-		tf   TicketFields
-		args args
-		want int
-	}{
-		{
-			name: "advent of code example",
-			tf: TicketFields{
-				"departure class": FieldParams{
-					vn: ValidNumbers{
-						0:  true,
-						1:  true,
-						4:  true,
-						5:  true,
-						6:  true,
-						7:  true,
-						8:  true,
-						9:  true,
-						10: true,
-						11: true,
-						12: true,
-						13: true,
-						14: true,
-						15: true,
-						16: true,
-						17: true,
-						18: true,
-						19: true,
-					},
-					pvi: PossibleValueIndices{
-						0: true,
-						1: true,
-						2: true,
-					},
+
+	t.Run("advent of code example", func(t *testing.T) {
+		tf := TicketFields{
+			"departure class": FieldParams{
+				vn: ValidNumbers{
+					0:  true,
+					1:  true,
+					4:  true,
+					5:  true,
+					6:  true,
+					7:  true,
+					8:  true,
+					9:  true,
+					10: true,
+					11: true,
+					12: true,
+					13: true,
+					14: true,
+					15: true,
+					16: true,
+					17: true,
+					18: true,
+					19: true,
 				},
-				"departure row": FieldParams{
-					vn: ValidNumbers{
-						0:  true,
-						1:  true,
-						2:  true,
-						3:  true,
-						4:  true,
-						5:  true,
-						8:  true,
-						9:  true,
-						10: true,
-						11: true,
-						12: true,
-						13: true,
-						14: true,
-						15: true,
-						16: true,
-						17: true,
-						18: true,
-						19: true,
-					},
-					pvi: PossibleValueIndices{
-						0: true,
-						1: true,
-						2: true,
-					},
-				},
-				"seat": FieldParams{
-					vn: ValidNumbers{
-						0:  true,
-						1:  true,
-						2:  true,
-						3:  true,
-						4:  true,
-						5:  true,
-						6:  true,
-						7:  true,
-						8:  true,
-						9:  true,
-						10: true,
-						11: true,
-						12: true,
-						13: true,
-						16: true,
-						17: true,
-						18: true,
-						19: true,
-					},
-					pvi: PossibleValueIndices{
-						0: true,
-						1: true,
-						2: true,
-					},
+				pvi: PossibleValueIndices{
+					0: true,
+					1: true,
+					2: true,
 				},
 			},
-			args: args{
-				myTicket:        []int{11, 12, 13},
-				allValidTickets: TicketCollection{{3, 9, 18}, {15, 1, 5}, {5, 14, 9}},
+			"departure row": FieldParams{
+				vn: ValidNumbers{
+					0:  true,
+					1:  true,
+					2:  true,
+					3:  true,
+					4:  true,
+					5:  true,
+					8:  true,
+					9:  true,
+					10: true,
+					11: true,
+					12: true,
+					13: true,
+					14: true,
+					15: true,
+					16: true,
+					17: true,
+					18: true,
+					19: true,
+				},
+				pvi: PossibleValueIndices{
+					0: true,
+					1: true,
+					2: true,
+				},
 			},
-			want: 132,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.tf.part2(tt.args.myTicket, tt.args.allValidTickets); got != tt.want {
-				t.Errorf("TicketFields.part2() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+			"seat": FieldParams{
+				vn: ValidNumbers{
+					0:  true,
+					1:  true,
+					2:  true,
+					3:  true,
+					4:  true,
+					5:  true,
+					6:  true,
+					7:  true,
+					8:  true,
+					9:  true,
+					10: true,
+					11: true,
+					12: true,
+					13: true,
+					16: true,
+					17: true,
+					18: true,
+					19: true,
+				},
+				pvi: PossibleValueIndices{
+					0: true,
+					1: true,
+					2: true,
+				},
+			},
+		}
+		myTicket := []int{11, 12, 13}
+		allValidTickets := TicketCollection{{3, 9, 18}, {15, 1, 5}, {5, 14, 9}}
+		got := tf.part2(myTicket, allValidTickets)
+		assert.Equal(t, 132, got)
+	})
 }
 
 func TestTicketFields_runSolution(t *testing.T) {
 	tests := []struct {
-		name    string
-		tf      TicketFields
-		entries []string
-		want    []int
-		want1   int
-		want2   TicketCollection
-		want3   TicketFields
-		wantErr bool
+		name               string
+		tf                 TicketFields
+		entries            []string
+		want               []int
+		want1              int
+		want2              TicketCollection
+		want3              TicketFields
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if the input cannot be parsed correctly",
@@ -484,7 +443,7 @@ func TestTicketFields_runSolution(t *testing.T) {
 				"class": {vn: classParams.vn},
 				"row":   {vn: rowParams.vn},
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "advent of code example",
@@ -511,28 +470,16 @@ func TestTicketFields_runSolution(t *testing.T) {
 				"class": classParams,
 				"seat":  seatParams,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, got2, err := tt.tf.runSolution(tt.entries)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("TicketFields.runSolution() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("TicketFields.runSolution() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("TicketFields.runSolution() got1 = %v, want %v", got1, tt.want1)
-			}
-			if !reflect.DeepEqual(got2, tt.want2) {
-				t.Errorf("TicketFields.runSolution() got2 = %v, want %v", got2, tt.want2)
-			}
-			if !reflect.DeepEqual(tt.tf, tt.want3) {
-				t.Errorf("parseInput() tf = %v, want %v", tt.tf, tt.want3)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
+			assert.Equal(t, tt.want2, got2)
 		})
 	}
 }

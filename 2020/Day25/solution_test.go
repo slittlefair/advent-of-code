@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_transformNumber(t *testing.T) {
@@ -33,9 +35,8 @@ func Test_transformNumber(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := transformNumber(tt.args.value, tt.args.subjectNumber); got != tt.want {
-				t.Errorf("transformNumber() = %v, want %v", got, tt.want)
-			}
+			got := transformNumber(tt.args.value, tt.args.subjectNumber)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -59,9 +60,8 @@ func Test_getLoopSize(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getLoopSize(tt.key); got != tt.want {
-				t.Errorf("getLoopSize() = %v, want %v", got, tt.want)
-			}
+			got := getLoopSize(tt.key)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -95,9 +95,8 @@ func Test_getEncryptionKey(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := getEncryptionKey(tt.args.subjectNumber, tt.args.loopSize); got != tt.want {
-				t.Errorf("getEncryptionKey() = %v, want %v", got, tt.want)
-			}
+			got := getEncryptionKey(tt.args.subjectNumber, tt.args.loopSize)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

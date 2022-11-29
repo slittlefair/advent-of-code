@@ -3,94 +3,83 @@ package picture
 import (
 	tile "Advent-of-Code/2020/Day20/tile"
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPicture_PopulateTiles(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  Picture
-	}{
-		{
-			name: "populates a simple picture from input",
-			input: []string{
-				"Tile 7:",
-				"..",
-				"##",
-				"",
-				"Tile 5:",
-				".#",
-				"#.",
-				"",
-				"Tile 11:",
-				".#",
-				".#",
-				"",
-				"Tile 3:",
-				"..",
-				"..",
-			},
-			want: Picture{
-				Tiles: []tile.Tile{
-					{
-						ID:     "7",
-						Height: 1,
-						Width:  1,
-						Pixels: map[graph.Co]string{
-							{X: 0, Y: 0}: ".",
-							{X: 1, Y: 0}: ".",
-							{X: 0, Y: 1}: "#",
-							{X: 1, Y: 1}: "#",
-						},
+	t.Run("populates a simple picture from input", func(t *testing.T) {
+		input := []string{
+			"Tile 7:",
+			"..",
+			"##",
+			"",
+			"Tile 5:",
+			".#",
+			"#.",
+			"",
+			"Tile 11:",
+			".#",
+			".#",
+			"",
+			"Tile 3:",
+			"..",
+			"..",
+		}
+		want := Picture{
+			Tiles: []tile.Tile{
+				{
+					ID:     "7",
+					Height: 1,
+					Width:  1,
+					Pixels: map[graph.Co]string{
+						{X: 0, Y: 0}: ".",
+						{X: 1, Y: 0}: ".",
+						{X: 0, Y: 1}: "#",
+						{X: 1, Y: 1}: "#",
 					},
-					{
-						ID:     "5",
-						Height: 1,
-						Width:  1,
-						Pixels: map[graph.Co]string{
-							{X: 0, Y: 0}: ".",
-							{X: 1, Y: 0}: "#",
-							{X: 0, Y: 1}: "#",
-							{X: 1, Y: 1}: ".",
-						},
+				},
+				{
+					ID:     "5",
+					Height: 1,
+					Width:  1,
+					Pixels: map[graph.Co]string{
+						{X: 0, Y: 0}: ".",
+						{X: 1, Y: 0}: "#",
+						{X: 0, Y: 1}: "#",
+						{X: 1, Y: 1}: ".",
 					},
-					{
-						ID:     "11",
-						Height: 1,
-						Width:  1,
-						Pixels: map[graph.Co]string{
-							{X: 0, Y: 0}: ".",
-							{X: 1, Y: 0}: "#",
-							{X: 0, Y: 1}: ".",
-							{X: 1, Y: 1}: "#",
-						},
+				},
+				{
+					ID:     "11",
+					Height: 1,
+					Width:  1,
+					Pixels: map[graph.Co]string{
+						{X: 0, Y: 0}: ".",
+						{X: 1, Y: 0}: "#",
+						{X: 0, Y: 1}: ".",
+						{X: 1, Y: 1}: "#",
 					},
-					{
-						ID:     "3",
-						Height: 1,
-						Width:  1,
-						Pixels: map[graph.Co]string{
-							{X: 0, Y: 0}: ".",
-							{X: 1, Y: 0}: ".",
-							{X: 0, Y: 1}: ".",
-							{X: 1, Y: 1}: ".",
-						},
+				},
+				{
+					ID:     "3",
+					Height: 1,
+					Width:  1,
+					Pixels: map[graph.Co]string{
+						{X: 0, Y: 0}: ".",
+						{X: 1, Y: 0}: ".",
+						{X: 0, Y: 1}: ".",
+						{X: 1, Y: 1}: ".",
 					},
 				},
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p := &Picture{}
-			p.PopulateTiles(tt.input)
-			if !reflect.DeepEqual(*p, tt.want) {
-				t.Errorf("got %v, want %v", p, tt.want)
-			}
-		})
-	}
+		}
+		p := &Picture{}
+		p.PopulateTiles(input)
+		assert.Equal(t, want, *p)
+
+	})
 }
 
 func TestPicture_FindMatchesForTile(t *testing.T) {
@@ -299,9 +288,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.p.FindMatchesForTile(tt.t, tt.index)
-			if !reflect.DeepEqual(tt.p, tt.want) {
-				t.Errorf("got %+v, want %+v", tt.p, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.p)
 		})
 	}
 
@@ -1694,19 +1681,17 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				},
 			}
 			p.FindMatchesForTile(tile1, 0)
-			if !reflect.DeepEqual(p, want) {
-				t.Errorf("Picture.FindMatchesForTile() = %v, want %v", p, want)
-			}
+			assert.Equal(t, want, p)
 		})
 	}
 }
 
 func TestPicture_CalculateCornerIDs(t *testing.T) {
 	tests := []struct {
-		name    string
-		Tiles   []tile.Tile
-		want    int
-		wantErr bool
+		name               string
+		Tiles              []tile.Tile
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if a corner tile ID can't be converted into an int",
@@ -1740,8 +1725,8 @@ func TestPicture_CalculateCornerIDs(t *testing.T) {
 					},
 				},
 			},
-			want:    0,
-			wantErr: true,
+			want:               0,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns the product of corner tiles (only corners)",
@@ -1775,8 +1760,8 @@ func TestPicture_CalculateCornerIDs(t *testing.T) {
 					},
 				},
 			},
-			want:    3003,
-			wantErr: false,
+			want:               3003,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns the product of corner tiles",
@@ -1831,8 +1816,8 @@ func TestPicture_CalculateCornerIDs(t *testing.T) {
 					},
 				},
 			},
-			want:    110517,
-			wantErr: false,
+			want:               110517,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns the product of corner tiles (non corner, non numeric ID)",
@@ -1887,8 +1872,8 @@ func TestPicture_CalculateCornerIDs(t *testing.T) {
 					},
 				},
 			},
-			want:    17391,
-			wantErr: false,
+			want:               17391,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
@@ -1897,24 +1882,19 @@ func TestPicture_CalculateCornerIDs(t *testing.T) {
 				Tiles: tt.Tiles,
 			}
 			got, err := p.CalculateCornerIDs()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Picture.CalculateCornerIDs() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("Picture.CalculateCornerIDs() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestPicture_getTileFromID(t *testing.T) {
 	tests := []struct {
-		name    string
-		Tiles   []tile.Tile
-		id      string
-		want    tile.Tile
-		wantErr bool
+		name               string
+		Tiles              []tile.Tile
+		id                 string
+		want               tile.Tile
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if picture contains no tile with the given ID",
@@ -1932,9 +1912,9 @@ func TestPicture_getTileFromID(t *testing.T) {
 					ID: "4",
 				},
 			},
-			id:      "5",
-			want:    tile.Tile{},
-			wantErr: true,
+			id:                 "5",
+			want:               tile.Tile{},
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns the correct tile if picture contains a tile with the given ID",
@@ -1956,7 +1936,7 @@ func TestPicture_getTileFromID(t *testing.T) {
 			want: tile.Tile{
 				ID: "3",
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
@@ -1965,23 +1945,18 @@ func TestPicture_getTileFromID(t *testing.T) {
 				Tiles: tt.Tiles,
 			}
 			got, err := p.getTileFromID(tt.id)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Picture.getTileFromID() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Picture.getTileFromID() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestPicture_getTopLeftTile(t *testing.T) {
 	tests := []struct {
-		name    string
-		Tiles   []tile.Tile
-		want    tile.Tile
-		wantErr bool
+		name               string
+		Tiles              []tile.Tile
+		want               tile.Tile
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if there is no top left tile",
@@ -2064,8 +2039,8 @@ func TestPicture_getTopLeftTile(t *testing.T) {
 					},
 				},
 			},
-			want:    tile.Tile{},
-			wantErr: true,
+			want:               tile.Tile{},
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if there is no top left tile",
@@ -2162,7 +2137,7 @@ func TestPicture_getTopLeftTile(t *testing.T) {
 					Right:  "b",
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
@@ -2171,32 +2146,19 @@ func TestPicture_getTopLeftTile(t *testing.T) {
 				Tiles: tt.Tiles,
 			}
 			got, err := p.getTopLeftTile()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Picture.getTopLeftTile() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Picture.getTopLeftTile() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestPicture_populatePictureWithTile(t *testing.T) {
-	type args struct {
-		t tile.Tile
-		x int
-		y int
-	}
-	tests := []struct {
-		name string
-		args args
-		want Picture
-	}{
-		{
-			name: "correctly populates the given tile into the picture",
-			args: args{
-				t: tile.Tile{
+	t.Run("correctly populates the given tile into the picture", func(t *testing.T) {
+		p := &Picture{
+			Pixels:  make(map[graph.Co]string),
+			TileMap: make(map[graph.Co]tile.Tile),
+			Tiles: []tile.Tile{
+				{
 					ID: "123",
 					Pixels: map[graph.Co]string{
 						{X: 0, Y: 0}: ".",
@@ -2219,108 +2181,94 @@ func TestPicture_populatePictureWithTile(t *testing.T) {
 					Height: 3,
 					Width:  3,
 				},
-				x: 2,
-				y: 2,
 			},
-			want: Picture{
-				Height: 5,
-				Width:  5,
-				Pixels: map[graph.Co]string{
-					{X: 4, Y: 4}: "#",
-					{X: 5, Y: 4}: ".",
-					{X: 4, Y: 5}: ".",
-					{X: 5, Y: 5}: "#",
-				},
-				TileMap: map[graph.Co]tile.Tile{
-					{X: 2, Y: 2}: {
-						ID: "123",
-						Pixels: map[graph.Co]string{
-							{X: 0, Y: 0}: ".",
-							{X: 1, Y: 0}: "#",
-							{X: 2, Y: 0}: "#",
-							{X: 3, Y: 0}: ".",
-							{X: 0, Y: 1}: ".",
-							{X: 1, Y: 1}: "#",
-							{X: 2, Y: 1}: ".",
-							{X: 3, Y: 1}: ".",
-							{X: 0, Y: 2}: ".",
-							{X: 1, Y: 2}: ".",
-							{X: 2, Y: 2}: "#",
-							{X: 3, Y: 2}: "#",
-							{X: 0, Y: 3}: "#",
-							{X: 1, Y: 3}: "#",
-							{X: 2, Y: 3}: "#",
-							{X: 3, Y: 3}: ".",
-						},
-						Height: 3,
-						Width:  3,
+		}
+		inputTile := tile.Tile{
+			ID: "123",
+			Pixels: map[graph.Co]string{
+				{X: 0, Y: 0}: ".",
+				{X: 1, Y: 0}: "#",
+				{X: 2, Y: 0}: "#",
+				{X: 3, Y: 0}: ".",
+				{X: 0, Y: 1}: ".",
+				{X: 1, Y: 1}: "#",
+				{X: 2, Y: 1}: ".",
+				{X: 3, Y: 1}: ".",
+				{X: 0, Y: 2}: ".",
+				{X: 1, Y: 2}: ".",
+				{X: 2, Y: 2}: "#",
+				{X: 3, Y: 2}: "#",
+				{X: 0, Y: 3}: "#",
+				{X: 1, Y: 3}: "#",
+				{X: 2, Y: 3}: "#",
+				{X: 3, Y: 3}: ".",
+			},
+			Height: 3,
+			Width:  3,
+		}
+		want := Picture{
+			Height: 5,
+			Width:  5,
+			Pixels: map[graph.Co]string{
+				{X: 4, Y: 4}: "#",
+				{X: 5, Y: 4}: ".",
+				{X: 4, Y: 5}: ".",
+				{X: 5, Y: 5}: "#",
+			},
+			TileMap: map[graph.Co]tile.Tile{
+				{X: 2, Y: 2}: {
+					ID: "123",
+					Pixels: map[graph.Co]string{
+						{X: 0, Y: 0}: ".",
+						{X: 1, Y: 0}: "#",
+						{X: 2, Y: 0}: "#",
+						{X: 3, Y: 0}: ".",
+						{X: 0, Y: 1}: ".",
+						{X: 1, Y: 1}: "#",
+						{X: 2, Y: 1}: ".",
+						{X: 3, Y: 1}: ".",
+						{X: 0, Y: 2}: ".",
+						{X: 1, Y: 2}: ".",
+						{X: 2, Y: 2}: "#",
+						{X: 3, Y: 2}: "#",
+						{X: 0, Y: 3}: "#",
+						{X: 1, Y: 3}: "#",
+						{X: 2, Y: 3}: "#",
+						{X: 3, Y: 3}: ".",
 					},
-				},
-				Tiles: []tile.Tile{
-					{
-						ID: "123",
-						Pixels: map[graph.Co]string{
-							{X: 0, Y: 0}: ".",
-							{X: 1, Y: 0}: "#",
-							{X: 2, Y: 0}: "#",
-							{X: 3, Y: 0}: ".",
-							{X: 0, Y: 1}: ".",
-							{X: 1, Y: 1}: "#",
-							{X: 2, Y: 1}: ".",
-							{X: 3, Y: 1}: ".",
-							{X: 0, Y: 2}: ".",
-							{X: 1, Y: 2}: ".",
-							{X: 2, Y: 2}: "#",
-							{X: 3, Y: 2}: "#",
-							{X: 0, Y: 3}: "#",
-							{X: 1, Y: 3}: "#",
-							{X: 2, Y: 3}: "#",
-							{X: 3, Y: 3}: ".",
-						},
-						Height: 3,
-						Width:  3,
-					},
+					Height: 3,
+					Width:  3,
 				},
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p := &Picture{
-				Pixels:  make(map[graph.Co]string),
-				TileMap: make(map[graph.Co]tile.Tile),
-				Tiles: []tile.Tile{
-					{
-						ID: "123",
-						Pixels: map[graph.Co]string{
-							{X: 0, Y: 0}: ".",
-							{X: 1, Y: 0}: "#",
-							{X: 2, Y: 0}: "#",
-							{X: 3, Y: 0}: ".",
-							{X: 0, Y: 1}: ".",
-							{X: 1, Y: 1}: "#",
-							{X: 2, Y: 1}: ".",
-							{X: 3, Y: 1}: ".",
-							{X: 0, Y: 2}: ".",
-							{X: 1, Y: 2}: ".",
-							{X: 2, Y: 2}: "#",
-							{X: 3, Y: 2}: "#",
-							{X: 0, Y: 3}: "#",
-							{X: 1, Y: 3}: "#",
-							{X: 2, Y: 3}: "#",
-							{X: 3, Y: 3}: ".",
-						},
-						Height: 3,
-						Width:  3,
+			Tiles: []tile.Tile{
+				{
+					ID: "123",
+					Pixels: map[graph.Co]string{
+						{X: 0, Y: 0}: ".",
+						{X: 1, Y: 0}: "#",
+						{X: 2, Y: 0}: "#",
+						{X: 3, Y: 0}: ".",
+						{X: 0, Y: 1}: ".",
+						{X: 1, Y: 1}: "#",
+						{X: 2, Y: 1}: ".",
+						{X: 3, Y: 1}: ".",
+						{X: 0, Y: 2}: ".",
+						{X: 1, Y: 2}: ".",
+						{X: 2, Y: 2}: "#",
+						{X: 3, Y: 2}: "#",
+						{X: 0, Y: 3}: "#",
+						{X: 1, Y: 3}: "#",
+						{X: 2, Y: 3}: "#",
+						{X: 3, Y: 3}: ".",
 					},
+					Height: 3,
+					Width:  3,
 				},
-			}
-			p.populatePictureWithTile(tt.args.t, tt.args.x, tt.args.y)
-			if !reflect.DeepEqual(p, &tt.want) {
-				t.Errorf("Picture.getTopLeftTile() = %v, want &%v", p, tt.want)
-			}
-		})
-	}
+			},
+		}
+		p.populatePictureWithTile(inputTile, 2, 2)
+		assert.Equal(t, &want, p)
+	})
 }
 
 func TestPicture_PopulateTileMap(t *testing.T) {
@@ -2511,11 +2459,11 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 		},
 	}
 	type want struct {
-		Height  int
-		Width   int
-		Pixels  map[graph.Co]string
-		TileMap map[graph.Co]tile.Tile
-		wantErr bool
+		Height             int
+		Width              int
+		Pixels             map[graph.Co]string
+		TileMap            map[graph.Co]tile.Tile
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}
 	tests := []struct {
 		name  string
@@ -2540,9 +2488,9 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 				},
 			},
 			want: want{
-				Pixels:  make(map[graph.Co]string),
-				TileMap: make(map[graph.Co]tile.Tile),
-				wantErr: true,
+				Pixels:             make(map[graph.Co]string),
+				TileMap:            make(map[graph.Co]tile.Tile),
+				errorAssertionFunc: assert.Error,
 			},
 		},
 		{
@@ -2579,7 +2527,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 						},
 					},
 				},
-				wantErr: true,
+				errorAssertionFunc: assert.Error,
 			},
 		},
 		{
@@ -2624,7 +2572,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 						},
 					},
 				},
-				wantErr: true,
+				errorAssertionFunc: assert.Error,
 			},
 		},
 		{
@@ -2655,7 +2603,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 					{X: 1, Y: 2}: tile8,
 					{X: 2, Y: 2}: tile9,
 				},
-				wantErr: false,
+				errorAssertionFunc: assert.NoError,
 			},
 		},
 	}
@@ -2666,9 +2614,8 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 				TileMap: make(map[graph.Co]tile.Tile),
 				Tiles:   tt.Tiles,
 			}
-			if err := p.PopulateTileMap(); (err != nil) != tt.want.wantErr {
-				t.Errorf("Picture.PopulateTileMap() error = %v, wantErr %v", err, tt.want.wantErr)
-			}
+			err := p.PopulateTileMap()
+			tt.want.errorAssertionFunc(t, err)
 			want := &Picture{
 				Height:  tt.want.Height,
 				Width:   tt.want.Width,
@@ -2676,9 +2623,7 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 				TileMap: tt.want.TileMap,
 				Tiles:   tt.Tiles,
 			}
-			if !reflect.DeepEqual(p, want) {
-				t.Errorf("Picture.PopulateTileMap() = %v, want %v", p, want)
-			}
+			assert.Equal(t, want, p)
 		})
 	}
 }
@@ -2743,9 +2688,7 @@ func TestPicture_rotatePicture90(t *testing.T) {
 				Pixels: tt.Pixels,
 			}
 			p.rotatePicture90()
-			if !reflect.DeepEqual(p.Pixels, tt.want) {
-				t.Errorf("Picture.rotatePicture90() = %v, want %v", p, tt.want)
-			}
+			assert.Equal(t, tt.want, p.Pixels)
 		})
 	}
 }
@@ -2807,30 +2750,15 @@ func TestPicture_flipPicture(t *testing.T) {
 				Pixels: tt.Pixels,
 			}
 			p.flipPicture()
-			if !reflect.DeepEqual(p.Pixels, tt.want) {
-				t.Errorf("Picture.flipPicture() = %v, want %v", p, tt.want)
-			}
+			assert.Equal(t, tt.want, p.Pixels)
 		})
 	}
 }
 
 func TestPicture_markSeaMonster(t *testing.T) {
-	tests := []struct {
-		name       string
-		co         graph.Co
-		seaMonster []graph.Co
-		pixels     map[graph.Co]string
-		want       map[graph.Co]string
-	}{
-		{
-			name: "it marks pixels as sea monster at the given coordinate",
-			co:   graph.Co{X: 1, Y: 1},
-			seaMonster: []graph.Co{
-				{X: 0, Y: 0},
-				{X: 1, Y: 0},
-				{X: 1, Y: 1},
-			},
-			pixels: map[graph.Co]string{
+	t.Run("it marks pixels as sea monster at the given coordinate", func(t *testing.T) {
+		p := &Picture{
+			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
 				{X: 2, Y: 0}: ".",
@@ -2841,30 +2769,26 @@ func TestPicture_markSeaMonster(t *testing.T) {
 				{X: 1, Y: 2}: "#",
 				{X: 2, Y: 2}: "#",
 			},
-			want: map[graph.Co]string{
-				{X: 0, Y: 0}: "#",
-				{X: 1, Y: 0}: "#",
-				{X: 2, Y: 0}: ".",
-				{X: 0, Y: 1}: "#",
-				{X: 1, Y: 1}: "O",
-				{X: 2, Y: 1}: "O",
-				{X: 0, Y: 2}: ".",
-				{X: 1, Y: 2}: "#",
-				{X: 2, Y: 2}: "O",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			p := &Picture{
-				Pixels: tt.pixels,
-			}
-			p.markSeaMonster(tt.co, tt.seaMonster)
-			if !reflect.DeepEqual(p.Pixels, tt.want) {
-				t.Errorf("Picture.markSeaMonster() = %v, want %v", p.Pixels, tt.want)
-			}
-		})
-	}
+		}
+		seaMonster := []graph.Co{
+			{X: 0, Y: 0},
+			{X: 1, Y: 0},
+			{X: 1, Y: 1},
+		}
+		want := map[graph.Co]string{
+			{X: 0, Y: 0}: "#",
+			{X: 1, Y: 0}: "#",
+			{X: 2, Y: 0}: ".",
+			{X: 0, Y: 1}: "#",
+			{X: 1, Y: 1}: "O",
+			{X: 2, Y: 1}: "O",
+			{X: 0, Y: 2}: ".",
+			{X: 1, Y: 2}: "#",
+			{X: 2, Y: 2}: "O",
+		}
+		p.markSeaMonster(graph.Co{X: 1, Y: 1}, seaMonster)
+		assert.Equal(t, want, p.Pixels)
+	})
 }
 
 func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
@@ -2978,12 +2902,9 @@ func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
 			p := &Picture{
 				Pixels: tt.Pixels,
 			}
-			if got := p.checkSeaMonsterAtCo(tt.co, tt.seaMonster); got != tt.want {
-				t.Errorf("Picture.checkSeaMonsterAtCo() = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(p.Pixels, tt.want1) {
-				t.Errorf("Picture.checkSeaMonster() = %v, want %v", p.Pixels, tt.want)
-			}
+			got := p.checkSeaMonsterAtCo(tt.co, tt.seaMonster)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, p.Pixels)
 		})
 	}
 }
@@ -3416,9 +3337,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 				Width:  3,
 			}
 			p.FindSeaMonster(tt.seaMonster)
-			if !reflect.DeepEqual(p.Pixels, tt.want) {
-				t.Errorf("Picture.FindSeaMonster() = %v, want %v", p.Pixels, tt.want)
-			}
+			assert.Equal(t, tt.want, p.Pixels)
 		})
 	}
 }
@@ -3523,9 +3442,8 @@ func TestPicture_CountWaterRoughness(t *testing.T) {
 			p := Picture{
 				Pixels: tt.Pixels,
 			}
-			if got := p.CountWaterRoughness(); got != tt.want {
-				t.Errorf("Picture.CountWaterRoughness() = %v, want %v", got, tt.want)
-			}
+			got := p.CountWaterRoughness()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

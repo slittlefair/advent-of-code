@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var sortedAdapters1 = []int{1, 4, 5, 6, 7, 10, 11, 12, 15, 16, 19, 22}
@@ -27,9 +28,8 @@ func Test_parseInput(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := parseInput(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
+			got := parseInput(tt.input)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -56,9 +56,8 @@ func TestJoltages_part1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.j.part1(tt.adapters); got != tt.want {
-				t.Errorf("Joltages.part1() = %v, want %v", got, tt.want)
-			}
+			got := tt.j.part1(tt.adapters)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -98,9 +97,8 @@ func Test_calculatePerms(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := calculatePerms(tt.args.adapters, tt.args.val, tt.args.i, tt.args.cache); got != tt.want {
-				t.Errorf("calculatePerms() = %v, want %v", got, tt.want)
-			}
+			got := calculatePerms(tt.args.adapters, tt.args.val, tt.args.i, tt.args.cache)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -124,9 +122,8 @@ func Test_part2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := part2(tt.adapters); got != tt.want {
-				t.Errorf("part2() = %v, want %v", got, tt.want)
-			}
+			got := part2(tt.adapters)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

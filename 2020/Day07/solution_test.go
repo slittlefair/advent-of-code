@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var exampleBagMap = &BagMap{
@@ -38,37 +39,22 @@ var exampleBagMap = &BagMap{
 }
 
 func TestBagMap_parseBag(t *testing.T) {
-	tests := []struct {
-		name    string
-		bm      *BagMap
-		entries []string
-		want    *BagMap
-	}{
-		{
-			name: "advent of code example 1",
-			bm:   &BagMap{},
-			entries: []string{
-				"light red bags contain 1 bright white bag, 2 muted yellow bags.",
-				"dark orange bags contain 3 bright white bags, 4 muted yellow bags.",
-				"bright white bags contain 1 shiny gold bag.",
-				"muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.",
-				"shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.",
-				"dark olive bags contain 3 faded blue bags, 4 dotted black bags.",
-				"vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.",
-				"faded blue bags contain no other bags.",
-				"dotted black bags contain no other bags.",
-			},
-			want: exampleBagMap,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.bm.parseBag(tt.entries)
-			if !reflect.DeepEqual(tt.bm, tt.want) {
-				t.Errorf("parseBag() bm = %v, want %v", tt.bm, tt.want)
-			}
-		})
-	}
+	t.Run("advent of code example 1", func(t *testing.T) {
+		bm := &BagMap{}
+		entries := []string{
+			"light red bags contain 1 bright white bag, 2 muted yellow bags.",
+			"dark orange bags contain 3 bright white bags, 4 muted yellow bags.",
+			"bright white bags contain 1 shiny gold bag.",
+			"muted yellow bags contain 2 shiny gold bags, 9 faded blue bags.",
+			"shiny gold bags contain 1 dark olive bag, 2 vibrant plum bags.",
+			"dark olive bags contain 3 faded blue bags, 4 dotted black bags.",
+			"vibrant plum bags contain 5 faded blue bags, 6 dotted black bags.",
+			"faded blue bags contain no other bags.",
+			"dotted black bags contain no other bags.",
+		}
+		bm.parseBag(entries)
+		assert.Equal(t, exampleBagMap, bm)
+	})
 }
 
 func TestBagMap_traverseBags(t *testing.T) {
@@ -118,9 +104,7 @@ func TestBagMap_traverseBags(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.bm.traverseBags(tt.args.bag, tt.args.bagsFound)
-			if !reflect.DeepEqual(tt.args.bagsFound, tt.want) {
-				t.Errorf("parseBag() args.bagsFound = %v, want %v", tt.args.bagsFound, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.args.bagsFound)
 		})
 	}
 }
@@ -153,9 +137,8 @@ func TestBagMap_getBagsFound(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.bm.getBagsFound(tt.myBag); got != tt.want {
-				t.Errorf("BagMap.getBagsFound() = %v, want %v", got, tt.want)
-			}
+			got := tt.bm.getBagsFound(tt.myBag)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -214,9 +197,8 @@ func TestBagMap_countBags(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.bm.countBags(tt.bag); got != tt.want {
-				t.Errorf("BagMap.countBags() = %v, want %v", got, tt.want)
-			}
+			got := tt.bm.countBags(tt.bag)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

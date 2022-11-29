@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_halfSeats(t *testing.T) {
@@ -12,12 +13,12 @@ func Test_halfSeats(t *testing.T) {
 		max  int
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    string
-		want1   int
-		want2   int
-		wantErr bool
+		name               string
+		args               args
+		want               string
+		want1              int
+		want2              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if the first character of dirs is an invalid letter",
@@ -26,10 +27,10 @@ func Test_halfSeats(t *testing.T) {
 				min:  0,
 				max:  10,
 			},
-			want:    "",
-			want1:   0,
-			want2:   0,
-			wantErr: true,
+			want:               "",
+			want1:              0,
+			want2:              0,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns the correct variables if first character of dirs is 'F'",
@@ -38,10 +39,10 @@ func Test_halfSeats(t *testing.T) {
 				min:  32,
 				max:  63,
 			},
-			want:    "RBRRFR",
-			want1:   32,
-			want2:   47,
-			wantErr: false,
+			want:               "RBRRFR",
+			want1:              32,
+			want2:              47,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns the correct variables if first character of dirs is 'B'",
@@ -50,10 +51,10 @@ func Test_halfSeats(t *testing.T) {
 				min:  0,
 				max:  63,
 			},
-			want:    "RBRRFR",
-			want1:   32,
-			want2:   63,
-			wantErr: false,
+			want:               "RBRRFR",
+			want1:              32,
+			want2:              63,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns the correct variables if first character of dirs is 'L'",
@@ -62,10 +63,10 @@ func Test_halfSeats(t *testing.T) {
 				min:  32,
 				max:  63,
 			},
-			want:    "RBRRFR",
-			want1:   32,
-			want2:   47,
-			wantErr: false,
+			want:               "RBRRFR",
+			want1:              32,
+			want2:              47,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns the correct variables if first character of dirs is 'L'",
@@ -74,10 +75,10 @@ func Test_halfSeats(t *testing.T) {
 				min:  4,
 				max:  7,
 			},
-			want:    "RBRRFR",
-			want1:   4,
-			want2:   5,
-			wantErr: false,
+			want:               "RBRRFR",
+			want1:              4,
+			want2:              5,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns the correct variables if first character of dirs is 'R'",
@@ -86,28 +87,19 @@ func Test_halfSeats(t *testing.T) {
 				min:  0,
 				max:  7,
 			},
-			want:    "RBRRFR",
-			want1:   4,
-			want2:   7,
-			wantErr: false,
+			want:               "RBRRFR",
+			want1:              4,
+			want2:              7,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, got2, err := halfSeats(tt.args.dirs, tt.args.min, tt.args.max)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("halfSeats() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("halfSeats() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("halfSeats() got1 = %v, want %v", got1, tt.want1)
-			}
-			if got2 != tt.want2 {
-				t.Errorf("halfSeats() got2 = %v, want %v", got2, tt.want2)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
+			assert.Equal(t, tt.want2, got2)
 		})
 	}
 }
@@ -119,10 +111,10 @@ func Test_findMyID(t *testing.T) {
 		highestID int
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    int
-		wantErr bool
+		name               string
+		args               args
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if all IDs between lowest and highest are taken",
@@ -137,8 +129,8 @@ func Test_findMyID(t *testing.T) {
 				lowestID:  456,
 				highestID: 460,
 			},
-			want:    0,
-			wantErr: true,
+			want:               0,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns the correct ID between lowest and highest IDs from the usedIDs map",
@@ -152,32 +144,27 @@ func Test_findMyID(t *testing.T) {
 				lowestID:  456,
 				highestID: 460,
 			},
-			want:    459,
-			wantErr: false,
+			want:               459,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := findMyID(tt.args.usedIDs, tt.args.lowestID, tt.args.highestID)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findMyID() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findMyID() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_getusedIDs(t *testing.T) {
 	tests := []struct {
-		name    string
-		entries []string
-		want    int
-		want1   int
-		want2   map[int]bool
-		wantErr bool
+		name               string
+		entries            []string
+		want               int
+		want1              int
+		want2              map[int]bool
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an entry contains an invalid character instead of F or B",
@@ -187,10 +174,10 @@ func Test_getusedIDs(t *testing.T) {
 				"FFFBBBFRRR",
 				"BBFFBBFRLL",
 			},
-			want:    0,
-			want1:   0,
-			want2:   nil,
-			wantErr: true,
+			want:               0,
+			want1:              0,
+			want2:              nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if an entry contains an invalid character instead of R or L",
@@ -200,10 +187,10 @@ func Test_getusedIDs(t *testing.T) {
 				"FFFBBBFRRR",
 				"BBFFBBFXLL",
 			},
-			want:    0,
-			want1:   0,
-			want2:   nil,
-			wantErr: true,
+			want:               0,
+			want1:              0,
+			want2:              nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name:    "advent of code example 1",
@@ -213,7 +200,7 @@ func Test_getusedIDs(t *testing.T) {
 			want2: map[int]bool{
 				357: true,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name:    "advent of code example 2",
@@ -223,7 +210,7 @@ func Test_getusedIDs(t *testing.T) {
 			want2: map[int]bool{
 				567: true,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name:    "advent of code example 3",
@@ -233,7 +220,7 @@ func Test_getusedIDs(t *testing.T) {
 			want2: map[int]bool{
 				119: true,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name:    "advent of code example 4",
@@ -243,7 +230,7 @@ func Test_getusedIDs(t *testing.T) {
 			want2: map[int]bool{
 				820: true,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "advent of code examples combined",
@@ -261,25 +248,16 @@ func Test_getusedIDs(t *testing.T) {
 				567: true,
 				820: true,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, got2, err := getusedIDs(tt.entries)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("getusedIDs() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("getusedIDs() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("getusedIDs() got1 = %v, want %v", got1, tt.want1)
-			}
-			if !reflect.DeepEqual(got2, tt.want2) {
-				t.Errorf("getusedIDs() got2 = %v, want %v", got2, tt.want2)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
+			assert.Equal(t, tt.want2, got2)
 		})
 	}
 }

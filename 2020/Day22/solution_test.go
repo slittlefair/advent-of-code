@@ -1,16 +1,17 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGame_parseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    *Game
-		wantErr bool
+		name               string
+		input              []string
+		want               *Game
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if one of the rows in the input cannot be converted to an int",
@@ -32,7 +33,7 @@ func TestGame_parseInput(t *testing.T) {
 			want: &Game{
 				player1: Deck{9, 2, 6, 3, 1},
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "advent of code example 1",
@@ -55,10 +56,10 @@ func TestGame_parseInput(t *testing.T) {
 				player1: Deck{9, 2, 6, 3, 1},
 				player2: Deck{5, 8, 4, 7, 10},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name: "advent of code example 1",
+			name: "advent of code example 2",
 			input: []string{
 				"Player 1:",
 				"43",
@@ -73,18 +74,15 @@ func TestGame_parseInput(t *testing.T) {
 				player1: Deck{43, 19},
 				player2: Deck{2, 29, 14},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			g := &Game{}
-			if err := g.parseInput(tt.input); (err != nil) != tt.wantErr {
-				t.Errorf("Game.parseInput() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Game.parseInput() = %v, want = %v", g, tt.want)
-			}
+			err := g.parseInput(tt.input)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
@@ -129,9 +127,7 @@ func TestGame_player1Wins(t *testing.T) {
 				player2: tt.fields.player2,
 			}
 			g.player1Wins()
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Game.player1Wins() = %v, want = %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
@@ -176,9 +172,7 @@ func TestGame_player2Wins(t *testing.T) {
 				player2: tt.fields.player2,
 			}
 			g.player2Wins()
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Game.player2Wins() = %v, want = %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
@@ -249,12 +243,9 @@ func TestGame_playNormalRound(t *testing.T) {
 				player1: tt.fields.player1,
 				player2: tt.fields.player2,
 			}
-			if got := g.playNormalRound(); got != tt.want {
-				t.Errorf("Game.playNormalRound() = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(g, tt.want1) {
-				t.Errorf("Game.playNormalRound() = %v, want = %v", g, tt.want1)
-			}
+			got := g.playNormalRound()
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, g)
 		})
 	}
 }
@@ -292,9 +283,8 @@ func TestGame_playNormalGame(t *testing.T) {
 				player1: tt.fields.player1,
 				player2: tt.fields.player2,
 			}
-			if got := g.playNormalGame(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Game.playNormalGame() = %v, want %v", got, tt.want)
-			}
+			got := g.playNormalGame()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -413,9 +403,8 @@ func TestGame_deckSeen(t *testing.T) {
 				player1: tt.fields.player1,
 				player2: tt.fields.player2,
 			}
-			if got := g.deckSeen(tt.seen); got != tt.want {
-				t.Errorf("Game.deckSeen() = %v, want %v", got, tt.want)
-			}
+			got := g.deckSeen(tt.seen)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -567,12 +556,9 @@ func TestGame_playRecursiveRound(t *testing.T) {
 				player1: tt.fields.player1,
 				player2: tt.fields.player2,
 			}
-			if got := g.playRecursiveRound(tt.seen); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Game.playRecursiveRound() = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(g, tt.want1) {
-				t.Errorf("Game.playRecursiveRound() = %v, want %v", g, tt.want1)
-			}
+			got := g.playRecursiveRound(tt.seen)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, g)
 		})
 	}
 }
@@ -614,52 +600,43 @@ func TestGame_playRecursiveGame(t *testing.T) {
 				player2: tt.fields.player2,
 			}
 			got, got1 := g.playRecursiveGame()
-			if got != tt.want {
-				t.Errorf("Game.playRecursiveGame() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("Game.playRecursiveGame() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
 
 func TestGame_calculateWinningScore(t *testing.T) {
 	tests := []struct {
-		name    string
-		deck    Deck
-		want    int
-		wantErr bool
+		name               string
+		deck               Deck
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if there are no cards in the deck",
-			deck:    Deck{},
-			want:    0,
-			wantErr: true,
+			name:               "returns an error if there are no cards in the deck",
+			deck:               Deck{},
+			want:               0,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "advent of code example 1",
-			deck:    Deck{3, 2, 10, 6, 8, 5, 9, 4, 7, 1},
-			want:    306,
-			wantErr: false,
+			name:               "advent of code example 1",
+			deck:               Deck{3, 2, 10, 6, 8, 5, 9, 4, 7, 1},
+			want:               306,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:    "advent of code example 2",
-			deck:    Deck{7, 5, 6, 2, 4, 1, 10, 8, 9, 3},
-			want:    291,
-			wantErr: false,
+			name:               "advent of code example 2",
+			deck:               Deck{7, 5, 6, 2, 4, 1, 10, 8, 9, 3},
+			want:               291,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := calculateWinningScore(tt.deck)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Game.calculateWinningScore() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("Game.calculateWinningScore() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

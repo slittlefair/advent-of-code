@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var exampleMap = TreeMap{
@@ -77,51 +79,22 @@ func TestTreeMap_traverseSlopes(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.tm.traverseSlopes(tt.args.right, tt.args.down); got != tt.want {
-				t.Errorf("TreeMap.traverseSlopes() = %v, want %v", got, tt.want)
-			}
+			got := tt.tm.traverseSlopes(tt.args.right, tt.args.down)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestTreeMap_part1(t *testing.T) {
-	tests := []struct {
-		name string
-		tm   TreeMap
-		want int
-	}{
-		{
-			name: "advent of code example map",
-			tm:   exampleMap,
-			want: 7,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.tm.part1(); got != tt.want {
-				t.Errorf("TreeMap.part1() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("advent of code example map", func(t *testing.T) {
+		got := exampleMap.part1()
+		assert.Equal(t, 7, got)
+	})
 }
 
 func TestTreeMap_part2(t *testing.T) {
-	tests := []struct {
-		name string
-		tm   TreeMap
-		want int
-	}{
-		{
-			name: "advent of code example map",
-			tm:   exampleMap,
-			want: 336,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.tm.part2(); got != tt.want {
-				t.Errorf("TreeMap.part2() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("advent of code example map", func(t *testing.T) {
+		got := exampleMap.part2()
+		assert.Equal(t, 336, got)
+	})
 }

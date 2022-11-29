@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_validateYr(t *testing.T) {
@@ -11,10 +13,10 @@ func Test_validateYr(t *testing.T) {
 		max int
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    bool
-		wantErr bool
+		name               string
+		args               args
+		want               bool
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if the passed val can't be converted into an int",
@@ -23,8 +25,8 @@ func Test_validateYr(t *testing.T) {
 				min: 0,
 				max: 1,
 			},
-			want:    false,
-			wantErr: true,
+			want:               false,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns false if the passed val is less than the min value",
@@ -33,8 +35,8 @@ func Test_validateYr(t *testing.T) {
 				min: 5,
 				max: 10,
 			},
-			want:    false,
-			wantErr: false,
+			want:               false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns false if the passed val is greater than the max value",
@@ -43,8 +45,8 @@ func Test_validateYr(t *testing.T) {
 				min: 5,
 				max: 10,
 			},
-			want:    false,
-			wantErr: false,
+			want:               false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns true if the passed val is equal to the min value",
@@ -53,8 +55,8 @@ func Test_validateYr(t *testing.T) {
 				min: 5,
 				max: 10,
 			},
-			want:    true,
-			wantErr: false,
+			want:               true,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns true if the passed val is equal to the max value",
@@ -63,8 +65,8 @@ func Test_validateYr(t *testing.T) {
 				min: 5,
 				max: 10,
 			},
-			want:    true,
-			wantErr: false,
+			want:               true,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns true if the passed val is greater than the min value and less than the max value",
@@ -73,20 +75,15 @@ func Test_validateYr(t *testing.T) {
 				min: 5,
 				max: 10,
 			},
-			want:    true,
-			wantErr: false,
+			want:               true,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := validateYr(tt.args.val, tt.args.min, tt.args.max)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("validateYr() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("validateYr() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -165,9 +162,8 @@ func Test_validateHgt(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := validateHgt(tt.val); got != tt.want {
-				t.Errorf("validateHgt() = %v, want %v", got, tt.want)
-			}
+			got := validateHgt(tt.val)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -211,9 +207,8 @@ func Test_validateHcl(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := validateHcl(tt.val); got != tt.want {
-				t.Errorf("validateHcl() = %v, want %v", got, tt.want)
-			}
+			got := validateHcl(tt.val)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -267,9 +262,8 @@ func Test_validateEcl(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := validateEcl(tt.val); got != tt.want {
-				t.Errorf("validateEcl() = %v, want %v", got, tt.want)
-			}
+			got := validateEcl(tt.val)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -303,19 +297,18 @@ func Test_validatePid(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := validatePid(tt.val); got != tt.want {
-				t.Errorf("validatePid() = %v, want %v", got, tt.want)
-			}
+			got := validatePid(tt.val)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_allFieldsValid(t *testing.T) {
 	tests := []struct {
-		name    string
-		fields  map[string]string
-		want    bool
-		wantErr bool
+		name               string
+		fields             map[string]string
+		want               bool
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns false if byr field does not pass validation",
@@ -328,8 +321,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "098765432",
 			},
-			want:    false,
-			wantErr: false,
+			want:               false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns an error if byr field is not an int",
@@ -342,8 +335,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "098765432",
 			},
-			want:    false,
-			wantErr: true,
+			want:               false,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns false if iyr field does not pass validation",
@@ -356,8 +349,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "098765432",
 			},
-			want:    false,
-			wantErr: false,
+			want:               false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns an error if iyr field is not an int",
@@ -370,8 +363,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "098765432",
 			},
-			want:    false,
-			wantErr: true,
+			want:               false,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns false if eyr field does not pass validation",
@@ -384,8 +377,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "098765432",
 			},
-			want:    false,
-			wantErr: false,
+			want:               false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns an error if eyr field is not an int",
@@ -398,8 +391,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "098765432",
 			},
-			want:    false,
-			wantErr: true,
+			want:               false,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns false if hgt field does not pass validation",
@@ -412,8 +405,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "098765432",
 			},
-			want:    false,
-			wantErr: false,
+			want:               false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns false if hcl field does not pass validation",
@@ -426,8 +419,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "098765432",
 			},
-			want:    false,
-			wantErr: false,
+			want:               false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns false if ecl field does not pass validation",
@@ -440,8 +433,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blue",
 				"pid": "098765432",
 			},
-			want:    false,
-			wantErr: false,
+			want:               false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns false if pid field does not pass validation",
@@ -454,8 +447,8 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "0987654321",
 			},
-			want:    false,
-			wantErr: false,
+			want:               false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns true if all fields are valid",
@@ -468,31 +461,26 @@ func Test_allFieldsValid(t *testing.T) {
 				"ecl": "blu",
 				"pid": "098765432",
 			},
-			want:    true,
-			wantErr: false,
+			want:               true,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := allFieldsValid(tt.fields)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("allFieldsValid() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("allFieldsValid() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_solution(t *testing.T) {
 	tests := []struct {
-		name    string
-		entries []string
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		entries            []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "advent of code part 1 example",
@@ -511,9 +499,9 @@ func Test_solution(t *testing.T) {
 				"hcl:#cfa07d eyr:2025 pid:166559648",
 				"iyr:2011 ecl:brn hgt:59in",
 			},
-			want:    2,
-			want1:   2,
-			wantErr: false,
+			want:               2,
+			want1:              2,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "advent of code part 2 example all invalid",
@@ -532,9 +520,9 @@ func Test_solution(t *testing.T) {
 				"eyr:2038 hcl:74454a iyr:2023",
 				"pid:3556412378 byr:2007",
 			},
-			want:    4,
-			want1:   0,
-			wantErr: false,
+			want:               4,
+			want1:              0,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "advent of code part 2 example all valid",
@@ -552,9 +540,9 @@ func Test_solution(t *testing.T) {
 				"",
 				"iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719",
 			},
-			want:    4,
-			want1:   4,
-			wantErr: false,
+			want:               4,
+			want1:              4,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns an error if one of the fields returns an error",
@@ -572,24 +560,17 @@ func Test_solution(t *testing.T) {
 				"",
 				"iyr:2010 hgt:158cm hcl:#b6652a ecl:blu byr:1944 eyr:2021 pid:093154719",
 			},
-			want:    0,
-			want1:   0,
-			wantErr: true,
+			want:               0,
+			want1:              0,
+			errorAssertionFunc: assert.Error,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := solution(tt.entries)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("solution() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("solution() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("solution() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
