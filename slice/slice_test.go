@@ -1,8 +1,9 @@
 package slice
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPermutations(t *testing.T) {
@@ -42,18 +43,7 @@ func TestPermutations(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := Permutations(tt.arg)
-			if len(got) != len(tt.want) {
-				t.Errorf("Permutations() = %v, want %v", got, tt.want)
-			}
-			for _, g := range got {
-				for _, w := range tt.want {
-					if reflect.DeepEqual(g, w) {
-						goto out
-					}
-				}
-				t.Errorf("Permutations() = %v, want %v", got, tt.want)
-			out:
-			}
+			assert.ElementsMatch(t, tt.want, got)
 		})
 	}
 }
@@ -95,9 +85,8 @@ func TestIntSlicesAreEqual(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := IntSlicesAreEqual(tt.args.slice1, tt.args.slice2); got != tt.want {
-				t.Errorf("isEqual() = %v, want %v", got, tt.want)
-			}
+			got := IntSlicesAreEqual(tt.args.slice1, tt.args.slice2)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -143,12 +132,9 @@ func TestRemove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Remove(tt.args.s, tt.args.i); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Remove() = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(tt.args.s, tt.want1) {
-				t.Errorf("original slice = %v, want %v", tt.args.s, tt.want1)
-			}
+			got := Remove(tt.args.s, tt.args.i)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, tt.args.s)
 		})
 	}
 }
@@ -182,12 +168,8 @@ func TestFindExtremities(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := FindExtremities(tt.nums)
-			if got != tt.want {
-				t.Errorf("FindExtremities() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("FindExtremities() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

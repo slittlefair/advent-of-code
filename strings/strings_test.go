@@ -1,6 +1,10 @@
 package strings
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestIsUpper(t *testing.T) {
 	tests := []struct {
@@ -21,9 +25,8 @@ func TestIsUpper(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := IsUpper(tt.s); got != tt.want {
-				t.Errorf("IsUpper() = %v, want %v", got, tt.want)
-			}
+			got := IsUpper(tt.s)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -47,9 +50,8 @@ func TestIsLower(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := IsLower(tt.s); got != tt.want {
-				t.Errorf("IsLower() = %v, want %v", got, tt.want)
-			}
+			got := IsLower(tt.s)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
