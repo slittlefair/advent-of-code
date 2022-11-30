@@ -11,22 +11,20 @@ import (
 
 type Spreadsheet [][]int
 
-func parseInput(input []string) (Spreadsheet, error) {
+func parseInput(input []string) Spreadsheet {
 	ss := Spreadsheet{}
 	re := regexp.MustCompile(`\d+`)
 	for _, line := range input {
 		row := []int{}
 		nums := re.FindAllString(line, -1)
 		for _, n := range nums {
-			i, err := strconv.Atoi(n)
-			if err != nil {
-				return nil, err
-			}
+			// We already match using regex so we know all numbers can be converted to ints
+			i, _ := strconv.Atoi(n)
 			row = append(row, i)
 		}
 		ss = append(ss, row)
 	}
-	return ss, nil
+	return ss
 }
 
 func dividesEvenly(x, y float64) bool {
@@ -59,11 +57,7 @@ func findSolutions(ss Spreadsheet) (int, int) {
 
 func main() {
 	input := file.Read()
-	spreadsheet, err := parseInput(input)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+	spreadsheet := parseInput(input)
 	part1, part2 := findSolutions(spreadsheet)
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)
