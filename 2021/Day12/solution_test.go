@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_makeCave(t *testing.T) {
@@ -32,14 +33,13 @@ func Test_makeCave(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := makeCave(tt.id); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("makeCave() = %v, want %v", got, tt.want)
-			}
+			got := makeCave(tt.id)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
-func createTestSystem() *System {
+var aocSystem = func() *System {
 	s := System{
 		caves: map[string]*Cave{
 			"start": {
@@ -95,16 +95,14 @@ func createTestSystem() *System {
 		"b": s.caves["b"],
 	}
 	return &s
-}
-
-var aocSystem = createTestSystem()
+}()
 
 func Test_parseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    *System
-		wantErr bool
+		name               string
+		input              []string
+		want               *System
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if a line doesn't consist of two neighbours",
@@ -117,8 +115,8 @@ func Test_parseInput(t *testing.T) {
 				"A-end",
 				"b-end",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "compiles a system from the given input, advent of code example",
@@ -131,41 +129,16 @@ func Test_parseInput(t *testing.T) {
 				"A-end",
 				"b-end",
 			},
-			want:    aocSystem,
-			wantErr: false,
+			want:               aocSystem,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := parseInput(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseInput() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if tt.wantErr {
-				return
-			}
-			if len(got.caves) != len(tt.want.caves) {
-				t.Errorf("parseInput() caves = %v, want %v", got.caves, tt.want.caves)
-			}
-			for id, gCave := range got.caves {
-				wCave := tt.want.caves[id]
-				if gCave.id != wCave.id {
-					t.Errorf("parseInput() caves[%s] = %v, want %v", id, gCave, wCave)
-				}
-				if gCave.small != wCave.small {
-					t.Errorf("parseInput() caves[%s] = %v, want %v", id, gCave, wCave)
-				}
-				if len(gCave.neighbours) != len(wCave.neighbours) {
-					t.Errorf("parseInput() caves[%s] = %v, want %v", id, gCave, wCave)
-				}
-				for gID, gNghbr := range gCave.neighbours {
-					if wNghbr, ok := wCave.neighbours[gID]; !ok {
-						t.Errorf("parseInput() caves[%s] = %v, want %v", id, gCave, wCave)
-					} else if gNghbr.id != wNghbr.id {
-						t.Errorf("parseInput() caves[%s] = %v, want %v", id, gCave, wCave)
-					}
-				}
+			tt.errorAssertionFunc(t, err)
+			if err == nil {
+				assert.Equal(t, tt.want.caves, got.caves)
 			}
 		})
 	}
@@ -217,9 +190,8 @@ func TestSystem_canVisitPart1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := canVisitPart1(tt.args.cave, tt.args.path); got != tt.want {
-				t.Errorf("System.canVisitPart1() = %v, want %v", got, tt.want)
-			}
+			got := canVisitPart1(tt.args.cave, tt.args.path)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -327,9 +299,8 @@ func Test_canVisitPart2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := canVisitPart2(tt.args.cave, tt.args.path); got != tt.want {
-				t.Errorf("canVisitPart2() = %v, want %v", got, tt.want)
-			}
+			got := canVisitPart2(tt.args.cave, tt.args.path)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -357,20 +328,19 @@ func TestSystem_findNumberOfPaths(t *testing.T) {
 				caves: aocSystem.caves,
 				paths: []Path{},
 			}
-			if got := s.findNumberOfPaths(tt.canVisit); got != tt.want {
-				t.Errorf("System.findNumberOfPaths() = %v, want %v", got, tt.want)
-			}
+			got := s.findNumberOfPaths(tt.canVisit)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_findSolutions(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an input line cannot be parsed",
@@ -382,9 +352,9 @@ func Test_findSolutions(t *testing.T) {
 				"end-A",
 				"end-b",
 			},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns solutions for part1 and part2, advent of code example 1",
@@ -397,9 +367,9 @@ func Test_findSolutions(t *testing.T) {
 				"A-end",
 				"b-end",
 			},
-			want:    10,
-			want1:   36,
-			wantErr: false,
+			want:               10,
+			want1:              36,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns solutions for part1 and part2, advent of code example 2",
@@ -415,9 +385,9 @@ func Test_findSolutions(t *testing.T) {
 				"kj-HN",
 				"kj-dc",
 			},
-			want:    19,
-			want1:   103,
-			wantErr: false,
+			want:               19,
+			want1:              103,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns solutions for part1 and part2, advent of code example 3",
@@ -441,24 +411,17 @@ func Test_findSolutions(t *testing.T) {
 				"pj-fs",
 				"start-RW",
 			},
-			want:    226,
-			want1:   3509,
-			wantErr: false,
+			want:               226,
+			want1:              3509,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := findSolutions(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolutions() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

@@ -40,9 +40,6 @@ func ParseInput(input []string) (*Game, error) {
 		card := &card.Card{Numbers: make(map[graph.Co]*card.Number)}
 		// We pass in a regex match we know ParseCard can handle, so we can ignore the error
 		_ = card.ParseCard(input[i:i+6], reNum)
-		if err != nil {
-			return nil, err
-		}
 		g.Cards = append(g.Cards, card)
 	}
 	g.CardsNotWon = make(map[*card.Card]struct{})

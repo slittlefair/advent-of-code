@@ -3,40 +3,36 @@ package game
 import (
 	"Advent-of-Code/2021/Day04/card"
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseNums(t *testing.T) {
 	tests := []struct {
-		name    string
-		str     string
-		want    []int
-		wantErr bool
+		name               string
+		str                string
+		want               []int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if a number on the card cannot be converted to int",
-			str:     "1,23,14,two,9,21",
-			want:    nil,
-			wantErr: true,
+			name:               "returns an error if a number on the card cannot be converted to int",
+			str:                "1,23,14,two,9,21",
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns a slice of converted ints from the given string",
-			str:     "1,23,14,2,9,21",
-			want:    []int{1, 23, 14, 2, 9, 21},
-			wantErr: false,
+			name:               "returns a slice of converted ints from the given string",
+			str:                "1,23,14,2,9,21",
+			want:               []int{1, 23, 14, 2, 9, 21},
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := parseNums(tt.str)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseNums() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseNums() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -130,10 +126,10 @@ func TestParseInput(t *testing.T) {
 		},
 	}
 	tests := []struct {
-		name    string
-		input   []string
-		want    *Game
-		wantErr bool
+		name               string
+		input              []string
+		want               *Game
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if parseNums returns an error",
@@ -143,8 +139,8 @@ func TestParseInput(t *testing.T) {
 				"2 3 4 5",
 				"1 8 7 6",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns a parsed input, advent of code example",
@@ -180,27 +176,25 @@ func TestParseInput(t *testing.T) {
 				},
 				Nums: []int{7, 4, 9, 5, 11, 17, 23, 2, 0, 14, 21, 24, 10, 16, 13, 6, 15, 25, 12, 22, 18, 20, 8, 19, 3, 26, 1},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := ParseInput(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("ParseInput() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
+			tt.errorAssertionFunc(t, err)
 			if err == nil {
-				if !reflect.DeepEqual(got.Nums, tt.want.Nums) {
-					t.Errorf("ParseInput().Nums = %v, want %v", got.Nums, tt.want.Nums)
-				}
+				assert.Equal(t, tt.want.Nums, got.Nums)
 				for i, card := range tt.want.Cards {
 					for co, n := range card.Numbers {
-						if !reflect.DeepEqual(got.Cards[i].Numbers[co], n) {
-							t.Errorf("ParseInput().Cards[%d].Numbers[%v] = %v, want %v", i, co, got.Cards[i].Numbers[co], n)
-						}
+						assert.Equal(t, got.Cards[i].Numbers[co], n)
 					}
 				}
+				cardsNotWon := []*card.Card{}
+				for k := range tt.want.CardsNotWon {
+					cardsNotWon = append(cardsNotWon, k)
+				}
+				assert.ElementsMatch(t, cardsNotWon, tt.want.Cards)
 			}
 		})
 	}
@@ -474,11 +468,11 @@ func TestGame_PlayGame(t *testing.T) {
 		Nums        []int
 	}
 	tests := []struct {
-		name    string
-		fields  fields
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		fields             fields
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if no games can be solved",
@@ -491,9 +485,9 @@ func TestGame_PlayGame(t *testing.T) {
 				Cards: []*card.Card{card00, card01, card02},
 				Nums:  []int{7, 4, 9, 5},
 			},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if not all games can be won",
@@ -506,9 +500,9 @@ func TestGame_PlayGame(t *testing.T) {
 				Cards: []*card.Card{card10, card11, card12},
 				Nums:  []int{7, 4, 9, 5, 11, 17, 23, 2, 0, 14, 21, 24, 10},
 			},
-			want:    4512,
-			want1:   -1,
-			wantErr: true,
+			want:               4512,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns both part solutions for a game",
@@ -521,9 +515,9 @@ func TestGame_PlayGame(t *testing.T) {
 				Cards: []*card.Card{card20, card21, card22},
 				Nums:  []int{7, 4, 9, 5, 11, 17, 23, 2, 0, 14, 21, 24, 10, 16, 13, 6, 15, 25, 12, 22, 18, 20, 8, 19, 3, 26, 1},
 			},
-			want:    4512,
-			want1:   1924,
-			wantErr: false,
+			want:               4512,
+			want1:              1924,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
@@ -534,16 +528,9 @@ func TestGame_PlayGame(t *testing.T) {
 				Nums:        tt.fields.Nums,
 			}
 			got, got1, err := g.PlayGame()
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Game.PlayGame() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("Game.PlayGame() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("Game.PlayGame() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

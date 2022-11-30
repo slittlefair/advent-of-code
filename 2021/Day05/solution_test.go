@@ -2,8 +2,9 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_convertToCos(t *testing.T) {
@@ -51,9 +52,8 @@ func Test_convertToCos(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := convertToCos(tt.args.minX, tt.args.maxX, tt.args.minY, tt.args.maxY); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("convertToCos() = %v, want %v", got, tt.want)
-			}
+			got := convertToCos(tt.args.minX, tt.args.maxX, tt.args.minY, tt.args.maxY)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -138,9 +138,8 @@ func Test_convertDiagonalToCos(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := convertDiagonalToCos(tt.args.startX, tt.args.endX, tt.args.startY, tt.args.endY); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("convertDiagonalToCos() = %v, want %v", got, tt.want)
-			}
+			got := convertDiagonalToCos(tt.args.startX, tt.args.endX, tt.args.startY, tt.args.endY)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -151,10 +150,10 @@ func Test_validCos(t *testing.T) {
 		part2 bool
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    []graph.Co
-		wantErr bool
+		name               string
+		args               args
+		want               []graph.Co
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if there are fewer than 4 numbers in an input line",
@@ -166,8 +165,8 @@ func Test_validCos(t *testing.T) {
 					"7,8 -> 6,9",
 				},
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns coordinates of lines in input, part 1",
@@ -195,7 +194,7 @@ func Test_validCos(t *testing.T) {
 				{X: 8, Y: 4},
 				{X: 9, Y: 4},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns coordinates of lines in input, part 2",
@@ -237,134 +236,104 @@ func Test_validCos(t *testing.T) {
 				{X: 3, Y: 1},
 				{X: 2, Y: 0},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := validCos(tt.args.input, tt.args.part2)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("validCos() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("validCos() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_populateGrid(t *testing.T) {
-	tests := []struct {
-		name string
-		cos  []graph.Co
-		want Grid
-	}{
-		{
-			name: "populates grid from list of coordinates",
-			cos: []graph.Co{
-				{X: 0, Y: 9},
-				{X: 1, Y: 9},
-				{X: 2, Y: 9},
-				{X: 3, Y: 9},
-				{X: 4, Y: 9},
-				{X: 5, Y: 9},
-				{X: 3, Y: 4},
-				{X: 4, Y: 4},
-				{X: 5, Y: 4},
-				{X: 6, Y: 4},
-				{X: 7, Y: 4},
-				{X: 8, Y: 4},
-				{X: 9, Y: 4},
-				{X: 2, Y: 2},
-				{X: 2, Y: 1},
-				{X: 7, Y: 0},
-				{X: 7, Y: 1},
-				{X: 7, Y: 2},
-				{X: 7, Y: 3},
-				{X: 7, Y: 4},
-				{X: 0, Y: 9},
-				{X: 1, Y: 9},
-				{X: 2, Y: 9},
-				{X: 3, Y: 4},
-				{X: 2, Y: 4},
-				{X: 1, Y: 4},
-			},
-			want: Grid{
-				{X: 0, Y: 9}: 2,
-				{X: 1, Y: 9}: 2,
-				{X: 2, Y: 9}: 2,
-				{X: 3, Y: 9}: 1,
-				{X: 4, Y: 9}: 1,
-				{X: 5, Y: 9}: 1,
-				{X: 3, Y: 4}: 2,
-				{X: 4, Y: 4}: 1,
-				{X: 5, Y: 4}: 1,
-				{X: 6, Y: 4}: 1,
-				{X: 8, Y: 4}: 1,
-				{X: 9, Y: 4}: 1,
-				{X: 2, Y: 2}: 1,
-				{X: 2, Y: 1}: 1,
-				{X: 7, Y: 0}: 1,
-				{X: 7, Y: 1}: 1,
-				{X: 7, Y: 2}: 1,
-				{X: 7, Y: 3}: 1,
-				{X: 7, Y: 4}: 2,
-				{X: 2, Y: 4}: 1,
-				{X: 1, Y: 4}: 1,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := populateGrid(tt.cos); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("populateGrid() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("populates grid from list of coordinates", func(t *testing.T) {
+		input := []graph.Co{
+			{X: 0, Y: 9},
+			{X: 1, Y: 9},
+			{X: 2, Y: 9},
+			{X: 3, Y: 9},
+			{X: 4, Y: 9},
+			{X: 5, Y: 9},
+			{X: 3, Y: 4},
+			{X: 4, Y: 4},
+			{X: 5, Y: 4},
+			{X: 6, Y: 4},
+			{X: 7, Y: 4},
+			{X: 8, Y: 4},
+			{X: 9, Y: 4},
+			{X: 2, Y: 2},
+			{X: 2, Y: 1},
+			{X: 7, Y: 0},
+			{X: 7, Y: 1},
+			{X: 7, Y: 2},
+			{X: 7, Y: 3},
+			{X: 7, Y: 4},
+			{X: 0, Y: 9},
+			{X: 1, Y: 9},
+			{X: 2, Y: 9},
+			{X: 3, Y: 4},
+			{X: 2, Y: 4},
+			{X: 1, Y: 4},
+		}
+		want := Grid{
+			{X: 0, Y: 9}: 2,
+			{X: 1, Y: 9}: 2,
+			{X: 2, Y: 9}: 2,
+			{X: 3, Y: 9}: 1,
+			{X: 4, Y: 9}: 1,
+			{X: 5, Y: 9}: 1,
+			{X: 3, Y: 4}: 2,
+			{X: 4, Y: 4}: 1,
+			{X: 5, Y: 4}: 1,
+			{X: 6, Y: 4}: 1,
+			{X: 8, Y: 4}: 1,
+			{X: 9, Y: 4}: 1,
+			{X: 2, Y: 2}: 1,
+			{X: 2, Y: 1}: 1,
+			{X: 7, Y: 0}: 1,
+			{X: 7, Y: 1}: 1,
+			{X: 7, Y: 2}: 1,
+			{X: 7, Y: 3}: 1,
+			{X: 7, Y: 4}: 2,
+			{X: 2, Y: 4}: 1,
+			{X: 1, Y: 4}: 1,
+		}
+		got := populateGrid(input)
+		assert.Equal(t, want, got)
+	})
 }
 
 func TestGrid_countOverlaps(t *testing.T) {
-	tests := []struct {
-		name string
-		g    Grid
-		want int
-	}{
-		{
-			name: "counts number of coordinates in a grid that have a value greater than 1",
-			g: Grid{
-				{X: 0, Y: 9}: 2,
-				{X: 1, Y: 9}: 2,
-				{X: 2, Y: 9}: 2,
-				{X: 3, Y: 9}: 1,
-				{X: 4, Y: 9}: 1,
-				{X: 5, Y: 9}: 1,
-				{X: 3, Y: 4}: 2,
-				{X: 4, Y: 4}: 1,
-				{X: 5, Y: 4}: 1,
-				{X: 6, Y: 4}: 1,
-				{X: 8, Y: 4}: 1,
-				{X: 9, Y: 4}: 1,
-				{X: 2, Y: 2}: 1,
-				{X: 2, Y: 1}: 1,
-				{X: 7, Y: 0}: 1,
-				{X: 7, Y: 1}: 1,
-				{X: 7, Y: 2}: 1,
-				{X: 7, Y: 3}: 1,
-				{X: 7, Y: 4}: 2,
-				{X: 2, Y: 4}: 1,
-				{X: 1, Y: 4}: 1,
-			},
-			want: 5,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.g.countOverlaps(); got != tt.want {
-				t.Errorf("Grid.countOverlaps() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("counts number of coordinates in a grid that have a value greater than 1", func(t *testing.T) {
+		g := Grid{
+			{X: 0, Y: 9}: 2,
+			{X: 1, Y: 9}: 2,
+			{X: 2, Y: 9}: 2,
+			{X: 3, Y: 9}: 1,
+			{X: 4, Y: 9}: 1,
+			{X: 5, Y: 9}: 1,
+			{X: 3, Y: 4}: 2,
+			{X: 4, Y: 4}: 1,
+			{X: 5, Y: 4}: 1,
+			{X: 6, Y: 4}: 1,
+			{X: 8, Y: 4}: 1,
+			{X: 9, Y: 4}: 1,
+			{X: 2, Y: 2}: 1,
+			{X: 2, Y: 1}: 1,
+			{X: 7, Y: 0}: 1,
+			{X: 7, Y: 1}: 1,
+			{X: 7, Y: 2}: 1,
+			{X: 7, Y: 3}: 1,
+			{X: 7, Y: 4}: 2,
+			{X: 2, Y: 4}: 1,
+			{X: 1, Y: 4}: 1,
+		}
+		got := g.countOverlaps()
+		assert.Equal(t, 5, got)
+	})
 }
 
 func Test_findSolution(t *testing.T) {
@@ -373,10 +342,10 @@ func Test_findSolution(t *testing.T) {
 		part2 bool
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    int
-		wantErr bool
+		name               string
+		args               args
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an input line does not contain 4 numbers",
@@ -388,8 +357,8 @@ func Test_findSolution(t *testing.T) {
 					"7,8 -> 6,9",
 				},
 			},
-			want:    -1,
-			wantErr: true,
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns number of overlapping coordinates from input, advent of code example part 1",
@@ -408,8 +377,8 @@ func Test_findSolution(t *testing.T) {
 				},
 				part2: false,
 			},
-			want:    5,
-			wantErr: false,
+			want:               5,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns number of overlapping coordinates from input, advent of code example part 1",
@@ -428,20 +397,15 @@ func Test_findSolution(t *testing.T) {
 				},
 				part2: true,
 			},
-			want:    12,
-			wantErr: false,
+			want:               12,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := findSolution(tt.args.input, tt.args.part2)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolution() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolution() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

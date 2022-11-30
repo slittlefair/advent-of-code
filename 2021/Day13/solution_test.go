@@ -1,16 +1,17 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    *Paper
-		wantErr bool
+		name               string
+		input              []string
+		want               *Paper
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if input has no blank line",
@@ -20,8 +21,8 @@ func Test_parseInput(t *testing.T) {
 				"3,0",
 				"fold along x=9",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if a coordinate line does not have 2 values",
@@ -32,8 +33,8 @@ func Test_parseInput(t *testing.T) {
 				"",
 				"fold along x=9",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if an instruction line does not have 3 regex matches",
@@ -45,8 +46,8 @@ func Test_parseInput(t *testing.T) {
 				"fold along x=9",
 				"fold along y",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if an instruction line direction is not x or y",
@@ -59,8 +60,8 @@ func Test_parseInput(t *testing.T) {
 				"fold along z=2",
 				"fold along y=8",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an input parsed into a Paper, advent of code example",
@@ -115,19 +116,14 @@ func Test_parseInput(t *testing.T) {
 				MaxX: 10,
 				MaxY: 14,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := parseInput(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseInput() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -264,20 +260,18 @@ func TestPaper_doFold(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			p := tt.p
 			p.doFold(tt.idx)
-			if !reflect.DeepEqual(p, tt.want) {
-				t.Errorf("Paper.doFold() = %v, want %v", p, tt.want)
-			}
+			assert.Equal(t, tt.want, p)
 		})
 	}
 }
 
 func Test_findSolutions(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		want1   *Paper
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		want1              *Paper
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if parseInput returns an error",
@@ -286,9 +280,9 @@ func Test_findSolutions(t *testing.T) {
 				"8,9",
 				"fold along x=8",
 			},
-			want:    -1,
-			want1:   nil,
-			wantErr: true,
+			want:               -1,
+			want1:              nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "finds solutions for parts 1 and 2, advent of code example",
@@ -344,22 +338,15 @@ func Test_findSolutions(t *testing.T) {
 				MaxX: 4,
 				MaxY: 6,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := findSolutions(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolutions() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

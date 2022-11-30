@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var adventOfCodeExampleInput = []string{
@@ -27,39 +28,18 @@ var adventOfCodeExampleInput = []string{
 }
 
 func Test_combineLetters(t *testing.T) {
-	type args struct {
-		l1 string
-		l2 string
-	}
-	tests := []struct {
-		name string
-		args args
-		want string
-	}{
-		{
-			name: "combines the two given strings into one",
-			args: args{
-				l1: "hello",
-				l2: "world",
-			},
-			want: "helloworld",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := combineLetters(tt.args.l1, tt.args.l2); got != tt.want {
-				t.Errorf("combineLetters() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("combines the two given strings into one", func(t *testing.T) {
+		got := combineLetters("hello", "world")
+		assert.Equal(t, "helloworld", got)
+	})
 }
 
 func Test_parseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    *PolymerizationEquipment
-		wantErr bool
+		name               string
+		input              []string
+		want               *PolymerizationEquipment
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an input line has fewer than two matching strings",
@@ -69,8 +49,8 @@ func Test_parseInput(t *testing.T) {
 				"CH ->",
 				"BB -> B",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if an input line has more than two matching strings",
@@ -80,8 +60,8 @@ func Test_parseInput(t *testing.T) {
 				"CH -> C",
 				"BB -> B -> H",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name:  "returns a correctly formed PolymerizationEquipment from input",
@@ -116,19 +96,14 @@ func Test_parseInput(t *testing.T) {
 					"B": 1,
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := parseInput(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseInput() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -284,9 +259,7 @@ func TestPolymerizationEquipment_followInstructions(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			pe := tt.pe
 			pe.followInstructions()
-			if !reflect.DeepEqual(pe, tt.want) {
-				t.Errorf("pe.followInstructions() = %v, want %v", pe, tt.want)
-			}
+			assert.Equal(t, tt.want, pe)
 		})
 	}
 }
@@ -323,20 +296,19 @@ func TestPolymerizationEquipment_getVal(t *testing.T) {
 			pe := PolymerizationEquipment{
 				lf: tt.lf,
 			}
-			if got := pe.getVal(); got != tt.want {
-				t.Errorf("PolymerizationEquipment.getVal() = %v, want %v", got, tt.want)
-			}
+			got := pe.getVal()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_findSolutions(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if input cannot be parsed",
@@ -348,31 +320,24 @@ func Test_findSolutions(t *testing.T) {
 				"AG -> YU -> B",
 				"HH -> H",
 			},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns correct solutions for parts 1 and 2 from input, advent of code example",
-			input:   adventOfCodeExampleInput,
-			want:    1588,
-			want1:   2188189693529,
-			wantErr: false,
+			name:               "returns correct solutions for parts 1 and 2 from input, advent of code example",
+			input:              adventOfCodeExampleInput,
+			want:               1588,
+			want1:              2188189693529,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := findSolutions(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolutions() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

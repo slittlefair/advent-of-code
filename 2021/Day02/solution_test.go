@@ -1,22 +1,23 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_evaluateLine(t *testing.T) {
 	tests := []struct {
-		name    string
-		line    string
-		want    *instruction
-		wantErr bool
+		name               string
+		line               string
+		want               *instruction
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if the second part of the line cannot be converted to an int",
-			line:    "forward one",
-			want:    nil,
-			wantErr: true,
+			name:               "returns an error if the second part of the line cannot be converted to an int",
+			line:               "forward one",
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an instruction from a line of input",
@@ -25,55 +26,49 @@ func Test_evaluateLine(t *testing.T) {
 				dir: "forward",
 				val: 4,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := evaluateLine(tt.line)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("evaluateLine() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("evaluateLine() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_validateInstruction(t *testing.T) {
 	tests := []struct {
-		name    string
-		dir     string
-		wantErr bool
+		name               string
+		dir                string
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    `does not return an error if the direction is "forward"`,
-			dir:     "forward",
-			wantErr: false,
+			name:               `does not return an error if the direction is "forward"`,
+			dir:                "forward",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:    `does not return an error if the direction is "up"`,
-			dir:     "up",
-			wantErr: false,
+			name:               `does not return an error if the direction is "up"`,
+			dir:                "up",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:    `does not return an error if the direction is "down"`,
-			dir:     "down",
-			wantErr: false,
+			name:               `does not return an error if the direction is "down"`,
+			dir:                "down",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
-			name:    `returns an error if the direction is not "forward", "up" or "down"`,
-			dir:     "diagonally",
-			wantErr: true,
+			name:               `returns an error if the direction is not "forward", "up" or "down"`,
+			dir:                "diagonally",
+			errorAssertionFunc: assert.Error,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if err := validateInstruction(tt.dir); (err != nil) != tt.wantErr {
-				t.Errorf("validateInstruction() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			err := validateInstruction(tt.dir)
+			tt.errorAssertionFunc(t, err)
 		})
 	}
 }
@@ -208,9 +203,7 @@ func Test_position_followInstruction(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			co := tt.co
 			co.followInstruction(tt.args.inst, tt.args.part2)
-			if !reflect.DeepEqual(co, tt.want) {
-				t.Errorf("evaluateLine() = %v, want %v", co, tt.want)
-			}
+			assert.Equal(t, tt.want, co)
 		})
 	}
 }
@@ -221,10 +214,10 @@ func Test_findSolution(t *testing.T) {
 		part2 bool
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    int
-		wantErr bool
+		name               string
+		args               args
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an input line is invalid part 1, evaluateLine",
@@ -239,8 +232,8 @@ func Test_findSolution(t *testing.T) {
 				},
 				part2: false,
 			},
-			want:    -1,
-			wantErr: true,
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if an input line is invalid part 1, validateInstruction",
@@ -255,8 +248,8 @@ func Test_findSolution(t *testing.T) {
 				},
 				part2: false,
 			},
-			want:    -1,
-			wantErr: true,
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "calculates product of horizontal position and depth part 1, advent of code example",
@@ -271,8 +264,8 @@ func Test_findSolution(t *testing.T) {
 				},
 				part2: false,
 			},
-			want:    150,
-			wantErr: false,
+			want:               150,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns an error if an input line is invalid part 2, evaluateLine",
@@ -287,8 +280,8 @@ func Test_findSolution(t *testing.T) {
 				},
 				part2: true,
 			},
-			want:    -1,
-			wantErr: true,
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if an input line is invalid part 2, validateInstruction",
@@ -303,8 +296,8 @@ func Test_findSolution(t *testing.T) {
 				},
 				part2: true,
 			},
-			want:    -1,
-			wantErr: true,
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "calculates product of horizontal position and depth part 1, advent of code example",
@@ -319,20 +312,15 @@ func Test_findSolution(t *testing.T) {
 				},
 				part2: true,
 			},
-			want:    900,
-			wantErr: false,
+			want:               900,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := findSolution(tt.args.input, tt.args.part2)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolution() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolution() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
