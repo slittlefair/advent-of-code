@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_composeBounds(t *testing.T) {
@@ -50,12 +51,8 @@ func Test_composeBounds(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := composeBounds(tt.args.input, tt.args.upperBound)
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("composeBounds() got = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(got1, tt.want1) {
-				t.Errorf("composeBounds() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
@@ -93,12 +90,8 @@ func Test_findAllowedIPs(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := findAllowedIPs(tt.args.lowers, tt.args.uppers)
-			if got != tt.want {
-				t.Errorf("findAllowedIPs() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findAllowedIPs() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

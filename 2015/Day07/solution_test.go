@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestWires_doBitwiseAND(t *testing.T) {
@@ -122,9 +123,7 @@ func TestWires_doBitwiseAND(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.doBitwiseAND(tt.args.identifiers, tt.args.nums)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("Wires.doBitwiseAND() = %v, want %v", tt.w, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.w)
 		})
 	}
 }
@@ -246,9 +245,7 @@ func TestWires_doBitwiseOR(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.doBitwiseOR(tt.args.identifiers, tt.args.nums)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("Wires.doBitwiseOR() = %v, want %v", tt.w, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.w)
 		})
 	}
 }
@@ -314,9 +311,7 @@ func TestWires_doBitwiseNOT(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.doBitwiseNOT(tt.args.identifiers)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("Wires.doBitwiseNOT() = %v, want %v", tt.w, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.w)
 		})
 	}
 }
@@ -385,9 +380,7 @@ func TestWires_doBitwiseLSHIFT(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.doBitwiseLSHIFT(tt.args.identifiers, tt.args.nums)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("Wires.doBitwiseLSHIFT() = %v, want %v", tt.w, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.w)
 		})
 	}
 }
@@ -456,9 +449,7 @@ func TestWires_doBitwiseRSHIFT(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.doBitwiseRSHIFT(tt.args.identifiers, tt.args.nums)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("Wires.doBitwiseLSHIFT() = %v, want %v", tt.w, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.w)
 		})
 	}
 }
@@ -562,9 +553,7 @@ func TestWires_doASSIGN(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.doASSIGN(tt.args.identifiers, tt.args.nums)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("Wires.doASSIGN() = %v, want %v", tt.w, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.w)
 		})
 	}
 }
@@ -628,9 +617,7 @@ func TestWires_followInstructions(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.followInstructions(tt.instructions)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("Wires.followInstructions() = %v, want %v", tt.w, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.w)
 		})
 	}
 }

@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var adventOfCodeExampleInput = []string{
@@ -328,24 +329,10 @@ var adventOfCodeExampleGrid3 = Grid{
 }
 
 func Test_parseInput(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  Grid
-	}{
-		{
-			name:  "correctly parses given input to a grid",
-			input: adventOfCodeExampleInput,
-			want:  adventOfCodeExampleGrid1,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := parseInput(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("correctly parses given input to a grid", func(t *testing.T) {
+		got := parseInput(adventOfCodeExampleInput)
+		assert.Equal(t, adventOfCodeExampleGrid1, got)
+	})
 }
 
 func TestGrid_followStep(t *testing.T) {
@@ -371,17 +358,9 @@ func TestGrid_followStep(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			g := tt.g
-			if got := g.followStep(); got != tt.want {
-				t.Errorf("Grid.followStep() = %v, want %v", got, tt.want)
-			}
-			for co, v := range g {
-				if v != tt.want1[co] {
-					t.Errorf("%v, %d, %d", co, v, tt.want1[co])
-				}
-			}
-			if !reflect.DeepEqual(g, tt.want1) {
-				t.Errorf("Grid.followStep(), %v, want %v", g, tt.want1)
-			}
+			got := g.followStep()
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, g)
 		})
 	}
 }
@@ -425,36 +404,16 @@ func TestGrid_isSynchronised(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.g.isSynchronised(); got != tt.want {
-				t.Errorf("Grid.isSynchronised() = %v, want %v", got, tt.want)
-			}
+			got := tt.g.isSynchronised()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_findSolution(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  int
-		want1 int
-	}{
-		{
-			name:  "find solutions for parts 1 and 2, advent of code example",
-			input: adventOfCodeExampleInput,
-			want:  1656,
-			want1: 195,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := findSolution(tt.input)
-			if got != tt.want {
-				t.Errorf("findSolution() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolution() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+	t.Run("find solutions for parts 1 and 2, advent of code example", func(t *testing.T) {
+		got, got1 := findSolution(adventOfCodeExampleInput)
+		assert.Equal(t, 1656, got)
+		assert.Equal(t, 195, got1)
+	})
 }

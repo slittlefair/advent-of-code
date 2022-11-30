@@ -2,8 +2,9 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var keypad map[graph.Co]string = map[graph.Co]string{
@@ -80,9 +81,7 @@ func TestCodeConstructor_move(t *testing.T) {
 				currentCo: tt.currentCo,
 			}
 			cc.move(tt.dir, keypad)
-			if !reflect.DeepEqual(cc.currentCo, tt.want) {
-				t.Errorf("CodeConstructor.move().currentCo = %v, want %v", cc.currentCo, tt.want)
-			}
+			assert.Equal(t, tt.want, cc.currentCo)
 		})
 	}
 }
@@ -154,9 +153,7 @@ func TestCodeConstructor_followDirections(t *testing.T) {
 				code:      tt.fields.code,
 			}
 			cc.followDirections(tt.line, keypad)
-			if !reflect.DeepEqual(cc, tt.want) {
-				t.Errorf("CodeConstructor.followDirections() = %v, want %v", cc, tt.want)
-			}
+			assert.Equal(t, tt.want, cc)
 		})
 	}
 }
@@ -183,9 +180,8 @@ func TestCodeConstructor_getCode(t *testing.T) {
 			cc := CodeConstructor{
 				code: tt.code,
 			}
-			if got := cc.getCode(); got != tt.want {
-				t.Errorf("CodeConstructor.getCode() = %v, want %v", got, tt.want)
-			}
+			got := cc.getCode()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

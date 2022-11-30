@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_evaluateCoreSum(t *testing.T) {
@@ -28,9 +30,8 @@ func Test_evaluateCoreSum(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := evaluateCoreSum(tt.sum); got != tt.want {
-				t.Errorf("evaluateCoreSum() = %v, want %v", got, tt.want)
-			}
+			got := evaluateCoreSum(tt.sum)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -54,9 +55,8 @@ func Test_evaluateCoreSumAdditionFirst(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := evaluateCoreSumAdditionFirst(tt.sum); got != tt.want {
-				t.Errorf("evaluateCoreSumAdditionFirst() = %v, want %v", got, tt.want)
-			}
+			got := evaluateCoreSumAdditionFirst(tt.sum)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -170,43 +170,24 @@ func Test_evaluateSum(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := evaluateSum(tt.args.sum, tt.args.part); got != tt.want {
-				t.Errorf("evaluateSum() = %v, want %v", got, tt.want)
-			}
+			got := evaluateSum(tt.args.sum, tt.args.part)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_findSolutions(t *testing.T) {
-	tests := []struct {
-		name  string
-		sums  []string
-		want  int
-		want1 int
-	}{
-		{
-			name: "advent of code example",
-			sums: []string{
-				"1 + 2 * 3 + 4 * 5 + 6",
-				"1 + (2 * 3) + (4 * (5 + 6))",
-				"2 * 3 + (4 * 5)",
-				"5 + (8 * 3 + 9 + 3 * 4 * 3)",
-				"5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))",
-				"((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2",
-			},
-			want:  26457,
-			want1: 694173,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := findSolutions(tt.sums)
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+	t.Run("advent of code example", func(t *testing.T) {
+		input := []string{
+			"1 + 2 * 3 + 4 * 5 + 6",
+			"1 + (2 * 3) + (4 * (5 + 6))",
+			"2 * 3 + (4 * 5)",
+			"5 + (8 * 3 + 9 + 3 * 4 * 3)",
+			"5 * 9 * (7 * 3 * 3 + 9 * 3 + (8 + 6 * 4))",
+			"((2 + 4 * 9) * (6 + 9 * 8 + 6) + 6) + 2 + 4 * 2",
+		}
+		got, got1 := findSolutions(input)
+		assert.Equal(t, 26457, got)
+		assert.Equal(t, 694173, got1)
+	})
 }

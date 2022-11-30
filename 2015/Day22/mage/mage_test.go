@@ -2,8 +2,9 @@ package mage
 
 import (
 	"Advent-of-Code/2015/Day21/martial"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestMage_SpellIsValid(t *testing.T) {
@@ -69,9 +70,8 @@ func TestMage_SpellIsValid(t *testing.T) {
 			m := &Mage{
 				Mana: tt.mana,
 			}
-			if got := m.SpellIsValid(tt.args.spell, tt.args.effects); got != tt.want {
-				t.Errorf("Mage.SpellIsValid() = %v, want %v", got, tt.want)
-			}
+			got := m.SpellIsValid(tt.args.spell, tt.args.effects)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -123,99 +123,32 @@ func TestApplyEffect(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := ApplyEffect(tt.args.mage, tt.args.boss, tt.args.e)
-			if got.Active != tt.want.Active {
-				t.Errorf("ApplyEffect().Active = %v, want %v", got.Active, tt.want.Active)
-			}
-			if got.DurationRemaining != tt.want.DurationRemaining {
-				t.Errorf("ApplyEffect().DurationRemaining = %v, want %v", got.DurationRemaining, tt.want.DurationRemaining)
-			}
+			assert.Equal(t, tt.want.Active, got.Active)
+			assert.Equal(t, tt.want.DurationRemaining, got.DurationRemaining)
 		})
 	}
 }
 
 func TestShield(t *testing.T) {
-	type args struct {
-		mage *Mage
-		boss *martial.Martial
-	}
-	tests := []struct {
-		name string
-		args args
-		want *Mage
-	}{
-		{
-			name: "applies shield effect to mage, setting armour to 7",
-			args: args{
-				mage: &Mage{},
-				boss: &martial.Martial{},
-			},
-			want: &Mage{Armour: 7},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			Shield(tt.args.mage, tt.args.boss)
-			if !reflect.DeepEqual(tt.args.mage, tt.want) {
-				t.Errorf("Shield() = %v, want %v", tt.args.mage, tt.want)
-			}
-		})
-	}
+	t.Run("applies shield effect to mage, setting armour to 7", func(t *testing.T) {
+		mage := &Mage{}
+		Shield(mage, &martial.Martial{})
+		assert.Equal(t, &Mage{Armour: 7}, mage)
+	})
 }
 
 func TestPoison(t *testing.T) {
-	type args struct {
-		mage *Mage
-		boss *martial.Martial
-	}
-	tests := []struct {
-		name string
-		args args
-		want *martial.Martial
-	}{
-		{
-			name: "applies poison effect, reducing boss HP by 3",
-			args: args{
-				mage: &Mage{},
-				boss: &martial.Martial{HP: 32},
-			},
-			want: &martial.Martial{HP: 29},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			Poison(tt.args.mage, tt.args.boss)
-			if !reflect.DeepEqual(tt.args.boss, tt.want) {
-				t.Errorf("Poison() = %v, want %v", tt.args.boss, tt.want)
-			}
-		})
-	}
+	t.Run("applies poison effect, reducing boss HP by 3", func(t *testing.T) {
+		boss := &martial.Martial{HP: 32}
+		Poison(&Mage{}, boss)
+		assert.Equal(t, &martial.Martial{HP: 29}, boss)
+	})
 }
 
 func TestRecharge(t *testing.T) {
-	type args struct {
-		mage *Mage
-		boss *martial.Martial
-	}
-	tests := []struct {
-		name string
-		args args
-		want *Mage
-	}{
-		{
-			name: "applies recharge effect to mage, increasing mana by 101",
-			args: args{
-				mage: &Mage{Mana: 274},
-				boss: &martial.Martial{},
-			},
-			want: &Mage{Mana: 375},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			Recharge(tt.args.mage, tt.args.boss)
-			if !reflect.DeepEqual(tt.args.mage, tt.want) {
-				t.Errorf("Recharge() = %v, want %v", tt.args.mage, tt.want)
-			}
-		})
-	}
+	t.Run("applies recharge effect to mage, increasing mana by 101", func(t *testing.T) {
+		mage := &Mage{Mana: 274}
+		Recharge(mage, &martial.Martial{})
+		assert.Equal(t, &Mage{Mana: 375}, mage)
+	})
 }

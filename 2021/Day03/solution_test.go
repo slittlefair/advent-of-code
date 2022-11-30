@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var adventOfCodeExampleInput = []string{
@@ -86,71 +87,31 @@ func Test_allFrequencies_compileFrequencies(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			f := tt.f
 			f.compileFrequencies((tt.input))
-			if !reflect.DeepEqual(f, tt.want) {
-				t.Errorf("compileFrequencies() = %v, want %v", f, tt.want)
-			}
+			assert.Equal(t, tt.want, f)
 		})
 	}
 }
 
 func Test_allFrequencies_compileRates(t *testing.T) {
-	tests := []struct {
-		name  string
-		f     allFrequencies
-		want  string
-		want1 string
-	}{
-		{
-			name: "compiles eRate and gRates from allFrequencies",
-			f: allFrequencies{
-				{ones: 6, zeros: 3},
-				{ones: 3, zeros: 6},
-				{ones: 7, zeros: 2},
-				{ones: 5, zeros: 4},
-			},
-			want:  "1011",
-			want1: "0100",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := tt.f.compileRates()
-			if got != tt.want {
-				t.Errorf("allFrequencies.compileRates() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("allFrequencies.compileRates() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+	t.Run("compiles eRate and gRates from allFrequencies", func(t *testing.T) {
+		f := allFrequencies{
+			{ones: 6, zeros: 3},
+			{ones: 3, zeros: 6},
+			{ones: 7, zeros: 2},
+			{ones: 5, zeros: 4},
+		}
+		got, got1 := f.compileRates()
+		assert.Equal(t, "1011", got)
+		assert.Equal(t, "0100", got1)
+	})
 }
 
 func Test_part1(t *testing.T) {
-	tests := []struct {
-		name    string
-		input   []string
-		want    int64
-		wantErr bool
-	}{
-		{
-			name:    "returns the correct eRate and gRate product for input, advent of code example",
-			input:   adventOfCodeExampleInput,
-			want:    198,
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, err := part1(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("part1() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("part1() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns the correct eRate and gRate product for input, advent of code example", func(t *testing.T) {
+		got, err := part1(adventOfCodeExampleInput)
+		assert.NoError(t, err)
+		assert.Equal(t, int64(198), got)
+	})
 }
 
 func Test_getRatings(t *testing.T) {
@@ -159,10 +120,10 @@ func Test_getRatings(t *testing.T) {
 		og    bool
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    string
-		wantErr bool
+		name               string
+		args               args
+		want               string
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if it cannot find a single valid value",
@@ -175,8 +136,8 @@ func Test_getRatings(t *testing.T) {
 					"1011",
 				},
 			},
-			want:    "",
-			wantErr: true,
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns a valid og rating, advent of code example",
@@ -184,8 +145,8 @@ func Test_getRatings(t *testing.T) {
 				input: adventOfCodeExampleInput,
 				og:    true,
 			},
-			want:    "10111",
-			wantErr: false,
+			want:               "10111",
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns a valid c02s rating, advent of code example",
@@ -193,60 +154,50 @@ func Test_getRatings(t *testing.T) {
 				input: adventOfCodeExampleInput,
 				og:    false,
 			},
-			want:    "01010",
-			wantErr: false,
+			want:               "01010",
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := getRatings(tt.args.input, tt.args.og)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("getRatings() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("getRatings() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_part2(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int64
-		wantErr bool
+		name               string
+		input              []string
+		want               int64
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if the ogRating cannot be obtained",
-			input:   []string{"2"},
-			want:    -1,
-			wantErr: true,
+			name:               "returns an error if the ogRating cannot be obtained",
+			input:              []string{"2"},
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns an error if the c02sRating cannot be obtained",
-			input:   []string{"1", "2"},
-			want:    -1,
-			wantErr: true,
+			name:               "returns an error if the c02sRating cannot be obtained",
+			input:              []string{"1", "2"},
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns product of o2Rating and c02sRating from input, advent of code example",
-			input:   adventOfCodeExampleInput,
-			want:    230,
-			wantErr: false,
+			name:               "returns product of o2Rating and c02sRating from input, advent of code example",
+			input:              adventOfCodeExampleInput,
+			want:               230,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := part2(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("part2() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("part2() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

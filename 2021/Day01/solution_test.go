@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_calculateIncreases(t *testing.T) {
@@ -44,63 +45,45 @@ func Test_calculateIncreases(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := calculateIncreases(tt.input); got != tt.want {
-				t.Errorf("calculateIncreases() = %v, want %v", got, tt.want)
-			}
+			got := calculateIncreases(tt.input)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_calculateSlidingWindows(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []int
-		want  []int
-	}{
-		{
-			name: "returns a slice of 3 value inputs from given slice",
-			input: []int{
-				199,
-				200,
-				208,
-				210,
-				200,
-				207,
-				240,
-				269,
-				260,
-				263,
-			},
-			want: []int{
-				607,
-				618,
-				618,
-				617,
-				647,
-				716,
-				769,
-				792,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := calculateSlidingWindows(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("calculateSlidingWindows() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns a slice of 3 value inputs from given slice", func(t *testing.T) {
+		input := []int{
+			199,
+			200,
+			208,
+			210,
+			200,
+			207,
+			240,
+			269,
+			260,
+			263,
+		}
+		want := []int{
+			607,
+			618,
+			618,
+			617,
+			647,
+			716,
+			769,
+			792,
+		}
+		got := calculateSlidingWindows(input)
+		assert.Equal(t, want, got)
+	})
 }
 
 func Test_part1(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []int
-		want  int
-	}{
-		{
-			name: "returns number of increases in a given input, advent of code example",
-			input: []int{
+	t.Run("returns number of increases in a given input, advent of code example", func(t *testing.T) {
+		got := part1(
+			[]int{
 				199,
 				200,
 				208,
@@ -112,27 +95,15 @@ func Test_part1(t *testing.T) {
 				260,
 				263,
 			},
-			want: 7,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := part1(tt.input); got != tt.want {
-				t.Errorf("part1() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		)
+		assert.Equal(t, 7, got)
+	})
 }
 
 func Test_part2(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []int
-		want  int
-	}{
-		{
-			name: "returns number of increases in sliding windows of a given input",
-			input: []int{
+	t.Run("returns number of increases in sliding windows of a given input", func(t *testing.T) {
+		got := part2(
+			[]int{
 				199,
 				200,
 				208,
@@ -144,14 +115,7 @@ func Test_part2(t *testing.T) {
 				260,
 				263,
 			},
-			want: 5,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := part2(tt.input); got != tt.want {
-				t.Errorf("part2() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		)
+		assert.Equal(t, 5, got)
+	})
 }

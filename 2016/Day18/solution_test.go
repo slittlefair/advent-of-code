@@ -2,8 +2,9 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_createGrid(t *testing.T) {
@@ -50,9 +51,8 @@ func Test_createGrid(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := createGrid(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("createGrid() = %v, want %v", got, tt.want)
-			}
+			got := createGrid(tt.input)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -103,12 +103,9 @@ func Test_grid_isTrap(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			g := tt.g
-			if got := g.isTrap(tt.x); got != tt.want {
-				t.Errorf("grid.isTrap() = %v, want %v", got, tt.want)
-			}
-			if g.safeTiles != tt.want1 {
-				t.Errorf("grid.isTrap().safeTiles = %d, want %d", g.safeTiles, tt.want1)
-			}
+			got := g.isTrap(tt.x)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, g.safeTiles)
 		})
 	}
 }
@@ -174,9 +171,7 @@ func Test_grid_assessRow(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			g := tt.g
 			g.assessRow()
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("grid.assessRow() = %v, want %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
@@ -217,12 +212,8 @@ func Test_findSolutions(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := findSolutions(tt.args.input, tt.args.part1, tt.args.part2)
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

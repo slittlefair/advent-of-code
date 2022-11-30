@@ -2,9 +2,9 @@ package dijkstra
 
 import (
 	"Advent-of-Code/graph"
-	"fmt"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPriorityQueue_Len(t *testing.T) {
@@ -26,9 +26,8 @@ func TestPriorityQueue_Len(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.pq.Len(); got != tt.want {
-				t.Errorf("PriorityQueue.Len() = %v, want %v", got, tt.want)
-			}
+			got := tt.pq.Len()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -75,172 +74,102 @@ func TestPriorityQueue_Less(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.pq.Less(tt.args.i, tt.args.j); got != tt.want {
-				t.Errorf("PriorityQueue.Less() = %v, want %v", got, tt.want)
-			}
+			got := tt.pq.Less(tt.args.i, tt.args.j)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestPriorityQueue_Swap(t *testing.T) {
-	type args struct {
-		i int
-		j int
-	}
-	tests := []struct {
-		name string
-		pq   PriorityQueue
-		args args
-		want PriorityQueue
-	}{
-		{
-			name: "swaps the items at the given indices",
-			pq: PriorityQueue{
-				&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-				&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-				&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-				&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-				&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-				&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-				&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-			},
-			args: args{i: 2, j: 5},
-			want: PriorityQueue{
-				&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-				&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-				&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-				&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-				&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-				&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-				&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			pq := tt.pq
-			pq.Swap(tt.args.i, tt.args.j)
-			if !reflect.DeepEqual(pq, tt.want) {
-				t.Errorf("PriorityQueue.Swap() = %v, want %v", pq, tt.want)
-			}
-		})
-	}
+	t.Run("swaps the items at the given indices", func(t *testing.T) {
+		pq := PriorityQueue{
+			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+		}
+		want := PriorityQueue{
+			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+		}
+		pq.Swap(2, 5)
+		assert.Equal(t, want, pq)
+	})
 }
 
 func TestPriorityQueue_Push(t *testing.T) {
-	tests := []struct {
-		name string
-		pq   *PriorityQueue
-		x    interface{}
-		want *PriorityQueue
-	}{
-		{
-			name: "pushes a Path to the PriorityQueue",
-			pq: &PriorityQueue{
-				&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-				&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-				&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-				&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-				&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-				&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-				&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-			},
-			x: &Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
-			want: &PriorityQueue{
-				&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-				&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-				&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-				&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-				&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-				&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-				&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-				&Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			pq := tt.pq
-			pq.Push(tt.x)
-			if !reflect.DeepEqual(pq, tt.want) {
-				t.Errorf("PriorityQueue.Push() = %v, want %v", pq, tt.want)
-			}
-		})
-	}
+	t.Run("pushes a Path to the PriorityQueue", func(t *testing.T) {
+		pq := PriorityQueue{
+			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+		}
+		want := PriorityQueue{
+			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			&Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
+		}
+		pq.Push(&Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}})
+		assert.Equal(t, want, pq)
+	})
 }
 
 func TestPriorityQueue_Pop(t *testing.T) {
-	tests := []struct {
-		name  string
-		pq    *PriorityQueue
-		want  interface{}
-		want1 *PriorityQueue
-	}{
-		{
-			name: "removes the last item from the PriorityQueue",
-			pq: &PriorityQueue{
-				&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-				&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-				&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-				&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-				&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-				&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-				&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-				&Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
-			},
-			want: &Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
-			want1: &PriorityQueue{
-				&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-				&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-				&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-				&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-				&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-				&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-				&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			pq := tt.pq
-			if got := pq.Pop(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("PriorityQueue.Pop() = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(pq, tt.want1) {
-				t.Errorf("PriorityQueue.Pop() = %v, want %v", pq, tt.want1)
-			}
-		})
-	}
+	t.Run("removes the last item from the PriorityQueue", func(t *testing.T) {
+		pq := &PriorityQueue{
+			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			&Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
+		}
+		want := &Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}}
+		want1 := &PriorityQueue{
+			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+		}
+		got := pq.Pop()
+		assert.Equal(t, want, got)
+		assert.Equal(t, want1, pq)
+	})
 }
 
 func TestNewGraph(t *testing.T) {
-	type args struct {
-		maxX int
-		maxY int
-	}
-	tests := []struct {
-		name string
-		args args
-		want *Graph
-	}{
-		{
-			name: "returns a constructed graph from given maxX and maxY",
-			args: args{maxX: 5, maxY: 87},
-			want: &Graph{
-				Grid:  make(map[graph.Co]int),
-				Nodes: make(map[graph.Co][]Edge),
-				MaxX:  5,
-				MaxY:  87,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := NewGraph(tt.args.maxX, tt.args.maxY); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("NewGraph() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns a constructed graph from given maxX and maxY", func(t *testing.T) {
+		got := NewGraph(5, 87)
+		want := &Graph{
+			Grid:  make(map[graph.Co]int),
+			Nodes: make(map[graph.Co][]Edge),
+			MaxX:  5,
+			MaxY:  87,
+		}
+		assert.Equal(t, want, got)
+	})
 }
 
 func TestGraph_AddEdge(t *testing.T) {
@@ -383,51 +312,33 @@ func TestGraph_AddEdge(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			g := tt.g
 			g.AddEdge(tt.args.origin, tt.args.destination, tt.args.weight)
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Graph.AddEdge() = %v, want %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
 
 func TestGraph_GetEdges(t *testing.T) {
-	tests := []struct {
-		name string
-		g    *Graph
-		node graph.Co
-		want []Edge
-	}{
-		{
-			name: "returns the edges in the graph for the given node",
-			g: &Graph{
-				Grid: map[graph.Co]int{
-					{X: 0, Y: 0}:  1,
-					{X: 0, Y: 1}:  9,
-					{X: 1, Y: 0}:  8,
-					{X: 1, Y: 1}:  4,
-					{X: 11, Y: 7}: 11,
-				},
-				Nodes: map[graph.Co][]Edge{
-					{X: 0, Y: 0}:  {{Node: graph.Co{X: 0, Y: 1}, Weight: 9}},
-					{X: 1, Y: 0}:  {{Node: graph.Co{X: 1, Y: 1}, Weight: 4}},
-					{X: 1, Y: 1}:  {{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
-					{X: 10, Y: 0}: {{Node: graph.Co{X: 9, Y: 1}, Weight: 7}, {Node: graph.Co{X: 11, Y: 7}, Weight: 11}},
-				},
-				MaxX: 3,
-				MaxY: 3,
+	t.Run("returns the edges in the graph for the given node", func(t *testing.T) {
+		g := &Graph{
+			Grid: map[graph.Co]int{
+				{X: 0, Y: 0}:  1,
+				{X: 0, Y: 1}:  9,
+				{X: 1, Y: 0}:  8,
+				{X: 1, Y: 1}:  4,
+				{X: 11, Y: 7}: 11,
 			},
-			node: graph.Co{X: 1, Y: 1},
-			want: []Edge{{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			g := tt.g
-			if got := g.GetEdges(tt.node); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Graph.GetEdges() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+			Nodes: map[graph.Co][]Edge{
+				{X: 0, Y: 0}:  {{Node: graph.Co{X: 0, Y: 1}, Weight: 9}},
+				{X: 1, Y: 0}:  {{Node: graph.Co{X: 1, Y: 1}, Weight: 4}},
+				{X: 1, Y: 1}:  {{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
+				{X: 10, Y: 0}: {{Node: graph.Co{X: 9, Y: 1}, Weight: 7}, {Node: graph.Co{X: 11, Y: 7}, Weight: 11}},
+			},
+			MaxX: 3,
+			MaxY: 3,
+		}
+		got := g.GetEdges(graph.Co{X: 1, Y: 1})
+		assert.Equal(t, []Edge{{Node: graph.Co{X: 1, Y: 0}, Weight: 8}}, got)
+	})
 }
 
 func TestGraph_ExtendGrid(t *testing.T) {
@@ -546,9 +457,7 @@ func TestGraph_ExtendGrid(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			g := tt.g
 			g.ExtendGrid(tt.factor)
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Graph.ExtendGrid() = %v, want %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
@@ -633,10 +542,10 @@ func TestGraph_GetPath(t *testing.T) {
 		destination graph.Co
 	}
 	tests := []struct {
-		name    string
-		args    args
-		want    *Path
-		wantErr bool
+		name               string
+		args               args
+		want               *Path
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if a path can't be found",
@@ -644,8 +553,8 @@ func TestGraph_GetPath(t *testing.T) {
 				origin:      graph.Co{X: 0, Y: 0},
 				destination: graph.Co{X: 100, Y: 100},
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "finds minimal path through graph",
@@ -678,26 +587,14 @@ func TestGraph_GetPath(t *testing.T) {
 					{X: 4, Y: 5},
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := exampleGraph.GetPath(tt.args.origin, tt.args.destination)
-			for co, edges := range exampleGraph.Nodes {
-				for _, e := range edges {
-					if exampleGraph.Grid[e.Node] != e.Weight {
-						fmt.Println(co, e)
-					}
-				}
-			}
-			if (err != nil) != tt.wantErr {
-				t.Errorf("Graph.GetPath() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Graph.GetPath() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

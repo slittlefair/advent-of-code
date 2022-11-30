@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var exampleInstructions = []Instructions{
@@ -46,10 +47,10 @@ var exampleInstructions = []Instructions{
 
 func Test_parseProgramme(t *testing.T) {
 	tests := []struct {
-		name    string
-		entries []string
-		want    *Programme
-		wantErr bool
+		name               string
+		entries            []string
+		want               *Programme
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an input value can't be converted to an int",
@@ -59,8 +60,8 @@ func Test_parseProgramme(t *testing.T) {
 				"acc ???",
 				"jmp +2",
 			},
-			want:    nil,
-			wantErr: true,
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "advent of code example",
@@ -78,19 +79,14 @@ func Test_parseProgramme(t *testing.T) {
 			want: &Programme{
 				instructions: exampleInstructions,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := parseProgramme(tt.entries)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseProgramme() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseProgramme() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -140,9 +136,8 @@ func TestProgramme_runProgramme(t *testing.T) {
 				foundSolution: tt.fields.foundSolution,
 				instructions:  tt.fields.instructions,
 			}
-			if got := p.runProgramme(tt.tweakAtIndex); got != tt.want {
-				t.Errorf("Programme.runProgramme() = %v, want %v", got, tt.want)
-			}
+			got := p.runProgramme(tt.tweakAtIndex)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

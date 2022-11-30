@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_registers_cpy(t *testing.T) {
@@ -11,11 +12,11 @@ func Test_registers_cpy(t *testing.T) {
 		to   string
 	}
 	tests := []struct {
-		name    string
-		r       registers
-		args    args
-		want    registers
-		wantErr bool
+		name               string
+		r                  registers
+		args               args
+		want               registers
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if from value can't be converted to an int",
@@ -35,7 +36,7 @@ func Test_registers_cpy(t *testing.T) {
 				"c": 3,
 				"d": 4,
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "sets a register to the value of another register if provided",
@@ -55,7 +56,7 @@ func Test_registers_cpy(t *testing.T) {
 				"c": 3,
 				"d": 4,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "sets a register to a value given",
@@ -75,90 +76,55 @@ func Test_registers_cpy(t *testing.T) {
 				"c": 3,
 				"d": 4,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := tt.r
-			if err := r.cpy(tt.args.from, tt.args.to); (err != nil) != tt.wantErr {
-				t.Errorf("registers.cpy() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if !reflect.DeepEqual(r, tt.want) {
-				t.Errorf("registers.cpy() = %v, want %v", r, tt.want)
-			}
+			err := r.cpy(tt.args.from, tt.args.to)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, r)
 		})
 	}
 }
 
 func Test_registers_inc(t *testing.T) {
-	tests := []struct {
-		name string
-		r    registers
-		reg  string
-		want registers
-	}{
-		{
-			name: "increments the value of the given register by 1",
-			r: registers{
-				"a": 3,
-				"b": 88,
-				"c": 64,
-				"d": 12,
-			},
-			reg: "c",
-			want: registers{
-				"a": 3,
-				"b": 88,
-				"c": 65,
-				"d": 12,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := tt.r
-			r.inc(tt.reg)
-			if !reflect.DeepEqual(r, tt.want) {
-				t.Errorf("registers.inc() = %v, want %v", r, tt.want)
-			}
-		})
-	}
+	t.Run("increments the value of the given register by 1", func(t *testing.T) {
+		r := registers{
+			"a": 3,
+			"b": 88,
+			"c": 64,
+			"d": 12,
+		}
+		want := registers{
+			"a": 3,
+			"b": 88,
+			"c": 65,
+			"d": 12,
+		}
+		r.inc("c")
+		assert.Equal(t, want, r)
+	})
 }
 
 func Test_registers_dec(t *testing.T) {
-	tests := []struct {
-		name string
-		r    registers
-		reg  string
-		want registers
-	}{
-		{
-			name: "increments the value of the given register by 1",
-			r: registers{
-				"a": 3,
-				"b": 88,
-				"c": 64,
-				"d": 12,
-			},
-			reg: "d",
-			want: registers{
-				"a": 3,
-				"b": 88,
-				"c": 64,
-				"d": 11,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			r := tt.r
-			r.dec(tt.reg)
-			if !reflect.DeepEqual(r, tt.want) {
-				t.Errorf("registers.dec() = %v, want %v", r, tt.want)
-			}
-		})
-	}
+	t.Run("increments the value of the given register by 1", func(t *testing.T) {
+		r := registers{
+			"a": 3,
+			"b": 88,
+			"c": 64,
+			"d": 12,
+		}
+		want := registers{
+			"a": 3,
+			"b": 88,
+			"c": 64,
+			"d": 11,
+		}
+		r.dec("d")
+		assert.Equal(t, want, r)
+	})
 }
 
 func Test_registers_jnz(t *testing.T) {
@@ -168,12 +134,12 @@ func Test_registers_jnz(t *testing.T) {
 		i    int
 	}
 	tests := []struct {
-		name    string
-		r       registers
-		args    args
-		want    registers
-		want1   int
-		wantErr bool
+		name               string
+		r                  registers
+		args               args
+		want               registers
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "increments i and returns if the value of a given register is 0",
@@ -194,8 +160,8 @@ func Test_registers_jnz(t *testing.T) {
 				"c": 3,
 				"d": 99,
 			},
-			want1:   9,
-			wantErr: false,
+			want1:              9,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns an error if the given reg is not in registers and cannot be converted to an int",
@@ -216,8 +182,8 @@ func Test_registers_jnz(t *testing.T) {
 				"c": 3,
 				"d": 99,
 			},
-			want1:   8,
-			wantErr: true,
+			want1:              8,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "increments i by 1 and returns if given reg is 0",
@@ -238,8 +204,8 @@ func Test_registers_jnz(t *testing.T) {
 				"c": 3,
 				"d": 99,
 			},
-			want1:   84,
-			wantErr: false,
+			want1:              84,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns an error if reg is in registers, not 0, and jmp cannot be converted to int",
@@ -260,8 +226,8 @@ func Test_registers_jnz(t *testing.T) {
 				"c": 3,
 				"d": 99,
 			},
-			want1:   2,
-			wantErr: true,
+			want1:              2,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "increments i by given value (positive) if reg is in registers and not 0",
@@ -282,8 +248,8 @@ func Test_registers_jnz(t *testing.T) {
 				"c": 3,
 				"d": 99,
 			},
-			want1:   97,
-			wantErr: false,
+			want1:              97,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "increments i by given value (negative) if reg is in registers and not 0",
@@ -304,22 +270,17 @@ func Test_registers_jnz(t *testing.T) {
 				"c": 3,
 				"d": 99,
 			},
-			want1:   36,
-			wantErr: false,
+			want1:              36,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := tt.r
-			if err := r.jnz(tt.args.reg, tt.args.jump, &tt.args.i); (err != nil) != tt.wantErr {
-				t.Errorf("registers.jnz() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if tt.args.i != tt.want1 {
-				t.Errorf("registers.jnz() i = %d, want %d", tt.args.i, tt.want1)
-			}
-			if !reflect.DeepEqual(r, tt.want) {
-				t.Errorf("registers.jnz() = %v, want %v", r, tt.want)
-			}
+			err := r.jnz(tt.args.reg, tt.args.jump, &tt.args.i)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want1, tt.args.i)
+			assert.Equal(t, tt.want, r)
 		})
 	}
 }
@@ -330,12 +291,12 @@ func Test_registers_followInstruction(t *testing.T) {
 		i    int
 	}
 	tests := []struct {
-		name    string
-		r       registers
-		args    args
-		want    registers
-		want1   int
-		wantErr bool
+		name               string
+		r                  registers
+		args               args
+		want               registers
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if cpy returns an error",
@@ -344,9 +305,9 @@ func Test_registers_followInstruction(t *testing.T) {
 				inst: "cpy six a",
 				i:    3,
 			},
-			want:    registers{"a": 2, "b": 4, "c": 8, "d": 0},
-			want1:   4,
-			wantErr: true,
+			want:               registers{"a": 2, "b": 4, "c": 8, "d": 0},
+			want1:              4,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if jnz returns an error",
@@ -355,9 +316,9 @@ func Test_registers_followInstruction(t *testing.T) {
 				inst: "jnz six a",
 				i:    3,
 			},
-			want:    registers{"a": 2, "b": 4, "c": 8, "d": 0},
-			want1:   3,
-			wantErr: true,
+			want:               registers{"a": 2, "b": 4, "c": 8, "d": 0},
+			want1:              3,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "carries out cpy instruction",
@@ -366,9 +327,9 @@ func Test_registers_followInstruction(t *testing.T) {
 				inst: "cpy 99 a",
 				i:    34,
 			},
-			want:    registers{"a": 99, "b": 4, "c": 8, "d": 0},
-			want1:   35,
-			wantErr: false,
+			want:               registers{"a": 99, "b": 4, "c": 8, "d": 0},
+			want1:              35,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "carries out inc instruction",
@@ -377,9 +338,9 @@ func Test_registers_followInstruction(t *testing.T) {
 				inst: "inc d",
 				i:    9,
 			},
-			want:    registers{"a": 2, "b": 4, "c": 8, "d": 1},
-			want1:   10,
-			wantErr: false,
+			want:               registers{"a": 2, "b": 4, "c": 8, "d": 1},
+			want1:              10,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "carries out dec instruction",
@@ -388,9 +349,9 @@ func Test_registers_followInstruction(t *testing.T) {
 				inst: "dec a",
 				i:    8,
 			},
-			want:    registers{"a": 1, "b": 4, "c": 8, "d": 0},
-			want1:   9,
-			wantErr: false,
+			want:               registers{"a": 1, "b": 4, "c": 8, "d": 0},
+			want1:              9,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "carries out jnz instruction",
@@ -399,9 +360,9 @@ func Test_registers_followInstruction(t *testing.T) {
 				inst: "jnz b 24",
 				i:    19,
 			},
-			want:    registers{"a": 2, "b": 4, "c": 8, "d": 0},
-			want1:   43,
-			wantErr: false,
+			want:               registers{"a": 2, "b": 4, "c": 8, "d": 0},
+			want1:              43,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns an error if an invalid instruction is supplied",
@@ -410,23 +371,18 @@ func Test_registers_followInstruction(t *testing.T) {
 				inst: "do something",
 				i:    3,
 			},
-			want:    registers{"a": 2, "b": 4, "c": 8, "d": 0},
-			want1:   3,
-			wantErr: true,
+			want:               registers{"a": 2, "b": 4, "c": 8, "d": 0},
+			want1:              3,
+			errorAssertionFunc: assert.Error,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			r := tt.r
-			if err := r.followInstruction(tt.args.inst, &tt.args.i); (err != nil) != tt.wantErr {
-				t.Errorf("registers.followInstruction() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if tt.args.i != tt.want1 {
-				t.Errorf("registers.followInstruction() i = %d, want %d", tt.args.i, tt.want1)
-			}
-			if !reflect.DeepEqual(r, tt.want) {
-				t.Errorf("registers.followInstruction() = %v, want %v", r, tt.want)
-			}
+			err := r.followInstruction(tt.args.inst, &tt.args.i)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want1, tt.args.i)
+			assert.Equal(t, tt.want, r)
 		})
 	}
 }
@@ -437,11 +393,11 @@ func Test_registers_findSolution(t *testing.T) {
 		i            int
 	}
 	tests := []struct {
-		name    string
-		r       registers
-		args    args
-		want    int
-		wantErr bool
+		name               string
+		r                  registers
+		args               args
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if any instruction fails",
@@ -457,8 +413,8 @@ func Test_registers_findSolution(t *testing.T) {
 				},
 				i: 0,
 			},
-			want:    42,
-			wantErr: false,
+			want:               42,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns the value of a after all instructions followed",
@@ -474,31 +430,26 @@ func Test_registers_findSolution(t *testing.T) {
 				},
 				i: 0,
 			},
-			want:    -1,
-			wantErr: true,
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := tt.r.findSolution(tt.args.instructions, &tt.args.i)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("registers.findSolution() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("registers.findSolution() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_findSolutions(t *testing.T) {
 	tests := []struct {
-		name         string
-		instructions []string
-		want         int
-		want1        int
-		wantErr      bool
+		name               string
+		instructions       []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an instruction can't be followed",
@@ -510,9 +461,9 @@ func Test_findSolutions(t *testing.T) {
 				"jnz a 2",
 				"dec a",
 			},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns correct parts 1 and 2, real solution (since AoC doesn't give a part 2 example)",
@@ -541,24 +492,17 @@ func Test_findSolutions(t *testing.T) {
 				"dec c",
 				"jnz c -5",
 			},
-			want:    317993,
-			want1:   9227647,
-			wantErr: false,
+			want:               317993,
+			want1:              9227647,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := findSolutions(tt.instructions)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolutions() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

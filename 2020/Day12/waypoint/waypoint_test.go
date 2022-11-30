@@ -4,8 +4,9 @@ import (
 	"Advent-of-Code/2020/Day12/ship"
 	"Advent-of-Code/graph"
 	"fmt"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type turnWaypointTestCase struct {
@@ -43,9 +44,7 @@ func TestWaypoint_turnWaypointLeft(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.turnWaypointLeft(tt.val)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("parseBag() w = %v, want %v", tt.w, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.w)
 		})
 	}
 }
@@ -66,9 +65,7 @@ func TestWaypoint_turnWaypointRight(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.turnWaypointRight(tt.val)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("parseBag() w = %v, want %v", tt.w, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.w)
 		})
 	}
 }
@@ -296,12 +293,8 @@ func TestWaypoint_MoveWaypoint(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.w.MoveWaypoint(tt.args.s, tt.args.d, tt.args.val)
-			if !reflect.DeepEqual(tt.w, tt.want) {
-				t.Errorf("parseBag() w = %v, want %v", tt.w, tt.want)
-			}
-			if !reflect.DeepEqual(tt.args.s, tt.want1) {
-				t.Errorf("parseBag() w = %v, want %v", tt.args.s, tt.want1)
-			}
+			assert.Equal(t, tt.want, tt.w)
+			assert.Equal(t, tt.want1, tt.args.s)
 		})
 	}
 }

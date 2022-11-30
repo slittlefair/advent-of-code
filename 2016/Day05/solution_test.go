@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_passwordComplete(t *testing.T) {
@@ -88,43 +90,15 @@ func Test_printPassword(t *testing.T) {
 }
 
 func Test_findEasyPassword(t *testing.T) {
-	tests := []struct {
-		name string
-		id   string
-		want string
-	}{
-		{
-			name: "finds and returns easy password, advent of code example 1",
-			id:   "abc",
-			want: "18f47a30",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := findEasyPassword(tt.id); got != tt.want {
-				t.Errorf("findEasyPassword() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("finds and returns easy password, advent of code example 1", func(t *testing.T) {
+		got := findEasyPassword("abc")
+		assert.Equal(t, "18f47a30", got)
+	})
 }
 
 func Test_findDifficultPassword(t *testing.T) {
-	tests := []struct {
-		name string
-		id   string
-		want string
-	}{
-		{
-			name: "finds and returns difficult password, advent of code example 1",
-			id:   "abc",
-			want: "05ace8e3",
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := findDifficultPassword(tt.id); got != tt.want {
-				t.Errorf("findDifficultPassword() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("finds and returns difficult password, advent of code example 1", func(t *testing.T) {
+		got := findDifficultPassword("abc")
+		assert.Equal(t, "05ace8e3", got)
+	})
 }

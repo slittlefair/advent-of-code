@@ -1,6 +1,10 @@
 package main
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func Test_decompress(t *testing.T) {
 	type args struct {
@@ -95,9 +99,8 @@ func Test_decompress(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := decompress(tt.args.s, tt.args.part1); got != tt.want {
-				t.Errorf("decompress() = %v, want %v", got, tt.want)
-			}
+			got := decompress(tt.args.s, tt.args.part1)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

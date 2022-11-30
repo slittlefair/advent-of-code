@@ -1,6 +1,10 @@
 package maths
 
-import "testing"
+import (
+	"testing"
+
+	"github.com/stretchr/testify/assert"
+)
 
 func TestMin(t *testing.T) {
 	tests := []struct {
@@ -30,9 +34,8 @@ func TestMin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Min(tt.x, tt.y); got != tt.want {
-				t.Errorf("Min() = %v, want %v", got, tt.want)
-			}
+			got := Min(tt.x, tt.y)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -65,9 +68,8 @@ func TestMax(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Max(tt.x, tt.y); got != tt.want {
-				t.Errorf("Max() = %v, want %v", got, tt.want)
-			}
+			got := Max(tt.x, tt.y)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -101,9 +103,8 @@ func TestMedian(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := Median(tt.nums); got != tt.want {
-				t.Errorf("Median() = %v, want %v", got, tt.want)
-			}
+			got := Median(tt.nums)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

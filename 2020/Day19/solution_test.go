@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var adventOfCodeRules1 = map[string]Rule{
@@ -41,46 +42,33 @@ var adventOfCodeMessages1 = []string{
 }
 
 func TestInput_parseInput(t *testing.T) {
-	tests := []struct {
-		name     string
-		rawInput []string
-		want     Input
-	}{
-		{
-			name: "parses a simple input",
-			rawInput: []string{
-				"11: 42 31",
-				"0: 4 1 5",
-				"1: 2 3 | 3 2",
-				"2: 4 4 | 5 5",
-				"8: 42",
-				"3: 4 5 | 5 4",
-				"4: \"a\"",
-				"5: \"b\"",
-				"",
-				"ababbb",
-				"bababa",
-				"abbbab",
-				"aaabbb",
-				"aaaabbb",
-			},
-			want: Input{
-				Rules:    adventOfCodeRules1,
-				Messages: adventOfCodeMessages1,
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			i := &Input{
-				Rules: map[string]Rule{},
-			}
-			i.parseInput(tt.rawInput)
-			if !reflect.DeepEqual(*i, tt.want) {
-				t.Errorf("Input.parseInput() = %v, want %v", i, tt.want)
-			}
-		})
-	}
+	t.Run("parses a simple input", func(t *testing.T) {
+		i := &Input{
+			Rules: map[string]Rule{},
+		}
+		rawInput := []string{
+			"11: 42 31",
+			"0: 4 1 5",
+			"1: 2 3 | 3 2",
+			"2: 4 4 | 5 5",
+			"8: 42",
+			"3: 4 5 | 5 4",
+			"4: \"a\"",
+			"5: \"b\"",
+			"",
+			"ababbb",
+			"bababa",
+			"abbbab",
+			"aaabbb",
+			"aaaabbb",
+		}
+		want := Input{
+			Rules:    adventOfCodeRules1,
+			Messages: adventOfCodeMessages1,
+		}
+		i.parseInput(rawInput)
+		assert.Equal(t, want, *i)
+	})
 }
 
 func TestInput_iterateMessages(t *testing.T) {
@@ -198,70 +186,48 @@ func TestInput_iterateMessages(t *testing.T) {
 				Rules:    tt.fields.Rules,
 				Messages: tt.fields.Messages,
 			}
-			if got := i.iterateMessages(tt.args.key, tt.args.remainingRules, tt.args.message, tt.args.index, tt.args.seen); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Input.iterateMessages() = %v, want %v", got, tt.want)
-			}
+			got := i.iterateMessages(tt.args.key, tt.args.remainingRules, tt.args.message, tt.args.index, tt.args.seen)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestInput_changeRulesForPart2(t *testing.T) {
-	type fields struct {
-		Rules    map[string]Rule
-		Messages []string
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   Input
-	}{
-		{
-			name: "advent of code example 1",
-			fields: fields{
-				Rules: adventOfCodeRules1,
-			},
-			want: Input{
-				Rules: map[string]Rule{
-					"0": {
-						subRules: [][]string{{"4", "1", "5"}},
-					},
-					"1": {
-						subRules: [][]string{{"2", "3"}, {"3", "2"}},
-					},
-					"2": {
-						subRules: [][]string{{"4", "4"}, {"5", "5"}},
-					},
-					"3": {
-						subRules: [][]string{{"4", "5"}, {"5", "4"}},
-					},
-					"8": {
-						subRules: [][]string{{"42"}, {"42", "8"}},
-					},
-					"11": {
-						subRules: [][]string{{"42", "31"}, {"42", "11", "31"}},
-					},
-					"4": {
-						val: "a",
-					},
-					"5": {
-						val: "b",
-					},
+	t.Run("advent of code example 1", func(t *testing.T) {
+		i := Input{
+			Rules: adventOfCodeRules1,
+		}
+		want := Input{
+			Rules: map[string]Rule{
+				"0": {
+					subRules: [][]string{{"4", "1", "5"}},
+				},
+				"1": {
+					subRules: [][]string{{"2", "3"}, {"3", "2"}},
+				},
+				"2": {
+					subRules: [][]string{{"4", "4"}, {"5", "5"}},
+				},
+				"3": {
+					subRules: [][]string{{"4", "5"}, {"5", "4"}},
+				},
+				"8": {
+					subRules: [][]string{{"42"}, {"42", "8"}},
+				},
+				"11": {
+					subRules: [][]string{{"42", "31"}, {"42", "11", "31"}},
+				},
+				"4": {
+					val: "a",
+				},
+				"5": {
+					val: "b",
 				},
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			i := Input{
-				Rules:    tt.fields.Rules,
-				Messages: tt.fields.Messages,
-			}
-			i.changeRulesForPart2()
-			if !reflect.DeepEqual(i, tt.want) {
-				t.Errorf("Input.parseInput() = %v, want %v", i, tt.want)
-			}
-		})
-	}
+		}
+		i.changeRulesForPart2()
+		assert.Equal(t, want, i)
+	})
 }
 
 func TestInput_evaluateMessages(t *testing.T) {
@@ -525,9 +491,8 @@ func TestInput_evaluateMessages(t *testing.T) {
 				Rules:    tt.fields.Rules,
 				Messages: tt.fields.Messages,
 			}
-			if got := i.evaluateMessages(); got != tt.want {
-				t.Errorf("Input.evaluateMessages() = %v, want %v", got, tt.want)
-			}
+			got := i.evaluateMessages()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

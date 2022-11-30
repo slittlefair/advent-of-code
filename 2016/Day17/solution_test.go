@@ -3,59 +3,47 @@ package main
 import (
 	"Advent-of-Code/graph"
 	"Advent-of-Code/maths"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_setupSolution(t *testing.T) {
-	tests := []struct {
-		name  string
-		input string
-		want  solution
-	}{
-		{
-			name:  "creates a solution struct from given input",
-			input: "helloworld",
-			want: solution{
-				currentRoom:        graph.Co{X: 0, Y: 0},
-				input:              "helloworld",
-				shortestPathLength: maths.Infinity,
-				directions: directions{
-					{letter: "U", dir: graph.Co{Y: -1}},
-					{letter: "D", dir: graph.Co{Y: 1}},
-					{letter: "L", dir: graph.Co{X: -1}},
-					{letter: "R", dir: graph.Co{X: 1}},
-				},
-				floors: floors{
-					{X: 0, Y: 0}: struct{}{},
-					{X: 1, Y: 0}: struct{}{},
-					{X: 2, Y: 0}: struct{}{},
-					{X: 3, Y: 0}: struct{}{},
-					{X: 0, Y: 1}: struct{}{},
-					{X: 1, Y: 1}: struct{}{},
-					{X: 2, Y: 1}: struct{}{},
-					{X: 3, Y: 1}: struct{}{},
-					{X: 0, Y: 2}: struct{}{},
-					{X: 1, Y: 2}: struct{}{},
-					{X: 2, Y: 2}: struct{}{},
-					{X: 3, Y: 2}: struct{}{},
-					{X: 0, Y: 3}: struct{}{},
-					{X: 1, Y: 3}: struct{}{},
-					{X: 2, Y: 3}: struct{}{},
-					{X: 3, Y: 3}: struct{}{},
-				},
-				shortestPath: "",
-				longestPath:  "",
+	t.Run("creates a solution struct from given input", func(t *testing.T) {
+		want := solution{
+			currentRoom:        graph.Co{X: 0, Y: 0},
+			input:              "helloworld",
+			shortestPathLength: maths.Infinity,
+			directions: directions{
+				{letter: "U", dir: graph.Co{Y: -1}},
+				{letter: "D", dir: graph.Co{Y: 1}},
+				{letter: "L", dir: graph.Co{X: -1}},
+				{letter: "R", dir: graph.Co{X: 1}},
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := setupSolution(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("setupSolution() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+			floors: floors{
+				{X: 0, Y: 0}: struct{}{},
+				{X: 1, Y: 0}: struct{}{},
+				{X: 2, Y: 0}: struct{}{},
+				{X: 3, Y: 0}: struct{}{},
+				{X: 0, Y: 1}: struct{}{},
+				{X: 1, Y: 1}: struct{}{},
+				{X: 2, Y: 1}: struct{}{},
+				{X: 3, Y: 1}: struct{}{},
+				{X: 0, Y: 2}: struct{}{},
+				{X: 1, Y: 2}: struct{}{},
+				{X: 2, Y: 2}: struct{}{},
+				{X: 3, Y: 2}: struct{}{},
+				{X: 0, Y: 3}: struct{}{},
+				{X: 1, Y: 3}: struct{}{},
+				{X: 2, Y: 3}: struct{}{},
+				{X: 3, Y: 3}: struct{}{},
+			},
+			shortestPath: "",
+			longestPath:  "",
+		}
+		got := setupSolution("helloworld")
+		assert.Equal(t, want, got)
+	})
 }
 
 func Test_solution_reachedEnd(t *testing.T) {
@@ -159,12 +147,9 @@ func Test_solution_reachedEnd(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			s := tt.s
-			if got := s.reachedEnd(); got != tt.want {
-				t.Errorf("solution.reachedEnd() = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(s, tt.want1) {
-				t.Errorf("solution.reachedEnd(), solution = %v, want %v", s, tt.want)
-			}
+			got := s.reachedEnd()
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, s)
 		})
 	}
 }
@@ -218,9 +203,8 @@ func Test_solution_getLockStatus(t *testing.T) {
 				input:       tt.fields.input,
 				currentPath: tt.fields.currentPath,
 			}
-			if got := s.getLockStatus(); got != tt.want {
-				t.Errorf("solution.getLockStatus() = %v, want %v", got, tt.want)
-			}
+			got := s.getLockStatus()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -287,9 +271,8 @@ func Test_solution_isValidRoom(t *testing.T) {
 					{X: 3, Y: 3}: struct{}{},
 				},
 			}
-			if got := s.isValidRoom(tt.args.char, tt.args.diff); got != tt.want {
-				t.Errorf("solution.isValidRoom() = %v, want %v", got, tt.want)
-			}
+			got := s.isValidRoom(tt.args.char, tt.args.diff)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -323,12 +306,8 @@ func Test_findSolutions(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := findSolutions(tt.input)
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

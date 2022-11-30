@@ -1,46 +1,29 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestWhenNumsSaid_parseInput(t *testing.T) {
-	tests := []struct {
-		name       string
-		wns        WhenNumsSaid
-		numStrings []int
-		want       int
-		want1      WhenNumsSaid
-	}{
-		{
-			name:       "advent of code example",
-			wns:        WhenNumsSaid{},
-			numStrings: []int{0, 3, 6},
-			want:       6,
-			want1: WhenNumsSaid{
-				0: NumsSaid{
-					lastSaid: 1,
-				},
-				3: NumsSaid{
-					lastSaid: 2,
-				},
-				6: NumsSaid{
-					lastSaid: 3,
-				},
+	t.Run("advent of code example", func(t *testing.T) {
+		wns := WhenNumsSaid{}
+		want := WhenNumsSaid{
+			0: NumsSaid{
+				lastSaid: 1,
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.wns.parseInput(tt.numStrings); got != tt.want {
-				t.Errorf("WhenNumsSaid.parseInput() = %v, want %v", got, tt.want)
-			}
-			if !reflect.DeepEqual(tt.wns, tt.want1) {
-				t.Errorf("WhenNumsSaid.parseInput() = %v, want %v", tt.wns, tt.want1)
-			}
-		})
-	}
+			3: NumsSaid{
+				lastSaid: 2,
+			},
+			6: NumsSaid{
+				lastSaid: 3,
+			},
+		}
+		got := wns.parseInput([]int{0, 3, 6})
+		assert.Equal(t, 6, got)
+		assert.Equal(t, want, wns)
+	})
 }
 
 func TestWhenNumsSaid_playGame(t *testing.T) {
@@ -132,12 +115,8 @@ func TestWhenNumsSaid_playGame(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := tt.wns.playGame(tt.startingIndex)
-			if got != tt.want {
-				t.Errorf("WhenNumsSaid.playGame() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("WhenNumsSaid.playGame() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

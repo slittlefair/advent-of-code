@@ -2,8 +2,9 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var adventOfCodeExampleHeightMap = HeightMap{
@@ -60,30 +61,17 @@ var adventOfCodeExampleHeightMap = HeightMap{
 }
 
 func Test_parseInput(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  HeightMap
-	}{
-		{
-			name: "correctly parses input into a HeightMap",
-			input: []string{
-				"2199943210",
-				"3987894921",
-				"9856789892",
-				"8767896789",
-				"9899965678",
-			},
-			want: adventOfCodeExampleHeightMap,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := parseInput(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("correctly parses input into a HeightMap", func(t *testing.T) {
+		input := []string{
+			"2199943210",
+			"3987894921",
+			"9856789892",
+			"8767896789",
+			"9899965678",
+		}
+		got := parseInput(input)
+		assert.Equal(t, adventOfCodeExampleHeightMap, got)
+	})
 }
 
 func TestHeightMap_findLowPoints(t *testing.T) {
@@ -166,37 +154,23 @@ func TestHeightMap_findLowPoints(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.hm.findLowPoints(); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("HeightMap.findLowPoints() = %v, want %v", got, tt.want)
-			}
+			got := tt.hm.findLowPoints()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_calculateRiskLevels(t *testing.T) {
-	tests := []struct {
-		name      string
-		lowPoints LowPoints
-		want      int
-	}{
-		{
-			name: "returns sum of a low points + 1",
-			lowPoints: LowPoints{
-				{X: 1, Y: 0}: 1,
-				{X: 9, Y: 0}: 0,
-				{X: 2, Y: 2}: 5,
-				{X: 6, Y: 4}: 5,
-			},
-			want: 15,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := calculateRiskLevels(tt.lowPoints); got != tt.want {
-				t.Errorf("calculateRiskLevels() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns sum of a low points + 1", func(t *testing.T) {
+		input := LowPoints{
+			{X: 1, Y: 0}: 1,
+			{X: 9, Y: 0}: 0,
+			{X: 2, Y: 2}: 5,
+			{X: 6, Y: 4}: 5,
+		}
+		got := calculateRiskLevels(input)
+		assert.Equal(t, 15, got)
+	})
 }
 
 func TestHeightMap_coIsPartOfBasin(t *testing.T) {
@@ -287,9 +261,8 @@ func TestHeightMap_coIsPartOfBasin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := adventOfCodeExampleHeightMap.coIsPartOfBasin(tt.args.b, tt.args.co); got != tt.want {
-				t.Errorf("HeightMap.coIsPartOfBasin() = %v, want %v", got, tt.want)
-			}
+			got := adventOfCodeExampleHeightMap.coIsPartOfBasin(tt.args.b, tt.args.co)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -323,63 +296,31 @@ func TestHeightMap_calculateBasin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := adventOfCodeExampleHeightMap.calculateBasin(tt.co); got != tt.want {
-				t.Errorf("HeightMap.calculateBasin() = %v, want %v", got, tt.want)
-			}
+			got := adventOfCodeExampleHeightMap.calculateBasin(tt.co)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestBasins_multiplyLargestBasinSizes(t *testing.T) {
-	tests := []struct {
-		name string
-		bs   Basins
-		want int
-	}{
-		{
-			name: "returns product of largest 3 basins, advent of code example",
-			bs:   Basins{9, 14, 3, 9},
-			want: 1134,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.bs.multiplyLargestBasinSizes(); got != tt.want {
-				t.Errorf("Basins.multiplyLargestBasinSizes() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns product of largest 3 basins, advent of code example", func(t *testing.T) {
+		bs := Basins{9, 14, 3, 9}
+		got := bs.multiplyLargestBasinSizes()
+		assert.Equal(t, 1134, got)
+	})
 }
 
 func Test_findSolutions(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  int
-		want1 int
-	}{
-		{
-			name: "returns correct part1 and part2 solutions from input, advent of code example",
-			input: []string{
-				"2199943210",
-				"3987894921",
-				"9856789892",
-				"8767896789",
-				"9899965678",
-			},
-			want:  15,
-			want1: 1134,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := findSolutions(tt.input)
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+	t.Run("returns correct part1 and part2 solutions from input, advent of code example", func(t *testing.T) {
+		input := []string{
+			"2199943210",
+			"3987894921",
+			"9856789892",
+			"8767896789",
+			"9899965678",
+		}
+		got, got1 := findSolutions(input)
+		assert.Equal(t, 15, got)
+		assert.Equal(t, 1134, got1)
+	})
 }

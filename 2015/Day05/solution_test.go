@@ -3,6 +3,8 @@ package main
 import (
 	"regexp"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_containsAtLeast3Vowels(t *testing.T) {
@@ -50,9 +52,8 @@ func Test_containsAtLeast3Vowels(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := containsAtLeast3Vowels(re, tt.str); got != tt.want {
-				t.Errorf("containsAtLeast3Vowels() = %v, want %v", got, tt.want)
-			}
+			got := containsAtLeast3Vowels(re, tt.str)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -76,9 +77,8 @@ func Test_containsDoubleLetter(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := containsDoubleLetter(tt.str); got != tt.want {
-				t.Errorf("containsDoubleLetter() = %v, want %v", got, tt.want)
-			}
+			got := containsDoubleLetter(tt.str)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -160,9 +160,8 @@ func Test_doesNotContainBadString(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := doesNotContainBadString(tt.args.re, tt.args.str); got != tt.want {
-				t.Errorf("doesNotContainBadString() = %v, want %v", got, tt.want)
-			}
+			got := doesNotContainBadString(tt.args.re, tt.args.str)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -207,9 +206,8 @@ func Test_doesNotContainAnyBadStrings(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := doesNotContainAnyBadStrings(reGroup, tt.str); got != tt.want {
-				t.Errorf("doesNotContainAnyBadStrings() = %v, want %v", got, tt.want)
-			}
+			got := doesNotContainAnyBadStrings(reGroup, tt.str)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -265,9 +263,8 @@ func Test_isNicePart1(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isNicePart1(vowelRe, badStringRe, tt.str); got != tt.want {
-				t.Errorf("isNicePart1() = %v, want %v", got, tt.want)
-			}
+			got := isNicePart1(vowelRe, badStringRe, tt.str)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -301,9 +298,8 @@ func Test_containsRepeatedPairOfLetters(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := containsRepeatedPairOfLetters(tt.str); got != tt.want {
-				t.Errorf("containsRepeatedPairOfLetters() = %v, want %v", got, tt.want)
-			}
+			got := containsRepeatedPairOfLetters(tt.str)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -337,9 +333,8 @@ func Test_repeatsLetterWithGap(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := repeatsLetterWithGap(tt.str); got != tt.want {
-				t.Errorf("repeatsLetterWithGap() = %v, want %v", got, tt.want)
-			}
+			got := repeatsLetterWithGap(tt.str)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -368,45 +363,26 @@ func Test_isNicePart2(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := isNicePart2(tt.str); got != tt.want {
-				t.Errorf("isNicePart2() = %v, want %v", got, tt.want)
-			}
+			got := isNicePart2(tt.str)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_getNiceStringCount(t *testing.T) {
-	tests := []struct {
-		name  string
-		input []string
-		want  int
-		want1 int
-	}{
-		{
-			name: "returns count of nice strings from given input",
-			input: []string{
-				"ugknbfddgicrmopn",
-				"haegwjzuvuyypxyu",
-				"qjhvhtzxzqqjkmpb",
-				"xxyxx",
-				"aaa",
-				"jchzalrnumimnmhp",
-				"dvszwmarrgswjxmb",
-				"aabbaabbababa",
-			},
-			want:  2,
-			want1: 3,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := getNiceStringCount(tt.input)
-			if got != tt.want {
-				t.Errorf("getNiceStringCount() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("getNiceStringCount() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+	t.Run("returns count of nice strings from given input", func(t *testing.T) {
+		input := []string{
+			"ugknbfddgicrmopn",
+			"haegwjzuvuyypxyu",
+			"qjhvhtzxzqqjkmpb",
+			"xxyxx",
+			"aaa",
+			"jchzalrnumimnmhp",
+			"dvszwmarrgswjxmb",
+			"aabbaabbababa",
+		}
+		got, got1 := getNiceStringCount(input)
+		assert.Equal(t, 2, got)
+		assert.Equal(t, 3, got1)
+	})
 }

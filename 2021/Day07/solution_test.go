@@ -2,6 +2,8 @@ package main
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_calculateFuelSpend(t *testing.T) {
@@ -33,9 +35,8 @@ func Test_calculateFuelSpend(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := calculateFuelSpend(tt.x); got != tt.want {
-				t.Errorf("calculateFuelSpend() = %v, want %v", got, tt.want)
-			}
+			got := calculateFuelSpend(tt.x)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -75,9 +76,8 @@ func Test_findMinFuelSpend(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := findMinFuelSpend(tt.args.input, tt.args.min, tt.args.max, tt.args.part2); got != tt.want {
-				t.Errorf("getMinDist() = %v, want %v", got, tt.want)
-			}
+			got := findMinFuelSpend(tt.args.input, tt.args.min, tt.args.max, tt.args.part2)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

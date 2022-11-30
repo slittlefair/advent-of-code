@@ -4,6 +4,8 @@ import (
 	"crypto/md5"
 	"fmt"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_hashContainsTriple(t *testing.T) {
@@ -11,7 +13,7 @@ func Test_hashContainsTriple(t *testing.T) {
 		name  string
 		hash  string
 		want  bool
-		want1 string
+		want1 byte
 	}{
 		{
 			name: "returns 0 if the given hash does not contain a triple, advent of code example 1",
@@ -27,30 +29,26 @@ func Test_hashContainsTriple(t *testing.T) {
 			name:  "returns the triple character of the given hash if one exists, advent of code example 3",
 			hash:  "abc18",
 			want:  true,
-			want1: "8",
+			want1: '8',
 		},
 		{
 			name:  "returns the triple character of the given hash if one exists, advent of code example 4",
 			hash:  "abc39",
 			want:  true,
-			want1: "e",
+			want1: 'e',
 		},
 		{
 			name:  "returns the triple character of the given hash if one exists, advent of code example 5",
 			hash:  "abc92",
 			want:  true,
-			want1: "9",
+			want1: '9',
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := hashContainsTriple(fmt.Sprintf("%x", md5.Sum([]byte(tt.hash))))
-			if got != tt.want {
-				t.Errorf("hashContainsTriple() got = %v, want %v", got, tt.want)
-			}
-			if got == true && got1 != tt.want1[0] {
-				t.Errorf("hashContainsTriple() got1 = %v, want %v", got1, tt.want1[0])
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
@@ -108,9 +106,8 @@ func Test_hashContainsQuintuple(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := hashContainsQuintuple(fmt.Sprintf("%x", md5.Sum([]byte(tt.args.hash))), tt.args.s[0]); got != tt.want {
-				t.Errorf("hashContainsQuintuple() = %v, want %v", got, tt.want)
-			}
+			got := hashContainsQuintuple(fmt.Sprintf("%x", md5.Sum([]byte(tt.args.hash))), tt.args.s[0])
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -144,9 +141,8 @@ func Test_findKeys(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := findKeys(tt.args.salt, tt.args.part2); got != tt.want {
-				t.Errorf("findKeys() = %v, want %v", got, tt.want)
-			}
+			got := findKeys(tt.args.salt, tt.args.part2)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

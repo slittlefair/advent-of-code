@@ -2,6 +2,8 @@ package graph
 
 import (
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestAdjacentCos(t *testing.T) {
@@ -12,7 +14,7 @@ func TestAdjacentCos(t *testing.T) {
 	tests := []struct {
 		name string
 		args args
-		want map[Co]struct{}
+		want []Co
 	}{
 		{
 			name: "returns adjacent coordinates, including diagonals, of a given coordinate",
@@ -20,15 +22,15 @@ func TestAdjacentCos(t *testing.T) {
 				co:               Co{X: 4, Y: 7},
 				includeDiagonals: true,
 			},
-			want: map[Co]struct{}{
-				{X: 3, Y: 6}: {},
-				{X: 4, Y: 6}: {},
-				{X: 5, Y: 6}: {},
-				{X: 3, Y: 7}: {},
-				{X: 5, Y: 7}: {},
-				{X: 3, Y: 8}: {},
-				{X: 4, Y: 8}: {},
-				{X: 5, Y: 8}: {},
+			want: []Co{
+				{X: 3, Y: 6},
+				{X: 4, Y: 6},
+				{X: 5, Y: 6},
+				{X: 3, Y: 7},
+				{X: 5, Y: 7},
+				{X: 3, Y: 8},
+				{X: 4, Y: 8},
+				{X: 5, Y: 8},
 			},
 		},
 		{
@@ -37,15 +39,15 @@ func TestAdjacentCos(t *testing.T) {
 				co:               Co{X: 0, Y: 0},
 				includeDiagonals: true,
 			},
-			want: map[Co]struct{}{
-				{X: -1, Y: -1}: {},
-				{X: 0, Y: -1}:  {},
-				{X: 1, Y: -1}:  {},
-				{X: -1, Y: 0}:  {},
-				{X: 1, Y: 0}:   {},
-				{X: -1, Y: 1}:  {},
-				{X: 0, Y: 1}:   {},
-				{X: 1, Y: 1}:   {},
+			want: []Co{
+				{X: -1, Y: -1},
+				{X: 0, Y: -1},
+				{X: 1, Y: -1},
+				{X: -1, Y: 0},
+				{X: 1, Y: 0},
+				{X: -1, Y: 1},
+				{X: 0, Y: 1},
+				{X: 1, Y: 1},
 			},
 		},
 		{
@@ -54,28 +56,18 @@ func TestAdjacentCos(t *testing.T) {
 				co:               Co{X: 4, Y: 7},
 				includeDiagonals: false,
 			},
-			want: map[Co]struct{}{
-				{X: 4, Y: 6}: {},
-				{X: 3, Y: 7}: {},
-				{X: 5, Y: 7}: {},
-				{X: 4, Y: 8}: {},
+			want: []Co{
+				{X: 4, Y: 6},
+				{X: 3, Y: 7},
+				{X: 5, Y: 7},
+				{X: 4, Y: 8},
 			},
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := map[Co]struct{}{}
-			for _, co := range AdjacentCos(tt.args.co, tt.args.includeDiagonals) {
-				got[co] = struct{}{}
-			}
-			if len(got) != len(tt.want) {
-				t.Errorf("AdjacentCos() got = %v, want %v", got, tt.want)
-			}
-			for co := range got {
-				if _, ok := tt.want[co]; !ok {
-					t.Errorf("AdjacentCos() got = %v, want %v", got, tt.want)
-				}
-			}
+			got1 := AdjacentCos(tt.args.co, tt.args.includeDiagonals)
+			assert.ElementsMatch(t, tt.want, got1)
 		})
 	}
 }
@@ -117,9 +109,8 @@ func TestCalculateManhattanDistance(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := CalculateManhattanDistance(tt.args.co1, tt.args.co2); got != tt.want {
-				t.Errorf("CalculateManhattanDistance() = %v, want %v", got, tt.want)
-			}
+			got := CalculateManhattanDistance(tt.args.co1, tt.args.co2)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

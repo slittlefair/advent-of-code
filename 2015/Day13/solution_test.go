@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGraph_AddNode(t *testing.T) {
@@ -48,9 +49,7 @@ func TestGraph_AddNode(t *testing.T) {
 				Nodes: tt.nodes,
 			}
 			g.AddNode(tt.arg)
-			if !reflect.DeepEqual(g.Nodes, tt.want) {
-				t.Errorf("Graph.AddNode() = %v, want %v", g.Nodes, tt.want)
-			}
+			assert.Equal(t, tt.want, g.Nodes)
 		})
 	}
 }
@@ -167,99 +166,66 @@ func TestGraph_AddEdge(t *testing.T) {
 				Nodes: tt.fields.Nodes,
 			}
 			g.AddEdge(tt.args.parent, tt.args.child, tt.args.cost)
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Graph.AddEdge() = %v, want %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
 
 func TestGraph_AddMe(t *testing.T) {
-	type fields struct {
-		Edges []*Edge
-		Nodes []string
-		Paths [][]string
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		want   *Graph
-	}{
-		{
-			name: `adds "Me" to a populated Graph`,
-			fields: fields{
-				Edges: []*Edge{
-					{
-						Parent: "Alf",
-						Child:  "Bert",
-						Cost:   5,
-					},
-				},
-				Nodes: []string{"Alf", "Bert"},
-				Paths: [][]string{
-					{"Alf", "Bert"},
-					{"Bert", "Alf"},
+	t.Run(`adds "Me" to a populated Graph`, func(t *testing.T) {
+		g := &Graph{
+			Edges: []*Edge{
+				{
+					Parent: "Alf",
+					Child:  "Bert",
+					Cost:   5,
 				},
 			},
-			want: &Graph{
-				Edges: []*Edge{
-					{
-						Parent: "Alf",
-						Child:  "Bert",
-						Cost:   5,
-					},
-					{
-						Parent: "Alf",
-						Child:  "Me",
-						Cost:   0,
-					},
-					{
-						Parent: "Bert",
-						Child:  "Me",
-						Cost:   0,
-					},
+			Nodes: []string{"Alf", "Bert"},
+			Paths: [][]string{
+				{"Alf", "Bert"},
+				{"Bert", "Alf"},
+			},
+		}
+		g.AddMe()
+		want := &Graph{
+			Edges: []*Edge{
+				{
+					Parent: "Alf",
+					Child:  "Bert",
+					Cost:   5,
 				},
-				Nodes: []string{"Alf", "Bert", "Me"},
-				Paths: [][]string{
-					{"Alf", "Bert", "Me"},
-					{"Bert", "Alf", "Me"},
-					{"Me", "Bert", "Alf"},
-					{"Bert", "Me", "Alf"},
-					{"Me", "Alf", "Bert"},
-					{"Alf", "Me", "Bert"},
+				{
+					Parent: "Alf",
+					Child:  "Me",
+					Cost:   0,
+				},
+				{
+					Parent: "Bert",
+					Child:  "Me",
+					Cost:   0,
 				},
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			g := &Graph{
-				Edges: tt.fields.Edges,
-				Nodes: tt.fields.Nodes,
-				Paths: tt.fields.Paths,
-			}
-			g.AddMe()
-			if !reflect.DeepEqual(g.Nodes, tt.want.Nodes) {
-				t.Errorf("Graph.AddEdge().Nodes = %v, want %v", g.Nodes, tt.want.Nodes)
-			}
-			if !reflect.DeepEqual(g.Paths, tt.want.Paths) {
-				t.Errorf("Graph.AddEdge().Paths = %v, want %v", g.Paths, tt.want.Paths)
-			}
-			for i, e := range g.Edges {
-				if want := tt.want.Edges[i]; *want != *e {
-					t.Errorf("Graph.AddEdge().Edge = %v, want %v", *e, *want)
-				}
-			}
-		})
-	}
+			Nodes: []string{"Alf", "Bert", "Me"},
+			Paths: [][]string{
+				{"Alf", "Bert", "Me"},
+				{"Bert", "Alf", "Me"},
+				{"Me", "Bert", "Alf"},
+				{"Bert", "Me", "Alf"},
+				{"Me", "Alf", "Bert"},
+				{"Alf", "Me", "Bert"},
+			},
+		}
+		assert.Equal(t, want, g)
+	})
 }
 
 func TestGraph_ParseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		arg     []string
-		want    *Graph
-		wantErr bool
+		name               string
+		arg                []string
+		want               *Graph
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an input line cost can't be converted correctly",
@@ -281,7 +247,7 @@ func TestGraph_ParseInput(t *testing.T) {
 				},
 				Nodes: []string{"Alice", "Bob"},
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns a populated graph from simple input",
@@ -321,39 +287,22 @@ func TestGraph_ParseInput(t *testing.T) {
 					{"Alice", "Carol", "Bob"},
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			g := &Graph{}
-			if err := g.ParseInput(tt.arg); (err != nil) != tt.wantErr {
-				t.Errorf("Graph.ParseInput() error = %v, wantErr %v", err, tt.wantErr)
-			}
-			if !reflect.DeepEqual(g.Nodes, tt.want.Nodes) {
-				t.Errorf("Graph.AddEdge().Nodes = %v, want %v", g.Nodes, tt.want.Nodes)
-			}
-			if !reflect.DeepEqual(g.Paths, tt.want.Paths) {
-				t.Errorf("Graph.AddEdge().Paths = %v, want %v", g.Paths, tt.want.Paths)
-			}
-			for i, e := range g.Edges {
-				if want := tt.want.Edges[i]; *want != *e {
-					t.Errorf("Graph.AddEdge().Edge = %v, want %v", *e, *want)
-				}
-			}
+			err := g.ParseInput(tt.arg)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
 
 func TestGraph_GetDistanceOfPath(t *testing.T) {
-	tests := []struct {
-		name  string
-		Edges []*Edge
-		arg   []string
-		want  int
-	}{
-		{
-			name: "gets the distance of a path in the graph",
+	t.Run("gets the distance of a path in the graph", func(t *testing.T) {
+		g := &Graph{
 			Edges: []*Edge{
 				{
 					Parent: "Carol",
@@ -381,31 +330,15 @@ func TestGraph_GetDistanceOfPath(t *testing.T) {
 					Cost:   20,
 				},
 			},
-			arg:  []string{"Alice", "Bob", "Carol", "David"},
-			want: 54021,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			g := &Graph{
-				Edges: tt.Edges,
-			}
-			if got := g.GetDistanceOfPath(tt.arg); got != tt.want {
-				t.Errorf("Graph.GetDistanceOfPath() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		}
+		got := g.GetDistanceOfPath([]string{"Alice", "Bob", "Carol", "David"})
+		assert.Equal(t, 54021, got)
+	})
 }
 
 func TestGraph_FindGreatestHappiness(t *testing.T) {
-	tests := []struct {
-		name  string
-		Edges []*Edge
-		Paths [][]string
-		want  int
-	}{
-		{
-			name: "finds the gratest happiness number, advent of code example",
+	t.Run("finds the gratest happiness number, advent of code example", func(t *testing.T) {
+		g := Graph{
 			Edges: []*Edge{
 				{
 					Parent: "Alice",
@@ -464,18 +397,8 @@ func TestGraph_FindGreatestHappiness(t *testing.T) {
 				{"David", "Alice", "Carol", "Bob"},
 				{"David", "Alice", "Bob", "Carol"},
 			},
-			want: 330,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			g := Graph{
-				Edges: tt.Edges,
-				Paths: tt.Paths,
-			}
-			if got := g.FindGreatestHappiness(); got != tt.want {
-				t.Errorf("Graph.FindGreatestHappiness() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+		}
+		got := g.FindGreatestHappiness()
+		assert.Equal(t, 330, got)
+	})
 }

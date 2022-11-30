@@ -2,8 +2,9 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestGrid_evaluateEmptySeat(t *testing.T) {
@@ -167,9 +168,8 @@ func TestGrid_evaluateEmptySeat(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.g.evaluateEmptySeat(tt.args.co, tt.args.part); got != tt.want {
-				t.Errorf("Grid.evaluateEmptySeat() = %v, want %v", got, tt.want)
-			}
+			got := tt.g.evaluateEmptySeat(tt.args.co, tt.args.part)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -220,29 +220,23 @@ func TestGrid_countOccupiedSeats(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.g.countOccupiedSeats(); got != tt.want {
-				t.Errorf("Grid.countOccupiedSeats() = %v, want %v", got, tt.want)
-			}
+			got := tt.g.countOccupiedSeats()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestGrid_parseInput(t *testing.T) {
-	type args struct {
-		plan []string
-	}
 	tests := []struct {
 		name string
 		g    Grid
-		args args
+		plan []string
 		want Grid
 	}{
 		{
 			name: "single line input",
 			g:    Grid{},
-			args: args{
-				plan: []string{"#.L."},
-			},
+			plan: []string{"#.L."},
 			want: Grid{
 				graph.Co{X: 0, Y: 0}: "#",
 				graph.Co{X: 1, Y: 0}: ".",
@@ -253,9 +247,7 @@ func TestGrid_parseInput(t *testing.T) {
 		{
 			name: "multiple line input",
 			g:    Grid{},
-			args: args{
-				plan: []string{"#.L#", "...L", "12X*"},
-			},
+			plan: []string{"#.L#", "...L", "12X*"},
 			want: Grid{
 				graph.Co{X: 0, Y: 0}: "#",
 				graph.Co{X: 1, Y: 0}: ".",
@@ -274,10 +266,8 @@ func TestGrid_parseInput(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			tt.g.parseInput(tt.args.plan)
+			tt.g.parseInput(tt.plan)
+			assert.Equal(t, tt.want, tt.g)
 		})
-		if ok := reflect.DeepEqual(tt.g, tt.want); !ok {
-			t.Errorf("Grid.parseInput() = %v, want %v", tt.g, tt.want)
-		}
 	}
 }

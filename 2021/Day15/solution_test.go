@@ -3,8 +3,9 @@ package main
 import (
 	"Advent-of-Code/graph"
 	djk "Advent-of-Code/graph/dijkstra"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
@@ -100,44 +101,20 @@ func Test_parseInput(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got := parseInput(tt.args.input, tt.args.factor)
-			if !reflect.DeepEqual(got.Grid, tt.want.Grid) {
-				t.Errorf("parseInput() = %v, want %v", got.Grid, tt.want.Grid)
-			}
-			for co, edge := range got.Nodes {
-				if len(edge) != len(tt.want.Nodes[co]) {
-					t.Errorf("parseInput().Nodes[%v] = %v, want %v", co, edge, tt.want.Nodes[co])
-				}
-				edges := map[djk.Edge]struct{}{}
-				for _, e := range edge {
-					edges[e] = struct{}{}
-				}
-				for _, e := range tt.want.Nodes[co] {
-					if _, ok := edges[e]; !ok {
-						t.Errorf("parseInput().Nodes[%v] = %v, want %v", co, edge, tt.want.Nodes[co])
-					}
-				}
-			}
-			if got.MaxX != tt.want.MaxX {
-				t.Errorf("parseInput().maxX = %d, want %d", got.MaxX, tt.want.MaxX)
-			}
-			if got.MaxY != tt.want.MaxY {
-				t.Errorf("parseInput().MaxY = %d, want %d", got.MaxY, tt.want.MaxY)
+			assert.Equal(t, tt.want.Grid, got.Grid)
+			assert.Equal(t, tt.want.MaxX, got.MaxX)
+			assert.Equal(t, tt.want.MaxY, got.MaxY)
+			for co, edges := range got.Nodes {
+				assert.ElementsMatch(t, tt.want.Nodes[co], edges)
 			}
 		})
 	}
 }
 
 func Test_findSolutions(t *testing.T) {
-	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		want1   int
-		wantErr bool
-	}{
-		{
-			name: "returns solutions for part 1 and part 2, advent of code example",
-			input: []string{
+	t.Run("returns solutions for part 1 and part 2, advent of code example", func(t *testing.T) {
+		got, got1, err := findSolutions(
+			[]string{
 				"1163751742",
 				"1381373672",
 				"2136511328",
@@ -149,24 +126,9 @@ func Test_findSolutions(t *testing.T) {
 				"1293138521",
 				"2311944581",
 			},
-			want:    40,
-			want1:   315,
-			wantErr: false,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := findSolutions(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolutions() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
-		})
-	}
+		)
+		assert.NoError(t, err)
+		assert.Equal(t, 40, got)
+		assert.Equal(t, 315, got1)
+	})
 }

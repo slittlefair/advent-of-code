@@ -2,28 +2,29 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   string
-		want    *TargetArea
-		wantErr bool
+		name               string
+		input              string
+		want               *TargetArea
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if there are fewer than 4 numbers",
-			input:   "target area: x=562, y=-98..613",
-			want:    nil,
-			wantErr: true,
+			name:               "returns an error if there are fewer than 4 numbers",
+			input:              "target area: x=562, y=-98..613",
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns an error if there are more than 4 numbers",
-			input:   "target area: x=562..872, y=-98..613..614",
-			want:    nil,
-			wantErr: true,
+			name:               "returns an error if there are more than 4 numbers",
+			input:              "target area: x=562..872, y=-98..613..614",
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name:  "returns the correct target area from inout, advent of code example",
@@ -35,19 +36,14 @@ func Test_parseInput(t *testing.T) {
 				MaxY:                -5,
 				GreatestSuccessfulY: -5,
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := parseInput(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseInput() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -93,9 +89,8 @@ func TestTargetArea_isInTargetArea(t *testing.T) {
 				MaxY:                -5,
 				GreatestSuccessfulY: -5,
 			}
-			if got := ta.isInTargetArea(tt.co); got != tt.want {
-				t.Errorf("TargetArea.isInTargetArea() = %v, want %v", got, tt.want)
-			}
+			got := ta.isInTargetArea(tt.co)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -190,27 +185,25 @@ func TestTargetArea_evaluateTrajectory(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			ta := tt.ta
 			ta.evaluateTrajectory(tt.args.x, tt.args.y)
-			if !reflect.DeepEqual(ta, tt.want) {
-				t.Errorf("TargetArea.evaluateTrajectory() = %v, want %v", ta, tt.want)
-			}
+			assert.Equal(t, tt.want, ta)
 		})
 	}
 }
 
 func Test_findTrajectories(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if input is less than one string long",
-			input:   []string{},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			name:               "returns an error if input is less than one string long",
+			input:              []string{},
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if input is greater than one string long",
@@ -218,42 +211,35 @@ func Test_findTrajectories(t *testing.T) {
 				"target area: x=20..30, y=-10..-5",
 				"target area: x=20..30, y=-10..-6",
 			},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if input cannot be parsed",
 			input: []string{
 				"target area: x=20..30, y=-10..-5..-1",
 			},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns correct part 1 and part 2 solutions for given input, advent of code example",
 			input: []string{
 				"target area: x=20..30, y=-10..-5",
 			},
-			want:    45,
-			want1:   112,
-			wantErr: false,
+			want:               45,
+			want1:              112,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := findTrajectories(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findTrajectories() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findTrajectories() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findTrajectories() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

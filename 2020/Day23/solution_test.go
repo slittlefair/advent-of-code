@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_createGame(t *testing.T) {
@@ -42,9 +43,8 @@ func Test_createGame(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := createGame(tt.args.input, tt.args.maxNum); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("createGame() = %v, want %v", got, tt.want)
-			}
+			got := createGame(tt.args.input, tt.args.maxNum)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -108,9 +108,7 @@ func TestGame_doMove(t *testing.T) {
 				Cups:       tt.fields.Cups,
 			}
 			g.doMove()
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("doMove() = %v, want %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
@@ -164,6 +162,7 @@ func TestGame_playGame(t *testing.T) {
 				Cups:       tt.fields.Cups,
 			}
 			g.playGame(tt.rounds)
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
@@ -190,9 +189,8 @@ func TestGame_getOrderString(t *testing.T) {
 			g := Game{
 				Cups: tt.cups,
 			}
-			if got := g.getOrderString(); got != tt.want {
-				t.Errorf("Game.getOrderString() = %v, want %v", got, tt.want)
-			}
+			got := g.getOrderString()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -219,9 +217,8 @@ func TestGame_getProductOfLabels(t *testing.T) {
 			g := Game{
 				Cups: tt.cups,
 			}
-			if got := g.getProductOfLabels(); got != tt.want {
-				t.Errorf("Game.getProductOfLabels() = %v, want %v", got, tt.want)
-			}
+			got := g.getProductOfLabels()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

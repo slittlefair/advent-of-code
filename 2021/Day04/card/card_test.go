@@ -4,6 +4,8 @@ import (
 	"Advent-of-Code/graph"
 	"regexp"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestCard_ParseCard(t *testing.T) {
@@ -12,11 +14,11 @@ func TestCard_ParseCard(t *testing.T) {
 		reNum *regexp.Regexp
 	}
 	tests := []struct {
-		name    string
-		card    *Card
-		args    args
-		want    *Card
-		wantErr bool
+		name               string
+		card               *Card
+		args               args
+		want               *Card
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if match from regex can't be converted to int",
@@ -37,7 +39,7 @@ func TestCard_ParseCard(t *testing.T) {
 					{X: 1, Y: 0}: {Val: 2},
 				},
 			},
-			wantErr: true,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns a parsed card from input, advent of code example 1",
@@ -84,7 +86,7 @@ func TestCard_ParseCard(t *testing.T) {
 					{X: 4, Y: 4}: {Val: 19},
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns a parsed card from input, advent of code example 2",
@@ -131,7 +133,7 @@ func TestCard_ParseCard(t *testing.T) {
 					{X: 4, Y: 4}: {Val: 6},
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns a parsed card from input, advent of code example 3",
@@ -178,15 +180,15 @@ func TestCard_ParseCard(t *testing.T) {
 					{X: 4, Y: 4}: {Val: 7},
 				},
 			},
-			wantErr: false,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			c := tt.card
-			if err := c.ParseCard(tt.args.lines, tt.args.reNum); (err != nil) != tt.wantErr {
-				t.Errorf("Card.ParseCard() error = %v, wantErr %v", err, tt.wantErr)
-			}
+			err := c.ParseCard(tt.args.lines, tt.args.reNum)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, c)
 		})
 	}
 }
@@ -296,9 +298,8 @@ func TestCard_CardIsWinner(t *testing.T) {
 			c := &Card{
 				Numbers: tt.numbers,
 			}
-			if got := c.CardIsWinner(); got != tt.want {
-				t.Errorf("Card.CardIsWinner() = %v, want %v", got, tt.want)
-			}
+			got := c.CardIsWinner()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -380,9 +381,8 @@ func TestCard_CalculateScore(t *testing.T) {
 			c := Card{
 				Numbers: tt.numbers,
 			}
-			if got := c.CalculateScore(tt.num); got != tt.want {
-				t.Errorf("Card.CalculateScore() = %v, want %v", got, tt.want)
-			}
+			got := c.CalculateScore(tt.num)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

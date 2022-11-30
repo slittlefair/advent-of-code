@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 var basicGrid = Grid{
@@ -85,9 +86,8 @@ func TestGrid_evaluateAdjacentCo(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := basicGrid.evaluateAdjacentCo(tt.args.co, tt.args.adjacentCo, tt.args.neighboursActive); got != tt.want {
-				t.Errorf("Grid.evaluateAdjacentCo() = %v, want %v", got, tt.want)
-			}
+			got := basicGrid.evaluateAdjacentCo(tt.args.co, tt.args.adjacentCo, tt.args.neighboursActive)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -233,187 +233,164 @@ func TestGrid_evaluateCo(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := basicGrid.evaluateCo(tt.args.is4D, tt.args.co); got != tt.want {
-				t.Errorf("Grid.evaluateCo() = %v, want %v", got, tt.want)
-			}
+			got := basicGrid.evaluateCo(tt.args.is4D, tt.args.co)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestGrid_parseInput(t *testing.T) {
-	type args struct {
-		pocketDimension []string
-		iterations      int
-	}
-	tests := []struct {
-		name string
-		g    Grid
-		args args
-		want Grid
-	}{
-		{
-			name: "correctly populates the grid",
-			g:    Grid{},
-			args: args{
-				pocketDimension: []string{"##", ".#"},
-				iterations:      1,
-			},
-			want: Grid{
-				Coord4D{X: -1, Y: -1, Z: -1, W: -1}: ".",
-				Coord4D{X: -1, Y: -1, Z: -1, W: 0}:  ".",
-				Coord4D{X: -1, Y: -1, Z: -1, W: 1}:  ".",
-				Coord4D{X: -1, Y: -1, Z: 0, W: -1}:  ".",
-				Coord4D{X: -1, Y: -1, Z: 0, W: 0}:   ".",
-				Coord4D{X: -1, Y: -1, Z: 0, W: 1}:   ".",
-				Coord4D{X: -1, Y: -1, Z: 1, W: -1}:  ".",
-				Coord4D{X: -1, Y: -1, Z: 1, W: 0}:   ".",
-				Coord4D{X: -1, Y: -1, Z: 1, W: 1}:   ".",
-				Coord4D{X: -1, Y: 0, Z: -1, W: -1}:  ".",
-				Coord4D{X: -1, Y: 0, Z: -1, W: 0}:   ".",
-				Coord4D{X: -1, Y: 0, Z: -1, W: 1}:   ".",
-				Coord4D{X: -1, Y: 0, Z: 0, W: -1}:   ".",
-				Coord4D{X: -1, Y: 0, Z: 0, W: 0}:    ".",
-				Coord4D{X: -1, Y: 0, Z: 0, W: 1}:    ".",
-				Coord4D{X: -1, Y: 0, Z: 1, W: -1}:   ".",
-				Coord4D{X: -1, Y: 0, Z: 1, W: 0}:    ".",
-				Coord4D{X: -1, Y: 0, Z: 1, W: 1}:    ".",
-				Coord4D{X: -1, Y: 1, Z: -1, W: -1}:  ".",
-				Coord4D{X: -1, Y: 1, Z: -1, W: 0}:   ".",
-				Coord4D{X: -1, Y: 1, Z: -1, W: 1}:   ".",
-				Coord4D{X: -1, Y: 1, Z: 0, W: -1}:   ".",
-				Coord4D{X: -1, Y: 1, Z: 0, W: 0}:    ".",
-				Coord4D{X: -1, Y: 1, Z: 0, W: 1}:    ".",
-				Coord4D{X: -1, Y: 1, Z: 1, W: -1}:   ".",
-				Coord4D{X: -1, Y: 1, Z: 1, W: 0}:    ".",
-				Coord4D{X: -1, Y: 1, Z: 1, W: 1}:    ".",
-				Coord4D{X: -1, Y: 2, Z: -1, W: -1}:  ".",
-				Coord4D{X: -1, Y: 2, Z: -1, W: 0}:   ".",
-				Coord4D{X: -1, Y: 2, Z: -1, W: 1}:   ".",
-				Coord4D{X: -1, Y: 2, Z: 0, W: -1}:   ".",
-				Coord4D{X: -1, Y: 2, Z: 0, W: 0}:    ".",
-				Coord4D{X: -1, Y: 2, Z: 0, W: 1}:    ".",
-				Coord4D{X: -1, Y: 2, Z: 1, W: -1}:   ".",
-				Coord4D{X: -1, Y: 2, Z: 1, W: 0}:    ".",
-				Coord4D{X: -1, Y: 2, Z: 1, W: 1}:    ".",
-				Coord4D{X: 0, Y: -1, Z: -1, W: -1}:  ".",
-				Coord4D{X: 1, Y: -1, Z: -1, W: -1}:  ".",
-				Coord4D{X: 2, Y: -1, Z: -1, W: -1}:  ".",
-				Coord4D{X: 0, Y: -1, Z: -1, W: 0}:   ".",
-				Coord4D{X: 1, Y: -1, Z: -1, W: 0}:   ".",
-				Coord4D{X: 2, Y: -1, Z: -1, W: 0}:   ".",
-				Coord4D{X: 0, Y: -1, Z: -1, W: 1}:   ".",
-				Coord4D{X: 1, Y: -1, Z: -1, W: 1}:   ".",
-				Coord4D{X: 2, Y: -1, Z: -1, W: 1}:   ".",
-				Coord4D{X: 0, Y: -1, Z: 0, W: -1}:   ".",
-				Coord4D{X: 1, Y: -1, Z: 0, W: -1}:   ".",
-				Coord4D{X: 2, Y: -1, Z: 0, W: -1}:   ".",
-				Coord4D{X: 0, Y: -1, Z: 0, W: 0}:    ".",
-				Coord4D{X: 1, Y: -1, Z: 0, W: 0}:    ".",
-				Coord4D{X: 2, Y: -1, Z: 0, W: 0}:    ".",
-				Coord4D{X: 0, Y: -1, Z: 0, W: 1}:    ".",
-				Coord4D{X: 1, Y: -1, Z: 0, W: 1}:    ".",
-				Coord4D{X: 2, Y: -1, Z: 0, W: 1}:    ".",
-				Coord4D{X: 0, Y: -1, Z: 1, W: -1}:   ".",
-				Coord4D{X: 1, Y: -1, Z: 1, W: -1}:   ".",
-				Coord4D{X: 2, Y: -1, Z: 1, W: -1}:   ".",
-				Coord4D{X: 0, Y: -1, Z: 1, W: 0}:    ".",
-				Coord4D{X: 1, Y: -1, Z: 1, W: 0}:    ".",
-				Coord4D{X: 2, Y: -1, Z: 1, W: 0}:    ".",
-				Coord4D{X: 0, Y: -1, Z: 1, W: 1}:    ".",
-				Coord4D{X: 1, Y: -1, Z: 1, W: 1}:    ".",
-				Coord4D{X: 2, Y: -1, Z: 1, W: 1}:    ".",
-				Coord4D{X: 0, Y: 0, Z: -1, W: -1}:   ".",
-				Coord4D{X: 1, Y: 0, Z: -1, W: -1}:   ".",
-				Coord4D{X: 2, Y: 0, Z: -1, W: -1}:   ".",
-				Coord4D{X: 0, Y: 0, Z: -1, W: 0}:    ".",
-				Coord4D{X: 1, Y: 0, Z: -1, W: 0}:    ".",
-				Coord4D{X: 2, Y: 0, Z: -1, W: 0}:    ".",
-				Coord4D{X: 0, Y: 0, Z: -1, W: 1}:    ".",
-				Coord4D{X: 1, Y: 0, Z: -1, W: 1}:    ".",
-				Coord4D{X: 2, Y: 0, Z: -1, W: 1}:    ".",
-				Coord4D{X: 0, Y: 0, Z: 0, W: -1}:    ".",
-				Coord4D{X: 1, Y: 0, Z: 0, W: -1}:    ".",
-				Coord4D{X: 2, Y: 0, Z: 0, W: -1}:    ".",
-				Coord4D{X: 0, Y: 0, Z: 0, W: 0}:     "#",
-				Coord4D{X: 1, Y: 0, Z: 0, W: 0}:     "#",
-				Coord4D{X: 2, Y: 0, Z: 0, W: 0}:     ".",
-				Coord4D{X: 0, Y: 0, Z: 0, W: 1}:     ".",
-				Coord4D{X: 1, Y: 0, Z: 0, W: 1}:     ".",
-				Coord4D{X: 2, Y: 0, Z: 0, W: 1}:     ".",
-				Coord4D{X: 0, Y: 0, Z: 1, W: -1}:    ".",
-				Coord4D{X: 1, Y: 0, Z: 1, W: -1}:    ".",
-				Coord4D{X: 2, Y: 0, Z: 1, W: -1}:    ".",
-				Coord4D{X: 0, Y: 0, Z: 1, W: 0}:     ".",
-				Coord4D{X: 1, Y: 0, Z: 1, W: 0}:     ".",
-				Coord4D{X: 2, Y: 0, Z: 1, W: 0}:     ".",
-				Coord4D{X: 0, Y: 0, Z: 1, W: 1}:     ".",
-				Coord4D{X: 1, Y: 0, Z: 1, W: 1}:     ".",
-				Coord4D{X: 2, Y: 0, Z: 1, W: 1}:     ".",
-				Coord4D{X: 0, Y: 1, Z: -1, W: -1}:   ".",
-				Coord4D{X: 1, Y: 1, Z: -1, W: -1}:   ".",
-				Coord4D{X: 2, Y: 1, Z: -1, W: -1}:   ".",
-				Coord4D{X: 0, Y: 1, Z: -1, W: 0}:    ".",
-				Coord4D{X: 1, Y: 1, Z: -1, W: 0}:    ".",
-				Coord4D{X: 2, Y: 1, Z: -1, W: 0}:    ".",
-				Coord4D{X: 0, Y: 1, Z: -1, W: 1}:    ".",
-				Coord4D{X: 1, Y: 1, Z: -1, W: 1}:    ".",
-				Coord4D{X: 2, Y: 1, Z: -1, W: 1}:    ".",
-				Coord4D{X: 0, Y: 1, Z: 0, W: -1}:    ".",
-				Coord4D{X: 1, Y: 1, Z: 0, W: -1}:    ".",
-				Coord4D{X: 2, Y: 1, Z: 0, W: -1}:    ".",
-				Coord4D{X: 0, Y: 1, Z: 0, W: 0}:     ".",
-				Coord4D{X: 1, Y: 1, Z: 0, W: 0}:     "#",
-				Coord4D{X: 2, Y: 1, Z: 0, W: 0}:     ".",
-				Coord4D{X: 0, Y: 1, Z: 0, W: 1}:     ".",
-				Coord4D{X: 1, Y: 1, Z: 0, W: 1}:     ".",
-				Coord4D{X: 2, Y: 1, Z: 0, W: 1}:     ".",
-				Coord4D{X: 0, Y: 1, Z: 1, W: -1}:    ".",
-				Coord4D{X: 1, Y: 1, Z: 1, W: -1}:    ".",
-				Coord4D{X: 2, Y: 1, Z: 1, W: -1}:    ".",
-				Coord4D{X: 0, Y: 1, Z: 1, W: 0}:     ".",
-				Coord4D{X: 1, Y: 1, Z: 1, W: 0}:     ".",
-				Coord4D{X: 2, Y: 1, Z: 1, W: 0}:     ".",
-				Coord4D{X: 0, Y: 1, Z: 1, W: 1}:     ".",
-				Coord4D{X: 1, Y: 1, Z: 1, W: 1}:     ".",
-				Coord4D{X: 2, Y: 1, Z: 1, W: 1}:     ".",
-				Coord4D{X: 0, Y: 2, Z: -1, W: -1}:   ".",
-				Coord4D{X: 1, Y: 2, Z: -1, W: -1}:   ".",
-				Coord4D{X: 2, Y: 2, Z: -1, W: -1}:   ".",
-				Coord4D{X: 0, Y: 2, Z: -1, W: 0}:    ".",
-				Coord4D{X: 1, Y: 2, Z: -1, W: 0}:    ".",
-				Coord4D{X: 2, Y: 2, Z: -1, W: 0}:    ".",
-				Coord4D{X: 0, Y: 2, Z: -1, W: 1}:    ".",
-				Coord4D{X: 1, Y: 2, Z: -1, W: 1}:    ".",
-				Coord4D{X: 2, Y: 2, Z: -1, W: 1}:    ".",
-				Coord4D{X: 0, Y: 2, Z: 0, W: -1}:    ".",
-				Coord4D{X: 1, Y: 2, Z: 0, W: -1}:    ".",
-				Coord4D{X: 2, Y: 2, Z: 0, W: -1}:    ".",
-				Coord4D{X: 0, Y: 2, Z: 0, W: 0}:     ".",
-				Coord4D{X: 1, Y: 2, Z: 0, W: 0}:     ".",
-				Coord4D{X: 2, Y: 2, Z: 0, W: 0}:     ".",
-				Coord4D{X: 0, Y: 2, Z: 0, W: 1}:     ".",
-				Coord4D{X: 1, Y: 2, Z: 0, W: 1}:     ".",
-				Coord4D{X: 2, Y: 2, Z: 0, W: 1}:     ".",
-				Coord4D{X: 0, Y: 2, Z: 1, W: -1}:    ".",
-				Coord4D{X: 1, Y: 2, Z: 1, W: -1}:    ".",
-				Coord4D{X: 2, Y: 2, Z: 1, W: -1}:    ".",
-				Coord4D{X: 0, Y: 2, Z: 1, W: 0}:     ".",
-				Coord4D{X: 1, Y: 2, Z: 1, W: 0}:     ".",
-				Coord4D{X: 2, Y: 2, Z: 1, W: 0}:     ".",
-				Coord4D{X: 0, Y: 2, Z: 1, W: 1}:     ".",
-				Coord4D{X: 1, Y: 2, Z: 1, W: 1}:     ".",
-				Coord4D{X: 2, Y: 2, Z: 1, W: 1}:     ".",
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			tt.g.parseInput(tt.args.pocketDimension, tt.args.iterations)
-			if !reflect.DeepEqual(tt.g, tt.want) {
-				t.Errorf("Grid.parseInput() = %v, want %v", tt.g, tt.want)
-			}
-		})
-	}
+	t.Run("correctly populates the grid", func(t *testing.T) {
+		g := Grid{}
+		want := Grid{
+			Coord4D{X: -1, Y: -1, Z: -1, W: -1}: ".",
+			Coord4D{X: -1, Y: -1, Z: -1, W: 0}:  ".",
+			Coord4D{X: -1, Y: -1, Z: -1, W: 1}:  ".",
+			Coord4D{X: -1, Y: -1, Z: 0, W: -1}:  ".",
+			Coord4D{X: -1, Y: -1, Z: 0, W: 0}:   ".",
+			Coord4D{X: -1, Y: -1, Z: 0, W: 1}:   ".",
+			Coord4D{X: -1, Y: -1, Z: 1, W: -1}:  ".",
+			Coord4D{X: -1, Y: -1, Z: 1, W: 0}:   ".",
+			Coord4D{X: -1, Y: -1, Z: 1, W: 1}:   ".",
+			Coord4D{X: -1, Y: 0, Z: -1, W: -1}:  ".",
+			Coord4D{X: -1, Y: 0, Z: -1, W: 0}:   ".",
+			Coord4D{X: -1, Y: 0, Z: -1, W: 1}:   ".",
+			Coord4D{X: -1, Y: 0, Z: 0, W: -1}:   ".",
+			Coord4D{X: -1, Y: 0, Z: 0, W: 0}:    ".",
+			Coord4D{X: -1, Y: 0, Z: 0, W: 1}:    ".",
+			Coord4D{X: -1, Y: 0, Z: 1, W: -1}:   ".",
+			Coord4D{X: -1, Y: 0, Z: 1, W: 0}:    ".",
+			Coord4D{X: -1, Y: 0, Z: 1, W: 1}:    ".",
+			Coord4D{X: -1, Y: 1, Z: -1, W: -1}:  ".",
+			Coord4D{X: -1, Y: 1, Z: -1, W: 0}:   ".",
+			Coord4D{X: -1, Y: 1, Z: -1, W: 1}:   ".",
+			Coord4D{X: -1, Y: 1, Z: 0, W: -1}:   ".",
+			Coord4D{X: -1, Y: 1, Z: 0, W: 0}:    ".",
+			Coord4D{X: -1, Y: 1, Z: 0, W: 1}:    ".",
+			Coord4D{X: -1, Y: 1, Z: 1, W: -1}:   ".",
+			Coord4D{X: -1, Y: 1, Z: 1, W: 0}:    ".",
+			Coord4D{X: -1, Y: 1, Z: 1, W: 1}:    ".",
+			Coord4D{X: -1, Y: 2, Z: -1, W: -1}:  ".",
+			Coord4D{X: -1, Y: 2, Z: -1, W: 0}:   ".",
+			Coord4D{X: -1, Y: 2, Z: -1, W: 1}:   ".",
+			Coord4D{X: -1, Y: 2, Z: 0, W: -1}:   ".",
+			Coord4D{X: -1, Y: 2, Z: 0, W: 0}:    ".",
+			Coord4D{X: -1, Y: 2, Z: 0, W: 1}:    ".",
+			Coord4D{X: -1, Y: 2, Z: 1, W: -1}:   ".",
+			Coord4D{X: -1, Y: 2, Z: 1, W: 0}:    ".",
+			Coord4D{X: -1, Y: 2, Z: 1, W: 1}:    ".",
+			Coord4D{X: 0, Y: -1, Z: -1, W: -1}:  ".",
+			Coord4D{X: 1, Y: -1, Z: -1, W: -1}:  ".",
+			Coord4D{X: 2, Y: -1, Z: -1, W: -1}:  ".",
+			Coord4D{X: 0, Y: -1, Z: -1, W: 0}:   ".",
+			Coord4D{X: 1, Y: -1, Z: -1, W: 0}:   ".",
+			Coord4D{X: 2, Y: -1, Z: -1, W: 0}:   ".",
+			Coord4D{X: 0, Y: -1, Z: -1, W: 1}:   ".",
+			Coord4D{X: 1, Y: -1, Z: -1, W: 1}:   ".",
+			Coord4D{X: 2, Y: -1, Z: -1, W: 1}:   ".",
+			Coord4D{X: 0, Y: -1, Z: 0, W: -1}:   ".",
+			Coord4D{X: 1, Y: -1, Z: 0, W: -1}:   ".",
+			Coord4D{X: 2, Y: -1, Z: 0, W: -1}:   ".",
+			Coord4D{X: 0, Y: -1, Z: 0, W: 0}:    ".",
+			Coord4D{X: 1, Y: -1, Z: 0, W: 0}:    ".",
+			Coord4D{X: 2, Y: -1, Z: 0, W: 0}:    ".",
+			Coord4D{X: 0, Y: -1, Z: 0, W: 1}:    ".",
+			Coord4D{X: 1, Y: -1, Z: 0, W: 1}:    ".",
+			Coord4D{X: 2, Y: -1, Z: 0, W: 1}:    ".",
+			Coord4D{X: 0, Y: -1, Z: 1, W: -1}:   ".",
+			Coord4D{X: 1, Y: -1, Z: 1, W: -1}:   ".",
+			Coord4D{X: 2, Y: -1, Z: 1, W: -1}:   ".",
+			Coord4D{X: 0, Y: -1, Z: 1, W: 0}:    ".",
+			Coord4D{X: 1, Y: -1, Z: 1, W: 0}:    ".",
+			Coord4D{X: 2, Y: -1, Z: 1, W: 0}:    ".",
+			Coord4D{X: 0, Y: -1, Z: 1, W: 1}:    ".",
+			Coord4D{X: 1, Y: -1, Z: 1, W: 1}:    ".",
+			Coord4D{X: 2, Y: -1, Z: 1, W: 1}:    ".",
+			Coord4D{X: 0, Y: 0, Z: -1, W: -1}:   ".",
+			Coord4D{X: 1, Y: 0, Z: -1, W: -1}:   ".",
+			Coord4D{X: 2, Y: 0, Z: -1, W: -1}:   ".",
+			Coord4D{X: 0, Y: 0, Z: -1, W: 0}:    ".",
+			Coord4D{X: 1, Y: 0, Z: -1, W: 0}:    ".",
+			Coord4D{X: 2, Y: 0, Z: -1, W: 0}:    ".",
+			Coord4D{X: 0, Y: 0, Z: -1, W: 1}:    ".",
+			Coord4D{X: 1, Y: 0, Z: -1, W: 1}:    ".",
+			Coord4D{X: 2, Y: 0, Z: -1, W: 1}:    ".",
+			Coord4D{X: 0, Y: 0, Z: 0, W: -1}:    ".",
+			Coord4D{X: 1, Y: 0, Z: 0, W: -1}:    ".",
+			Coord4D{X: 2, Y: 0, Z: 0, W: -1}:    ".",
+			Coord4D{X: 0, Y: 0, Z: 0, W: 0}:     "#",
+			Coord4D{X: 1, Y: 0, Z: 0, W: 0}:     "#",
+			Coord4D{X: 2, Y: 0, Z: 0, W: 0}:     ".",
+			Coord4D{X: 0, Y: 0, Z: 0, W: 1}:     ".",
+			Coord4D{X: 1, Y: 0, Z: 0, W: 1}:     ".",
+			Coord4D{X: 2, Y: 0, Z: 0, W: 1}:     ".",
+			Coord4D{X: 0, Y: 0, Z: 1, W: -1}:    ".",
+			Coord4D{X: 1, Y: 0, Z: 1, W: -1}:    ".",
+			Coord4D{X: 2, Y: 0, Z: 1, W: -1}:    ".",
+			Coord4D{X: 0, Y: 0, Z: 1, W: 0}:     ".",
+			Coord4D{X: 1, Y: 0, Z: 1, W: 0}:     ".",
+			Coord4D{X: 2, Y: 0, Z: 1, W: 0}:     ".",
+			Coord4D{X: 0, Y: 0, Z: 1, W: 1}:     ".",
+			Coord4D{X: 1, Y: 0, Z: 1, W: 1}:     ".",
+			Coord4D{X: 2, Y: 0, Z: 1, W: 1}:     ".",
+			Coord4D{X: 0, Y: 1, Z: -1, W: -1}:   ".",
+			Coord4D{X: 1, Y: 1, Z: -1, W: -1}:   ".",
+			Coord4D{X: 2, Y: 1, Z: -1, W: -1}:   ".",
+			Coord4D{X: 0, Y: 1, Z: -1, W: 0}:    ".",
+			Coord4D{X: 1, Y: 1, Z: -1, W: 0}:    ".",
+			Coord4D{X: 2, Y: 1, Z: -1, W: 0}:    ".",
+			Coord4D{X: 0, Y: 1, Z: -1, W: 1}:    ".",
+			Coord4D{X: 1, Y: 1, Z: -1, W: 1}:    ".",
+			Coord4D{X: 2, Y: 1, Z: -1, W: 1}:    ".",
+			Coord4D{X: 0, Y: 1, Z: 0, W: -1}:    ".",
+			Coord4D{X: 1, Y: 1, Z: 0, W: -1}:    ".",
+			Coord4D{X: 2, Y: 1, Z: 0, W: -1}:    ".",
+			Coord4D{X: 0, Y: 1, Z: 0, W: 0}:     ".",
+			Coord4D{X: 1, Y: 1, Z: 0, W: 0}:     "#",
+			Coord4D{X: 2, Y: 1, Z: 0, W: 0}:     ".",
+			Coord4D{X: 0, Y: 1, Z: 0, W: 1}:     ".",
+			Coord4D{X: 1, Y: 1, Z: 0, W: 1}:     ".",
+			Coord4D{X: 2, Y: 1, Z: 0, W: 1}:     ".",
+			Coord4D{X: 0, Y: 1, Z: 1, W: -1}:    ".",
+			Coord4D{X: 1, Y: 1, Z: 1, W: -1}:    ".",
+			Coord4D{X: 2, Y: 1, Z: 1, W: -1}:    ".",
+			Coord4D{X: 0, Y: 1, Z: 1, W: 0}:     ".",
+			Coord4D{X: 1, Y: 1, Z: 1, W: 0}:     ".",
+			Coord4D{X: 2, Y: 1, Z: 1, W: 0}:     ".",
+			Coord4D{X: 0, Y: 1, Z: 1, W: 1}:     ".",
+			Coord4D{X: 1, Y: 1, Z: 1, W: 1}:     ".",
+			Coord4D{X: 2, Y: 1, Z: 1, W: 1}:     ".",
+			Coord4D{X: 0, Y: 2, Z: -1, W: -1}:   ".",
+			Coord4D{X: 1, Y: 2, Z: -1, W: -1}:   ".",
+			Coord4D{X: 2, Y: 2, Z: -1, W: -1}:   ".",
+			Coord4D{X: 0, Y: 2, Z: -1, W: 0}:    ".",
+			Coord4D{X: 1, Y: 2, Z: -1, W: 0}:    ".",
+			Coord4D{X: 2, Y: 2, Z: -1, W: 0}:    ".",
+			Coord4D{X: 0, Y: 2, Z: -1, W: 1}:    ".",
+			Coord4D{X: 1, Y: 2, Z: -1, W: 1}:    ".",
+			Coord4D{X: 2, Y: 2, Z: -1, W: 1}:    ".",
+			Coord4D{X: 0, Y: 2, Z: 0, W: -1}:    ".",
+			Coord4D{X: 1, Y: 2, Z: 0, W: -1}:    ".",
+			Coord4D{X: 2, Y: 2, Z: 0, W: -1}:    ".",
+			Coord4D{X: 0, Y: 2, Z: 0, W: 0}:     ".",
+			Coord4D{X: 1, Y: 2, Z: 0, W: 0}:     ".",
+			Coord4D{X: 2, Y: 2, Z: 0, W: 0}:     ".",
+			Coord4D{X: 0, Y: 2, Z: 0, W: 1}:     ".",
+			Coord4D{X: 1, Y: 2, Z: 0, W: 1}:     ".",
+			Coord4D{X: 2, Y: 2, Z: 0, W: 1}:     ".",
+			Coord4D{X: 0, Y: 2, Z: 1, W: -1}:    ".",
+			Coord4D{X: 1, Y: 2, Z: 1, W: -1}:    ".",
+			Coord4D{X: 2, Y: 2, Z: 1, W: -1}:    ".",
+			Coord4D{X: 0, Y: 2, Z: 1, W: 0}:     ".",
+			Coord4D{X: 1, Y: 2, Z: 1, W: 0}:     ".",
+			Coord4D{X: 2, Y: 2, Z: 1, W: 0}:     ".",
+			Coord4D{X: 0, Y: 2, Z: 1, W: 1}:     ".",
+			Coord4D{X: 1, Y: 2, Z: 1, W: 1}:     ".",
+			Coord4D{X: 2, Y: 2, Z: 1, W: 1}:     ".",
+		}
+		g.parseInput([]string{"##", ".#"}, 1)
+		assert.Equal(t, want, g)
+	})
 }
 
 func TestGrid_generateNextGrid(t *testing.T) {
@@ -658,46 +635,32 @@ func TestGrid_generateNextGrid(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.g.generateNextGrid(tt.is4D); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("Grid.generateNextGrid() = %v, want %v", got, tt.want)
-			}
+			got := tt.g.generateNextGrid(tt.is4D)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestGrid_countActiveCubes(t *testing.T) {
-	tests := []struct {
-		name string
-		g    Grid
-		want int
-	}{
-		{
-			name: "returns the correct number of active cubes",
-			g: Grid{
-				Coord4D{X: 0, Y: 0, Z: 0, W: 0}:   "#",
-				Coord4D{X: 1, Y: 0, Z: 0, W: 0}:   "#",
-				Coord4D{X: 2, Y: 0, Z: 0, W: 0}:   "#",
-				Coord4D{X: 0, Y: 1, Z: 0, W: 0}:   "#",
-				Coord4D{X: 0, Y: 2, Z: 0, W: 0}:   ".",
-				Coord4D{X: 0, Y: 0, Z: 1, W: 0}:   ".",
-				Coord4D{X: 0, Y: 0, Z: 2, W: 0}:   "#",
-				Coord4D{X: 0, Y: 0, Z: 0, W: 1}:   ".",
-				Coord4D{X: 0, Y: 0, Z: 0, W: 2}:   "#",
-				Coord4D{X: -1, Y: 0, Z: 0, W: 2}:  ".",
-				Coord4D{X: -1, Y: 0, Z: 10, W: 2}: ".",
-				Coord4D{X: 0, Y: 0, Z: 20, W: 2}:  "#",
-				Coord4D{X: 0, Y: 0, Z: 0, W: 25}:  "#",
-			},
-			want: 8,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.g.countActiveCubes(); got != tt.want {
-				t.Errorf("Grid.countActiveCubes() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns the correct number of active cubes", func(t *testing.T) {
+		g := Grid{
+			Coord4D{X: 0, Y: 0, Z: 0, W: 0}:   "#",
+			Coord4D{X: 1, Y: 0, Z: 0, W: 0}:   "#",
+			Coord4D{X: 2, Y: 0, Z: 0, W: 0}:   "#",
+			Coord4D{X: 0, Y: 1, Z: 0, W: 0}:   "#",
+			Coord4D{X: 0, Y: 2, Z: 0, W: 0}:   ".",
+			Coord4D{X: 0, Y: 0, Z: 1, W: 0}:   ".",
+			Coord4D{X: 0, Y: 0, Z: 2, W: 0}:   "#",
+			Coord4D{X: 0, Y: 0, Z: 0, W: 1}:   ".",
+			Coord4D{X: 0, Y: 0, Z: 0, W: 2}:   "#",
+			Coord4D{X: -1, Y: 0, Z: 0, W: 2}:  ".",
+			Coord4D{X: -1, Y: 0, Z: 10, W: 2}: ".",
+			Coord4D{X: 0, Y: 0, Z: 20, W: 2}:  "#",
+			Coord4D{X: 0, Y: 0, Z: 0, W: 25}:  "#",
+		}
+		got := g.countActiveCubes()
+		assert.Equal(t, 8, got)
+	})
 }
 
 func TestGrid_findSolution(t *testing.T) {
@@ -733,9 +696,8 @@ func TestGrid_findSolution(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.g.parseInput([]string{".#.", "..#", "###"}, 6)
-			if got := tt.g.findSolution(tt.args.is4D, tt.args.iterations); got != tt.want {
-				t.Errorf("Grid.findSolution() = %v, want %v", got, tt.want)
-			}
+			got := tt.g.findSolution(tt.args.is4D, tt.args.iterations)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

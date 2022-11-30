@@ -1,16 +1,17 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
 	tests := []struct {
-		name    string
-		arg     []string
-		want    []int
-		wantErr bool
+		name            string
+		arg             []string
+		want            []int
+		errorAssertFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if an input line can't be converted to an int",
@@ -21,8 +22,8 @@ func Test_parseInput(t *testing.T) {
 				"a",
 				"22",
 			},
-			want:    nil,
-			wantErr: true,
+			want:            nil,
+			errorAssertFunc: assert.Error,
 		},
 		{
 			name: "returns a sorted list of containers, highest to lowest",
@@ -33,72 +34,35 @@ func Test_parseInput(t *testing.T) {
 				"10",
 				"22",
 			},
-			want:    []int{22, 10, 5, 2, 1},
-			wantErr: false,
+			want:            []int{22, 10, 5, 2, 1},
+			errorAssertFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := parseInput(tt.arg)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseInput() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func TestEggnogContainers_FindContainers(t *testing.T) {
-	type fields struct {
-		WantedTotal int
-		Ways        map[int]int
-	}
-	type args struct {
-		remainingContainers []int
-		totalCapacity       int
-		levels              int
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		args   args
-		want   *EggnogContainers
-	}{
-		{
-			name: "updates EggnogContainer with permutations that sum to WantedTotal, advent of code example",
-			fields: fields{
-				WantedTotal: 25,
-				Ways:        make(map[int]int),
+	t.Run("updates EggnogContainer with permutations that sum to WantedTotal, advent of code example", func(t *testing.T) {
+		ec := &EggnogContainers{
+			WantedTotal: 25,
+			Ways:        make(map[int]int),
+		}
+		want := &EggnogContainers{
+			WantedTotal: 25,
+			Ways: map[int]int{
+				3: 1,
+				2: 3,
 			},
-			args: args{
-				remainingContainers: []int{20, 15, 10, 5, 5},
-				totalCapacity:       0,
-				levels:              0,
-			},
-			want: &EggnogContainers{
-				WantedTotal: 25,
-				Ways: map[int]int{
-					3: 1,
-					2: 3,
-				},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			ec := &EggnogContainers{
-				WantedTotal: tt.fields.WantedTotal,
-				Ways:        tt.fields.Ways,
-			}
-			ec.FindContainers(tt.args.remainingContainers, tt.args.totalCapacity, tt.args.levels)
-			if !reflect.DeepEqual(ec, tt.want) {
-				t.Errorf("EggnogContainers.FindContainers() = %v, want %v", ec, tt.want)
-			}
-		})
-	}
+		}
+		ec.FindContainers([]int{20, 15, 10, 5, 5}, 0, 0)
+		assert.Equal(t, want, ec)
+	})
 }
 
 func TestEggnogContainers_CountPermutations(t *testing.T) {
@@ -132,9 +96,8 @@ func TestEggnogContainers_CountPermutations(t *testing.T) {
 				WantedTotal: tt.fields.WantedTotal,
 				Ways:        tt.fields.Ways,
 			}
-			if got := ec.CountPermutations(); got != tt.want {
-				t.Errorf("EggnogContainers.CountPermutations() = %v, want %v", got, tt.want)
-			}
+			got := ec.CountPermutations()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -188,9 +151,8 @@ func TestEggnogContainers_CountSmallestContainersPermutations(t *testing.T) {
 				WantedTotal: tt.fields.WantedTotal,
 				Ways:        tt.fields.Ways,
 			}
-			if got := ec.CountSmallestContainersPermutations(); got != tt.want {
-				t.Errorf("EggnogContainers.CountSmallestContainersPermutations() = %v, want %v", got, tt.want)
-			}
+			got := ec.CountSmallestContainersPermutations()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

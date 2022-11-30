@@ -2,8 +2,9 @@ package tile
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestTile_RotateTile90(t *testing.T) {
@@ -74,9 +75,7 @@ func TestTile_RotateTile90(t *testing.T) {
 				Width:  tt.fields.Width,
 			}
 			tr.RotateTile90()
-			if !reflect.DeepEqual(tr.Pixels, tt.want) {
-				t.Errorf("got %v, want %v", tr.Pixels, tt.want)
-			}
+			assert.Equal(t, tt.want, tr.Pixels)
 		})
 	}
 }
@@ -145,9 +144,7 @@ func TestTile_FlipTile(t *testing.T) {
 				Width:  tt.fields.Width,
 			}
 			tr.FlipTile()
-			if !reflect.DeepEqual(tr.Pixels, tt.want) {
-				t.Errorf("got %v, want %v", tr.Pixels, tt.want)
-			}
+			assert.Equal(t, tt.want, tr.Pixels)
 		})
 	}
 }
@@ -230,9 +227,8 @@ func TestTile_IsAdjacentTop(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.t.IsAdjacentTop(tt.tile); got != tt.want {
-				t.Errorf("Tile.IsAdjacentTop() = %v, want %v", got, tt.want)
-			}
+			got := tt.t.IsAdjacentTop(tt.tile)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -315,9 +311,8 @@ func TestTile_IsAdjacentBottom(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.t.IsAdjacentBottom(tt.tile); got != tt.want {
-				t.Errorf("Tile.IsAdjacentBottom() = %v, want %v", got, tt.want)
-			}
+			got := tt.t.IsAdjacentBottom(tt.tile)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -400,9 +395,8 @@ func TestTile_IsAdjacentLeft(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.t.IsAdjacentLeft(tt.tile); got != tt.want {
-				t.Errorf("Tile.IsAdjacentLeft() = %v, want %v", got, tt.want)
-			}
+			got := tt.t.IsAdjacentLeft(tt.tile)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -485,9 +479,8 @@ func TestTile_IsAdjacentRight(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.t.IsAdjacentRight(tt.tile); got != tt.want {
-				t.Errorf("Tile.IsAdjacentRight() = %v, want %v", got, tt.want)
-			}
+			got := tt.t.IsAdjacentRight(tt.tile)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -577,9 +570,8 @@ func TestTile_IsAdjacentTo(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.t.IsAdjacentTo(tt.tile); got != tt.want {
-				t.Errorf("Tile.IsAdjacentTo() = %v, want %v", got, tt.want)
-			}
+			got := tt.t.IsAdjacentTo(tt.tile)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -656,9 +648,8 @@ func TestTile_NumAdjacent(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.t.NumAdjacent(); got != tt.want {
-				t.Errorf("Tile.NumAdjacent() = %v, want %v", got, tt.want)
-			}
+			got := tt.t.NumAdjacent()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

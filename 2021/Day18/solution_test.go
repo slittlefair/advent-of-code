@@ -1,8 +1,9 @@
 package main
 
 import (
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPair_leftPopulated(t *testing.T) {
@@ -62,54 +63,48 @@ func TestPair_leftPopulated(t *testing.T) {
 				leftVal:   tt.fields.leftVal,
 				rightVal:  tt.fields.rightVal,
 			}
-			if got := p.leftPopulated(); got != tt.want {
-				t.Errorf("Pair.leftPopulated() = %v, want %v", got, tt.want)
-			}
+			got := p.leftPopulated()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_parseLine(t *testing.T) {
 	tests := []struct {
-		name    string
-		line    string
-		want    *Pair
-		wantErr bool
+		name               string
+		line               string
+		want               *Pair
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    "returns an error if the line does not end in a closing bracket",
-			line:    "[[2,[2,[3,4]]],[2,3",
-			want:    nil,
-			wantErr: true,
+			name:               "returns an error if the line does not end in a closing bracket",
+			line:               "[[2,[2,[3,4]]],[2,3",
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 		{
-			name:    "returns an error if the line contains a character that cannot be converted to int",
-			line:    "[[2,[2,[3,4]]],[[4,8],[9,w]]]",
-			want:    nil,
-			wantErr: true,
+			name:               "returns an error if the line contains a character that cannot be converted to int",
+			line:               "[[2,[2,[3,4]]],[[4,8],[9,w]]]",
+			want:               nil,
+			errorAssertionFunc: assert.Error,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			i := 0
 			got, err := parseLine(tt.line, &i)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("parseLine() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseLine() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_part1(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if parseLine returns an error",
@@ -122,8 +117,8 @@ func Test_part1(t *testing.T) {
 				"[9,1]",
 				"[1,9]",
 			},
-			want:    -1,
-			wantErr: true,
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns correct magnitude of snailfish sum, advent of code example 1",
@@ -131,8 +126,8 @@ func Test_part1(t *testing.T) {
 				"[[[[4,3],4],4],[7,[[8,4],9]]]",
 				"[1,1]",
 			},
-			want:    1384,
-			wantErr: false,
+			want:               1384,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns correct magnitude of snailfish sum, advent of code example 2",
@@ -140,8 +135,8 @@ func Test_part1(t *testing.T) {
 				"[9,1]",
 				"[1,9]",
 			},
-			want:    129,
-			wantErr: false,
+			want:               129,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns correct magnitude of snailfish sum, advent of code example 3",
@@ -151,8 +146,8 @@ func Test_part1(t *testing.T) {
 				"[3,3]",
 				"[4,4]",
 			},
-			want:    445,
-			wantErr: false,
+			want:               445,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns correct magnitude of snailfish sum, advent of code example 4",
@@ -163,8 +158,8 @@ func Test_part1(t *testing.T) {
 				"[4,4]",
 				"[5,5]",
 			},
-			want:    791,
-			wantErr: false,
+			want:               791,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns correct magnitude of snailfish sum, advent of code example 5",
@@ -176,8 +171,8 @@ func Test_part1(t *testing.T) {
 				"[5,5]",
 				"[6,6]",
 			},
-			want:    1137,
-			wantErr: false,
+			want:               1137,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns correct magnitude of snailfish sum, advent of code example 6",
@@ -193,8 +188,8 @@ func Test_part1(t *testing.T) {
 				"[[[5,[7,4]],7],1]",
 				"[[[[4,2],2],6],[8,7]]",
 			},
-			want:    3488,
-			wantErr: false,
+			want:               3488,
+			errorAssertionFunc: assert.NoError,
 		},
 		{
 			name: "returns correct magnitude of snailfish sum, advent of code example 7",
@@ -210,30 +205,25 @@ func Test_part1(t *testing.T) {
 				"[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]",
 				"[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]",
 			},
-			want:    4140,
-			wantErr: false,
+			want:               4140,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := part1(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("part1() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("part1() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_part2(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if parseLine returns an error for first line of two considered",
@@ -249,8 +239,8 @@ func Test_part2(t *testing.T) {
 				"[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]",
 				"[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]",
 			},
-			want:    -1,
-			wantErr: true,
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns an error if parseLine returns an error for second line of two considered",
@@ -266,8 +256,8 @@ func Test_part2(t *testing.T) {
 				"[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]",
 				"[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]",
 			},
-			want:    -1,
-			wantErr: true,
+			want:               -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "finds greatest magnitude from sum of two snailfish numbers, advent of code example",
@@ -283,31 +273,26 @@ func Test_part2(t *testing.T) {
 				"[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]",
 				"[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]",
 			},
-			want:    3993,
-			wantErr: false,
+			want:               3993,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := part2(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("part2() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("part2() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
 
 func Test_findSolutions(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    int
-		want1   int
-		wantErr bool
+		name               string
+		input              []string
+		want               int
+		want1              int
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
 			name: "returns an error if part1 returns an error, which happens when an input line cannot be parsed",
@@ -319,9 +304,9 @@ func Test_findSolutions(t *testing.T) {
 				"[[[7,[6,4]],[3,[1,3]]],[[[5,5],1],9]]",
 				"[[6,[[7,3],[3,2]]],[[[3,8],[5,7]],4]]",
 			},
-			want:    -1,
-			want1:   -1,
-			wantErr: true,
+			want:               -1,
+			want1:              -1,
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: "returns part 1 and part 2 answers for given input, advent of code example",
@@ -337,24 +322,17 @@ func Test_findSolutions(t *testing.T) {
 				"[[2,[[7,7],7]],[[5,8],[[9,3],[0,2]]]]",
 				"[[[[5,2],5],[8,[3,7]]],[[5,[7,5]],[4,4]]]",
 			},
-			want:    4140,
-			want1:   3993,
-			wantErr: false,
+			want:               4140,
+			want1:              3993,
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1, err := findSolutions(tt.input)
-			if (err != nil) != tt.wantErr {
-				t.Errorf("findSolutions() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("findSolutions() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("findSolutions() got1 = %v, want %v", got1, tt.want1)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }

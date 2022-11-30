@@ -1,36 +1,25 @@
 package main
 
 import (
-	"reflect"
 	"regexp"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func TestPairList_Len(t *testing.T) {
-	tests := []struct {
-		name string
-		p    PairList
-		want int
-	}{
-		{
-			name: "returns length of p",
-			p: PairList{
-				{Key: "a", Value: 1},
-				{Key: "a", Value: 1},
-				{Key: "a", Value: 1},
-				{Key: "a", Value: 1},
-				{Key: "a", Value: 1},
-			},
-			want: 5,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.p.Len(); got != tt.want {
-				t.Errorf("PairList.Len() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("returns length of p", func(t *testing.T) {
+		p := PairList{
+			{Key: "a", Value: 1},
+			{Key: "a", Value: 1},
+			{Key: "a", Value: 1},
+			{Key: "a", Value: 1},
+			{Key: "a", Value: 1},
+		}
+		got := p.Len()
+		assert.Equal(t, 5, got)
+
+	})
 }
 
 func TestPairList_Swap(t *testing.T) {
@@ -66,9 +55,7 @@ func TestPairList_Swap(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			tt.p.Swap(tt.args.i, tt.args.j)
-			if !reflect.DeepEqual(tt.p, tt.want) {
-				t.Errorf("PairList.Swap() = %v, want %v", tt.p, tt.want)
-			}
+			assert.Equal(t, tt.want, tt.p)
 		})
 	}
 }
@@ -147,9 +134,8 @@ func TestPairList_Less(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := tt.p.Less(tt.args.i, tt.args.j); got != tt.want {
-				t.Errorf("PairList.Less() = %v, want %v", got, tt.want)
-			}
+			got := tt.p.Less(tt.args.i, tt.args.j)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -181,11 +167,11 @@ func Test_roomIsValid(t *testing.T) {
 			want: false,
 		},
 	}
+	re := regexp.MustCompile(`[a-z]`)
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			if got := roomIsValid(tt.line, regexp.MustCompile(`[a-z]`)); got != tt.want {
-				t.Errorf("roomIsValid() = %v, want %v", got, tt.want)
-			}
+			got := roomIsValid(tt.line, re)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -216,28 +202,24 @@ func Test_getValidRooms(t *testing.T) {
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, got1 := getValidRooms(tt.input, regexp.MustCompile(`\d+`))
-			if !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("getValidRooms() got = %v, want %v", got, tt.want)
-			}
-			if got1 != tt.want1 {
-				t.Errorf("getValidRooms() got1 = %v, want %v", got1, tt.want1)
-			}
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, got1)
 		})
 	}
 }
 
 func Test_validateRooms(t *testing.T) {
 	tests := []struct {
-		name    string
-		input   []string
-		want    string
-		wantErr bool
+		name               string
+		input              []string
+		want               string
+		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name:    `returns an error if no decrypted rooms contain the string "northpole"`,
-			input:   []string{"some-random-string-1"},
-			want:    "",
-			wantErr: true,
+			name:               `returns an error if no decrypted rooms contain the string "northpole"`,
+			input:              []string{"some-random-string-1"},
+			want:               "",
+			errorAssertionFunc: assert.Error,
 		},
 		{
 			name: `returns room idof the first decrypted room to contain the string "northpole"`,
@@ -247,20 +229,15 @@ func Test_validateRooms(t *testing.T) {
 				"northpole-26",
 				"south-pole-25",
 			},
-			want:    "26",
-			wantErr: false,
+			want:               "26",
+			errorAssertionFunc: assert.NoError,
 		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := validateRooms(tt.input, regexp.MustCompile(`\d+`))
-			if (err != nil) != tt.wantErr {
-				t.Errorf("validateRooms() error = %v, wantErr %v", err, tt.wantErr)
-				return
-			}
-			if got != tt.want {
-				t.Errorf("validateRooms() = %v, want %v", got, tt.want)
-			}
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

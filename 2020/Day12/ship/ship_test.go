@@ -3,9 +3,10 @@ package ship
 import (
 	"Advent-of-Code/graph"
 	"fmt"
-	"reflect"
 	"strings"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 type turnShipTestArgs struct {
@@ -81,9 +82,7 @@ func TestShip_turnShip(t *testing.T) {
 				FacingDir: tt.facingDir,
 			}
 			s.turnShip(tt.args.d, tt.args.val)
-			if !reflect.DeepEqual(s.FacingDir, tt.want) {
-				t.Errorf("parseBag() s.FacingDir = %s, want %s", s.FacingDir, tt.want)
-			}
+			assert.Equal(t, tt.want, s.FacingDir)
 		})
 	}
 }
@@ -216,9 +215,7 @@ func TestShip_MoveShip(t *testing.T) {
 				FacingDir: tt.fields.FacingDir,
 			}
 			s.MoveShip(tt.args.d, tt.args.val)
-			if !reflect.DeepEqual(s, tt.want) {
-				t.Errorf("parseBag() s = %v, want %v", s, tt.want)
-			}
+			assert.Equal(t, tt.want, s)
 		})
 	}
 }
@@ -303,9 +300,8 @@ func TestShip_CalculateDistance(t *testing.T) {
 				Co:        tt.fields.Co,
 				FacingDir: tt.fields.FacingDir,
 			}
-			if got := s.CalculateDistance(); got != tt.want {
-				t.Errorf("Ship.CalculateDistance() = %v, want %v", got, tt.want)
-			}
+			got := s.CalculateDistance()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

@@ -2,43 +2,32 @@ package main
 
 import (
 	"Advent-of-Code/graph"
-	"reflect"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
 )
 
 func Test_parseInput(t *testing.T) {
-	tests := []struct {
-		name string
-		arg  []string
-		want Grid
-	}{
-		{
-			name: "correctly parses a simple grid",
-			arg: []string{
-				"#.#",
-				"..#",
+	t.Run("correctly parses a simple grid", func(t *testing.T) {
+		want := Grid{
+			Height: 1,
+			Width:  2,
+			Lights: Lights{
+				{X: 0, Y: 0}: "#",
+				{X: 1, Y: 0}: ".",
+				{X: 2, Y: 0}: "#",
+				{X: 0, Y: 1}: ".",
+				{X: 1, Y: 1}: ".",
+				{X: 2, Y: 1}: "#",
 			},
-			want: Grid{
-				Height: 1,
-				Width:  2,
-				Lights: Lights{
-					{X: 0, Y: 0}: "#",
-					{X: 1, Y: 0}: ".",
-					{X: 2, Y: 0}: "#",
-					{X: 0, Y: 1}: ".",
-					{X: 1, Y: 1}: ".",
-					{X: 2, Y: 1}: "#",
-				},
-			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := parseInput(tt.arg); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("parseInput() = %v, want %v", got, tt.want)
-			}
+		}
+		got := parseInput([]string{
+			"#.#",
+			"..#",
 		})
-	}
+		assert.Equal(t, want, got)
+
+	})
 }
 
 func TestGrid_LightStaysOn(t *testing.T) {
@@ -205,9 +194,8 @@ func TestGrid_LightStaysOn(t *testing.T) {
 				Height: tt.fields.Height,
 				Width:  tt.fields.Width,
 			}
-			if got := g.LightStaysOn(tt.arg); got != tt.want {
-				t.Errorf("Grid.LightStaysOn() = %v, want %v", got, tt.want)
-			}
+			got := g.LightStaysOn(tt.arg)
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -564,9 +552,7 @@ func TestGrid_ChangeLights(t *testing.T) {
 				Width:  tt.fields.Width,
 			}
 			g.ChangeLights()
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Grid.ChangeLights() = %v, want %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
@@ -638,9 +624,8 @@ func TestGrid_CountLightsOn(t *testing.T) {
 				Height: tt.fields.Height,
 				Width:  tt.fields.Width,
 			}
-			if got := g.CountLightsOn(); got != tt.want {
-				t.Errorf("Grid.CountLightsOn() = %v, want %v", got, tt.want)
-			}
+			got := g.CountLightsOn()
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }
@@ -764,307 +749,215 @@ func TestGrid_TurnCornersOn(t *testing.T) {
 				Width:  tt.fields.Width,
 			}
 			g.TurnCornersOn()
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Grid.TurnCornersOn() = %v, want %v", g, tt.want)
-			}
+			assert.Equal(t, tt.want, g)
 		})
 	}
 }
 
 func TestGrid_RunStepsPart1(t *testing.T) {
-	type fields struct {
-		Lights Lights
-		Height int
-		Width  int
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		arg    int
-		want   *Grid
-	}{
-		{
-			name: "runs steps for part 1, advent of code example",
-			fields: fields{
-				Lights: Lights{
-					{X: 0, Y: 0}: ".",
-					{X: 1, Y: 0}: "#",
-					{X: 2, Y: 0}: ".",
-					{X: 3, Y: 0}: "#",
-					{X: 4, Y: 0}: ".",
-					{X: 5, Y: 0}: "#",
-					{X: 0, Y: 1}: ".",
-					{X: 1, Y: 1}: ".",
-					{X: 2, Y: 1}: ".",
-					{X: 3, Y: 1}: "#",
-					{X: 4, Y: 1}: "#",
-					{X: 5, Y: 1}: ".",
-					{X: 0, Y: 2}: "#",
-					{X: 1, Y: 2}: ".",
-					{X: 2, Y: 2}: ".",
-					{X: 3, Y: 2}: ".",
-					{X: 4, Y: 2}: ".",
-					{X: 5, Y: 2}: "#",
-					{X: 0, Y: 3}: ".",
-					{X: 1, Y: 3}: ".",
-					{X: 2, Y: 3}: "#",
-					{X: 3, Y: 3}: ".",
-					{X: 4, Y: 3}: ".",
-					{X: 5, Y: 3}: ".",
-					{X: 0, Y: 4}: "#",
-					{X: 1, Y: 4}: ".",
-					{X: 2, Y: 4}: "#",
-					{X: 3, Y: 4}: ".",
-					{X: 4, Y: 4}: ".",
-					{X: 5, Y: 4}: "#",
-					{X: 0, Y: 5}: "#",
-					{X: 1, Y: 5}: "#",
-					{X: 2, Y: 5}: "#",
-					{X: 3, Y: 5}: "#",
-					{X: 4, Y: 5}: ".",
-					{X: 5, Y: 5}: ".",
-				},
+	t.Run("runs steps for part 1, advent of code example", func(t *testing.T) {
+		g := &Grid{
+			Lights: Lights{
+				{X: 0, Y: 0}: ".",
+				{X: 1, Y: 0}: "#",
+				{X: 2, Y: 0}: ".",
+				{X: 3, Y: 0}: "#",
+				{X: 4, Y: 0}: ".",
+				{X: 5, Y: 0}: "#",
+				{X: 0, Y: 1}: ".",
+				{X: 1, Y: 1}: ".",
+				{X: 2, Y: 1}: ".",
+				{X: 3, Y: 1}: "#",
+				{X: 4, Y: 1}: "#",
+				{X: 5, Y: 1}: ".",
+				{X: 0, Y: 2}: "#",
+				{X: 1, Y: 2}: ".",
+				{X: 2, Y: 2}: ".",
+				{X: 3, Y: 2}: ".",
+				{X: 4, Y: 2}: ".",
+				{X: 5, Y: 2}: "#",
+				{X: 0, Y: 3}: ".",
+				{X: 1, Y: 3}: ".",
+				{X: 2, Y: 3}: "#",
+				{X: 3, Y: 3}: ".",
+				{X: 4, Y: 3}: ".",
+				{X: 5, Y: 3}: ".",
+				{X: 0, Y: 4}: "#",
+				{X: 1, Y: 4}: ".",
+				{X: 2, Y: 4}: "#",
+				{X: 3, Y: 4}: ".",
+				{X: 4, Y: 4}: ".",
+				{X: 5, Y: 4}: "#",
+				{X: 0, Y: 5}: "#",
+				{X: 1, Y: 5}: "#",
+				{X: 2, Y: 5}: "#",
+				{X: 3, Y: 5}: "#",
+				{X: 4, Y: 5}: ".",
+				{X: 5, Y: 5}: ".",
 			},
-			arg: 4,
-			want: &Grid{
-				Lights: Lights{
-					{X: 0, Y: 0}: ".",
-					{X: 1, Y: 0}: ".",
-					{X: 2, Y: 0}: ".",
-					{X: 3, Y: 0}: ".",
-					{X: 4, Y: 0}: ".",
-					{X: 5, Y: 0}: ".",
-					{X: 0, Y: 1}: ".",
-					{X: 1, Y: 1}: ".",
-					{X: 2, Y: 1}: ".",
-					{X: 3, Y: 1}: ".",
-					{X: 4, Y: 1}: ".",
-					{X: 5, Y: 1}: ".",
-					{X: 0, Y: 2}: ".",
-					{X: 1, Y: 2}: ".",
-					{X: 2, Y: 2}: "#",
-					{X: 3, Y: 2}: "#",
-					{X: 4, Y: 2}: ".",
-					{X: 5, Y: 2}: ".",
-					{X: 0, Y: 3}: ".",
-					{X: 1, Y: 3}: ".",
-					{X: 2, Y: 3}: "#",
-					{X: 3, Y: 3}: "#",
-					{X: 4, Y: 3}: ".",
-					{X: 5, Y: 3}: ".",
-					{X: 0, Y: 4}: ".",
-					{X: 1, Y: 4}: ".",
-					{X: 2, Y: 4}: ".",
-					{X: 3, Y: 4}: ".",
-					{X: 4, Y: 4}: ".",
-					{X: 5, Y: 4}: ".",
-					{X: 0, Y: 5}: ".",
-					{X: 1, Y: 5}: ".",
-					{X: 2, Y: 5}: ".",
-					{X: 3, Y: 5}: ".",
-					{X: 4, Y: 5}: ".",
-					{X: 5, Y: 5}: ".",
-				},
+		}
+		want := &Grid{
+			Lights: Lights{
+				{X: 0, Y: 0}: ".",
+				{X: 1, Y: 0}: ".",
+				{X: 2, Y: 0}: ".",
+				{X: 3, Y: 0}: ".",
+				{X: 4, Y: 0}: ".",
+				{X: 5, Y: 0}: ".",
+				{X: 0, Y: 1}: ".",
+				{X: 1, Y: 1}: ".",
+				{X: 2, Y: 1}: ".",
+				{X: 3, Y: 1}: ".",
+				{X: 4, Y: 1}: ".",
+				{X: 5, Y: 1}: ".",
+				{X: 0, Y: 2}: ".",
+				{X: 1, Y: 2}: ".",
+				{X: 2, Y: 2}: "#",
+				{X: 3, Y: 2}: "#",
+				{X: 4, Y: 2}: ".",
+				{X: 5, Y: 2}: ".",
+				{X: 0, Y: 3}: ".",
+				{X: 1, Y: 3}: ".",
+				{X: 2, Y: 3}: "#",
+				{X: 3, Y: 3}: "#",
+				{X: 4, Y: 3}: ".",
+				{X: 5, Y: 3}: ".",
+				{X: 0, Y: 4}: ".",
+				{X: 1, Y: 4}: ".",
+				{X: 2, Y: 4}: ".",
+				{X: 3, Y: 4}: ".",
+				{X: 4, Y: 4}: ".",
+				{X: 5, Y: 4}: ".",
+				{X: 0, Y: 5}: ".",
+				{X: 1, Y: 5}: ".",
+				{X: 2, Y: 5}: ".",
+				{X: 3, Y: 5}: ".",
+				{X: 4, Y: 5}: ".",
+				{X: 5, Y: 5}: ".",
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			g := &Grid{
-				Lights: tt.fields.Lights,
-				Height: tt.fields.Height,
-				Width:  tt.fields.Width,
-			}
-			g.RunStepsPart1(tt.arg)
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Grid.RunStepsPart1() = %v, want %v", g, tt.want)
-			}
-		})
-	}
+		}
+		g.RunStepsPart1(4)
+		assert.Equal(t, want, g)
+	})
 }
 
 func TestGrid_RunStepsPart2(t *testing.T) {
-	type fields struct {
-		Lights Lights
-		Height int
-		Width  int
-	}
-	tests := []struct {
-		name   string
-		fields fields
-		arg    int
-		want   *Grid
-	}{
-		{
-			name: "runs steps for part 2, advent of code example",
-			fields: fields{
-				Lights: Lights{
-					{X: 0, Y: 0}: "#",
-					{X: 1, Y: 0}: "#",
-					{X: 2, Y: 0}: ".",
-					{X: 3, Y: 0}: "#",
-					{X: 4, Y: 0}: ".",
-					{X: 5, Y: 0}: "#",
-					{X: 0, Y: 1}: ".",
-					{X: 1, Y: 1}: ".",
-					{X: 2, Y: 1}: ".",
-					{X: 3, Y: 1}: "#",
-					{X: 4, Y: 1}: "#",
-					{X: 5, Y: 1}: ".",
-					{X: 0, Y: 2}: "#",
-					{X: 1, Y: 2}: ".",
-					{X: 2, Y: 2}: ".",
-					{X: 3, Y: 2}: ".",
-					{X: 4, Y: 2}: ".",
-					{X: 5, Y: 2}: "#",
-					{X: 0, Y: 3}: ".",
-					{X: 1, Y: 3}: ".",
-					{X: 2, Y: 3}: "#",
-					{X: 3, Y: 3}: ".",
-					{X: 4, Y: 3}: ".",
-					{X: 5, Y: 3}: ".",
-					{X: 0, Y: 4}: "#",
-					{X: 1, Y: 4}: ".",
-					{X: 2, Y: 4}: "#",
-					{X: 3, Y: 4}: ".",
-					{X: 4, Y: 4}: ".",
-					{X: 5, Y: 4}: "#",
-					{X: 0, Y: 5}: "#",
-					{X: 1, Y: 5}: "#",
-					{X: 2, Y: 5}: "#",
-					{X: 3, Y: 5}: "#",
-					{X: 4, Y: 5}: ".",
-					{X: 5, Y: 5}: "#",
-				},
-				Height: 5,
-				Width:  5,
+	t.Run("runs steps for part 2, advent of code example", func(t *testing.T) {
+		g := &Grid{
+			Lights: Lights{
+				{X: 0, Y: 0}: "#",
+				{X: 1, Y: 0}: "#",
+				{X: 2, Y: 0}: ".",
+				{X: 3, Y: 0}: "#",
+				{X: 4, Y: 0}: ".",
+				{X: 5, Y: 0}: "#",
+				{X: 0, Y: 1}: ".",
+				{X: 1, Y: 1}: ".",
+				{X: 2, Y: 1}: ".",
+				{X: 3, Y: 1}: "#",
+				{X: 4, Y: 1}: "#",
+				{X: 5, Y: 1}: ".",
+				{X: 0, Y: 2}: "#",
+				{X: 1, Y: 2}: ".",
+				{X: 2, Y: 2}: ".",
+				{X: 3, Y: 2}: ".",
+				{X: 4, Y: 2}: ".",
+				{X: 5, Y: 2}: "#",
+				{X: 0, Y: 3}: ".",
+				{X: 1, Y: 3}: ".",
+				{X: 2, Y: 3}: "#",
+				{X: 3, Y: 3}: ".",
+				{X: 4, Y: 3}: ".",
+				{X: 5, Y: 3}: ".",
+				{X: 0, Y: 4}: "#",
+				{X: 1, Y: 4}: ".",
+				{X: 2, Y: 4}: "#",
+				{X: 3, Y: 4}: ".",
+				{X: 4, Y: 4}: ".",
+				{X: 5, Y: 4}: "#",
+				{X: 0, Y: 5}: "#",
+				{X: 1, Y: 5}: "#",
+				{X: 2, Y: 5}: "#",
+				{X: 3, Y: 5}: "#",
+				{X: 4, Y: 5}: ".",
+				{X: 5, Y: 5}: "#",
 			},
-			arg: 5,
-			want: &Grid{
-				Lights: Lights{
-					{X: 0, Y: 0}: "#",
-					{X: 1, Y: 0}: "#",
-					{X: 2, Y: 0}: ".",
-					{X: 3, Y: 0}: "#",
-					{X: 4, Y: 0}: "#",
-					{X: 5, Y: 0}: "#",
-					{X: 0, Y: 1}: ".",
-					{X: 1, Y: 1}: "#",
-					{X: 2, Y: 1}: "#",
-					{X: 3, Y: 1}: ".",
-					{X: 4, Y: 1}: ".",
-					{X: 5, Y: 1}: "#",
-					{X: 0, Y: 2}: ".",
-					{X: 1, Y: 2}: "#",
-					{X: 2, Y: 2}: "#",
-					{X: 3, Y: 2}: ".",
-					{X: 4, Y: 2}: ".",
-					{X: 5, Y: 2}: ".",
-					{X: 0, Y: 3}: ".",
-					{X: 1, Y: 3}: "#",
-					{X: 2, Y: 3}: "#",
-					{X: 3, Y: 3}: ".",
-					{X: 4, Y: 3}: ".",
-					{X: 5, Y: 3}: ".",
-					{X: 0, Y: 4}: "#",
-					{X: 1, Y: 4}: ".",
-					{X: 2, Y: 4}: "#",
-					{X: 3, Y: 4}: ".",
-					{X: 4, Y: 4}: ".",
-					{X: 5, Y: 4}: ".",
-					{X: 0, Y: 5}: "#",
-					{X: 1, Y: 5}: "#",
-					{X: 2, Y: 5}: ".",
-					{X: 3, Y: 5}: ".",
-					{X: 4, Y: 5}: ".",
-					{X: 5, Y: 5}: "#",
-				},
-				Height: 5,
-				Width:  5,
+			Height: 5,
+			Width:  5,
+		}
+		want := &Grid{
+			Lights: Lights{
+				{X: 0, Y: 0}: "#",
+				{X: 1, Y: 0}: "#",
+				{X: 2, Y: 0}: ".",
+				{X: 3, Y: 0}: "#",
+				{X: 4, Y: 0}: "#",
+				{X: 5, Y: 0}: "#",
+				{X: 0, Y: 1}: ".",
+				{X: 1, Y: 1}: "#",
+				{X: 2, Y: 1}: "#",
+				{X: 3, Y: 1}: ".",
+				{X: 4, Y: 1}: ".",
+				{X: 5, Y: 1}: "#",
+				{X: 0, Y: 2}: ".",
+				{X: 1, Y: 2}: "#",
+				{X: 2, Y: 2}: "#",
+				{X: 3, Y: 2}: ".",
+				{X: 4, Y: 2}: ".",
+				{X: 5, Y: 2}: ".",
+				{X: 0, Y: 3}: ".",
+				{X: 1, Y: 3}: "#",
+				{X: 2, Y: 3}: "#",
+				{X: 3, Y: 3}: ".",
+				{X: 4, Y: 3}: ".",
+				{X: 5, Y: 3}: ".",
+				{X: 0, Y: 4}: "#",
+				{X: 1, Y: 4}: ".",
+				{X: 2, Y: 4}: "#",
+				{X: 3, Y: 4}: ".",
+				{X: 4, Y: 4}: ".",
+				{X: 5, Y: 4}: ".",
+				{X: 0, Y: 5}: "#",
+				{X: 1, Y: 5}: "#",
+				{X: 2, Y: 5}: ".",
+				{X: 3, Y: 5}: ".",
+				{X: 4, Y: 5}: ".",
+				{X: 5, Y: 5}: "#",
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			g := &Grid{
-				Lights: tt.fields.Lights,
-				Height: tt.fields.Height,
-				Width:  tt.fields.Width,
-			}
-			g.RunStepsPart2(tt.arg)
-			if !reflect.DeepEqual(g, tt.want) {
-				t.Errorf("Grid.RunStepsPart2() = %v, want %v", g, tt.want)
-			}
-		})
-	}
+			Height: 5,
+			Width:  5,
+		}
+		g.RunStepsPart2(5)
+		assert.Equal(t, want, g)
+	})
 }
 
 func Test_runAndCountLightsPart1(t *testing.T) {
-	type args struct {
-		input []string
-		steps int
-	}
-	tests := []struct {
-		name string
-		args args
-		want int
-	}{
-		{
-			name: "runs steps and counts lights for part 1, advent of code example",
-			args: args{
-				input: []string{
-					".#.#.#",
-					"...##.",
-					"#....#",
-					"..#...",
-					"#.#..#",
-					"####..",
-				},
-				steps: 4,
-			},
-			want: 4,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := runAndCountLightsPart1(tt.args.input, tt.args.steps); got != tt.want {
-				t.Errorf("runAndCountLightsPart1() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("runs steps and counts lights for part 1, advent of code example", func(t *testing.T) {
+		input := []string{
+			".#.#.#",
+			"...##.",
+			"#....#",
+			"..#...",
+			"#.#..#",
+			"####..",
+		}
+		got := runAndCountLightsPart1(input, 4)
+		assert.Equal(t, 4, got)
+	})
 }
 
 func Test_runAndCountLightsPart2(t *testing.T) {
-	type args struct {
-		input []string
-		steps int
-	}
-	tests := []struct {
-		name string
-		args args
-		want int
-	}{
-		{
-			name: "runs steps and counts lights for part 2, advent of code example",
-			args: args{
-				input: []string{
-					".#.#.#",
-					"...##.",
-					"#....#",
-					"..#...",
-					"#.#..#",
-					"####..",
-				},
-				steps: 5,
-			},
-			want: 17,
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := runAndCountLightsPart2(tt.args.input, tt.args.steps); got != tt.want {
-				t.Errorf("runAndCountLightsPart2() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+	t.Run("runs steps and counts lights for part 2, advent of code example", func(t *testing.T) {
+		input := []string{
+			".#.#.#",
+			"...##.",
+			"#....#",
+			"..#...",
+			"#.#..#",
+			"####..",
+		}
+		got := runAndCountLightsPart2(input, 5)
+		assert.Equal(t, 17, got)
+	})
 }
