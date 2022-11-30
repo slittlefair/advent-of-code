@@ -36,9 +36,6 @@ func TestMin(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got := Min(tt.x, tt.y)
 			assert.Equal(t, tt.want, got)
-			if got != tt.want {
-				t.Errorf("Min() = %v, want %v", got, tt.want)
-			}
 		})
 	}
 }

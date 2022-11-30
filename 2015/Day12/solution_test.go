@@ -109,9 +109,7 @@ func Test_findNonRedNumbers(t *testing.T) {
 		t.Run(tt.name, func(t *testing.T) {
 			got, err := findNonRedNumbers(tt.input)
 			tt.errorAssertFunc(t, err)
-			if got != tt.want {
-				t.Errorf("findNonRedNumbers() = %v, want %v", got, tt.want)
-			}
+			assert.Equal(t, tt.want, got)
 		})
 	}
 }

@@ -3,61 +3,47 @@ package main
 import (
 	"Advent-of-Code/graph"
 	"Advent-of-Code/maths"
-	"reflect"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_setupSolution(t *testing.T) {
-	tests := []struct {
-		name  string
-		input string
-		want  solution
-	}{
-		{
-			name:  "creates a solution struct from given input",
-			input: "helloworld",
-			want: solution{
-				currentRoom:        graph.Co{X: 0, Y: 0},
-				input:              "helloworld",
-				shortestPathLength: maths.Infinity,
-				directions: directions{
-					{letter: "U", dir: graph.Co{Y: -1}},
-					{letter: "D", dir: graph.Co{Y: 1}},
-					{letter: "L", dir: graph.Co{X: -1}},
-					{letter: "R", dir: graph.Co{X: 1}},
-				},
-				floors: floors{
-					{X: 0, Y: 0}: struct{}{},
-					{X: 1, Y: 0}: struct{}{},
-					{X: 2, Y: 0}: struct{}{},
-					{X: 3, Y: 0}: struct{}{},
-					{X: 0, Y: 1}: struct{}{},
-					{X: 1, Y: 1}: struct{}{},
-					{X: 2, Y: 1}: struct{}{},
-					{X: 3, Y: 1}: struct{}{},
-					{X: 0, Y: 2}: struct{}{},
-					{X: 1, Y: 2}: struct{}{},
-					{X: 2, Y: 2}: struct{}{},
-					{X: 3, Y: 2}: struct{}{},
-					{X: 0, Y: 3}: struct{}{},
-					{X: 1, Y: 3}: struct{}{},
-					{X: 2, Y: 3}: struct{}{},
-					{X: 3, Y: 3}: struct{}{},
-				},
-				shortestPath: "",
-				longestPath:  "",
+	t.Run("creates a solution struct from given input", func(t *testing.T) {
+		want := solution{
+			currentRoom:        graph.Co{X: 0, Y: 0},
+			input:              "helloworld",
+			shortestPathLength: maths.Infinity,
+			directions: directions{
+				{letter: "U", dir: graph.Co{Y: -1}},
+				{letter: "D", dir: graph.Co{Y: 1}},
+				{letter: "L", dir: graph.Co{X: -1}},
+				{letter: "R", dir: graph.Co{X: 1}},
 			},
-		},
-	}
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			if got := setupSolution(tt.input); !reflect.DeepEqual(got, tt.want) {
-				t.Errorf("setupSolution() = %v, want %v", got, tt.want)
-			}
-		})
-	}
+			floors: floors{
+				{X: 0, Y: 0}: struct{}{},
+				{X: 1, Y: 0}: struct{}{},
+				{X: 2, Y: 0}: struct{}{},
+				{X: 3, Y: 0}: struct{}{},
+				{X: 0, Y: 1}: struct{}{},
+				{X: 1, Y: 1}: struct{}{},
+				{X: 2, Y: 1}: struct{}{},
+				{X: 3, Y: 1}: struct{}{},
+				{X: 0, Y: 2}: struct{}{},
+				{X: 1, Y: 2}: struct{}{},
+				{X: 2, Y: 2}: struct{}{},
+				{X: 3, Y: 2}: struct{}{},
+				{X: 0, Y: 3}: struct{}{},
+				{X: 1, Y: 3}: struct{}{},
+				{X: 2, Y: 3}: struct{}{},
+				{X: 3, Y: 3}: struct{}{},
+			},
+			shortestPath: "",
+			longestPath:  "",
+		}
+		got := setupSolution("helloworld")
+		assert.Equal(t, want, got)
+	})
 }
 
 func Test_solution_reachedEnd(t *testing.T) {
