@@ -1,6 +1,7 @@
-package strings
+package strings_test
 
 import (
+	"Advent-of-Code/strings"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -25,7 +26,7 @@ func TestIsUpper(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := IsUpper(tt.s)
+			got := strings.IsUpper(tt.s)
 			assert.Equal(t, tt.want, got)
 		})
 	}
@@ -50,7 +51,7 @@ func TestIsLower(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := IsLower(tt.s)
+			got := strings.IsLower(tt.s)
 			assert.Equal(t, tt.want, got)
 		})
 	}

@@ -1,8 +1,9 @@
-package spellfight
+package spellfight_test
 
 import (
 	"Advent-of-Code/2015/Day21/martial"
 	"Advent-of-Code/2015/Day22/mage"
+	"Advent-of-Code/2015/Day22/spellfight"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -58,7 +59,7 @@ func TestMartialAttack(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			MartialAttack(tt.args.boss, tt.args.player)
+			spellfight.MartialAttack(tt.args.boss, tt.args.player)
 			assert.Equal(t, tt.want, tt.args.boss)
 			assert.Equal(t, tt.want1, tt.args.player)
 		})
@@ -245,7 +246,7 @@ func TestSpellAttack(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := SpellAttack(tt.args.player, tt.args.boss, tt.args.spell, tt.args.effects)
+			got := spellfight.SpellAttack(tt.args.player, tt.args.boss, tt.args.spell, tt.args.effects)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.want1, tt.args.player)
 			assert.Equal(t, tt.want2, tt.args.boss)
@@ -488,7 +489,7 @@ func TestApplyEffects(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ApplyEffects(tt.args.player, tt.args.boss, tt.args.effects)
+			got := spellfight.ApplyEffects(tt.args.player, tt.args.boss, tt.args.effects)
 			for k, e := range got {
 				assert.Equal(t, tt.want[k].Active, e.Active)
 				assert.Equal(t, tt.want[k].Duration, e.Duration)
@@ -528,7 +529,7 @@ func TestManaSpent_CompareMana(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ms := &ManaSpent{
+			ms := &spellfight.ManaSpent{
 				LowestManaSpent: tt.LowestManaSpent,
 			}
 			ms.CompareMana(tt.currentMana)
@@ -661,7 +662,7 @@ func TestManaSpent_SpellRound(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			ms := &ManaSpent{
+			ms := &spellfight.ManaSpent{
 				LowestManaSpent: tt.LowestManaSpent,
 			}
 			ms.SpellRound(tt.args.player, tt.args.boss, tt.args.spell, tt.args.effects, tt.args.hardMode)
@@ -704,7 +705,7 @@ func TestSpellFight(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := SpellFight(tt.args.boss, tt.args.bossHP, tt.args.hardMode)
+			got := spellfight.SpellFight(tt.args.boss, tt.args.bossHP, tt.args.hardMode)
 			assert.Equal(t, tt.want, got)
 		})
 	}
@@ -739,7 +740,7 @@ func TestRunSpellFights(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := RunSpellFights(tt.input)
+			got, got1, err := spellfight.RunSpellFights(tt.input)
 			tt.errorAssertionFunc(t, err)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.want1, got1)

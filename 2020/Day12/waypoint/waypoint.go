@@ -7,7 +7,7 @@ import (
 
 type Waypoint graph.Co
 
-func (w *Waypoint) turnWaypointLeft(val int) {
+func (w *Waypoint) TurnWaypointLeft(val int) {
 	// Rotated around the origin 90 degrees anticlockwise point M (h, k) takes the image M' (-k, h)
 	for i := 0; i < val; i += 90 {
 		newWaypoint := graph.Co{
@@ -19,7 +19,7 @@ func (w *Waypoint) turnWaypointLeft(val int) {
 	}
 }
 
-func (w *Waypoint) turnWaypointRight(val int) {
+func (w *Waypoint) TurnWaypointRight(val int) {
 	// Rotated around the origin 90 degrees clockwise point M (h, k) takes the image M' (k, -h)
 	for i := 0; i < val; i += 90 {
 		newWaypoint := graph.Co{
@@ -42,9 +42,9 @@ func (w *Waypoint) MoveWaypoint(s *ship.Ship, d string, val int) {
 	case "W":
 		w.X -= val
 	case "L":
-		w.turnWaypointLeft(val)
+		w.TurnWaypointLeft(val)
 	case "R":
-		w.turnWaypointRight(val)
+		w.TurnWaypointRight(val)
 	case "F":
 		for i := 0; i < val; i++ {
 			if w.X > 0 {

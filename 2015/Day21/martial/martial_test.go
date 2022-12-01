@@ -1,6 +1,7 @@
-package martial
+package martial_test
 
 import (
+	"Advent-of-Code/2015/Day21/martial"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -14,7 +15,7 @@ func TestParseBoss(t *testing.T) {
 	tests := []struct {
 		name               string
 		args               args
-		want               *Martial
+		want               *martial.Martial
 		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
@@ -193,7 +194,7 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: true,
 			},
-			want: &Martial{
+			want: &martial.Martial{
 				HP: 3, Damage: 9, Armour: 8,
 			},
 			errorAssertionFunc: assert.NoError,
@@ -207,7 +208,7 @@ func TestParseBoss(t *testing.T) {
 				},
 				hasArmour: false,
 			},
-			want: &Martial{
+			want: &martial.Martial{
 				HP: 10, Damage: 1001,
 			},
 			errorAssertionFunc: assert.NoError,
@@ -215,7 +216,7 @@ func TestParseBoss(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ParseBoss(tt.args.input, tt.args.hasArmour)
+			got, err := martial.ParseBoss(tt.args.input, tt.args.hasArmour)
 			tt.errorAssertionFunc(t, err)
 			assert.Equal(t, tt.want, got)
 		})

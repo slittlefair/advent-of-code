@@ -1,6 +1,7 @@
-package slice
+package slice_test
 
 import (
+	"Advent-of-Code/slice"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -42,7 +43,7 @@ func TestPermutations(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Permutations(tt.arg)
+			got := slice.Permutations(tt.arg)
 			assert.ElementsMatch(t, tt.want, got)
 		})
 	}
@@ -85,7 +86,7 @@ func TestIntSlicesAreEqual(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := IntSlicesAreEqual(tt.args.slice1, tt.args.slice2)
+			got := slice.IntSlicesAreEqual(tt.args.slice1, tt.args.slice2)
 			assert.Equal(t, tt.want, got)
 		})
 	}
@@ -132,7 +133,7 @@ func TestRemove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Remove(tt.args.s, tt.args.i)
+			got := slice.Remove(tt.args.s, tt.args.i)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.want1, tt.args.s)
 		})
@@ -167,7 +168,7 @@ func TestFindExtremities(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := FindExtremities(tt.nums)
+			got, got1 := slice.FindExtremities(tt.nums)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.want1, got1)
 		})

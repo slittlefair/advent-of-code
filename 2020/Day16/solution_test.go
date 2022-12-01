@@ -316,7 +316,6 @@ func TestTicketFields_part1(t *testing.T) {
 }
 
 func TestTicketFields_part2(t *testing.T) {
-
 	t.Run("advent of code example", func(t *testing.T) {
 		tf := TicketFields{
 			"departure class": FieldParams{

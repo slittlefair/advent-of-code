@@ -1,7 +1,8 @@
-package game
+package game_test
 
 import (
 	"Advent-of-Code/2021/Day04/card"
+	"Advent-of-Code/2021/Day04/game"
 	"Advent-of-Code/graph"
 	"testing"
 
@@ -30,7 +31,7 @@ func Test_parseNums(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := parseNums(tt.str)
+			got, err := game.ParseNums(tt.str)
 			tt.errorAssertionFunc(t, err)
 			assert.Equal(t, tt.want, got)
 		})
@@ -128,11 +129,11 @@ func TestParseInput(t *testing.T) {
 	tests := []struct {
 		name               string
 		input              []string
-		want               *Game
+		want               *game.Game
 		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
-			name: "returns an error if parseNums returns an error",
+			name: "returns an error if game.ParseNums returns an error",
 			input: []string{
 				"1,24,two,7,12",
 				"",
@@ -165,7 +166,7 @@ func TestParseInput(t *testing.T) {
 				"22 11 13  6  5",
 				"2  0 12  3  7",
 			},
-			want: &Game{
+			want: &game.Game{
 				CardsNotWon: map[*card.Card]struct{}{
 					card0: {},
 					card1: {},
@@ -181,7 +182,7 @@ func TestParseInput(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := ParseInput(tt.input)
+			got, err := game.ParseInput(tt.input)
 			tt.errorAssertionFunc(t, err)
 			if err == nil {
 				assert.Equal(t, tt.want.Nums, got.Nums)
@@ -522,7 +523,7 @@ func TestGame_PlayGame(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			g := &Game{
+			g := &game.Game{
 				CardsNotWon: tt.fields.CardsNotWon,
 				Cards:       tt.fields.Cards,
 				Nums:        tt.fields.Nums,

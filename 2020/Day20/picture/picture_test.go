@@ -1,6 +1,7 @@
-package picture
+package picture_test
 
 import (
+	"Advent-of-Code/2020/Day20/picture"
 	tile "Advent-of-Code/2020/Day20/tile"
 	"Advent-of-Code/graph"
 	"testing"
@@ -27,7 +28,7 @@ func TestPicture_PopulateTiles(t *testing.T) {
 			"..",
 			"..",
 		}
-		want := Picture{
+		want := picture.Picture{
 			Tiles: []tile.Tile{
 				{
 					ID:     "7",
@@ -75,24 +76,23 @@ func TestPicture_PopulateTiles(t *testing.T) {
 				},
 			},
 		}
-		p := &Picture{}
+		p := &picture.Picture{}
 		p.PopulateTiles(input)
 		assert.Equal(t, want, *p)
-
 	})
 }
 
 func TestPicture_FindMatchesForTile(t *testing.T) {
 	tests := []struct {
 		name  string
-		p     Picture
+		p     picture.Picture
 		t     tile.Tile
 		index int
-		want  Picture
+		want  picture.Picture
 	}{
 		{
 			name: "skips tile in picture if its ID matches the given tile ID",
-			p: Picture{
+			p: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-1",
@@ -103,7 +103,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				ID: "tile-1",
 			},
 			index: 0,
-			want: Picture{
+			want: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-1",
@@ -113,7 +113,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "skips tile in picture if it is already known to be adjacent to the given tile ID",
-			p: Picture{
+			p: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-2",
@@ -127,7 +127,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				},
 			},
 			index: 0,
-			want: Picture{
+			want: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-2",
@@ -137,7 +137,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "skips tile in picture if it is already adjacent to 4 tiles",
-			p: Picture{
+			p: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-2",
@@ -154,7 +154,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				},
 			},
 			index: 0,
-			want: Picture{
+			want: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-2",
@@ -164,7 +164,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "skips tile in picture if it is already adjacent to 4 tiles",
-			p: Picture{
+			p: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-2",
@@ -181,7 +181,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				ID: "tile-1",
 			},
 			index: 0,
-			want: Picture{
+			want: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-2",
@@ -197,7 +197,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 		},
 		{
 			name: "does not affect the picture if the given tile is not adjacent to any tile in the picture",
-			p: Picture{
+			p: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-1",
@@ -246,7 +246,7 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				Width:  1,
 			},
 			index: 0,
-			want: Picture{
+			want: picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID: "tile-1",
@@ -1659,10 +1659,10 @@ func TestPicture_FindMatchesForTile(t *testing.T) {
 				Height: 2,
 				Width:  2,
 			}
-			p := Picture{
+			p := picture.Picture{
 				Tiles: []tile.Tile{tile1, tile2},
 			}
-			want := Picture{
+			want := picture.Picture{
 				Tiles: []tile.Tile{
 					{
 						ID:            tile1.ID,
@@ -1878,7 +1878,7 @@ func TestPicture_CalculateCornerIDs(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := Picture{
+			p := picture.Picture{
 				Tiles: tt.Tiles,
 			}
 			got, err := p.CalculateCornerIDs()
@@ -1941,10 +1941,10 @@ func TestPicture_getTileFromID(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := Picture{
+			p := picture.Picture{
 				Tiles: tt.Tiles,
 			}
-			got, err := p.getTileFromID(tt.id)
+			got, err := p.GetTileFromID(tt.id)
 			tt.errorAssertionFunc(t, err)
 			assert.Equal(t, tt.want, got)
 		})
@@ -2142,10 +2142,10 @@ func TestPicture_getTopLeftTile(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := Picture{
+			p := picture.Picture{
 				Tiles: tt.Tiles,
 			}
-			got, err := p.getTopLeftTile()
+			got, err := p.GetTopLeftTile()
 			tt.errorAssertionFunc(t, err)
 			assert.Equal(t, tt.want, got)
 		})
@@ -2154,7 +2154,7 @@ func TestPicture_getTopLeftTile(t *testing.T) {
 
 func TestPicture_populatePictureWithTile(t *testing.T) {
 	t.Run("correctly populates the given tile into the picture", func(t *testing.T) {
-		p := &Picture{
+		p := &picture.Picture{
 			Pixels:  make(map[graph.Co]string),
 			TileMap: make(map[graph.Co]tile.Tile),
 			Tiles: []tile.Tile{
@@ -2206,7 +2206,7 @@ func TestPicture_populatePictureWithTile(t *testing.T) {
 			Height: 3,
 			Width:  3,
 		}
-		want := Picture{
+		want := picture.Picture{
 			Height: 5,
 			Width:  5,
 			Pixels: map[graph.Co]string{
@@ -2266,7 +2266,7 @@ func TestPicture_populatePictureWithTile(t *testing.T) {
 				},
 			},
 		}
-		p.populatePictureWithTile(inputTile, 2, 2)
+		p.PopulatePictureWithTile(inputTile, 2, 2)
 		assert.Equal(t, &want, p)
 	})
 }
@@ -2609,14 +2609,14 @@ func TestPicture_PopulateTileMap(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Picture{
+			p := &picture.Picture{
 				Pixels:  make(map[graph.Co]string),
 				TileMap: make(map[graph.Co]tile.Tile),
 				Tiles:   tt.Tiles,
 			}
 			err := p.PopulateTileMap()
 			tt.want.errorAssertionFunc(t, err)
-			want := &Picture{
+			want := &picture.Picture{
 				Height:  tt.want.Height,
 				Width:   tt.want.Width,
 				Pixels:  tt.want.Pixels,
@@ -2682,12 +2682,12 @@ func TestPicture_rotatePicture90(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Picture{
+			p := &picture.Picture{
 				Height: tt.Height,
 				Width:  tt.Width,
 				Pixels: tt.Pixels,
 			}
-			p.rotatePicture90()
+			p.RotatePicture90()
 			assert.Equal(t, tt.want, p.Pixels)
 		})
 	}
@@ -2745,11 +2745,11 @@ func TestPicture_flipPicture(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Picture{
+			p := &picture.Picture{
 				Width:  tt.Width,
 				Pixels: tt.Pixels,
 			}
-			p.flipPicture()
+			p.FlipPicture()
 			assert.Equal(t, tt.want, p.Pixels)
 		})
 	}
@@ -2757,7 +2757,7 @@ func TestPicture_flipPicture(t *testing.T) {
 
 func TestPicture_markSeaMonster(t *testing.T) {
 	t.Run("it marks pixels as sea monster at the given coordinate", func(t *testing.T) {
-		p := &Picture{
+		p := &picture.Picture{
 			Pixels: map[graph.Co]string{
 				{X: 0, Y: 0}: "#",
 				{X: 1, Y: 0}: "#",
@@ -2786,7 +2786,7 @@ func TestPicture_markSeaMonster(t *testing.T) {
 			{X: 1, Y: 2}: "#",
 			{X: 2, Y: 2}: "O",
 		}
-		p.markSeaMonster(graph.Co{X: 1, Y: 1}, seaMonster)
+		p.MarkSeaMonster(graph.Co{X: 1, Y: 1}, seaMonster)
 		assert.Equal(t, want, p.Pixels)
 	})
 }
@@ -2899,10 +2899,10 @@ func TestPicture_checkSeaMonsterAtCo(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Picture{
+			p := &picture.Picture{
 				Pixels: tt.Pixels,
 			}
-			got := p.checkSeaMonsterAtCo(tt.co, tt.seaMonster)
+			got := p.CheckSeaMonsterAtCo(tt.co, tt.seaMonster)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.want1, p.Pixels)
 		})
@@ -3331,7 +3331,7 @@ func TestPicture_FindSeaMonster(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := &Picture{
+			p := &picture.Picture{
 				Pixels: tt.Pixels,
 				Height: 3,
 				Width:  3,
@@ -3439,7 +3439,7 @@ func TestPicture_CountWaterRoughness(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			p := Picture{
+			p := picture.Picture{
 				Pixels: tt.Pixels,
 			}
 			got := p.CountWaterRoughness()

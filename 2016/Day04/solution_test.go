@@ -18,7 +18,6 @@ func TestPairList_Len(t *testing.T) {
 		}
 		got := p.Len()
 		assert.Equal(t, 5, got)
-
 	})
 }
 

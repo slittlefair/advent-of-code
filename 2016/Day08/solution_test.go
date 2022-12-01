@@ -25,7 +25,6 @@ func Test_constructLights(t *testing.T) {
 		}
 		got := constructLights(2, 4)
 		assert.Equal(t, want, got)
-
 	})
 }
 
