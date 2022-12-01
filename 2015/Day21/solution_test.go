@@ -43,5 +43,4 @@ func Test_runFights(t *testing.T) {
 			assert.Equal(t, tt.want1, got1)
 		})
 	}
-
 }

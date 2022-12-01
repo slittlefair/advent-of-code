@@ -34,7 +34,6 @@ func (g *Graph) CalculateTimes(co string, coType int, adjacentCo map[graph.Co]in
 			}
 		}
 	}
-
 }
 
 // Path finds the shortest path between start and target, also returning the

@@ -1,6 +1,7 @@
-package shop
+package shop_test
 
 import (
+	"Advent-of-Code/2015/Day21/shop"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -8,15 +9,15 @@ import (
 
 func TestPopulateShop(t *testing.T) {
 	t.Run("returns shop with equipment as per instructions", func(t *testing.T) {
-		want := &Shop{
-			Weapons: []Equipment{
+		want := &shop.Shop{
+			Weapons: []shop.Equipment{
 				{Cost: 8, Damage: 4},
 				{Cost: 10, Damage: 5},
 				{Cost: 25, Damage: 6},
 				{Cost: 40, Damage: 7},
 				{Cost: 74, Damage: 8},
 			},
-			Armour: []Equipment{
+			Armour: []shop.Equipment{
 				{},
 				{Cost: 13, Armour: 1},
 				{Cost: 31, Armour: 2},
@@ -24,7 +25,7 @@ func TestPopulateShop(t *testing.T) {
 				{Cost: 75, Armour: 4},
 				{Cost: 102, Armour: 5},
 			},
-			Rings: []Equipment{
+			Rings: []shop.Equipment{
 				{},
 				{},
 				{Cost: 25, Damage: 1},
@@ -35,7 +36,7 @@ func TestPopulateShop(t *testing.T) {
 				{Cost: 80, Armour: 3},
 			},
 		}
-		got := PopulateShop()
+		got := shop.PopulateShop()
 		assert.Equal(t, want, got)
 	})
 }

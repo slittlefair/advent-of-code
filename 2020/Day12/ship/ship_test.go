@@ -1,6 +1,7 @@
-package ship
+package ship_test
 
 import (
+	"Advent-of-Code/2020/Day12/ship"
 	"Advent-of-Code/graph"
 	"fmt"
 	"strings"
@@ -78,10 +79,10 @@ func TestShip_turnShip(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Ship{
+			s := &ship.Ship{
 				FacingDir: tt.facingDir,
 			}
-			s.turnShip(tt.args.d, tt.args.val)
+			s.TurnShip(tt.args.d, tt.args.val)
 			assert.Equal(t, tt.want, s.FacingDir)
 		})
 	}
@@ -100,7 +101,7 @@ func TestShip_MoveShip(t *testing.T) {
 		name   string
 		fields fields
 		args   args
-		want   *Ship
+		want   *ship.Ship
 	}{
 		{
 			name: "correctly moves the ship north the given amount when told to",
@@ -112,7 +113,7 @@ func TestShip_MoveShip(t *testing.T) {
 				d:   "N",
 				val: 34,
 			},
-			want: &Ship{
+			want: &ship.Ship{
 				Co:        graph.Co{X: 3, Y: 45},
 				FacingDir: "E",
 			},
@@ -127,7 +128,7 @@ func TestShip_MoveShip(t *testing.T) {
 				d:   "E",
 				val: 88,
 			},
-			want: &Ship{
+			want: &ship.Ship{
 				Co:        graph.Co{X: 109, Y: 37},
 				FacingDir: "N",
 			},
@@ -142,7 +143,7 @@ func TestShip_MoveShip(t *testing.T) {
 				d:   "S",
 				val: 49,
 			},
-			want: &Ship{
+			want: &ship.Ship{
 				Co:        graph.Co{X: 12, Y: 18},
 				FacingDir: "N",
 			},
@@ -157,7 +158,7 @@ func TestShip_MoveShip(t *testing.T) {
 				d:   "W",
 				val: 53,
 			},
-			want: &Ship{
+			want: &ship.Ship{
 				Co:        graph.Co{X: -12, Y: 7},
 				FacingDir: "E",
 			},
@@ -172,7 +173,7 @@ func TestShip_MoveShip(t *testing.T) {
 				d:   "L",
 				val: 270,
 			},
-			want: &Ship{
+			want: &ship.Ship{
 				Co:        graph.Co{X: 21, Y: 79},
 				FacingDir: "N",
 			},
@@ -187,7 +188,7 @@ func TestShip_MoveShip(t *testing.T) {
 				d:   "R",
 				val: 180,
 			},
-			want: &Ship{
+			want: &ship.Ship{
 				Co:        graph.Co{X: 21, Y: 79},
 				FacingDir: "S",
 			},
@@ -202,7 +203,7 @@ func TestShip_MoveShip(t *testing.T) {
 				d:   "F",
 				val: 187,
 			},
-			want: &Ship{
+			want: &ship.Ship{
 				Co:        graph.Co{X: 168, Y: 66},
 				FacingDir: "E",
 			},
@@ -210,7 +211,7 @@ func TestShip_MoveShip(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Ship{
+			s := &ship.Ship{
 				Co:        tt.fields.Co,
 				FacingDir: tt.fields.FacingDir,
 			}
@@ -296,7 +297,7 @@ func TestShip_CalculateDistance(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			s := &Ship{
+			s := &ship.Ship{
 				Co:        tt.fields.Co,
 				FacingDir: tt.fields.FacingDir,
 			}

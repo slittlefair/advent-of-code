@@ -1,6 +1,7 @@
-package maths
+package maths_test
 
 import (
+	"Advent-of-Code/maths"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -34,7 +35,7 @@ func TestMin(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Min(tt.x, tt.y)
+			got := maths.Min(tt.x, tt.y)
 			assert.Equal(t, tt.want, got)
 		})
 	}
@@ -68,7 +69,7 @@ func TestMax(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Max(tt.x, tt.y)
+			got := maths.Max(tt.x, tt.y)
 			assert.Equal(t, tt.want, got)
 		})
 	}
@@ -103,7 +104,7 @@ func TestMedian(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Median(tt.nums)
+			got := maths.Median(tt.nums)
 			assert.Equal(t, tt.want, got)
 		})
 	}

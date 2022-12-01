@@ -126,9 +126,9 @@ func (p Picture) CalculateCornerIDs() (int, error) {
 	return cornerID, nil
 }
 
-// getTileFromID returns the tile that has the given ID. If no such tile exists then return an
+// GetTileFromID returns the tile that has the given ID. If no such tile exists then return an
 // error, as something has obviously gone wrong.
-func (p Picture) getTileFromID(id string) (tile.Tile, error) {
+func (p Picture) GetTileFromID(id string) (tile.Tile, error) {
 	for _, tile := range p.Tiles {
 		if tile.ID == id {
 			return tile, nil
@@ -137,10 +137,10 @@ func (p Picture) getTileFromID(id string) (tile.Tile, error) {
 	return tile.Tile{}, errors.New(fmt.Sprintln("could not find tile for id:", id))
 }
 
-// getTopLeftTile returns the tile at the top left of the picture. We do this so we can start
+// GetTopLeftTile returns the tile at the top left of the picture. We do this so we can start
 // creating a picture from this tile, with all other tiles relative to it. At the point we call this
 // we expect there to be a top left tile, so return an error if one doesn't exist
-func (p Picture) getTopLeftTile() (tile.Tile, error) {
+func (p Picture) GetTopLeftTile() (tile.Tile, error) {
 	for _, t := range p.Tiles {
 		if t.AdjacentTiles.Bottom != "" && t.AdjacentTiles.Right != "" && t.AdjacentTiles.Left == "" && t.AdjacentTiles.Top == "" {
 			return t, nil
@@ -149,9 +149,9 @@ func (p Picture) getTopLeftTile() (tile.Tile, error) {
 	return tile.Tile{}, errors.New("no tile found at top left")
 }
 
-// populatePictureWithTile gets the individual tiles and puts their pixels into the picture p's
+// PopulatePictureWithTile gets the individual tiles and puts their pixels into the picture p's
 // pixels, into one large picture
-func (p *Picture) populatePictureWithTile(t tile.Tile, x, y int) {
+func (p *Picture) PopulatePictureWithTile(t tile.Tile, x, y int) {
 	p.TileMap[graph.Co{X: x, Y: y}] = t
 	for i := 1; i < t.Height; i++ {
 		for j := 1; j < t.Width; j++ {
@@ -173,32 +173,32 @@ func (p *Picture) populatePictureWithTile(t tile.Tile, x, y int) {
 func (p *Picture) PopulateTileMap() error {
 	// Find the top left tile first, then build out from there
 	var x, y int
-	tile, err := p.getTopLeftTile()
+	tile, err := p.GetTopLeftTile()
 	if err != nil {
 		return err
 	}
-	p.populatePictureWithTile(tile, x, y)
+	p.PopulatePictureWithTile(tile, x, y)
 	for {
 		if tile.AdjacentTiles.Bottom != "" {
-			t, err := p.getTileFromID(tile.AdjacentTiles.Bottom)
+			t, err := p.GetTileFromID(tile.AdjacentTiles.Bottom)
 			if err != nil {
 				return err
 			}
 			y++
-			p.populatePictureWithTile(t, x, y)
+			p.PopulatePictureWithTile(t, x, y)
 			tile = t
 		} else {
 			tile = p.TileMap[graph.Co{X: x, Y: 0}]
 			if tile.AdjacentTiles.Right == "" {
 				return nil
 			}
-			t, err := p.getTileFromID(tile.AdjacentTiles.Right)
+			t, err := p.GetTileFromID(tile.AdjacentTiles.Right)
 			if err != nil {
 				return err
 			}
 			x++
 			y = 0
-			p.populatePictureWithTile(t, x, y)
+			p.PopulatePictureWithTile(t, x, y)
 			tile = t
 		}
 	}
@@ -215,8 +215,8 @@ func (p Picture) PrintPictureMap() {
 	}
 }
 
-// rotatePicture90 rotates the pixels in the picture p by 90 degrees
-func (p *Picture) rotatePicture90() {
+// RotatePicture90 rotates the pixels in the picture p by 90 degrees
+func (p *Picture) RotatePicture90() {
 	newPixels := make(map[graph.Co]string)
 	for co, val := range p.Pixels {
 		newPixels[graph.Co{X: p.Width - co.Y, Y: co.X}] = val
@@ -225,7 +225,7 @@ func (p *Picture) rotatePicture90() {
 }
 
 // flipPicture flips (reflects) the pixels of a tile along the vertical centre
-func (p *Picture) flipPicture() {
+func (p *Picture) FlipPicture() {
 	newPixels := make(map[graph.Co]string)
 	for co, val := range p.Pixels {
 		newPixels[graph.Co{X: p.Width - co.X, Y: co.Y}] = val
@@ -233,23 +233,23 @@ func (p *Picture) flipPicture() {
 	p.Pixels = newPixels
 }
 
-// markSeaMonster changes the pixels in the picture that represent a sea monster from "#" to "O"
-func (p *Picture) markSeaMonster(co graph.Co, seaMonster []graph.Co) {
+// MarkSeaMonster changes the pixels in the picture that represent a sea monster from "#" to "O"
+func (p *Picture) MarkSeaMonster(co graph.Co, seaMonster []graph.Co) {
 	for _, smCo := range seaMonster {
 		p.Pixels[graph.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}] = "O"
 	}
 }
 
-// checkSeaMonsterAtCo checks to see if a sea monster is in the picture relative to the given
+// CheckSeaMonsterAtCo checks to see if a sea monster is in the picture relative to the given
 // coordinate, co
-func (p *Picture) checkSeaMonsterAtCo(co graph.Co, seaMonster []graph.Co) bool {
+func (p *Picture) CheckSeaMonsterAtCo(co graph.Co, seaMonster []graph.Co) bool {
 	for _, smCo := range seaMonster {
 		c := graph.Co{X: co.X + smCo.X, Y: co.Y + smCo.Y}
 		if val, ok := p.Pixels[c]; val != "#" || !ok {
 			return false
 		}
 	}
-	p.markSeaMonster(co, seaMonster)
+	p.MarkSeaMonster(co, seaMonster)
 	return true
 }
 
@@ -262,16 +262,16 @@ func (p *Picture) FindSeaMonster(seaMonster []graph.Co) {
 	for j := 0; j < 2; j++ {
 		for i := 0; i < 4; i++ {
 			for co := range p.Pixels {
-				if p.checkSeaMonsterAtCo(co, seaMonster) {
+				if p.CheckSeaMonsterAtCo(co, seaMonster) {
 					found = true
 				}
 			}
 			if found {
 				return
 			}
-			p.rotatePicture90()
+			p.RotatePicture90()
 		}
-		p.flipPicture()
+		p.FlipPicture()
 	}
 }
 

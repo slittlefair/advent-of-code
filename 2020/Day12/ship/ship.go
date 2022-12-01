@@ -19,7 +19,7 @@ var pointsToIndex = map[string]int{
 	"W": 3,
 }
 
-func (s *Ship) turnShip(d string, val int) {
+func (s *Ship) TurnShip(d string, val int) {
 	turnTimes := val / 90 % 360
 	if d == "L" {
 		turnTimes *= -1
@@ -38,9 +38,9 @@ func (s *Ship) MoveShip(d string, val int) {
 	case "W":
 		s.Co.X -= val
 	case "L":
-		s.turnShip(d, val)
+		s.TurnShip(d, val)
 	case "R":
-		s.turnShip(d, val)
+		s.TurnShip(d, val)
 	case "F":
 		s.MoveShip(s.FacingDir, val)
 	}

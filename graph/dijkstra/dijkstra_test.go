@@ -1,7 +1,8 @@
-package dijkstra
+package dijkstra_test
 
 import (
 	"Advent-of-Code/graph"
+	"Advent-of-Code/graph/dijkstra"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -10,17 +11,17 @@ import (
 func TestPriorityQueue_Len(t *testing.T) {
 	tests := []struct {
 		name string
-		pq   PriorityQueue
+		pq   dijkstra.PriorityQueue
 		want int
 	}{
 		{
 			name: "returns 0 for an empty queue",
-			pq:   PriorityQueue{},
+			pq:   dijkstra.PriorityQueue{},
 			want: 0,
 		},
 		{
 			name: "returns the length of the given queue",
-			pq:   PriorityQueue{&Path{}, &Path{}, &Path{}, &Path{}, &Path{}, &Path{}, &Path{}},
+			pq:   dijkstra.PriorityQueue{&dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}},
 			want: 7,
 		},
 	}
@@ -39,34 +40,34 @@ func TestPriorityQueue_Less(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		pq   PriorityQueue
+		pq   dijkstra.PriorityQueue
 		args args
 		want bool
 	}{
 		{
 			name: "returns true if the value of the first item is less then the value of the second",
-			pq: PriorityQueue{
-				&Path{Value: 3},
-				&Path{Value: 1},
-				&Path{Value: 7},
-				&Path{Value: 4},
-				&Path{Value: 5},
-				&Path{Value: 2},
-				&Path{Value: 6},
+			pq: dijkstra.PriorityQueue{
+				&dijkstra.Path{Value: 3},
+				&dijkstra.Path{Value: 1},
+				&dijkstra.Path{Value: 7},
+				&dijkstra.Path{Value: 4},
+				&dijkstra.Path{Value: 5},
+				&dijkstra.Path{Value: 2},
+				&dijkstra.Path{Value: 6},
 			},
 			args: args{i: 4, j: 6},
 			want: true,
 		},
 		{
 			name: "returns false if the value of the first item is not less then the value of the second",
-			pq: PriorityQueue{
-				&Path{Value: 3},
-				&Path{Value: 1},
-				&Path{Value: 7},
-				&Path{Value: 4},
-				&Path{Value: 5},
-				&Path{Value: 2},
-				&Path{Value: 6},
+			pq: dijkstra.PriorityQueue{
+				&dijkstra.Path{Value: 3},
+				&dijkstra.Path{Value: 1},
+				&dijkstra.Path{Value: 7},
+				&dijkstra.Path{Value: 4},
+				&dijkstra.Path{Value: 5},
+				&dijkstra.Path{Value: 2},
+				&dijkstra.Path{Value: 6},
 			},
 			args: args{i: 4, j: 5},
 			want: false,
@@ -82,23 +83,23 @@ func TestPriorityQueue_Less(t *testing.T) {
 
 func TestPriorityQueue_Swap(t *testing.T) {
 	t.Run("swaps the items at the given indices", func(t *testing.T) {
-		pq := PriorityQueue{
-			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+		pq := dijkstra.PriorityQueue{
+			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
 		}
-		want := PriorityQueue{
-			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+		want := dijkstra.PriorityQueue{
+			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
 		}
 		pq.Swap(2, 5)
 		assert.Equal(t, want, pq)
@@ -107,51 +108,51 @@ func TestPriorityQueue_Swap(t *testing.T) {
 
 func TestPriorityQueue_Push(t *testing.T) {
 	t.Run("pushes a Path to the PriorityQueue", func(t *testing.T) {
-		pq := PriorityQueue{
-			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+		pq := dijkstra.PriorityQueue{
+			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
 		}
-		want := PriorityQueue{
-			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-			&Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
+		want := dijkstra.PriorityQueue{
+			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			&dijkstra.Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
 		}
-		pq.Push(&Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}})
+		pq.Push(&dijkstra.Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}})
 		assert.Equal(t, want, pq)
 	})
 }
 
 func TestPriorityQueue_Pop(t *testing.T) {
 	t.Run("removes the last item from the PriorityQueue", func(t *testing.T) {
-		pq := &PriorityQueue{
-			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-			&Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
+		pq := &dijkstra.PriorityQueue{
+			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			&dijkstra.Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
 		}
-		want := &Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}}
-		want1 := &PriorityQueue{
-			&Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+		want := &dijkstra.Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}}
+		want1 := &dijkstra.PriorityQueue{
+			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
 		}
 		got := pq.Pop()
 		assert.Equal(t, want, got)
@@ -161,10 +162,10 @@ func TestPriorityQueue_Pop(t *testing.T) {
 
 func TestNewGraph(t *testing.T) {
 	t.Run("returns a constructed graph from given maxX and maxY", func(t *testing.T) {
-		got := NewGraph(5, 87)
-		want := &Graph{
+		got := dijkstra.NewGraph(5, 87)
+		want := &dijkstra.Graph{
 			Grid:  make(map[graph.Co]int),
-			Nodes: make(map[graph.Co][]Edge),
+			Nodes: make(map[graph.Co][]dijkstra.Edge),
 			MaxX:  5,
 			MaxY:  87,
 		}
@@ -180,20 +181,20 @@ func TestGraph_AddEdge(t *testing.T) {
 	}
 	tests := []struct {
 		name string
-		g    *Graph
+		g    *dijkstra.Graph
 		args args
-		want *Graph
+		want *dijkstra.Graph
 	}{
 		{
 			name: "adds an edge to the graph that is not in the grid or nodes",
-			g: &Graph{
+			g: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 0, Y: 1}: 9,
 					{X: 1, Y: 0}: 8,
 					{X: 1, Y: 1}: 4,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}: {{Node: graph.Co{X: 0, Y: 1}, Weight: 9}},
 					{X: 1, Y: 0}: {{Node: graph.Co{X: 1, Y: 1}, Weight: 4}},
 					{X: 1, Y: 1}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
@@ -206,7 +207,7 @@ func TestGraph_AddEdge(t *testing.T) {
 				destination: graph.Co{X: 9, Y: 1},
 				weight:      7,
 			},
-			want: &Graph{
+			want: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 0, Y: 1}: 9,
@@ -214,7 +215,7 @@ func TestGraph_AddEdge(t *testing.T) {
 					{X: 1, Y: 1}: 4,
 					{X: 9, Y: 1}: 7,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}:  {{Node: graph.Co{X: 0, Y: 1}, Weight: 9}},
 					{X: 1, Y: 0}:  {{Node: graph.Co{X: 1, Y: 1}, Weight: 4}},
 					{X: 1, Y: 1}:  {{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
@@ -226,14 +227,14 @@ func TestGraph_AddEdge(t *testing.T) {
 		},
 		{
 			name: "adds an edge to the graph that is not in the grid but is in nodes",
-			g: &Graph{
+			g: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}: 1,
 					{X: 0, Y: 1}: 9,
 					{X: 1, Y: 0}: 8,
 					{X: 1, Y: 1}: 4,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}:  {{Node: graph.Co{X: 0, Y: 1}, Weight: 9}},
 					{X: 1, Y: 0}:  {{Node: graph.Co{X: 1, Y: 1}, Weight: 4}},
 					{X: 1, Y: 1}:  {{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
@@ -247,7 +248,7 @@ func TestGraph_AddEdge(t *testing.T) {
 				destination: graph.Co{X: 11, Y: 7},
 				weight:      11,
 			},
-			want: &Graph{
+			want: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}:  1,
 					{X: 0, Y: 1}:  9,
@@ -255,7 +256,7 @@ func TestGraph_AddEdge(t *testing.T) {
 					{X: 1, Y: 1}:  4,
 					{X: 11, Y: 7}: 11,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}:  {{Node: graph.Co{X: 0, Y: 1}, Weight: 9}},
 					{X: 1, Y: 0}:  {{Node: graph.Co{X: 1, Y: 1}, Weight: 4}},
 					{X: 1, Y: 1}:  {{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
@@ -267,7 +268,7 @@ func TestGraph_AddEdge(t *testing.T) {
 		},
 		{
 			name: "adds an edge to the graph that is in grid and in nodes",
-			g: &Graph{
+			g: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}:  1,
 					{X: 0, Y: 1}:  9,
@@ -275,7 +276,7 @@ func TestGraph_AddEdge(t *testing.T) {
 					{X: 1, Y: 1}:  4,
 					{X: 11, Y: 7}: 11,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}:  {{Node: graph.Co{X: 0, Y: 1}, Weight: 9}},
 					{X: 1, Y: 0}:  {{Node: graph.Co{X: 1, Y: 1}, Weight: 4}},
 					{X: 1, Y: 1}:  {{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
@@ -289,7 +290,7 @@ func TestGraph_AddEdge(t *testing.T) {
 				destination: graph.Co{X: 11, Y: 7},
 				weight:      11,
 			},
-			want: &Graph{
+			want: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}:  1,
 					{X: 0, Y: 1}:  9,
@@ -297,7 +298,7 @@ func TestGraph_AddEdge(t *testing.T) {
 					{X: 1, Y: 1}:  4,
 					{X: 11, Y: 7}: 11,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}:  {{Node: graph.Co{X: 0, Y: 1}, Weight: 9}},
 					{X: 1, Y: 0}:  {{Node: graph.Co{X: 1, Y: 1}, Weight: 4}},
 					{X: 1, Y: 1}:  {{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
@@ -319,7 +320,7 @@ func TestGraph_AddEdge(t *testing.T) {
 
 func TestGraph_GetEdges(t *testing.T) {
 	t.Run("returns the edges in the graph for the given node", func(t *testing.T) {
-		g := &Graph{
+		g := &dijkstra.Graph{
 			Grid: map[graph.Co]int{
 				{X: 0, Y: 0}:  1,
 				{X: 0, Y: 1}:  9,
@@ -327,7 +328,7 @@ func TestGraph_GetEdges(t *testing.T) {
 				{X: 1, Y: 1}:  4,
 				{X: 11, Y: 7}: 11,
 			},
-			Nodes: map[graph.Co][]Edge{
+			Nodes: map[graph.Co][]dijkstra.Edge{
 				{X: 0, Y: 0}:  {{Node: graph.Co{X: 0, Y: 1}, Weight: 9}},
 				{X: 1, Y: 0}:  {{Node: graph.Co{X: 1, Y: 1}, Weight: 4}},
 				{X: 1, Y: 1}:  {{Node: graph.Co{X: 1, Y: 0}, Weight: 8}},
@@ -337,27 +338,27 @@ func TestGraph_GetEdges(t *testing.T) {
 			MaxY: 3,
 		}
 		got := g.GetEdges(graph.Co{X: 1, Y: 1})
-		assert.Equal(t, []Edge{{Node: graph.Co{X: 1, Y: 0}, Weight: 8}}, got)
+		assert.Equal(t, []dijkstra.Edge{{Node: graph.Co{X: 1, Y: 0}, Weight: 8}}, got)
 	})
 }
 
 func TestGraph_ExtendGrid(t *testing.T) {
 	tests := []struct {
 		name   string
-		g      *Graph
+		g      *dijkstra.Graph
 		factor int
-		want   *Graph
+		want   *dijkstra.Graph
 	}{
 		{
 			name: "does not affect a graph if given factor is 1",
-			g: &Graph{
+			g: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}: 2,
 					{X: 1, Y: 0}: 7,
 					{X: 0, Y: 1}: 1,
 					{X: 1, Y: 1}: 9,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 7}},
 					{X: 1, Y: 0}: {{Node: graph.Co{X: 0, Y: 0}, Weight: 2}},
 					{X: 0, Y: 1}: {{Node: graph.Co{X: 1, Y: 1}, Weight: 9}},
@@ -367,14 +368,14 @@ func TestGraph_ExtendGrid(t *testing.T) {
 				MaxY: 1,
 			},
 			factor: 1,
-			want: &Graph{
+			want: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}: 2,
 					{X: 1, Y: 0}: 7,
 					{X: 0, Y: 1}: 1,
 					{X: 1, Y: 1}: 9,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 7}},
 					{X: 1, Y: 0}: {{Node: graph.Co{X: 0, Y: 0}, Weight: 2}},
 					{X: 0, Y: 1}: {{Node: graph.Co{X: 1, Y: 1}, Weight: 9}},
@@ -386,14 +387,14 @@ func TestGraph_ExtendGrid(t *testing.T) {
 		},
 		{
 			name: "extends a graph by a factor greater than 1",
-			g: &Graph{
+			g: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}: 2,
 					{X: 1, Y: 0}: 7,
 					{X: 0, Y: 1}: 1,
 					{X: 1, Y: 1}: 9,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 7}},
 					{X: 1, Y: 0}: {{Node: graph.Co{X: 0, Y: 0}, Weight: 2}},
 					{X: 0, Y: 1}: {{Node: graph.Co{X: 1, Y: 1}, Weight: 9}},
@@ -403,7 +404,7 @@ func TestGraph_ExtendGrid(t *testing.T) {
 				MaxY: 1,
 			},
 			factor: 3,
-			want: &Graph{
+			want: &dijkstra.Graph{
 				Grid: map[graph.Co]int{
 					{X: 0, Y: 0}: 2,
 					{X: 1, Y: 0}: 7,
@@ -442,7 +443,7 @@ func TestGraph_ExtendGrid(t *testing.T) {
 					{X: 4, Y: 5}: 5,
 					{X: 5, Y: 5}: 4,
 				},
-				Nodes: map[graph.Co][]Edge{
+				Nodes: map[graph.Co][]dijkstra.Edge{
 					{X: 0, Y: 0}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 7}},
 					{X: 1, Y: 0}: {{Node: graph.Co{X: 0, Y: 0}, Weight: 2}},
 					{X: 0, Y: 1}: {{Node: graph.Co{X: 1, Y: 1}, Weight: 9}},
@@ -462,8 +463,8 @@ func TestGraph_ExtendGrid(t *testing.T) {
 	}
 }
 
-var exampleGraph = Graph{
-	Nodes: map[graph.Co][]Edge{
+var exampleGraph = dijkstra.Graph{
+	Nodes: map[graph.Co][]dijkstra.Edge{
 		{X: 0, Y: 0}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 1}, {Node: graph.Co{X: 0, Y: 1}, Weight: 99}},
 		{X: 1, Y: 0}: {{Node: graph.Co{X: 0, Y: 0}, Weight: 5}, {Node: graph.Co{X: 1, Y: 1}, Weight: 99}, {Node: graph.Co{X: 2, Y: 0}, Weight: 1}},
 		{X: 2, Y: 0}: {{Node: graph.Co{X: 1, Y: 0}, Weight: 1}, {Node: graph.Co{X: 2, Y: 1}, Weight: 99}, {Node: graph.Co{X: 3, Y: 0}, Weight: 1}},
@@ -544,7 +545,7 @@ func TestGraph_GetPath(t *testing.T) {
 	tests := []struct {
 		name               string
 		args               args
-		want               *Path
+		want               *dijkstra.Path
 		errorAssertionFunc assert.ErrorAssertionFunc
 	}{
 		{
@@ -562,7 +563,7 @@ func TestGraph_GetPath(t *testing.T) {
 				origin:      graph.Co{X: 0, Y: 0},
 				destination: graph.Co{X: 4, Y: 5},
 			},
-			want: &Path{
+			want: &dijkstra.Path{
 				Value: 19,
 				Nodes: []graph.Co{
 					{X: 0, Y: 0},

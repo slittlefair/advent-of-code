@@ -25,7 +25,6 @@ func findMinFuelSpend(input []int, min, max int, part2 bool) int {
 			} else {
 				dist += maths.Abs(i - x)
 			}
-
 		}
 		if dist < minDist {
 			minDist = dist

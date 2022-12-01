@@ -1,7 +1,8 @@
-package mage
+package mage_test
 
 import (
 	"Advent-of-Code/2015/Day21/martial"
+	"Advent-of-Code/2015/Day22/mage"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -9,8 +10,8 @@ import (
 
 func TestMage_SpellIsValid(t *testing.T) {
 	type args struct {
-		spell   *Spell
-		effects map[string]Effect
+		spell   *mage.Spell
+		effects map[string]mage.Effect
 	}
 	tests := []struct {
 		name string
@@ -22,11 +23,11 @@ func TestMage_SpellIsValid(t *testing.T) {
 			name: "returns false if mage does not have mana for the spell",
 			mana: 99,
 			args: args{
-				spell: &Spell{
+				spell: &mage.Spell{
 					Effect: "Fire Bolt",
 					Mana:   100,
 				},
-				effects: map[string]Effect{
+				effects: map[string]mage.Effect{
 					"Fire Bolt": {Active: false},
 				},
 			},
@@ -36,11 +37,11 @@ func TestMage_SpellIsValid(t *testing.T) {
 			name: "returns false if mage has mana for the spell but it is already active",
 			mana: 100,
 			args: args{
-				spell: &Spell{
+				spell: &mage.Spell{
 					Effect: "Ray of Frost",
 					Mana:   100,
 				},
-				effects: map[string]Effect{
+				effects: map[string]mage.Effect{
 					"Fire Bolt":    {Active: true},
 					"Ray of Frost": {Active: true},
 					"Chill Touch":  {Active: false},
@@ -52,11 +53,11 @@ func TestMage_SpellIsValid(t *testing.T) {
 			name: "returns true if mage has mana for the spell and is not active",
 			mana: 100,
 			args: args{
-				spell: &Spell{
+				spell: &mage.Spell{
 					Effect: "Ray of Frost",
 					Mana:   100,
 				},
-				effects: map[string]Effect{
+				effects: map[string]mage.Effect{
 					"Fire Bolt":    {Active: true},
 					"Ray of Frost": {Active: false},
 					"Chill Touch":  {Active: false},
@@ -67,7 +68,7 @@ func TestMage_SpellIsValid(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			m := &Mage{
+			m := &mage.Mage{
 				Mana: tt.mana,
 			}
 			got := m.SpellIsValid(tt.args.spell, tt.args.effects)
@@ -76,29 +77,29 @@ func TestMage_SpellIsValid(t *testing.T) {
 	}
 }
 
-func TestApplyEffect(t *testing.T) {
+func TestApply_Effect(t *testing.T) {
 	type args struct {
-		mage *Mage
+		mage *mage.Mage
 		boss *martial.Martial
-		e    Effect
+		e    mage.Effect
 	}
 	tests := []struct {
 		name string
 		args args
-		want Effect
+		want mage.Effect
 	}{
 		{
 			name: "applies an effect and returns it with reduced DurationRemaining",
 			args: args{
-				mage: &Mage{},
+				mage: &mage.Mage{},
 				boss: &martial.Martial{},
-				e: Effect{
+				e: mage.Effect{
 					Active:            true,
 					DurationRemaining: 3,
-					Effect:            Shield,
+					Effect:            mage.Shield,
 				},
 			},
-			want: Effect{
+			want: mage.Effect{
 				Active:            true,
 				DurationRemaining: 2,
 			},
@@ -106,15 +107,15 @@ func TestApplyEffect(t *testing.T) {
 		{
 			name: "applies an effect and returns it deactivated if duration has run out",
 			args: args{
-				mage: &Mage{},
+				mage: &mage.Mage{},
 				boss: &martial.Martial{},
-				e: Effect{
+				e: mage.Effect{
 					Active:            true,
 					DurationRemaining: 1,
-					Effect:            Shield,
+					Effect:            mage.Shield,
 				},
 			},
-			want: Effect{
+			want: mage.Effect{
 				Active:            false,
 				DurationRemaining: 0,
 			},
@@ -122,7 +123,7 @@ func TestApplyEffect(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := ApplyEffect(tt.args.mage, tt.args.boss, tt.args.e)
+			got := mage.ApplyEffect(tt.args.mage, tt.args.boss, tt.args.e)
 			assert.Equal(t, tt.want.Active, got.Active)
 			assert.Equal(t, tt.want.DurationRemaining, got.DurationRemaining)
 		})
@@ -131,24 +132,24 @@ func TestApplyEffect(t *testing.T) {
 
 func TestShield(t *testing.T) {
 	t.Run("applies shield effect to mage, setting armour to 7", func(t *testing.T) {
-		mage := &Mage{}
-		Shield(mage, &martial.Martial{})
-		assert.Equal(t, &Mage{Armour: 7}, mage)
+		m := &mage.Mage{}
+		mage.Shield(m, &martial.Martial{})
+		assert.Equal(t, &mage.Mage{Armour: 7}, m)
 	})
 }
 
 func TestPoison(t *testing.T) {
 	t.Run("applies poison effect, reducing boss HP by 3", func(t *testing.T) {
 		boss := &martial.Martial{HP: 32}
-		Poison(&Mage{}, boss)
+		mage.Poison(&mage.Mage{}, boss)
 		assert.Equal(t, &martial.Martial{HP: 29}, boss)
 	})
 }
 
 func TestRecharge(t *testing.T) {
 	t.Run("applies recharge effect to mage, increasing mana by 101", func(t *testing.T) {
-		mage := &Mage{Mana: 274}
-		Recharge(mage, &martial.Martial{})
-		assert.Equal(t, &Mage{Mana: 375}, mage)
+		m := &mage.Mage{Mana: 274}
+		mage.Recharge(m, &martial.Martial{})
+		assert.Equal(t, &mage.Mage{Mana: 375}, m)
 	})
 }

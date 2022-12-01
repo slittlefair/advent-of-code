@@ -24,7 +24,7 @@ var coords = make(map[co][]int)
 func main() {
 	lines := file.Read()
 	var matches int
-	var ids []int
+	ids := []int{}
 	// cycle through cuts (or claims) and pick out the relevant information
 	for _, cut := range lines {
 		re := regexp.MustCompile("[^# @ ,: x]+")

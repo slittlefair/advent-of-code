@@ -15,7 +15,7 @@ type Game struct {
 	Nums        []int
 }
 
-func parseNums(str string) ([]int, error) {
+func ParseNums(str string) ([]int, error) {
 	nums := []int{}
 	strNums := strings.Split(str, ",")
 	for _, n := range strNums {
@@ -29,7 +29,7 @@ func parseNums(str string) ([]int, error) {
 }
 
 func ParseInput(input []string) (*Game, error) {
-	nums, err := parseNums(input[0])
+	nums, err := ParseNums(input[0])
 	if err != nil {
 		return nil, err
 	}

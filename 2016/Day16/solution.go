@@ -6,7 +6,7 @@ import (
 )
 
 func generateDataStep(input string) (string, error) {
-	new := input + "0"
+	step := input + "0"
 	reverse := []byte{}
 	for i := len(input) - 1; i >= 0; i-- {
 		char := input[i]
@@ -19,7 +19,7 @@ func generateDataStep(input string) (string, error) {
 			return "", fmt.Errorf("invalid character: %s", string(char))
 		}
 	}
-	return new + string(reverse), nil
+	return step + string(reverse), nil
 }
 
 func generateData(input string, requiredLength int) (string, error) {

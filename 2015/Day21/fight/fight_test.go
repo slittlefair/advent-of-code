@@ -1,6 +1,7 @@
-package fight
+package fight_test
 
 import (
+	"Advent-of-Code/2015/Day21/fight"
 	"Advent-of-Code/2015/Day21/martial"
 	"Advent-of-Code/2015/Day21/shop"
 	"testing"
@@ -58,7 +59,7 @@ func TestMartialAttack(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			MartialAttack(tt.args.attacker, tt.args.defender)
+			fight.MartialAttack(tt.args.attacker, tt.args.defender)
 			assert.Equal(t, tt.want, tt.args.attacker)
 			assert.Equal(t, tt.want1, tt.args.defender)
 		})
@@ -94,7 +95,7 @@ func TestFight(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := Fight(tt.args.player, tt.args.boss)
+			got := fight.Fight(tt.args.player, tt.args.boss)
 			assert.Equal(t, tt.want, got)
 		})
 	}
@@ -123,7 +124,7 @@ func TestInitiatePlayerForFight(t *testing.T) {
 			Damage: 222,
 			HP:     100,
 		}
-		got, got1 := InitiatePlayerForFight(weapon, armour, ring1, ring2)
+		got, got1 := fight.InitiatePlayerForFight(weapon, armour, ring1, ring2)
 		assert.Equal(t, want, got)
 		assert.Equal(t, 333, got1)
 	})

@@ -26,7 +26,6 @@ func Test_parseInput(t *testing.T) {
 			"..#",
 		})
 		assert.Equal(t, want, got)
-
 	})
 }
 
