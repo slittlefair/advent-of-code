@@ -30,6 +30,7 @@ func findLargestCalories(elves []int, n int) (int, error) {
 	if n > len(elves) {
 		return -1, fmt.Errorf("findLargestCalories: asked for more items (%d) than are in provided slice %v", n, elves)
 	}
+	// Sort elves in descending order
 	sort.Sort(sort.Reverse(sort.IntSlice(elves)))
 	calories := 0
 	for i := 0; i < n; i++ {
