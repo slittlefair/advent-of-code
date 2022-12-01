@@ -16,5 +16,5 @@ jobs:
         uses: golangci/golangci-lint-action@v2
         with:
           version: latest
-          args: --enable goconst,ifshort,misspell,revive,unconvert,unparam
+          args: --enable goconst,misspell,prealloc,predeclared,revive,testpackage,unconvert,unparam,whitespace
           only-new-issues: true
