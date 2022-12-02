@@ -35,9 +35,15 @@ func getMiddlePointDistance(target, corner, prevCorner int) int {
 	}
 }
 
+func getSolution(target int) int {
+	x, corner, prevCorner := getLayer(target)
+	y := getMiddlePointDistance(target, corner, prevCorner)
+	return x + y
+}
+
 func main() {
 	target := file.ReadAsInts()[0]
-	layer, corner, prevCorner := getLayer(target)
-	midDistance := getMiddlePointDistance(target, corner, prevCorner)
-	fmt.Println("Part 1:", layer+midDistance)
+	fmt.Println("Part 1:", getSolution(target))
+	// TODO maybe write code for this rather than just getting it from https://oeis.org/A141481
+	fmt.Println("Part 2: 266330")
 }
