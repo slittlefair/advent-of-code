@@ -93,7 +93,7 @@ func findSolution(input []string, expectedChips []int) (string, int, error) {
 	// Keep running until we have run all of the instructions
 	for {
 		for _, bot := range bots {
-			if slice.IntSlicesAreEqual(bot.vals, expectedChips) {
+			if slice.Equal(bot.vals, expectedChips) {
 				part1 = strings.Split(bot.id, " ")[1]
 			}
 		}

@@ -73,7 +73,7 @@ func (s solution) getLockStatus() string {
 }
 
 func (s solution) isValidRoom(char string, diff graph.Co) bool {
-	if !slice.StringInSlice(char, []string{"b", "c", "d", "e", "f"}) {
+	if !slice.Contains([]string{"b", "c", "d", "e", "f"}, char) {
 		return false
 	}
 	co := graph.Co{X: s.currentRoom.X + diff.X, Y: s.currentRoom.Y + diff.Y}

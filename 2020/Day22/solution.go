@@ -74,7 +74,7 @@ func (g *Game) playNormalGame() Deck {
 
 func (g Game) deckSeen(seen []Game) bool {
 	for _, game := range seen {
-		if slice.IntSlicesAreEqual(game.player1, g.player1) && slice.IntSlicesAreEqual(game.player2, g.player2) {
+		if slice.Equal(game.player1, g.player1) && slice.Equal(game.player2, g.player2) {
 			return true
 		}
 	}

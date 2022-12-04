@@ -18,24 +18,35 @@ func StringSliceToIntSlice(ss []string) ([]int, error) {
 	return is, nil
 }
 
-// StringInSlice returns a boolean based on if the given string is in the given slice
-func StringInSlice(s string, sl []string) bool {
-	for _, k := range sl {
-		if k == s {
+// Contains returns a boolean based on if the given elements is in the given slice
+func Contains[K comparable](s []K, v K) bool {
+	for _, val := range s {
+		if val == v {
 			return true
 		}
 	}
 	return false
 }
 
-// Permutations returns all ordered permutations of a slice of strings
-func Permutations(arr []string) [][]string {
-	var helper func([]string, int)
-	res := [][]string{}
+// Index returns the index of the given element in the given slice. It returns -1 if
+// element is not in the slice.
+func Index[K comparable](sl []K, s K) int {
+	for i, k := range sl {
+		if k == s {
+			return i
+		}
+	}
+	return -1
+}
 
-	helper = func(arr []string, n int) {
+// Permutations returns all ordered permutations of a slice
+func Permutations[K comparable](arr []K) [][]K {
+	var helper func([]K, int)
+	res := [][]K{}
+
+	helper = func(arr []K, n int) {
 		if n == 1 {
-			tmp := make([]string, len(arr))
+			tmp := make([]K, len(arr))
 			copy(tmp, arr)
 			res = append(res, tmp)
 		} else {
@@ -57,12 +68,12 @@ func Permutations(arr []string) [][]string {
 	return res
 }
 
-// StringSlicesEqual takes two slices and returns whether they contain the same elements
-func StringSlicesContainSameElements(a []string, b []string) (equal bool) {
+// SameElements returns whether the two gives slices contain the same elements
+func SameElements[K comparable](a []K, b []K) bool {
 	if len(a) != len(b) {
 		return false
 	}
-	vals := make(map[string]bool)
+	vals := make(map[K]bool)
 	for _, v := range a {
 		vals[v] = true
 	}
@@ -74,8 +85,7 @@ func StringSlicesContainSameElements(a []string, b []string) (equal bool) {
 	return true
 }
 
-// IntSlicesAreEqual returns a bool depending on whether the given slices are equal.
-func IntSlicesAreEqual(slice1, slice2 []int) bool {
+func Equal[K comparable](slice1, slice2 []K) bool {
 	if len(slice1) != len(slice2) {
 		return false
 	}
@@ -88,8 +98,8 @@ func IntSlicesAreEqual(slice1, slice2 []int) bool {
 }
 
 // Remove removes the element at index i from slice s and returns that slice, whilst keeping the original in tact
-func Remove(s []int, i int) []int {
-	ret := make([]int, 0)
+func Remove[K comparable](s []K, i int) []K {
+	ret := make([]K, 0)
 	ret = append(ret, s[:i]...)
 	return append(ret, s[i+1:]...)
 }
