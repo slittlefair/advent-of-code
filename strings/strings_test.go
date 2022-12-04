@@ -56,3 +56,20 @@ func TestIsLower(t *testing.T) {
 		})
 	}
 }
+
+func TestAreAnagrams(t *testing.T) {
+	t.Run("returns false if strings are of different lengths", func(t *testing.T) {
+		got := strings.AreAnagrams("angered", "enrage")
+		assert.False(t, got)
+	})
+
+	t.Run("returns false if strings are same length but not anagrams", func(t *testing.T) {
+		got := strings.AreAnagrams("angered", "enrages")
+		assert.False(t, got)
+	})
+
+	t.Run("returns true if strings are anagrams", func(t *testing.T) {
+		got := strings.AreAnagrams("dictionary", "indicatory")
+		assert.True(t, got)
+	})
+}
