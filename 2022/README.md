@@ -4,3 +4,4 @@
 - [x] Day 2 - Rock Paper Scissors :rock: :page_with_curl: :scissors:
 - [x] Day 3 - Rucksack Reorganization :school_satchel: :card_index_dividers:
 - [x] Day 4 - Camp Cleanup :tent: :broom:
+- [ ] Day 5 - Supply Stacks :package: :package:
