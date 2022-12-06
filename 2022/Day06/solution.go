@@ -8,21 +8,17 @@ import (
 // Find the index after the makrer that contains n distinct characters
 func findStartMarker(input string, n int) (int, error) {
 	// Frequency map of characters
-	chars := map[string]int{}
+	chars := map[byte]int{}
 	for i := 0; i < len(input)-1; i++ {
-		chars[string(input[i])]++
-		// If the length of the frequency map is n and all frequencies are 1 then we have found
-		// n distinct consecutive characters
+		chars[input[i]]++
+		// If the length of the frequency map is n then we have found n distinct consecutive characters
 		if len(chars) == n {
-			foundPacket := true
-			if foundPacket {
-				return i + 1, nil
-			}
+			return i + 1, nil
 		}
 		// If we are more than n characters through the input then we can start removing characters
 		// that have come before our current one
 		if i >= n-1 {
-			c := string(input[i-(n-1)])
+			c := input[i-(n-1)]
 			chars[c]--
 			// We are looking for the map to be n characters long so delete any that have 0 frequency
 			if chars[c] == 0 {
