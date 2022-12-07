@@ -30,9 +30,8 @@ func (dm dirMap) handleFileOrDir(line string, currentDir *node) error {
 		dm[newSys.id] = newSys
 	} else {
 		// Otherwise we have a file, add its size to its parent, that dir's parent and so on
-		var n string
 		var size int
-		_, err := fmt.Sscanf(line, "%d %s", &size, &n)
+		_, err := fmt.Sscanf(line, "%d", &size)
 		if err != nil {
 			return fmt.Errorf("addFileOrDir on %s: %w", line, err)
 		}
@@ -43,16 +42,6 @@ func (dm dirMap) handleFileOrDir(line string, currentDir *node) error {
 		}
 	}
 	return nil
-}
-
-func (dm dirMap) getSub100000Dirs() int {
-	sum := 0
-	for _, dir := range dm {
-		if dir.size <= 100000 {
-			sum += dir.size
-		}
-	}
-	return sum
 }
 
 func parseInput(input []string) (dirMap, error) {
@@ -88,6 +77,16 @@ func parseInput(input []string) (dirMap, error) {
 		}
 	}
 	return dm, nil
+}
+
+func (dm dirMap) getSub100000Dirs() int {
+	sum := 0
+	for _, dir := range dm {
+		if dir.size <= 100000 {
+			sum += dir.size
+		}
+	}
+	return sum
 }
 
 func (dm dirMap) findDirToDelete() int {
