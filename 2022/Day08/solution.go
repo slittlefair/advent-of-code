@@ -26,6 +26,8 @@ func parseInput(input []string) TreeMap {
 	return tm
 }
 
+// Create an "enum" (as close as Go allows) for directions which we use to let the traverse function
+// know whether to run along the x or y axis
 type Direction int
 
 const (
@@ -52,9 +54,11 @@ func (tm TreeMap) travel(co graph.Co, from, to, change int, direction Direction)
 			visible = false
 			if viewingDistance == 0 {
 				viewingDistance = dist
+				break
 			}
 		}
 	}
+	// If viewing stance is still 0 we have got to the edge without being blocked
 	if viewingDistance == 0 {
 		viewingDistance = dist
 	}
@@ -62,12 +66,13 @@ func (tm TreeMap) travel(co graph.Co, from, to, change int, direction Direction)
 }
 
 func (tm TreeMap) optimiseTreehouseLocation() (int, int) {
-	sum := 0
+	visibleTrees := 0
 	highestScenicScore := 0
 	for co := range tm.graph {
-		// if a tree is on the edge then it is visible
+		// If a tree is on the edge then it is visible and has at least one viewing distance of 0,
+		// giving it a scenic score of 0 and making it not the highest
 		if co.X == 0 || co.X == tm.maxX || co.Y == 0 || co.Y == tm.maxY {
-			sum++
+			visibleTrees++
 		} else {
 			var visible bool
 			var viewingDistance int
@@ -94,22 +99,22 @@ func (tm TreeMap) optimiseTreehouseLocation() (int, int) {
 			visibleDirections[3] = visible
 			scenicScore *= viewingDistance
 
-			// check all directions and if any of them are visible then the tree is visible
+			// Check all directions and if any of them are visible then the tree is visible
 			for _, b := range visibleDirections {
 				if b {
-					sum++
+					visibleTrees++
 					break
 				}
 			}
 
-			// compare the tree's scenic score with the current highest and set it if it's higher
+			// Compare the tree's scenic score with the current highest and set it if it's higher
 			if scenicScore > highestScenicScore {
 				highestScenicScore = scenicScore
 			}
 		}
 	}
 
-	return sum, highestScenicScore
+	return visibleTrees, highestScenicScore
 }
 
 func main() {
