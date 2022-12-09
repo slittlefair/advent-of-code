@@ -6,3 +6,4 @@
 - [x] Day 4 - Camp Cleanup :tent: :broom:
 - [x] Day 6 - Tuning Trouble :notes: :confounded:
 - [x] Day 7 - No Space Left On Device :no_mobile_phones: :computer:
+- [ ] Day 9 - Rope Bridge :yarn: :bridge_at_night:
