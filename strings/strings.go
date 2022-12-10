@@ -2,6 +2,8 @@ package strings
 
 import "unicode"
 
+var BLOCK = "\u2588"
+
 // IsUpper returns true if all characters in a string are upper case, false otherwise
 func IsUpper(s string) bool {
 	for _, r := range s {

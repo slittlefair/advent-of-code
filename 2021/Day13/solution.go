@@ -4,6 +4,7 @@ import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/graph"
 	"Advent-of-Code/maths"
+	"Advent-of-Code/strings"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -73,7 +74,7 @@ func (p Paper) printPaper() {
 	for y := 0; y <= p.MaxY; y++ {
 		for x := 0; x <= p.MaxX; x++ {
 			if _, ok := p.Dots[graph.Co{X: x, Y: y}]; ok {
-				fmt.Print("\u2588")
+				fmt.Print(strings.BLOCK)
 			} else {
 				fmt.Print(" ")
 			}

@@ -2,6 +2,7 @@ package main
 
 import (
 	"Advent-of-Code/graph"
+	"Advent-of-Code/strings"
 	"fmt"
 	"testing"
 
@@ -96,19 +97,19 @@ func TestCheckCycle(t *testing.T) {
 			name: "sets the current pixel to a block if the x value is on the left of the sprite",
 			co:   graph.Co{X: 10, Y: 0},
 			x:    11,
-			want: "\u2588",
+			want: strings.BLOCK,
 		},
 		{
 			name: "sets the current pixel to a block if the x value is on the right of the sprite",
 			co:   graph.Co{X: 12, Y: 0},
 			x:    11,
-			want: "\u2588",
+			want: strings.BLOCK,
 		},
 		{
 			name: "sets the current pixel to a block if the x value is in the centre of the sprite",
 			co:   graph.Co{X: 10, Y: 0},
 			x:    10,
-			want: "\u2588",
+			want: strings.BLOCK,
 		},
 	}
 
@@ -162,7 +163,7 @@ func TestHandleInstruction(t *testing.T) {
 			cycle: 1,
 			co:    graph.Co{X: 1, Y: 0},
 			pixels: map[graph.Co]string{
-				{X: 0, Y: 0}: "\u2588",
+				{X: 0, Y: 0}: strings.BLOCK,
 			},
 		}
 		err := c.handleInstruction("noop")
@@ -176,7 +177,7 @@ func TestHandleInstruction(t *testing.T) {
 			cycle: 1,
 			co:    graph.Co{X: 1, Y: 0},
 			pixels: map[graph.Co]string{
-				{X: 0, Y: 0}: "\u2588",
+				{X: 0, Y: 0}: strings.BLOCK,
 			},
 		}
 		want := &cpu{
@@ -184,9 +185,9 @@ func TestHandleInstruction(t *testing.T) {
 			x:     4,
 			co:    graph.Co{X: 3, Y: 0},
 			pixels: map[graph.Co]string{
-				{X: 0, Y: 0}: "\u2588",
-				{X: 1, Y: 0}: "\u2588",
-				{X: 2, Y: 0}: "\u2588",
+				{X: 0, Y: 0}: strings.BLOCK,
+				{X: 1, Y: 0}: strings.BLOCK,
+				{X: 2, Y: 0}: strings.BLOCK,
 			},
 		}
 		err := c.handleInstruction("addx 3")
@@ -225,11 +226,11 @@ func TestCompleteCycles(t *testing.T) {
 			cycle: 5,
 			co:    graph.Co{X: 5, Y: 0},
 			pixels: map[graph.Co]string{
-				{X: 0, Y: 0}: "\u2588",
-				{X: 1, Y: 0}: "\u2588",
-				{X: 2, Y: 0}: "\u2588",
-				{X: 3, Y: 0}: "\u2588",
-				{X: 4, Y: 0}: "\u2588",
+				{X: 0, Y: 0}: strings.BLOCK,
+				{X: 1, Y: 0}: strings.BLOCK,
+				{X: 2, Y: 0}: strings.BLOCK,
+				{X: 3, Y: 0}: strings.BLOCK,
+				{X: 4, Y: 0}: strings.BLOCK,
 			},
 		}
 		err := c.completeCycles(input)
