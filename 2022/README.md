@@ -8,4 +8,4 @@
 - [x] Day 6 - Tuning Trouble :notes: :confounded:
 - [x] Day 7 - No Space Left On Device :no_mobile_phones: :computer:
 - [x] Day 8 - Treetop Tree House :evergreen_tree: :house:
-- [ ] Day 10 - Cathode-Ray Tube :tv: :iphone:
+- [x] Day 10 - Cathode-Ray Tube :tv: :iphone:
