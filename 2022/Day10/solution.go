@@ -4,6 +4,7 @@ import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/graph"
 	"Advent-of-Code/maths"
+	"Advent-of-Code/strings"
 	"fmt"
 )
 
@@ -27,8 +28,7 @@ func (cpu *cpu) checkCycle() {
 
 	// Part 2
 	if maths.Abs(cpu.co.X-cpu.x) <= 1 {
-		// Solid white block
-		cpu.pixels[cpu.co] = "\u2588"
+		cpu.pixels[cpu.co] = strings.BLOCK
 	} else {
 		cpu.pixels[cpu.co] = " "
 	}
