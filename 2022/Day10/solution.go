@@ -17,31 +17,27 @@ type cpu struct {
 	pixels map[graph.Co]string
 }
 
-func (cpu cpu) printGrid() {
-	for y := 1; y <= 6; y++ {
-		for x := 0; x < 40; x++ {
-			fmt.Print(cpu.pixels[graph.Co{X: x, Y: y}])
-		}
-		fmt.Println()
-	}
-}
-
 func (cpu *cpu) checkCycle() {
 	cpu.cycle++
+
+	// Part 1
 	if (cpu.cycle+20)%40 == 0 {
 		cpu.signal += cpu.cycle * cpu.x
 	}
 
-	cpu.co.X++
-	if (cpu.cycle+39)%40 == 0 {
-		fmt.Println(cpu.cycle, cpu.co.X)
-		cpu.co.X = 0
-		cpu.co.Y++
-	}
+	// Part 2
 	if maths.Abs(cpu.co.X-cpu.x) <= 1 {
-		cpu.pixels[cpu.co] = "#"
+		// Solid white block
+		cpu.pixels[cpu.co] = "\u2588"
 	} else {
 		cpu.pixels[cpu.co] = " "
+	}
+
+	// If we're at the end of a row, move down to the start of the next
+	cpu.co.X++
+	if cpu.co.X == 40 {
+		cpu.co.X = 0
+		cpu.co.Y++
 	}
 }
 
@@ -70,6 +66,15 @@ func (cpu *cpu) completeCycles(input []string) error {
 		}
 	}
 	return nil
+}
+
+func (cpu cpu) printGrid() {
+	for y := 0; y < 6; y++ {
+		for x := 0; x < 40; x++ {
+			fmt.Print(cpu.pixels[graph.Co{X: x, Y: y}])
+		}
+		fmt.Println()
+	}
 }
 
 func main() {
