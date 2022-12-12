@@ -10,3 +10,4 @@
 - [x] Day 8 - Treetop Tree House :evergreen_tree: :house:
 - [x] Day 9 - Rope Bridge :yarn: :bridge_at_night:
 - [x] Day 10 - Cathode-Ray Tube :tv: :iphone:
+- [ ] Day 12 - Hill Climbing Algorithm :mountain_snow: :climbing:
