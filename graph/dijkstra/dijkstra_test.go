@@ -21,7 +21,7 @@ func TestPriorityQueue_Len(t *testing.T) {
 		},
 		{
 			name: "returns the length of the given queue",
-			pq:   dijkstra.PriorityQueue{&dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}, &dijkstra.Path{}},
+			pq:   dijkstra.PriorityQueue{{}, {}, {}, {}, {}, {}, {}},
 			want: 7,
 		},
 	}
@@ -47,13 +47,13 @@ func TestPriorityQueue_Less(t *testing.T) {
 		{
 			name: "returns true if the value of the first item is less then the value of the second",
 			pq: dijkstra.PriorityQueue{
-				&dijkstra.Path{Value: 3},
-				&dijkstra.Path{Value: 1},
-				&dijkstra.Path{Value: 7},
-				&dijkstra.Path{Value: 4},
-				&dijkstra.Path{Value: 5},
-				&dijkstra.Path{Value: 2},
-				&dijkstra.Path{Value: 6},
+				{Value: 3},
+				{Value: 1},
+				{Value: 7},
+				{Value: 4},
+				{Value: 5},
+				{Value: 2},
+				{Value: 6},
 			},
 			args: args{i: 4, j: 6},
 			want: true,
@@ -61,13 +61,13 @@ func TestPriorityQueue_Less(t *testing.T) {
 		{
 			name: "returns false if the value of the first item is not less then the value of the second",
 			pq: dijkstra.PriorityQueue{
-				&dijkstra.Path{Value: 3},
-				&dijkstra.Path{Value: 1},
-				&dijkstra.Path{Value: 7},
-				&dijkstra.Path{Value: 4},
-				&dijkstra.Path{Value: 5},
-				&dijkstra.Path{Value: 2},
-				&dijkstra.Path{Value: 6},
+				{Value: 3},
+				{Value: 1},
+				{Value: 7},
+				{Value: 4},
+				{Value: 5},
+				{Value: 2},
+				{Value: 6},
 			},
 			args: args{i: 4, j: 5},
 			want: false,
@@ -84,22 +84,22 @@ func TestPriorityQueue_Less(t *testing.T) {
 func TestPriorityQueue_Swap(t *testing.T) {
 	t.Run("swaps the items at the given indices", func(t *testing.T) {
 		pq := dijkstra.PriorityQueue{
-			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
 		}
 		want := dijkstra.PriorityQueue{
-			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
 		}
 		pq.Swap(2, 5)
 		assert.Equal(t, want, pq)
@@ -109,23 +109,23 @@ func TestPriorityQueue_Swap(t *testing.T) {
 func TestPriorityQueue_Push(t *testing.T) {
 	t.Run("pushes a Path to the PriorityQueue", func(t *testing.T) {
 		pq := dijkstra.PriorityQueue{
-			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
 		}
 		want := dijkstra.PriorityQueue{
-			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-			&dijkstra.Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
+			{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
 		}
 		pq.Push(&dijkstra.Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}})
 		assert.Equal(t, want, pq)
@@ -135,24 +135,24 @@ func TestPriorityQueue_Push(t *testing.T) {
 func TestPriorityQueue_Pop(t *testing.T) {
 	t.Run("removes the last item from the PriorityQueue", func(t *testing.T) {
 		pq := &dijkstra.PriorityQueue{
-			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
-			&dijkstra.Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
+			{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}},
 		}
 		want := &dijkstra.Path{Value: 9, Nodes: []graph.Co{{X: 9, Y: 9}}}
 		want1 := &dijkstra.PriorityQueue{
-			&dijkstra.Path{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
-			&dijkstra.Path{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
-			&dijkstra.Path{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
-			&dijkstra.Path{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
-			&dijkstra.Path{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
-			&dijkstra.Path{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
-			&dijkstra.Path{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
+			{Value: 3, Nodes: []graph.Co{{X: 0, Y: 1}}},
+			{Value: 1, Nodes: []graph.Co{{X: 1, Y: 1}}},
+			{Value: 2, Nodes: []graph.Co{{X: 7, Y: 1}, {X: 6, Y: 4}}},
+			{Value: 4, Nodes: []graph.Co{{X: 0, Y: 4}, {X: 10, Y: 9}}},
+			{Value: 5, Nodes: []graph.Co{{X: 0, Y: 5}}},
+			{Value: 7, Nodes: []graph.Co{{X: 2, Y: 1}}},
+			{Value: 6, Nodes: []graph.Co{{X: 8, Y: 1}}},
 		}
 		got := pq.Pop()
 		assert.Equal(t, want, got)
