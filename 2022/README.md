@@ -11,3 +11,4 @@
 - [x] Day 9 - Rope Bridge :yarn: :bridge_at_night:
 - [x] Day 10 - Cathode-Ray Tube :tv: :iphone:
 - [x] Day 11 - Monkey in the Middle :see_no_evil: :hear_no_evil: :speak_no_evil:
+- [x] Day 12 - Hill Climbing Algorithm :mountain_snow: :climbing:
