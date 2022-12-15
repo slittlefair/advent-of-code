@@ -9,38 +9,38 @@ import (
 // Determines whether two elements are in the correct order. We return a negative integer if they
 // are in the correct order, a positive integer if they are in the incorrect order or zero if the
 // elements are identical in this comparison.
-func isInCorrectOrder(left, right interface{}) int {
-	l, leftIsArray := left.([]interface{})
-	r, rightIsArray := right.([]interface{})
+func comparePackets(pkt1, pkt2 interface{}) int {
+	left, pkt1IsArray := pkt1.([]interface{})
+	right, pkt2IsArray := pkt2.([]interface{})
 
-	if !leftIsArray && !rightIsArray {
+	if !pkt1IsArray && !pkt2IsArray {
 		// If neither element is an array then both are ints, so compare their values
-		return int(left.(float64)) - int(right.(float64))
+		return int(pkt1.(float64)) - int(pkt2.(float64))
 	}
 
 	// We either have two arrays or an array and an int, so if we have any ints we need to convert
 	// it to an array containing itself
-	if !leftIsArray {
-		l = []interface{}{left}
+	if !pkt1IsArray {
+		left = []interface{}{pkt1}
 	}
-	if !rightIsArray {
-		r = []interface{}{right}
+	if !pkt2IsArray {
+		right = []interface{}{pkt2}
 	}
 
 	// Run through each element of left and right arrays and compare them. If we have determined an
 	// order, return it, otherwise move onto the next element
-	for i := 0; i < len(l) && i < len(r); i++ {
-		if correctOrder := isInCorrectOrder(l[i], r[i]); correctOrder != 0 {
+	for i := 0; i < len(left) && i < len(right); i++ {
+		if correctOrder := comparePackets(left[i], right[i]); correctOrder != 0 {
 			return correctOrder
 		}
 	}
 
 	// After running through each element we can make a determination based on number of elements.
 	// If the arrays are the same length then we haven't made a decision so we can keep going.
-	return len(l) - len(r)
+	return len(left) - len(right)
 }
 
-func traverseInput(input []string) (int, int, error) {
+func findSolutions(input []string) (int, int, error) {
 	sumCorrectIndices := 0
 	pair := 0
 	allPackets := []interface{}{}
@@ -63,7 +63,7 @@ func traverseInput(input []string) (int, int, error) {
 
 		allPackets = append(allPackets, left, right)
 
-		if isInCorrectOrder(left, right) <= 0 {
+		if comparePackets(left, right) <= 0 {
 			sumCorrectIndices += pair
 		}
 	}
@@ -76,10 +76,10 @@ func traverseInput(input []string) (int, int, error) {
 	// then its index will be one more).
 	var packetIndex2, packetIndex6 = 1, 1
 	for _, pkt := range allPackets {
-		if isInCorrectOrder(pkt, []interface{}{[]interface{}{float64(2)}}) <= 0 {
+		if comparePackets(pkt, []interface{}{[]interface{}{float64(2)}}) <= 0 {
 			packetIndex2++
 		}
-		if isInCorrectOrder(pkt, []interface{}{[]interface{}{float64(6)}}) <= 0 {
+		if comparePackets(pkt, []interface{}{[]interface{}{float64(6)}}) <= 0 {
 			packetIndex6++
 		}
 	}
@@ -95,7 +95,7 @@ func traverseInput(input []string) (int, int, error) {
 
 func main() {
 	input := file.Read()
-	part1, part2, err := traverseInput(input)
+	part1, part2, err := findSolutions(input)
 	if err != nil {
 		fmt.Println(err)
 		return
