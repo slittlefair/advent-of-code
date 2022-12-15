@@ -4,7 +4,6 @@ import (
 	"Advent-of-Code/file"
 	"fmt"
 	"regexp"
-	"sort"
 	"strconv"
 )
 
@@ -131,10 +130,17 @@ func (t Troop) initialiseTroop(allItems [][]int) {
 func (t Troop) doMonkeyBusiness(n int, worryFunc func(worryLevel int) int, allItems [][]int) int {
 	t.initialiseTroop(allItems)
 	t.throwItems(n, worryFunc)
-	sort.Slice(t, func(i, j int) bool {
-		return t[i].inspectCount > t[j].inspectCount
-	})
-	return t[0].inspectCount * t[1].inspectCount
+	highestCount, secondHighestCount := 0, 0
+	for _, m := range t {
+		if m.inspectCount > highestCount {
+			secondHighestCount = highestCount
+			highestCount = m.inspectCount
+		} else if m.inspectCount > secondHighestCount {
+			secondHighestCount = m.inspectCount
+		}
+	}
+
+	return highestCount * secondHighestCount
 }
 
 func findSolutions(input []string) (int, int, error) {
