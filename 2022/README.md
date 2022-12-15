@@ -11,3 +11,4 @@
 - [x] Day 9 - Rope Bridge :yarn: :bridge_at_night:
 - [x] Day 10 - Cathode-Ray Tube :tv: :iphone:
 - [x] Day 12 - Hill Climbing Algorithm :mountain_snow: :climbing:
+- [ ] Day 13 - Distress Signal :anguished: :vertical_traffic_light:
