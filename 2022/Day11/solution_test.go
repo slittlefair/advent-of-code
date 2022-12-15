@@ -7,6 +7,17 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
+func assertTroopEqual(t *testing.T, troop, want Troop, allItems [][]int) {
+	for i, monkey := range troop {
+		assert.Equal(t, want[i].items, allItems[i])
+		assert.Equal(t, want[i].id, monkey.id)
+		assert.Equal(t, want[i].test, monkey.test)
+		assert.Equal(t, want[i].ifTrue, monkey.ifTrue)
+		assert.Equal(t, want[i].ifFalse, monkey.ifFalse)
+		assert.Equal(t, want[i].inspectCount, monkey.inspectCount)
+	}
+}
+
 func TestCreateMonkey(t *testing.T) {
 	errTests := []struct {
 		name  string
@@ -203,7 +214,7 @@ func TestParseInput(t *testing.T) {
 		assert.Error(t, err)
 	})
 
-	t.Run("returns an error in an input line is invalid", func(t *testing.T) {
+	t.Run("returns a troop parsed from input", func(t *testing.T) {
 		input := []string{
 			"Monkey 0:",
 			"  Starting items: 79, 98",
@@ -264,13 +275,7 @@ func TestParseInput(t *testing.T) {
 			},
 		}
 		troop, allItems, err := parseInput(input)
-		for i, monkey := range troop {
-			assert.Equal(t, want[i].items, allItems[i])
-			assert.Equal(t, want[i].id, monkey.id)
-			assert.Equal(t, want[i].test, monkey.test)
-			assert.Equal(t, want[i].ifTrue, monkey.ifTrue)
-			assert.Equal(t, want[i].ifFalse, monkey.ifFalse)
-		}
+		assertTroopEqual(t, troop, want, allItems)
 		assert.NoError(t, err)
 	})
 }
@@ -404,4 +409,282 @@ func TestThrowItems(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestInitialiseTroop(t *testing.T) {
+	allItems := [][]int{
+		{79, 98},
+		{54, 65, 75, 74},
+		{79, 60, 97},
+		{74},
+	}
+
+	want := &Troop{
+		{
+			id:           0,
+			operation:    func(old int) int { return old * 19 },
+			test:         23,
+			ifTrue:       2,
+			ifFalse:      3,
+			inspectCount: 0,
+			items:        []int{79, 98},
+		},
+		{
+			id:           1,
+			operation:    func(old int) int { return old + 6 },
+			test:         19,
+			ifTrue:       2,
+			ifFalse:      0,
+			inspectCount: 0,
+			items:        []int{54, 65, 75, 74},
+		},
+		{
+			id:           2,
+			operation:    func(old int) int { return old * old },
+			test:         13,
+			ifTrue:       1,
+			ifFalse:      3,
+			inspectCount: 0,
+			items:        []int{79, 60, 97},
+		},
+		{
+			id:           3,
+			operation:    func(old int) int { return old + 3 },
+			test:         17,
+			ifTrue:       0,
+			ifFalse:      1,
+			inspectCount: 0,
+			items:        []int{74},
+		},
+	}
+
+	t.Run("initialises a starting troop with all items and inspect count", func(t *testing.T) {
+		troop := &Troop{
+			{
+				id:        0,
+				operation: func(old int) int { return old * 19 },
+				test:      23,
+				ifTrue:    2,
+				ifFalse:   3,
+			},
+			{
+				id:        1,
+				operation: func(old int) int { return old + 6 },
+				test:      19,
+				ifTrue:    2,
+				ifFalse:   0,
+			},
+			{
+				id:        2,
+				operation: func(old int) int { return old * old },
+				test:      13,
+				ifTrue:    1,
+				ifFalse:   3,
+			},
+			{
+				id:        3,
+				operation: func(old int) int { return old + 3 },
+				test:      17,
+				ifTrue:    0,
+				ifFalse:   1,
+			},
+		}
+		troop.initialiseTroop(allItems)
+		assertTroopEqual(t, *troop, *want, allItems)
+	})
+
+	t.Run("reinitialises a troop with all items and inspect count", func(t *testing.T) {
+		troop := &Troop{
+			{
+				id:           0,
+				operation:    func(old int) int { return old * 19 },
+				test:         23,
+				ifTrue:       2,
+				ifFalse:      3,
+				inspectCount: 10,
+				items:        []int{21, 23},
+			},
+			{
+				id:           1,
+				operation:    func(old int) int { return old + 6 },
+				test:         19,
+				ifTrue:       2,
+				ifFalse:      0,
+				inspectCount: 122,
+				items:        []int{},
+			},
+			{
+				id:           2,
+				operation:    func(old int) int { return old * old },
+				test:         13,
+				ifTrue:       1,
+				ifFalse:      3,
+				inspectCount: 9,
+				items:        []int{98, 56, 43, 29},
+			},
+			{
+				id:           3,
+				operation:    func(old int) int { return old + 3 },
+				test:         17,
+				ifTrue:       0,
+				ifFalse:      1,
+				inspectCount: 76,
+				items:        []int{100, 101, 109, 108, 11111},
+			},
+		}
+		troop.initialiseTroop(allItems)
+		assertTroopEqual(t, *troop, *want, allItems)
+	})
+}
+
+func TestDoMonkeyBusiness(t *testing.T) {
+	t.Run("does monkey business, advent of code example 1", func(t *testing.T) {
+		troop := Troop{
+			{
+				id:        0,
+				operation: func(old int) int { return old * 19 },
+				test:      23,
+				ifTrue:    2,
+				ifFalse:   3,
+			},
+			{
+				id:        1,
+				operation: func(old int) int { return old + 6 },
+				test:      19,
+				ifTrue:    2,
+				ifFalse:   0,
+			},
+			{
+				id:        2,
+				operation: func(old int) int { return old * old },
+				test:      13,
+				ifTrue:    1,
+				ifFalse:   3,
+			},
+			{
+				id:        3,
+				operation: func(old int) int { return old + 3 },
+				test:      17,
+				ifTrue:    0,
+				ifFalse:   1,
+			},
+		}
+		allItems := [][]int{
+			{79, 98},
+			{54, 65, 75, 74},
+			{79, 60, 97},
+			{74},
+		}
+
+		got := troop.doMonkeyBusiness(20, func(worryLevel int) int { return worryLevel / 3 }, allItems)
+		assert.Equal(t, 10605, got)
+	})
+
+	t.Run("does monkey business, advent of code example 2", func(t *testing.T) {
+		troop := Troop{
+			{
+				id:        0,
+				operation: func(old int) int { return old * 19 },
+				test:      23,
+				ifTrue:    2,
+				ifFalse:   3,
+			},
+			{
+				id:        1,
+				operation: func(old int) int { return old + 6 },
+				test:      19,
+				ifTrue:    2,
+				ifFalse:   0,
+			},
+			{
+				id:        2,
+				operation: func(old int) int { return old * old },
+				test:      13,
+				ifTrue:    1,
+				ifFalse:   3,
+			},
+			{
+				id:        3,
+				operation: func(old int) int { return old + 3 },
+				test:      17,
+				ifTrue:    0,
+				ifFalse:   1,
+			},
+		}
+		allItems := [][]int{
+			{79, 98},
+			{54, 65, 75, 74},
+			{79, 60, 97},
+			{74},
+		}
+
+		lcm := 1
+		for _, monkey := range troop {
+			lcm *= monkey.test
+		}
+
+		got := troop.doMonkeyBusiness(10000, func(worryLevel int) int { return worryLevel % lcm }, allItems)
+		assert.Equal(t, 2713310158, got)
+	})
+}
+
+func TestFindSolutions(t *testing.T) {
+	t.Run("returns an error if input can't be parsed", func(t *testing.T) {
+		input := []string{
+			"Monkey 0:",
+			"  Starting items: 79, 98",
+			"  Operation: new = old * 19",
+			"  Test: divisible by 23",
+			"    If true: throw to monkey 2",
+			"    If false: throw to monkey 3",
+			"",
+			"Monkey 1:",
+			"  Starting items: 54, 65, 75, 74",
+			"  Operation: new = old + 6",
+			"  Test: divide by 19",
+			"    If true: throw to monkey 2",
+			"    If false: throw to monkey 0",
+			"",
+		}
+		got, got1, err := findSolutions(input)
+		assert.Error(t, err)
+		assert.Equal(t, -1, got)
+		assert.Equal(t, -1, got1)
+	})
+
+	t.Run("returns solutions, advent of code example", func(t *testing.T) {
+		input := []string{
+			"Monkey 0:",
+			"  Starting items: 79, 98",
+			"  Operation: new = old * 19",
+			"  Test: divisible by 23",
+			"    If true: throw to monkey 2",
+			"    If false: throw to monkey 3",
+			"",
+			"Monkey 1:",
+			"  Starting items: 54, 65, 75, 74",
+			"  Operation: new = old + 6",
+			"  Test: divisible by 19",
+			"    If true: throw to monkey 2",
+			"    If false: throw to monkey 0",
+			"",
+			"Monkey 2:",
+			"  Starting items: 79, 60, 97",
+			"  Operation: new = old * old",
+			"  Test: divisible by 13",
+			"    If true: throw to monkey 1",
+			"    If false: throw to monkey 3",
+			"",
+			"Monkey 3:",
+			"  Starting items: 74",
+			"  Operation: new = old + 3",
+			"  Test: divisible by 17",
+			"    If true: throw to monkey 0",
+			"    If false: throw to monkey 1",
+		}
+		got, got1, err := findSolutions(input)
+		assert.NoError(t, err)
+		assert.Equal(t, 10605, got)
+		assert.Equal(t, 2713310158, got1)
+	})
 }
