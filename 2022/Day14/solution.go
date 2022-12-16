@@ -16,10 +16,20 @@ type Waterfall struct {
 	minX, minY, maxX, maxY int
 }
 
-func (w Waterfall) PrintGrid(animate, slowMo, overwrite bool, co graph.Co) {
+func (w Waterfall) PrintGrid(animate, actualInput, slowMo, overwrite bool, co graph.Co, count int) {
 	// If we don't want to animate, return early
 	if !animate {
 		return
+	}
+	xStart := w.minX
+	xEnd := w.maxX
+	yStart := w.minY
+	yEnd := w.maxY
+	if actualInput {
+		xStart = co.X - 10
+		xEnd = co.X + 10
+		yStart = co.Y - 5
+		yEnd = co.Y + 5
 	}
 	// We always want to overwrite the last grid unless it's the first one we're drawing
 	if overwrite {
@@ -29,13 +39,13 @@ func (w Waterfall) PrintGrid(animate, slowMo, overwrite bool, co graph.Co) {
 			time.Sleep(30 * time.Millisecond)
 		}
 		// For every line we've written, write the "cursor up" ANSI escape code
-		for i := w.minY; i <= w.maxY+1; i++ {
+		for i := yStart; i <= yEnd+1; i++ {
 			fmt.Printf("\033[A")
 		}
 	}
 
-	for y := w.minY; y <= w.maxY; y++ {
-		for x := w.minX - 1; x <= w.maxX+1; x++ {
+	for y := yStart; y <= yEnd; y++ {
+		for x := xStart - 1; x <= xEnd+1; x++ {
 			printChar := " "
 			if v, ok := w.grid[graph.Co{X: x, Y: y}]; x == 500 && y == 0 && v != "." {
 				printChar = "+"
@@ -47,7 +57,7 @@ func (w Waterfall) PrintGrid(animate, slowMo, overwrite bool, co graph.Co) {
 		fmt.Println()
 	}
 	// Also print the current coordinate of the falling sand
-	fmt.Printf("X: %03d, Y: %03d\n", co.X, co.Y)
+	fmt.Printf("X: %03d, Y: %03d, count %d\n", co.X, co.Y, count)
 }
 
 func parseInput(input []string) (*Waterfall, error) {
@@ -114,10 +124,10 @@ func (w *Waterfall) extendGrid(sand graph.Co) {
 	}
 }
 
-func (w *Waterfall) releaseTheSand(animate, slowMo bool) (int, int) {
+func (w *Waterfall) releaseTheSand(animate, actualInput, slowMo bool) (int, int) {
 	sand := graph.Co{X: 500, Y: 0}
 	sandCount := 0
-	w.PrintGrid(animate, slowMo, false, sand)
+	w.PrintGrid(animate, actualInput, slowMo, false, sand, sandCount)
 	var part1, part2 int
 
 	for {
@@ -130,7 +140,7 @@ func (w *Waterfall) releaseTheSand(animate, slowMo bool) (int, int) {
 			w.extendGrid(sand)
 		}
 
-		w.PrintGrid(animate, slowMo, true, sand)
+		w.PrintGrid(animate, actualInput, slowMo, true, sand, sandCount)
 
 		// Try and move the sand down, if we can then update the grid and move onto the next loop.
 		co := graph.Co{X: sand.X, Y: sand.Y + 1}
@@ -169,7 +179,7 @@ func (w *Waterfall) releaseTheSand(animate, slowMo bool) (int, int) {
 			sand = graph.Co{X: 500, Y: 0}
 			w.grid[sand] = "."
 			if animate {
-				w.PrintGrid(animate, slowMo, true, sand)
+				w.PrintGrid(animate, actualInput, slowMo, true, sand, sandCount)
 			}
 			break
 		}
@@ -185,8 +195,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	// Animation: true only usable for advent of code's example!
-	part1, part2 := waterfall.releaseTheSand(true, true)
+	part1, part2 := waterfall.releaseTheSand(false, len(input) > 2, true)
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)
 }
