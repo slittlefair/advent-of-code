@@ -16,30 +16,38 @@ type Waterfall struct {
 	minX, minY, maxX, maxY int
 }
 
-func (w Waterfall) PrintGrid(overwrite bool, slowMo bool) {
+func (w Waterfall) PrintGrid(animate, slowMo, overwrite bool, co graph.Co) {
+	// If we don't want to animate, return early
+	if !animate {
+		return
+	}
+	// We always want to overwrite the last grid unless it's the first one we're drawing
 	if overwrite {
 		if slowMo {
 			time.Sleep(100 * time.Millisecond)
 		} else {
 			time.Sleep(30 * time.Millisecond)
 		}
+		// For every line we've written, write the "cursor up" ANSI escape code
 		for i := w.minY; i <= w.maxY+1; i++ {
 			fmt.Printf("\033[A")
 		}
 	}
 
-	for y := w.minY; y <= w.maxY+1; y++ {
+	for y := w.minY; y <= w.maxY; y++ {
 		for x := w.minX - 1; x <= w.maxX+1; x++ {
-			if x == 500 && y == 0 {
-				fmt.Print("+")
-			} else if v, ok := w.grid[graph.Co{X: x, Y: y}]; ok {
-				fmt.Print(v)
-			} else {
-				fmt.Print(".")
+			printChar := " "
+			if v, ok := w.grid[graph.Co{X: x, Y: y}]; x == 500 && y == 0 && v != "." {
+				printChar = "+"
+			} else if ok {
+				printChar = v
 			}
+			fmt.Print(printChar)
 		}
 		fmt.Println()
 	}
+	// Also print the current coordinate of the falling sand
+	fmt.Printf("X: %03d, Y: %03d\n", co.X, co.Y)
 }
 
 func parseInput(input []string) (*Waterfall, error) {
@@ -50,8 +58,10 @@ func parseInput(input []string) (*Waterfall, error) {
 		maxX: 0,
 		maxY: 0,
 	}
+
 	for _, line := range input {
 		corners := strings.Split(line, " -> ")
+
 		for i := 0; i < len(corners)-1; i++ {
 			start, end := corners[i], corners[i+1]
 			var x1, x2, y1, y2 int
@@ -64,11 +74,13 @@ func parseInput(input []string) (*Waterfall, error) {
 				return nil, err
 			}
 
+			// For ease of looping set start coordinates as the lower and end as the higher
 			startX := maths.Min(x1, x2)
 			endX := maths.Max(x1, x2)
 			startY := maths.Min(y1, y2)
 			endY := maths.Max(y1, y2)
 
+			// Update waterfall's min and max values
 			w.minX = maths.Min(w.minX, startX)
 			w.maxX = maths.Max(w.maxX, endX)
 			w.maxY = maths.Max(w.maxY, endY)
@@ -80,45 +92,90 @@ func parseInput(input []string) (*Waterfall, error) {
 			}
 		}
 	}
+
+	// For part 2 increase waterfall.maxY by 2 and add the floor. As the sand can fall diagonally
+	// we need to extend the
+	w.maxY += 2
+	for x := w.minX - 2; x <= w.maxX+2; x++ {
+		w.grid[graph.Co{X: x, Y: w.maxY}] = "#"
+	}
 	return w, nil
 }
 
-func (w *Waterfall) releaseTheSand(animate, slowMo bool) int {
+// If we have reached the floor and are at the edge of the grid then we need to extend it
+func (w *Waterfall) extendGrid(sand graph.Co) {
+	if sand.X < w.minX {
+		w.minX = sand.X
+		w.grid[graph.Co{X: sand.X - 1, Y: w.maxY}] = "#"
+	}
+	if sand.X > w.maxX {
+		w.maxX = sand.X
+		w.grid[graph.Co{X: sand.X + 1, Y: w.maxY}] = "#"
+	}
+}
+
+func (w *Waterfall) releaseTheSand(animate, slowMo bool) (int, int) {
 	sand := graph.Co{X: 500, Y: 0}
 	sandCount := 0
-	if animate {
-		w.PrintGrid(false, slowMo)
-	}
-	for sand.Y < w.maxY+2 {
-		if animate {
-			w.PrintGrid(true, slowMo)
+	w.PrintGrid(animate, slowMo, false, sand)
+	var part1, part2 int
+
+	for {
+		// If we have reached the floor the first time then we have the solution to part 1.
+		// Every time we reach the floor we need to extend it if necessary.
+		if sand.Y == w.maxY-1 {
+			if part1 == 0 {
+				part1 = sandCount
+			}
+			w.extendGrid(sand)
 		}
+
+		w.PrintGrid(animate, slowMo, true, sand)
+
+		// Try and move the sand down, if we can then update the grid and move onto the next loop.
 		co := graph.Co{X: sand.X, Y: sand.Y + 1}
 		if _, ok := w.grid[co]; !ok {
 			delete(w.grid, sand)
 			sand = co
-			w.grid[sand] = "o"
+			w.grid[sand] = "."
 			continue
 		}
+
+		// Try and move the sand down and left, if we can then update the grid and move onto the next loop.
 		co = graph.Co{X: sand.X - 1, Y: sand.Y + 1}
 		if _, ok := w.grid[co]; !ok {
 			delete(w.grid, sand)
 			sand = co
-			w.grid[sand] = "o"
+			w.grid[sand] = "."
 			continue
 		}
+
+		// Try and move the sand down and right, if we can then update the grid and move onto the next loop.
 		co = graph.Co{X: sand.X + 1, Y: sand.Y + 1}
 		if _, ok := w.grid[co]; !ok {
 			delete(w.grid, sand)
 			sand = co
-			w.grid[sand] = "o"
+			w.grid[sand] = "."
 			continue
 		}
 
-		sand = graph.Co{X: 500, Y: 0}
+		// If we can't move the sand then it comes to rest.
+		// If the sand is stopped at the origin then we've found the solution to part2. Update the
+		// grid and print it a final time if we're animating.
+		// Otherwise create a new grain of sand at the top and start moving that one.
 		sandCount++
+		if sand.X == 500 && sand.Y == 0 {
+			part2 = sandCount
+			sand = graph.Co{X: 500, Y: 0}
+			w.grid[sand] = "."
+			if animate {
+				w.PrintGrid(animate, slowMo, true, sand)
+			}
+			break
+		}
+		sand = graph.Co{X: 500, Y: 0}
 	}
-	return sandCount
+	return part1, part2
 }
 
 func main() {
@@ -128,7 +185,8 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	// Only usable for part 1!
-	part1 := waterfall.releaseTheSand(false, false)
+	// Animation: true only usable for advent of code's example!
+	part1, part2 := waterfall.releaseTheSand(true, true)
 	fmt.Println("Part 1:", part1)
+	fmt.Println("Part 2:", part2)
 }
