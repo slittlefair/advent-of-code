@@ -12,4 +12,4 @@
 - [x] Day 10 - Cathode-Ray Tube :tv: :iphone:
 - [x] Day 11 - Monkey in the Middle :see_no_evil: :hear_no_evil: :speak_no_evil:
 - [x] Day 12 - Hill Climbing Algorithm :mountain_snow: :climbing:
-- [ ] Day 13 - Distress Signal :anguished: :vertical_traffic_light:
+- [x] Day 13 - Distress Signal :anguished: :vertical_traffic_light:
