@@ -13,4 +13,4 @@
 - [x] Day 11 - Monkey in the Middle :see_no_evil: :hear_no_evil: :speak_no_evil:
 - [x] Day 12 - Hill Climbing Algorithm :mountain_snow: :climbing:
 - [x] Day 13 - Distress Signal :anguished: :vertical_traffic_light:
-- [ ] Day 14 - Regolith Reservoir :rock: :ocean:
+- [x] Day 14 - Regolith Reservoir :rock: :ocean:
