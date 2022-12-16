@@ -195,7 +195,10 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	part1, part2 := waterfall.releaseTheSand(false, len(input) > 2, true)
+	animate := false
+	actualInput := len(input) > 2
+	slowMo := false
+	part1, part2 := waterfall.releaseTheSand(animate, actualInput, slowMo)
 	fmt.Println("Part 1:", part1)
 	fmt.Println("Part 2:", part2)
 }
