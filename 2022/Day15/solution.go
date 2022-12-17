@@ -58,18 +58,27 @@ func (s Sensors) findBeacon(n int) (int, error) {
 		distances[sns] = graph.CalculateManhattanDistance(sns, bcn)
 	}
 
-	// Walk around the uotside of each sensor's boundaries and see if any of them are within the boundary of
-	// another sensor. If not, we've found the beacon
-	for sns, bcn := range s {
-		dist := graph.CalculateManhattanDistance(sns, bcn)
+	// Walk around the outside of each sensor's boundaries and check that each of those coordinates
+	// is within the boundary of another sensor. If not, we've found the beacon's location
+	for sns := range s {
+		dist := distances[sns]
+		// We know x and y values are within 0 and n so exlude values outside that range
 		for y := maths.Max(sns.Y-dist-1, 0); y <= maths.Min(sns.Y+dist+1, n); y++ {
+			// Given the y coordinate we can work out the possible x values such the coordinate will
+			// be one outside the perimeter of the sensor.
 			offset := dist + 1 - maths.Abs(sns.Y-y)
 		out:
 			for _, x := range []int{sns.X + offset, sns.X - offset} {
+				// If x isn't between 0 and n then it can't be the beacon so continue.
 				if x < 0 || x > n {
 					continue
 				}
 				co := graph.Co{X: x, Y: y}
+				// Loop through the other sensors (no point checking it against itself) and seein if
+				// the coordinate falls within the boundary of it. If it does then it can't be the
+				// beacon so continue to the next possible coordinate value. Otherwise if we've gone
+				// through all other sensors and none of their boundaries contain the coordinate
+				// then we've found the beacon.
 				for otherSns := range s {
 					if otherSns != sns {
 						if graph.CalculateManhattanDistance(otherSns, co) <= distances[otherSns] {
