@@ -7,49 +7,6 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-var aocWaterfall = Waterfall{
-	grid: Grid{
-		{X: 498, Y: 4}:  "#",
-		{X: 498, Y: 5}:  "#",
-		{X: 498, Y: 6}:  "#",
-		{X: 497, Y: 6}:  "#",
-		{X: 496, Y: 6}:  "#",
-		{X: 503, Y: 4}:  "#",
-		{X: 502, Y: 4}:  "#",
-		{X: 502, Y: 5}:  "#",
-		{X: 502, Y: 6}:  "#",
-		{X: 502, Y: 7}:  "#",
-		{X: 502, Y: 8}:  "#",
-		{X: 502, Y: 9}:  "#",
-		{X: 501, Y: 9}:  "#",
-		{X: 500, Y: 9}:  "#",
-		{X: 499, Y: 9}:  "#",
-		{X: 498, Y: 9}:  "#",
-		{X: 497, Y: 9}:  "#",
-		{X: 496, Y: 9}:  "#",
-		{X: 495, Y: 9}:  "#",
-		{X: 494, Y: 9}:  "#",
-		{X: 492, Y: 11}: "#",
-		{X: 493, Y: 11}: "#",
-		{X: 494, Y: 11}: "#",
-		{X: 495, Y: 11}: "#",
-		{X: 496, Y: 11}: "#",
-		{X: 497, Y: 11}: "#",
-		{X: 498, Y: 11}: "#",
-		{X: 499, Y: 11}: "#",
-		{X: 500, Y: 11}: "#",
-		{X: 501, Y: 11}: "#",
-		{X: 502, Y: 11}: "#",
-		{X: 503, Y: 11}: "#",
-		{X: 504, Y: 11}: "#",
-		{X: 505, Y: 11}: "#",
-	},
-	minX: 494,
-	maxX: 503,
-	minY: 0,
-	maxY: 11,
-}
-
 func TestParseInput(t *testing.T) {
 	t.Run("returns an error if first coordinate in a set cannot be parsed", func(t *testing.T) {
 		input := []string{
@@ -76,8 +33,50 @@ func TestParseInput(t *testing.T) {
 			"498,4 -> 498,6 -> 496,6",
 			"503,4 -> 502,4 -> 502,9 -> 494,9",
 		}
+		want := &Waterfall{
+			grid: Grid{
+				{X: 498, Y: 4}:  "#",
+				{X: 498, Y: 5}:  "#",
+				{X: 498, Y: 6}:  "#",
+				{X: 497, Y: 6}:  "#",
+				{X: 496, Y: 6}:  "#",
+				{X: 503, Y: 4}:  "#",
+				{X: 502, Y: 4}:  "#",
+				{X: 502, Y: 5}:  "#",
+				{X: 502, Y: 6}:  "#",
+				{X: 502, Y: 7}:  "#",
+				{X: 502, Y: 8}:  "#",
+				{X: 502, Y: 9}:  "#",
+				{X: 501, Y: 9}:  "#",
+				{X: 500, Y: 9}:  "#",
+				{X: 499, Y: 9}:  "#",
+				{X: 498, Y: 9}:  "#",
+				{X: 497, Y: 9}:  "#",
+				{X: 496, Y: 9}:  "#",
+				{X: 495, Y: 9}:  "#",
+				{X: 494, Y: 9}:  "#",
+				{X: 492, Y: 11}: "#",
+				{X: 493, Y: 11}: "#",
+				{X: 494, Y: 11}: "#",
+				{X: 495, Y: 11}: "#",
+				{X: 496, Y: 11}: "#",
+				{X: 497, Y: 11}: "#",
+				{X: 498, Y: 11}: "#",
+				{X: 499, Y: 11}: "#",
+				{X: 500, Y: 11}: "#",
+				{X: 501, Y: 11}: "#",
+				{X: 502, Y: 11}: "#",
+				{X: 503, Y: 11}: "#",
+				{X: 504, Y: 11}: "#",
+				{X: 505, Y: 11}: "#",
+			},
+			minX: 494,
+			maxX: 503,
+			minY: 0,
+			maxY: 11,
+		}
 		got, err := parseInput(input)
-		assert.Equal(t, &aocWaterfall, got)
+		assert.Equal(t, want, got)
 		assert.NoError(t, err)
 	})
 }
@@ -355,7 +354,49 @@ func TestExtendGrid(t *testing.T) {
 
 func TestReleaseTheSand(t *testing.T) {
 	t.Run("returns solutions to part1 and part2, advent of code example", func(t *testing.T) {
-		got, got1 := aocWaterfall.releaseTheSand(false, false, false)
+		w := &Waterfall{
+			grid: Grid{
+				{X: 498, Y: 4}:  "#",
+				{X: 498, Y: 5}:  "#",
+				{X: 498, Y: 6}:  "#",
+				{X: 497, Y: 6}:  "#",
+				{X: 496, Y: 6}:  "#",
+				{X: 503, Y: 4}:  "#",
+				{X: 502, Y: 4}:  "#",
+				{X: 502, Y: 5}:  "#",
+				{X: 502, Y: 6}:  "#",
+				{X: 502, Y: 7}:  "#",
+				{X: 502, Y: 8}:  "#",
+				{X: 502, Y: 9}:  "#",
+				{X: 501, Y: 9}:  "#",
+				{X: 500, Y: 9}:  "#",
+				{X: 499, Y: 9}:  "#",
+				{X: 498, Y: 9}:  "#",
+				{X: 497, Y: 9}:  "#",
+				{X: 496, Y: 9}:  "#",
+				{X: 495, Y: 9}:  "#",
+				{X: 494, Y: 9}:  "#",
+				{X: 492, Y: 11}: "#",
+				{X: 493, Y: 11}: "#",
+				{X: 494, Y: 11}: "#",
+				{X: 495, Y: 11}: "#",
+				{X: 496, Y: 11}: "#",
+				{X: 497, Y: 11}: "#",
+				{X: 498, Y: 11}: "#",
+				{X: 499, Y: 11}: "#",
+				{X: 500, Y: 11}: "#",
+				{X: 501, Y: 11}: "#",
+				{X: 502, Y: 11}: "#",
+				{X: 503, Y: 11}: "#",
+				{X: 504, Y: 11}: "#",
+				{X: 505, Y: 11}: "#",
+			},
+			minX: 494,
+			maxX: 503,
+			minY: 0,
+			maxY: 11,
+		}
+		got, got1 := w.releaseTheSand(false, false, false)
 		assert.Equal(t, 24, got)
 		assert.Equal(t, 93, got1)
 	})

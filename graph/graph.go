@@ -1,5 +1,7 @@
 package graph
 
+import "Advent-of-Code/maths"
+
 // Co is a simple struct for a graph coordinate with points x, y, z
 type Co struct {
 	X int
@@ -30,11 +32,5 @@ func AdjacentCos(co Co, includeDiagonals bool) []Co {
 func CalculateManhattanDistance(co1, co2 Co) int {
 	x := co1.X - co2.X
 	y := co1.Y - co2.Y
-	if x < 0 {
-		x *= -1
-	}
-	if y < 0 {
-		y *= -1
-	}
-	return x + y
+	return maths.Abs(x) + maths.Abs(y)
 }
