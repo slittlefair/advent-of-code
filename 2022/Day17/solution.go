@@ -17,7 +17,7 @@ func createChamber() Chamber {
 	for x := 0; x <= 8; x++ {
 		chamber[graph.Co{X: x, Y: 0}] = true
 	}
-	for y := 0; y <= 10; y++ {
+	for y := 0; y <= 4; y++ {
 		chamber[graph.Co{X: 0, Y: y}] = true
 		chamber[graph.Co{X: 8, Y: y}] = true
 	}
@@ -25,13 +25,13 @@ func createChamber() Chamber {
 }
 
 func (c Chamber) extendWalls(n int) {
-	for y := n; y <= n+10; y++ {
+	for y := n; y <= n+4; y++ {
 		c[graph.Co{X: 0, Y: y}] = true
 		c[graph.Co{X: 8, Y: y}] = true
 	}
 }
 
-func (c Chamber) highestRocks() int {
+func (c Chamber) highestPoint() int {
 	max := 0
 	for co := range c {
 		if co.X > 0 && co.X < 8 {
@@ -62,7 +62,7 @@ func (c Chamber) move(r rock.Rock, x int, y int) (rock.Rock, bool) {
 	return potential, true
 }
 
-func (c Chamber) highestPoints() [7]int {
+func (c Chamber) getColumnHeightsAndMinimiseChamber() [7]int {
 	hp := [7]int{}
 	for co := range c {
 		if co.X > 0 && co.X < 8 {
@@ -90,27 +90,30 @@ type state struct {
 	height int
 }
 
+type Cache map[[2]int]state
+
 func playTetris(instructions string, n1, n2 int) (int, int, error) {
 	chamber := createChamber()
-	j := 0
-	xTaken := map[int]int{}
-	base := 0
-	cache := map[[2]int]state{}
+	jet := 0
+	cache := Cache{}
 	var part1 int
-	for i := 0; i < n2; i++ {
-		if i == n1 {
-			part1 = chamber.highestRocks()
+	for rockNum := 0; rockNum < n2; rockNum++ {
+		if rockNum == n1 {
+			part1 = chamber.highestPoint()
 		}
-		moved := true
-		highestPoint := chamber.highestRocks()
 
+		moved := true
+		highestPoint := chamber.highestPoint()
 		chamber.extendWalls(highestPoint)
-		piece := rock.Pieces[i%len(rock.Pieces)](highestPoint)
+
+		pieceIdx := rockNum % len(rock.Pieces)
+		piece := rock.Pieces[pieceIdx](highestPoint)
 		for _, co := range piece {
 			chamber[co] = true
 		}
+
 		for moved {
-			inst := string(instructions[j%len(instructions)])
+			inst := string(instructions[jet])
 			switch inst {
 			case "<":
 				piece, _ = chamber.move(piece, -1, 0)
@@ -121,44 +124,32 @@ func playTetris(instructions string, n1, n2 int) (int, int, error) {
 			}
 			piece, moved = chamber.move(piece, 0, -1)
 			if !moved {
-				newBase := maths.Infinity
-				for _, co := range piece {
-					chamber[co] = true
-					xTaken[co.X] = co.Y
-					if base != 0 {
-						newBase = maths.Min(co.Y, newBase)
-					}
-				}
-				base = newBase
+				hp := chamber.getColumnHeightsAndMinimiseChamber()
+				key := [2]int{pieceIdx, jet}
 
-				hp := chamber.highestPoints()
-				key := [2]int{i % len(rock.Pieces), j % len(instructions)}
-
-				if comp, ok := cache[key]; ok && hp == comp.points && i > n1 {
-					heightDiff := chamber.highestRocks() - comp.height
-					cycle := i - comp.rock
-					multiplier := (n2 - i) / cycle
+				if comp, ok := cache[key]; ok && hp == comp.points && rockNum > n1 {
+					heightDiff := chamber.highestPoint() - comp.height
+					cycleLength := rockNum - comp.rock
+					numCycles := (n2 - rockNum) / cycleLength
 					newChamber := Chamber{}
 					for co := range chamber {
-						if co.X > 0 && co.X < 8 && co.Y > 0 {
-							newChamber[graph.Co{X: co.X, Y: co.Y + (heightDiff * multiplier)}] = true
-						}
+						newChamber[graph.Co{X: co.X, Y: co.Y + (heightDiff * numCycles)}] = true
 					}
 					chamber = newChamber
-					i += cycle * multiplier
+					rockNum += cycleLength * numCycles
 					cache = make(map[[2]int]state)
 				} else {
 					cache[key] = state{
 						points: hp,
-						rock:   i,
-						height: chamber.highestRocks(),
+						rock:   rockNum,
+						height: chamber.highestPoint(),
 					}
 				}
 			}
-			j++
+			jet = (jet + 1) % len(instructions)
 		}
 	}
-	return part1, chamber.highestRocks(), nil
+	return part1, chamber.highestPoint(), nil
 }
 
 func main() {
