@@ -4,6 +4,7 @@ import "Advent-of-Code/graph"
 
 type Rock []graph.Co
 
+// Dash creates a dash shaped rock relative to the given y coordinate
 func Dash(y int) Rock {
 	return Rock{
 		{X: 3, Y: y + 4},
@@ -13,6 +14,7 @@ func Dash(y int) Rock {
 	}
 }
 
+// Dash creates a cross shaped rock relative to the given y coordinate
 func Cross(y int) Rock {
 	return Rock{
 		{X: 3, Y: y + 5},
@@ -23,6 +25,7 @@ func Cross(y int) Rock {
 	}
 }
 
+// Dash creates an L shaped rock relative to the given y coordinate
 func L(y int) Rock {
 	return Rock{
 		{X: 3, Y: y + 4},
@@ -33,6 +36,7 @@ func L(y int) Rock {
 	}
 }
 
+// Dash creates an I shaped rock relative to the given y coordinate
 func I(y int) Rock {
 	return Rock{
 		{X: 3, Y: y + 4},
@@ -42,6 +46,7 @@ func I(y int) Rock {
 	}
 }
 
+// Dash creates a square shaped rock relative to the given y coordinate
 func Square(y int) Rock {
 	return Rock{
 		{X: 3, Y: y + 4},
