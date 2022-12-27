@@ -16,7 +16,7 @@ func CreateChamber() Chamber {
 	for x := 0; x <= 8; x++ {
 		chamber[graph.Co{X: x, Y: 0}] = true
 	}
-	for y := 0; y <= 4; y++ {
+	for y := 1; y <= 4; y++ {
 		chamber[graph.Co{X: 0, Y: y}] = true
 		chamber[graph.Co{X: 8, Y: y}] = true
 	}
@@ -25,7 +25,7 @@ func CreateChamber() Chamber {
 
 // ExtendWalls increases the side walls by 4 (the tallest rock) from the given y value
 func (c Chamber) ExtendWalls(n int) {
-	for y := n; y <= n+4; y++ {
+	for y := n; y <= n+3; y++ {
 		c[graph.Co{X: 0, Y: y}] = true
 		c[graph.Co{X: 8, Y: y}] = true
 	}
