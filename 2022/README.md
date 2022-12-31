@@ -16,3 +16,4 @@
 - [x] Day 14 - Regolith Reservoir :rock: :ocean:
 - [x] Day 15 - Beacon Exclusion Zone :rotating_light: :no_entry:
 - [x] Day 17 - Pyroclastic Flow :volcano: :volcano:
+- [x] Day 20 - Grove Positioning System :tanabata_tree: :compass:

@@ -40,3 +40,12 @@ func Median(nums []int) float64 {
 	midWay2 := float64(nums[(l/2)-1])
 	return (midWay1 + midWay2) / 2
 }
+
+// Modulo returns the positive modulo of the first value from the second
+func Modulo(x, y int) int {
+	mod := x % y
+	if mod >= 0 {
+		return mod
+	}
+	return mod + y
+}
