@@ -109,3 +109,20 @@ func TestMedian(t *testing.T) {
 		})
 	}
 }
+
+func TestModulo(t *testing.T) {
+	t.Run("returns 0 if the values divide", func(t *testing.T) {
+		got := maths.Modulo(72, 4)
+		assert.Equal(t, 0, got)
+	})
+
+	t.Run("returns the remainder of the first value divided by the second", func(t *testing.T) {
+		got := maths.Modulo(100, 3)
+		assert.Equal(t, 1, got)
+	})
+
+	t.Run("returns the modulo if the second is negative", func(t *testing.T) {
+		got := maths.Modulo(10, -7)
+		assert.Equal(t, 3, got)
+	})
+}
