@@ -122,7 +122,12 @@ func TestModulo(t *testing.T) {
 	})
 
 	t.Run("returns the modulo if the second is negative", func(t *testing.T) {
-		got := maths.Modulo(10, -7)
+		got := maths.Modulo(-7, 10)
+		assert.Equal(t, 3, got)
+	})
+
+	t.Run("returns the modulo if the second is negative and absolute greater than the first", func(t *testing.T) {
+		got := maths.Modulo(-27, 10)
 		assert.Equal(t, 3, got)
 	})
 }

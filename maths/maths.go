@@ -43,11 +43,9 @@ func Median(nums []int) float64 {
 
 // Modulo returns the positive modulo of the first value from the second
 func Modulo(x, y int) int {
-	if x >= 0 {
-		return x % y
+	mod := x % y
+	if mod >= 0 {
+		return mod
 	}
-	for x < 0 {
-		x += y
-	}
-	return (x % y)
+	return mod + y
 }
