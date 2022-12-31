@@ -60,23 +60,24 @@ func TestParseInput(t *testing.T) {
 	t.Run("parses input into a linked list", func(t *testing.T) {
 		input := []int{1, 2, -3, 3, -2, 0, 4}
 
-		got := parseInput(input)
+		got, got1 := parseInput(input)
 		assert.Equal(t, aocExampleList, got)
+		assert.Equal(t, aocExampleList[5], got1)
 	})
 }
 
 func TestMoveItemInList(t *testing.T) {
 	var checkMoveItemInList = func(input, want []int, moveVal, moveIdx, startVal int) {
-		list := parseInput(input)
-		itm := list[moveIdx]
+		got, _ := parseInput(input)
+		itm := got[moveIdx]
 		assert.Equal(t, moveVal, itm.value)
 
-		itm.moveItemInList(len(list))
+		itm.moveItemInList(len(got))
 
-		itm = list[0]
+		itm = got[0]
 		assert.Equal(t, startVal, itm.value)
 		nums := []int{itm.value}
-		for i := 1; i < len(list); i++ {
+		for i := 1; i < len(got); i++ {
 			itm = itm.next
 			nums = append(nums, itm.value)
 			assert.Equal(t, want[i], itm.value)
@@ -101,10 +102,24 @@ func TestMixList(t *testing.T) {
 		input := []int{1, 2, -3, 3, -2, 0, 4}
 		want := []int{1, 2, -3, 4, 0, 3, -2}
 
-		list := parseInput(input)
+		list, _ := parseInput(input)
 		list.mixList(1, 1)
 		itm := list[0]
 		assert.Equal(t, 1, itm.value)
+		for i := 1; i < len(list); i++ {
+			itm = itm.next
+			assert.Equal(t, want[i], itm.value)
+		}
+	})
+
+	t.Run("mixes list, advent of code example 1", func(t *testing.T) {
+		input := []int{1, 2, -3, 3, -2, 0, 4}
+		want := []int{811589153, 0, -2434767459, 1623178306, 3246356612, -1623178306, 2434767459}
+
+		list, _ := parseInput(input)
+		list.mixList(811589153, 10)
+		itm := list[0]
+		assert.Equal(t, 811589153, itm.value)
 		for i := 1; i < len(list); i++ {
 			itm = itm.next
 			assert.Equal(t, want[i], itm.value)
@@ -115,10 +130,18 @@ func TestMixList(t *testing.T) {
 func TestGetSumOfCoordinates(t *testing.T) {
 	t.Run("returns sum of coordinates from a list, advent of code example 1", func(t *testing.T) {
 		input := []int{1, 2, -3, 3, -2, 0, 4}
-		list := parseInput(input)
+		list, zero := parseInput(input)
 		list.mixList(1, 1)
-		got := list.getSumOfCoordinates()
+		got := list.getSumOfCoordinates(zero)
 		assert.Equal(t, 3, got)
+	})
+
+	t.Run("returns sum of coordinates from a list, advent of code example 2", func(t *testing.T) {
+		input := []int{1, 2, -3, 3, -2, 0, 4}
+		list, zero := parseInput(input)
+		list.mixList(811589153, 10)
+		got := list.getSumOfCoordinates(zero)
+		assert.Equal(t, 1623178306, got)
 	})
 }
 
