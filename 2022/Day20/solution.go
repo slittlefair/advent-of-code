@@ -37,8 +37,6 @@ func (itm *Item) moveItemInList(listLength int) {
 		return
 	}
 
-	fmt.Println("mod", maths.Modulo(itm.value, listLength-1))
-
 	oldNext := itm.next
 	oldPrev := itm.prev
 
@@ -46,10 +44,8 @@ func (itm *Item) moveItemInList(listLength int) {
 	oldPrev.next = oldNext
 
 	n := itm
-	steps := maths.Modulo(itm.value, listLength-1)
-	for steps > 0 {
+	for i := 0; i < maths.Modulo(itm.value, listLength-1); i++ {
 		n = n.next
-		steps--
 	}
 
 	newPrev := n
@@ -66,8 +62,8 @@ func (l List) mixList(decryptionKey, times int) {
 	for _, itm := range l {
 		itm.value *= decryptionKey
 	}
+
 	for i := 0; i < times; i++ {
-		fmt.Println("RUN", i+1)
 		for _, itm := range l {
 			itm.moveItemInList(len(l))
 		}
@@ -94,14 +90,14 @@ func (l List) getSumOfCoordinates() int {
 
 func findSolutions(input []int) (int, int) {
 	list := parseInput(input)
-	// list.mixList(1, 1)
-	// part1 := list.getSumOfCoordinates()
+	list.mixList(1, 1)
+	part1 := list.getSumOfCoordinates()
 
-	// list = parseInput(input)
+	list = parseInput(input)
 	list.mixList(811589153, 10)
 	part2 := list.getSumOfCoordinates()
 
-	return 0, part2
+	return part1, part2
 }
 
 func main() {
