@@ -120,7 +120,7 @@ out:
 func (g *Grove) proposeMoves(currentDirection Direction) bool {
 	// Map of old positions to proposed new positions
 	newPositions := map[graph.Co]graph.Co{}
-	// Frequencies of proposed new positions. If any new positon has a frequency over 1 then
+	// Frequencies of proposed new positions. If any new position has a frequency over 1 then
 	// multiple elves want to move there and so they cannot.
 	positionFrequencies := map[graph.Co]int{}
 	atLeastOneMoved := false
