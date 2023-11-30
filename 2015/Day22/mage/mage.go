@@ -51,15 +51,15 @@ func ApplyEffect(mage *Mage, boss *martial.Martial, e Effect) Effect {
 	return e
 }
 
-func Shield(mage *Mage, boss *martial.Martial) {
+func Shield(mage *Mage, _ *martial.Martial) {
 	mage.Armour = 7
 }
 
-func Poison(mage *Mage, boss *martial.Martial) {
+func Poison(_ *Mage, boss *martial.Martial) {
 	boss.HP -= 3
 }
 
-func Recharge(mage *Mage, boss *martial.Martial) {
+func Recharge(mage *Mage, _ *martial.Martial) {
 	mage.Mana += 101
 }
 

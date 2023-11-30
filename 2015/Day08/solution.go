@@ -23,11 +23,11 @@ func readInputForPart1(input []string) int {
 				if string(line[i+1]) == "x" {
 					count += 3
 					continue
-				} else {
-					// If the following character is not "x" then it's either "\\" or "\"", in
-					// either case it's one character difference between literal and memory
-					count++
 				}
+				// If the following character is not "x" then it's either "\\" or "\"", in
+				// either case it's one character difference between literal and memory
+				count++
+
 				// If that following character is another backslash then skip it, as it's already
 				// been evaluated and will cause the next character in the loop to add to our count,
 				// which we don't want since it'll be a "normal" character that gets put into memory
