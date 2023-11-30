@@ -194,7 +194,6 @@ func nextWater(c []graph.Co) (newCoords []graph.Co) {
 			newCo := graph.Co{X: co.X, Y: co.Y + 1}
 			if allCoords[co] == "~" {
 				newCoords = append(newCoords, graph.Co{X: co.X, Y: co.Y - 1})
-			} else if allCoords[newCo] == "|" {
 			} else if allCoords[newCo] == "." {
 				allCoords[newCo] = "|"
 				newCoords = append(newCoords, newCo)

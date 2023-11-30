@@ -141,12 +141,12 @@ func (g *Grove) proposeMoves(currentDirection Direction) bool {
 	elfCos := []graph.Co{}
 	// For old and proposed new positions, if more than 1 elf wants to move there then they
 	// remain in their original position, so their new locations is the same as their old.
-	for old, new := range newPositions {
-		if positionFrequencies[new] > 1 {
-			new = old
+	for old, newPos := range newPositions {
+		if positionFrequencies[newPos] > 1 {
+			newPos = old
 		}
-		newElves[new] = true
-		elfCos = append(elfCos, new)
+		newElves[newPos] = true
+		elfCos = append(elfCos, newPos)
 	}
 	// Populate the grove with the new elf positions after moves and update its extremities
 	g.elves = newElves
