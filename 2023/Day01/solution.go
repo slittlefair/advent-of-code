@@ -17,7 +17,34 @@ type Num struct {
 	strVal int
 }
 
-func processLine(line string, tens, units *Num) {
+func findSolution(input []string) (int, int) {
+	part1 := 0
+	part2 := 0
+	for _, line := range input {
+		tens, units := processLine(line)
+
+		part1 += tens.val*10 + units.val
+
+		if tens.idx < tens.strIdx {
+			tens.strVal = tens.val
+		}
+		if units.idx > units.strIdx {
+			units.strVal = units.val
+		}
+		part2 += tens.strVal*10 + units.strVal
+	}
+	return part1, part2
+}
+
+func processLine(line string) (Num, Num) {
+	tens := Num{
+		idx:    maths.Infinity,
+		strIdx: maths.Infinity,
+	}
+	units := Num{
+		idx:    -1,
+		strIdx: -1,
+	}
 	for i, num := range strs {
 		conv := strconv.Itoa(i)
 
@@ -45,34 +72,7 @@ func processLine(line string, tens, units *Num) {
 			units.strVal = i
 		}
 	}
-}
-
-func findSolution(input []string) (int, int) {
-	part1 := 0
-	part2 := 0
-	for _, line := range input {
-		tens := &Num{
-			idx:    maths.Infinity,
-			strIdx: maths.Infinity,
-		}
-		units := &Num{
-			idx:    -1,
-			strIdx: -1,
-		}
-
-		processLine(line, tens, units)
-
-		part1 += tens.val*10 + units.val
-
-		if tens.idx < tens.strIdx {
-			tens.strVal = tens.val
-		}
-		if units.idx > units.strIdx {
-			units.strVal = units.val
-		}
-		part2 += tens.strVal*10 + units.strVal
-	}
-	return part1, part2
+	return tens, units
 }
 
 func main() {
