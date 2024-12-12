@@ -73,12 +73,12 @@ func calculateSimilarityScore(slice1, slice2 []int) int {
 func findSolutions(input []string) (int, int, error) {
 	slice1, slice2, err := createSortedSlicesFromInput(input)
 	if err != nil {
-		return 0, 0, fmt.Errorf("error getting sorted slices from input: %v\n", err)
+		return 0, 0, fmt.Errorf("error getting sorted slices from input: %v", err)
 	}
 
 	part1, err := calculateDiffInSlices(slice1, slice2)
 	if err != nil {
-		return 0, 0, fmt.Errorf("error calculating diff in slices: %v\n", err)
+		return 0, 0, fmt.Errorf("error calculating diff in slices: %v", err)
 	}
 
 	part2 := calculateSimilarityScore(slice1, slice2)
@@ -92,6 +92,7 @@ func main() {
 	part1, part2, err := findSolutions(input)
 	if err != nil {
 		fmt.Printf("finding solutions: %v\n", err)
+		return
 	}
 
 	fmt.Println("Part1:", part1)
