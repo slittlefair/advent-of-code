@@ -40,6 +40,8 @@ func ReadAsInts() []int {
 	return lines
 }
 
+// ReadSingleLineAsInts reads the input file using Read and returns a slice of ints in that file.
+// It expects the file to be only one line long and errors if it's not.
 func ReadSingleLineAsInts() ([]int, error) {
 	input := Read()
 	if l := len(input); l != 1 {
