@@ -1,6 +1,6 @@
 module Advent-of-Code
 
-go 1.23.0
+go 1.23
 
 require github.com/stretchr/testify v1.8.1
 
