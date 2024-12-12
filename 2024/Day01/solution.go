@@ -70,20 +70,30 @@ func calculateSimilarityScore(slice1, slice2 []int) int {
 	return similarityScore
 }
 
+func findSolutions(input []string) (int, int, error) {
+	slice1, slice2, err := createSortedSlicesFromInput(input)
+	if err != nil {
+		return 0, 0, fmt.Errorf("error getting sorted slices from input: %v\n", err)
+	}
+
+	part1, err := calculateDiffInSlices(slice1, slice2)
+	if err != nil {
+		return 0, 0, fmt.Errorf("error calculating diff in slices: %v\n", err)
+	}
+
+	part2 := calculateSimilarityScore(slice1, slice2)
+
+	return part1, part2, err
+}
+
 func main() {
 	input := file.Read()
 
-	slice1, slice2, err := createSortedSlicesFromInput(input)
+	part1, part2, err := findSolutions(input)
 	if err != nil {
-		fmt.Printf("Error getting sorted slices from input: %v\n", err)
-		return
+		fmt.Printf("finding solutions: %v\n", err)
 	}
 
-	diff, err := calculateDiffInSlices(slice1, slice2)
-	if err != nil {
-		fmt.Printf("Error calculating diff in slices: %v\n", err)
-	}
-	fmt.Printf("Part1: %d\n", diff)
-
-	fmt.Printf("Part2: %d\n", calculateSimilarityScore(slice1, slice2))
+	fmt.Println("Part1:", part1)
+	fmt.Println("Part2:", part2)
 }
