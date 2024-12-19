@@ -11,17 +11,17 @@ import (
 // it's not valid. Otherwise it partitions the seats depending on the direction and alters the min
 // or max accordingly. It returns these, as well as the remainder of the directions, minus the
 // direction we just evaluated.
-func halfSeats(dirs string, min int, max int) (string, int, int, error) {
+func halfSeats(dirs string, minimum int, maximum int) (string, int, int, error) {
 	direction := string(dirs[0])
 	if direction != "F" && direction != "B" && direction != "L" && direction != "R" {
 		return "", 0, 0, errors.New("invalid character found")
 	}
 	if direction == "F" || direction == "L" {
-		max = max - ((max - min + 1) / 2)
+		maximum = maximum - ((maximum - minimum + 1) / 2)
 	} else {
-		min = min + ((max - min + 1) / 2)
+		minimum = minimum + ((maximum - minimum + 1) / 2)
 	}
-	return dirs[1:], min, max, nil
+	return dirs[1:], minimum, maximum, nil
 }
 
 // findMyID takes a map of IDs we know are taken, the lowest and the highest IDs in the map. It then

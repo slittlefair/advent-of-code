@@ -34,12 +34,12 @@ func dividesEvenly(x, y float64) bool {
 func findSolutions(ss Spreadsheet) (int, int) {
 	part1, part2 := 0, 0
 	for _, row := range ss {
-		max := 0
-		min := maths.Infinity
+		maximum := 0
+		minimum := maths.Infinity
 		foundDivisiblePair := false
 		for i, x := range row {
-			max = maths.Max(x, max)
-			min = maths.Min(x, min)
+			maximum = maths.Max(x, maximum)
+			minimum = maths.Min(x, minimum)
 			for j, y := range row {
 				if i != j && !foundDivisiblePair && dividesEvenly(float64(x), float64(y)) {
 					part2 += maths.Max(x, y) / maths.Min(x, y)
@@ -50,7 +50,7 @@ func findSolutions(ss Spreadsheet) (int, int) {
 				}
 			}
 		}
-		part1 += max - min
+		part1 += maximum - minimum
 	}
 	return part1, part2
 }
