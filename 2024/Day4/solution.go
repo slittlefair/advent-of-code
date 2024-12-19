@@ -41,7 +41,7 @@ func traverseCos(g *graph.Grid, currentCo, dir graph.Co, currentIndex int) bool 
 
 	// If we've found another expected match, and we're at the end of expected sequence, we've
 	// found the word
-	if currentIndex == len(expectedSequence) {
+	if currentIndex == len(expectedSequence)-1 {
 		return true
 	}
 
@@ -100,14 +100,12 @@ func findMasInX(g *graph.Grid, co graph.Co) bool {
 	return g.Graph[co1] != g.Graph[co2]
 }
 
-func traverseGrid(g *graph.Grid) (int, int) {
+func calculateXmasTotals(g *graph.Grid) (int, int) {
 	part1, part2 := 0, 0
 	for y := g.MinY; y <= g.MaxY; y++ {
 		for x := g.MinX; x <= g.MaxX; x++ {
 			currentCo := graph.Co{X: x, Y: y}
-			// Part 1
 			part1 += findXmas(g, currentCo)
-
 			if findMasInX(g, currentCo) {
 				part2++
 			}
@@ -118,7 +116,7 @@ func traverseGrid(g *graph.Grid) (int, int) {
 
 func findSolutions(input []string) (int, int) {
 	grid := parseInput(input)
-	return traverseGrid(grid)
+	return calculateXmasTotals(grid)
 }
 
 func main() {
