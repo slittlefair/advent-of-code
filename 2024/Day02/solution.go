@@ -25,17 +25,6 @@ func createReportsFromInput(input []string) [][]int {
 	return reports
 }
 
-func isDiffSafe(v1, v2 int, asc bool) bool {
-	diff := v1 - v2
-	if diff == 0 || diff < -3 || diff > 3 {
-		return false
-	}
-	if (diff*-1 < 0) == asc {
-		return false
-	}
-	return true
-}
-
 func reportIsSafe(report []int) (bool, int) {
 	asc := report[0] < report[1]
 	for i := 0; i < len(report)-1; i++ {
@@ -59,12 +48,6 @@ func findSolutions(input []string) (int, int) {
 			part1++
 			part2++
 		} else {
-			// If the unsafe level is the last element, then the report will be safe if we remove it
-			if unsafeIndex == len(report)-1 {
-				part2++
-				continue
-			}
-
 			// Loop over the elements around the unsafe one and see if we can make a report safe by
 			// removing any of them. We need to remove the one that caused the report to be made
 			// unsafe, as well as the levels before and after since any of these could have caused
