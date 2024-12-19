@@ -12,13 +12,15 @@ var reMulPart2 = regexp.MustCompile(`mul\(\d+,\d+\)|do\(\)|don't\(\)`)
 var reNum = regexp.MustCompile(`\d+`)
 
 func getMultiplication(mul string) int {
+	// mul is already regex matched to ensure we have two numbers, so we don't need to validate
+	// or handle any errors
 	nums := reNum.FindAllString(mul, 2)
 	n1, _ := strconv.Atoi(nums[0])
 	n2, _ := strconv.Atoi(nums[1])
 	return n1 * n2
 }
 
-func getMultiplicationResults(input []string) (int, int) {
+func findSolutions(input []string) (int, int) {
 	var part1, part2 int
 	mulEnabled := true
 	for _, line := range input {
@@ -43,11 +45,6 @@ func getMultiplicationResults(input []string) (int, int) {
 			part2 += getMultiplication(m)
 		}
 	}
-	return part1, part2
-}
-
-func findSolutions(input []string) (int, int) {
-	part1, part2 := getMultiplicationResults(input)
 	return part1, part2
 }
 
