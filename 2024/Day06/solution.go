@@ -22,8 +22,8 @@ var printGuard = []string{"^", ">", "v", "<"}
 
 func parseInput(input []string) *Floor {
 	g := graph.NewGrid()
-	g.MaxY = len(input)
-	g.MaxX = len(input[0])
+	g.MaxY = len(input) - 1
+	g.MaxX = len(input[0]) - 1
 	guard := &Guard{
 		dir: 0,
 	}
@@ -32,9 +32,9 @@ func parseInput(input []string) *Floor {
 			str := string(r)
 			if str == "^" {
 				guard.co = graph.Co{X: x, Y: y}
-				str = "."
+			} else if str == "#" {
+				g.Graph[graph.Co{X: x, Y: y}] = str
 			}
-			g.Graph[graph.Co{X: x, Y: y}] = str
 		}
 	}
 	return &Floor{
@@ -47,24 +47,21 @@ func parseInput(input []string) *Floor {
 }
 
 func (f *Floor) printFloor() {
-	numObstacles := 0
 	for y := f.grid.MinY; y <= f.grid.MaxY; y++ {
 		for x := f.grid.MinX; x <= f.grid.MaxX; x++ {
 			co := graph.Co{X: x, Y: y}
 			if co == f.guard.co {
 				fmt.Print(printGuard[f.guard.dir])
 			} else if _, ok := f.visitedSteps[co]; ok {
-				fmt.Printf("X")
+				fmt.Print("X")
+			} else if v, ok := f.grid.Graph[co]; ok {
+				fmt.Print(v)
 			} else {
-				fmt.Print(f.grid.Graph[co])
-				if f.grid.Graph[co] == "#" {
-					numObstacles++
-				}
+				fmt.Print(".")
 			}
 		}
 		fmt.Println()
 	}
-	fmt.Printf("maxX: %d, maxY: %d, numObstacles: %d\n", f.grid.MaxX, f.grid.MaxY, numObstacles)
 }
 
 func findSolutions(input []string) (int, int) {
@@ -83,19 +80,14 @@ func findSolutions(input []string) (int, int) {
 		visitedSteps: originalFloor.visitedSteps,
 	}
 	floor.printFloor()
-	fmt.Println("len1", len(originalFloor.visitedSteps))
 
 	// Part 1
 	inBounds := true
 	for inBounds {
 		inBounds, _ = floor.step()
-		if _, ok := floor.grid.Graph[floor.guard.co]; !ok {
-			break
-		}
 	}
 	part1 := len(floor.visitedSteps)
 	floor.printFloor()
-	fmt.Println("len1", len(originalFloor.visitedSteps))
 
 	originalFloor.printFloor()
 
@@ -117,12 +109,12 @@ func (f *Floor) step() (bool, bool) {
 	} else {
 		f.guard.co = newGuardCo
 		if f.visitedBefore() {
-			fmt.Printf("visitedbefore %v\n", f.guard)
 			f.printFloor()
 			return true, true
 		}
 	}
-	if _, ok := f.grid.Graph[newGuardCo]; !ok {
+	if newGuardCo.X < f.grid.MinX || newGuardCo.X > f.grid.MaxX || newGuardCo.Y < f.grid.MinY ||
+		newGuardCo.Y > f.grid.MaxY {
 		return false, false
 	}
 	if _, ok := f.visitedSteps[newGuardCo][f.guard.dir]; !ok {
