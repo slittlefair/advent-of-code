@@ -148,7 +148,6 @@ func Test_parseInput(t *testing.T) {
 			},
 		}, g)
 	})
-
 }
 
 func Test_traverseCos(t *testing.T) {
