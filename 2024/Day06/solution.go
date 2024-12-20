@@ -77,10 +77,10 @@ func (f *Floor) step() (bool, bool) {
 		f.guard.dir = (f.guard.dir + 1) % len(dirs)
 		return true, false
 	} else {
-		// Otherwise move the guard and see if they have visited that space before (same space and
-		// same direction). If so we're in a loop, so exit
 		f.guard.co = newGuardCo
 	}
+	// If the guard havs visited that space before (same space and same direction), they're in a
+	// loop, so exit
 	if f.visitedSteps[f.guard.co][f.guard.dir] {
 		return true, true
 	}

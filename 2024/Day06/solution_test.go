@@ -242,7 +242,7 @@ func Test_step(t *testing.T) {
 	})
 }
 
-func test_runPatrol(t *testing.T) {
+func Test_runPatrol(t *testing.T) {
 	t.Run("runs a patrol for a given grid 1, leaving the grid", func(t *testing.T) {
 		floor := &Floor{
 			guard: &Guard{
