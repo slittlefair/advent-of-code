@@ -15,9 +15,9 @@ func calculateFuelSpend(x int) int {
 	return spend
 }
 
-func findMinFuelSpend(input []int, min, max int, part2 bool) int {
+func findMinFuelSpend(input []int, minimum, maximum int, part2 bool) int {
 	minDist := maths.Infinity
-	for x := min; x <= max; x++ {
+	for x := minimum; x <= maximum; x++ {
 		dist := 0
 		for _, i := range input {
 			if part2 {
@@ -39,7 +39,7 @@ func main() {
 		fmt.Println(err)
 		return
 	}
-	min, max := slice.FindExtremities(input)
-	fmt.Println("Part 1:", findMinFuelSpend(input, min, max, false))
-	fmt.Println("Part 2:", findMinFuelSpend(input, min, max, true))
+	minimum, maximum := slice.FindExtremities(input)
+	fmt.Println("Part 1:", findMinFuelSpend(input, minimum, maximum, false))
+	fmt.Println("Part 2:", findMinFuelSpend(input, minimum, maximum, true))
 }

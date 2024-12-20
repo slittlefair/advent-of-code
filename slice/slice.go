@@ -106,15 +106,15 @@ func Remove[K comparable](s []K, i int) []K {
 
 // FindExtremities returns the max and min value from a slice of ints
 func FindExtremities(nums []int) (int, int) {
-	min := maths.Infinity
-	max := 0
+	minimum := maths.Infinity
+	maximum := 0
 	for _, n := range nums {
-		if n > max {
-			max = n
+		if n > maximum {
+			maximum = n
 		}
-		if n < min {
-			min = n
+		if n < minimum {
+			minimum = n
 		}
 	}
-	return min, max
+	return minimum, maximum
 }

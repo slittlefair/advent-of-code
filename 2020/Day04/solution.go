@@ -7,12 +7,12 @@ import (
 	"strconv"
 )
 
-func validateYr(val string, min int, max int) (bool, error) {
+func validateYr(val string, minimum int, maximum int) (bool, error) {
 	year, err := strconv.Atoi(val)
 	if err != nil {
 		return false, err
 	}
-	return year >= min && year <= max, nil
+	return year >= minimum && year <= maximum, nil
 }
 
 func validateHgt(val string) bool {

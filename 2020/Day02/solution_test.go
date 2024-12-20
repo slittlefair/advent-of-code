@@ -8,20 +8,20 @@ import (
 
 var examplePasswordCollection = []passwords{
 	{
-		min:      1,
-		max:      3,
+		minimum:  1,
+		maximum:  3,
 		letter:   "a",
 		password: "abcde",
 	},
 	{
-		min:      1,
-		max:      3,
+		minimum:  1,
+		maximum:  3,
 		letter:   "b",
 		password: "cdefg",
 	},
 	{
-		min:      2,
-		max:      9,
+		minimum:  2,
+		maximum:  9,
 		letter:   "c",
 		password: "ccccccccc",
 	},
@@ -73,8 +73,8 @@ func Test_populatePasswordCollection(t *testing.T) {
 func Test_readPassword(t *testing.T) {
 	t.Run("returns a password given a list of input matches", func(t *testing.T) {
 		want := passwords{
-			min:      1,
-			max:      45,
+			minimum:  1,
+			maximum:  45,
 			letter:   "s",
 			password: "abcde",
 		}
