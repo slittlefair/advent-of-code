@@ -79,7 +79,7 @@ func (f *Floor) step() (bool, bool) {
 		// Otherwise move the guard and see if they have visited that space before (same space and
 		// same direction). If so we're in a loop, so exit
 		f.guard.co = newGuardCo
-		if f.visitedBefore() {
+		if f.visitedSteps[f.guard.co][f.guard.dir] {
 			return true, true
 		}
 	}
@@ -93,11 +93,6 @@ func (f *Floor) step() (bool, bool) {
 	}
 	f.visitedSteps[newGuardCo][f.guard.dir] = true
 	return true, false
-}
-
-// Must be called before visitedSteps populated with current guard
-func (f *Floor) visitedBefore() bool {
-	return f.visitedSteps[f.guard.co][f.guard.dir]
 }
 
 // Move the guard on the floor until they are either stuck in a loop or move out of bounds. Return
@@ -144,10 +139,7 @@ func findSolutions(input []string) (int, int) {
 
 	// Part 1
 	floor.runPatrol()
-	part1 := 0
-	for _, v := range floor.visitedSteps {
-		part1 += len(v)
-	}
+	part1 := len(floor.visitedSteps)
 	visitedSteps := map[graph.Co]map[int]bool{}
 	for k, v := range floor.visitedSteps {
 		visitedSteps[k] = v
