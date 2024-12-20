@@ -22,6 +22,7 @@ var dirs = []graph.Co{{Y: -1}, {X: 1}, {Y: 1}, {X: -1}}
 // utility function for printing the floor, showing the positions of any obstacles as well as the
 // position and direction of the guard
 // func (f *Floor) print() {
+// 	fmt.Println()
 // 	for y := f.grid.MinY; y <= f.grid.MaxY; y++ {
 // 		for x := f.grid.MinX; x <= f.grid.MaxX; x++ {
 // 			co := graph.Co{X: x, Y: y}
@@ -37,6 +38,7 @@ var dirs = []graph.Co{{Y: -1}, {X: 1}, {Y: 1}, {X: -1}}
 // 		}
 // 		fmt.Println()
 // 	}
+// 	fmt.Println()
 // }
 
 func parseInput(input []string) *Floor {
@@ -65,77 +67,6 @@ func parseInput(input []string) *Floor {
 	}
 }
 
-// Move the guard on the floor until they are either stuck in a loop or move out of bounds. Return
-// whether they are stuck in a loop so we can keep a count of these instances.
-func (f *Floor) runPatrol() bool {
-	inBounds := true
-	visitedBefore := false
-	for inBounds && !visitedBefore {
-		inBounds, visitedBefore = f.step()
-	}
-	return visitedBefore
-}
-
-// Reset a floor to the given values. This prevents us having to run parseInput each time which is
-// slightly less efficient
-func (f *Floor) resetFloor(originalGraph graph.Graph, originalGuard Guard) {
-	f.guard = &Guard{
-		co: graph.Co{
-			X: originalGuard.co.X,
-			Y: originalGuard.co.Y,
-		},
-		dir: 0,
-	}
-	f.visitedSteps = map[graph.Co]map[int]bool{
-		originalGuard.co: {
-			originalGuard.dir: true,
-		},
-	}
-	f.grid.Graph = map[graph.Co]string{}
-	for k, v := range originalGraph {
-		f.grid.Graph[k] = v
-	}
-}
-
-func findSolutions(input []string) (int, int) {
-	floor := parseInput(input)
-
-	// Record the original graph and guard values so we can reset the floor after each part2 iteration
-	originalGraph := map[graph.Co]string{}
-	for k, v := range floor.grid.Graph {
-		originalGraph[k] = v
-	}
-	originalGuard := Guard{
-		co:  floor.guard.co,
-		dir: floor.guard.dir,
-	}
-
-	// Part 1
-	floor.runPatrol()
-	part1 := len(floor.visitedSteps)
-
-	part2 := 0
-
-	// For any placed objects to have an impact they must be placed in a space the guard would have
-	// visited in part1, otherwise placing the object would have no affect on the guard's movement.
-	// This lets us narrow down the number of coordinates we have to try for part2 from every space
-	// on the floor to just those visited previously
-	for k := range floor.visitedSteps {
-		// Don't put an obstacle in the guard's original position
-		if k == originalGuard.co {
-			continue
-		}
-		// Reset the floor and place the obstacle before running the patrol
-		floor.resetFloor(originalGraph, originalGuard)
-		floor.grid.Graph[k] = "#"
-		if floor.runPatrol() {
-			part2++
-		}
-	}
-
-	return part1, part2
-}
-
 // Attempt to move the guard. If facing an obstacle they instead turn
 func (f *Floor) step() (bool, bool) {
 	guardDir := dirs[f.guard.dir]
@@ -157,7 +88,7 @@ func (f *Floor) step() (bool, bool) {
 		return false, false
 	}
 	// Add the guard's new space to the list of visited steps
-	if _, ok := f.visitedSteps[newGuardCo][f.guard.dir]; !ok {
+	if _, ok := f.visitedSteps[newGuardCo]; !ok {
 		f.visitedSteps[newGuardCo] = map[int]bool{}
 	}
 	f.visitedSteps[newGuardCo][f.guard.dir] = true
@@ -169,10 +100,86 @@ func (f *Floor) visitedBefore() bool {
 	return f.visitedSteps[f.guard.co][f.guard.dir]
 }
 
+// Move the guard on the floor until they are either stuck in a loop or move out of bounds. Return
+// whether they are stuck in a loop so we can keep a count of these instances.
+func (f *Floor) runPatrol() bool {
+	inBounds := true
+	visitedBefore := false
+	for inBounds && !visitedBefore {
+		inBounds, visitedBefore = f.step()
+	}
+	return visitedBefore
+}
+
+// Reset a floor to the given values. This prevents us having to run parseInput each time which is
+// slightly less efficient
+func (f *Floor) resetFloor(obstacle graph.Co, originalGuard Guard) {
+	f.guard = &Guard{
+		co: graph.Co{
+			X: originalGuard.co.X,
+			Y: originalGuard.co.Y,
+		},
+		dir: 0,
+	}
+	f.visitedSteps = map[graph.Co]map[int]bool{
+		originalGuard.co: {
+			originalGuard.dir: true,
+		},
+	}
+	delete(f.grid.Graph, obstacle)
+}
+
+func findSolutions(input []string) (int, int) {
+	floor := parseInput(input)
+
+	// Record the original graph and guard values so we can reset the floor after each part2 iteration
+	originalGraph := graph.Graph{}
+	for k, v := range floor.grid.Graph {
+		originalGraph[k] = v
+	}
+	originalGuard := Guard{
+		co:  floor.guard.co,
+		dir: floor.guard.dir,
+	}
+
+	// Part 1
+	floor.runPatrol()
+	part1 := 0
+	for _, v := range floor.visitedSteps {
+		part1 += len(v)
+	}
+	visitedSteps := map[graph.Co]map[int]bool{}
+	for k, v := range floor.visitedSteps {
+		visitedSteps[k] = v
+	}
+	floor.resetFloor(graph.Co{}, originalGuard)
+
+	part2 := 0
+
+	// For any placed objects to have an impact they must be placed in a space the guard would have
+	// visited in part1, otherwise placing the object would have no affect on the guard's movement.
+	// This lets us narrow down the number of coordinates we have to try for part2 from every space
+	// on the floor to just those visited previously
+	for k := range visitedSteps {
+		// Don't put an obstacle in the guard's original position
+		if k == originalGuard.co {
+			continue
+		}
+		// Place the obstacle before running the patrol
+		floor.grid.Graph[k] = "#"
+		if floor.runPatrol() {
+			part2++
+		}
+		// Reset the floor after running the patrol
+		floor.resetFloor(k, originalGuard)
+	}
+
+	return part1, part2
+}
+
 func main() {
 	input := file.Read()
 	part1, part2 := findSolutions(input)
 	fmt.Printf("Part1: %v\n", part1)
 	fmt.Printf("Part2: %d\n", part2)
-
 }
