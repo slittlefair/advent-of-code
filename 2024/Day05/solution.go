@@ -54,16 +54,7 @@ func parseInput(input []string) (orderingRules, [][]int) {
 // Sort the pages using the ordering rules
 func sortPages(rules orderingRules, pages []int) []int {
 	sort.SliceStable(pages, func(i, j int) bool {
-		pi := pages[i]
-		pj := pages[j]
-
-		if !rules[pi][pj] {
-			return false
-		}
-		if rules[pj][pi] {
-			return false
-		}
-		return true
+		return rules[pages[i]][pages[j]]
 	})
 	return pages
 }
@@ -75,19 +66,9 @@ func findSolutions(input []string) (int, int) {
 
 	for _, pages := range publications {
 		for i, page := range pages {
-			before := pages[:i]
-			for _, p := range before {
-				if v, ok := rules[page][p]; !ok {
-					continue
-				} else if v {
-					goto sortFunc
-				}
-			}
 			after := pages[i+1:]
 			for _, p := range after {
-				if v, ok := rules[page][p]; !ok {
-					continue
-				} else if !v {
+				if v := rules[page][p]; !v {
 					goto sortFunc
 				}
 			}
