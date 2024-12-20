@@ -71,7 +71,8 @@ func parseInput(input []string) *Floor {
 func (f *Floor) step() (bool, bool) {
 	guardDir := dirs[f.guard.dir]
 	newGuardCo := graph.Co{X: f.guard.co.X + guardDir.X, Y: f.guard.co.Y + guardDir.Y}
-	// If the guard's new position would see them in an obstacle, turn them 90 degress clockwise
+	// If the guard's new position would see them in an obstacle, turn them 90 degress clockwise.
+	// Otherwise move them forward
 	if f.grid.Graph[newGuardCo] == "#" {
 		f.guard.dir = (f.guard.dir + 1) % len(dirs)
 		return true, false
@@ -79,9 +80,9 @@ func (f *Floor) step() (bool, bool) {
 		// Otherwise move the guard and see if they have visited that space before (same space and
 		// same direction). If so we're in a loop, so exit
 		f.guard.co = newGuardCo
-		if f.visitedSteps[f.guard.co][f.guard.dir] {
-			return true, true
-		}
+	}
+	if f.visitedSteps[f.guard.co][f.guard.dir] {
+		return true, true
 	}
 	// If we're out of bounds then the guard has moved off the floor, so return
 	if f.grid.OutOfBounds(newGuardCo) {
