@@ -33,13 +33,13 @@ func (c Chamber) ExtendWalls(n int) {
 
 // HighestPoint returns the highest rock that isn't part of the side walls.
 func (c Chamber) HighestPoint() int {
-	max := 0
+	maximum := 0
 	for co := range c {
 		if co.X > 0 && co.X < 8 {
-			max = maths.Max(max, co.Y)
+			maximum = maths.Max(maximum, co.Y)
 		}
 	}
-	return max
+	return maximum
 }
 
 // Move alters a rock piece position the given x and y amounts. The chamber is updated with these
