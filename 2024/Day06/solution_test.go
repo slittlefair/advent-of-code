@@ -271,13 +271,13 @@ func Test_runPatrol(t *testing.T) {
 		}
 		stuckInLoop := floor.runPatrol()
 		assert.False(t, stuckInLoop)
-		assert.Len(t, 41, len(floor.visitedSteps))
+		assert.Len(t, floor.visitedSteps, 41)
 	})
 
 	t.Run("runs a patrol for a given grid 2, leaving the grid", func(t *testing.T) {
 		floor := &Floor{
 			guard: &Guard{
-				co:  graph.Co{X: 4, Y: 1},
+				co:  graph.Co{X: 4, Y: 6},
 				dir: 0,
 			},
 			grid: &graph.Grid{
@@ -292,7 +292,7 @@ func Test_runPatrol(t *testing.T) {
 					{X: 8, Y: 7}: "#",
 					{X: 0, Y: 8}: "#",
 					{X: 6, Y: 9}: "#",
-					{X: 4, Y: 4}: "#",
+					{X: 4, Y: 1}: "#",
 				},
 			},
 			visitedSteps: map[graph.Co]map[int]bool{
@@ -303,13 +303,13 @@ func Test_runPatrol(t *testing.T) {
 		}
 		stuckInLoop := floor.runPatrol()
 		assert.False(t, stuckInLoop)
-		assert.Len(t, 10, len(floor.visitedSteps))
+		assert.Len(t, floor.visitedSteps, 10)
 	})
 
 	t.Run("runs a patrol for a given grid 3, getting stuck in a loop", func(t *testing.T) {
 		floor := &Floor{
 			guard: &Guard{
-				co:  graph.Co{X: 4, Y: 1},
+				co:  graph.Co{X: 4, Y: 6},
 				dir: 0,
 			},
 			grid: &graph.Grid{
