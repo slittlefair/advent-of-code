@@ -5,3 +5,4 @@
 - [x] Day 3 - Mull It Over :wine_glass: :arrow_upper_right:s
 - [x] Day 4 - Ceres Search :full_moon: :mag:
 - [ ] Day 5 - Print Queue :printer: :standing_woman: :standing_person: :standing_man:
+- [x] Day 6 - Guard Gallivant :shield: :walking_woman:

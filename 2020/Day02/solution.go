@@ -10,8 +10,8 @@ import (
 )
 
 type passwords struct {
-	min      int
-	max      int
+	minimum  int
+	maximum  int
 	letter   string
 	password string
 }
@@ -34,11 +34,11 @@ func populatePasswordCollection(input []string) ([]passwords, error) {
 func readPassword(match []string) passwords {
 	// We only pass in match from regex, so we know items and indices 1 and 2 can be converted to
 	// an int, so the error here can be safely ignored
-	min, _ := strconv.Atoi(match[1])
-	max, _ := strconv.Atoi(match[2])
+	minimum, _ := strconv.Atoi(match[1])
+	maximum, _ := strconv.Atoi(match[2])
 	return passwords{
-		min:      min,
-		max:      max,
+		minimum:  minimum,
+		maximum:  maximum,
 		letter:   match[3],
 		password: match[4],
 	}
@@ -47,12 +47,13 @@ func readPassword(match []string) passwords {
 func getSolutions(passwordCollection []passwords) (int, int) {
 	part1ValidCount, part2ValidCount := 0, 0
 	for _, password := range passwordCollection {
-		if count := strings.Count(password.password, password.letter); count >= password.min && count <= password.max {
+		if count := strings.Count(password.password, password.letter); count >= password.minimum &&
+			count <= password.maximum {
 			part1ValidCount++
 		}
 
-		letter1 := password.password[password.min-1]
-		letter2 := password.password[password.max-1]
+		letter1 := password.password[password.minimum-1]
+		letter2 := password.password[password.maximum-1]
 		if letter1 != letter2 && (string(letter1) == password.letter || string(letter2) == password.letter) {
 			part2ValidCount++
 		}

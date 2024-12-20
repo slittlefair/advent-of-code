@@ -67,7 +67,7 @@ func TestParseInput(t *testing.T) {
 }
 
 func TestMoveItemInList(t *testing.T) {
-	var checkMoveItemInList = func(input, want []int, moveVal, moveIdx, startVal int) {
+	var checkMoveItemInList = func(t *testing.T, input, want []int, moveVal, moveIdx, startVal int) {
 		got, _ := parseInput(input)
 		itm := got[moveIdx]
 		assert.Equal(t, moveVal, itm.value)
@@ -87,13 +87,13 @@ func TestMoveItemInList(t *testing.T) {
 	t.Run("moves item in list advent of code example 1", func(t *testing.T) {
 		input := []int{4, 5, 6, 1, 7, 8, 9}
 		want := []int{4, 5, 6, 7, 1, 8, 9}
-		checkMoveItemInList(input, want, 1, 3, 4)
+		checkMoveItemInList(t, input, want, 1, 3, 4)
 	})
 
 	t.Run("moves item in list advent of code example 2", func(t *testing.T) {
 		input := []int{4, -2, 5, 6, 7, 8, 9}
 		want := []int{4, 5, 6, 7, 8, -2, 9}
-		checkMoveItemInList(input, want, -2, 1, 4)
+		checkMoveItemInList(t, input, want, -2, 1, 4)
 	})
 }
 
