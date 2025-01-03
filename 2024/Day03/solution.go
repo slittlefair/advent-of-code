@@ -2,6 +2,7 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -9,12 +10,11 @@ import (
 
 var reMulPart1 = regexp.MustCompile(`mul\(\d+,\d+\)`)
 var reMulPart2 = regexp.MustCompile(`mul\(\d+,\d+\)|do\(\)|don't\(\)`)
-var reNum = regexp.MustCompile(`\d+`)
 
 func getMultiplication(mul string) int {
 	// mul is already regex matched to ensure we have two numbers, so we don't need to validate
 	// or handle any errors
-	nums := reNum.FindAllString(mul, 2)
+	nums := regex.MatchNums.FindAllString(mul, 2)
 	n1, _ := strconv.Atoi(nums[0])
 	n2, _ := strconv.Atoi(nums[1])
 	return n1 * n2

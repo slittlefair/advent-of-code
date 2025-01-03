@@ -2,18 +2,16 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"errors"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
 func findExactMatch(input []string, ticker map[string]int) (string, error) {
-	reWords := regexp.MustCompile(`[a-z]+`)
-	reNums := regexp.MustCompile(`\d+`)
 	for _, line := range input {
-		words := reWords.FindAllString(line, -1)[1:]
-		nums := reNums.FindAllString(line, -1)
+		words := regex.MatchLettersLower.FindAllString(line, -1)[1:]
+		nums := regex.MatchNums.FindAllString(line, -1)
 		if len(words) != len(nums)-1 {
 			return "", fmt.Errorf("line wasn't parsed correctly, expected one fewer elem in %v than %v", words, nums)
 		}
@@ -31,11 +29,9 @@ func findExactMatch(input []string, ticker map[string]int) (string, error) {
 }
 
 func findRangedMatch(input []string, ticker map[string]int) (string, error) {
-	reWords := regexp.MustCompile(`[a-z]+`)
-	reNums := regexp.MustCompile(`\d+`)
 	for _, line := range input {
-		words := reWords.FindAllString(line, -1)[1:]
-		nums := reNums.FindAllString(line, -1)
+		words := regex.MatchLettersLower.FindAllString(line, -1)[1:]
+		nums := regex.MatchNums.FindAllString(line, -1)
 		if len(words) != len(nums)-1 {
 			return "", fmt.Errorf("line wasn't parsed correctly, expected one fewer elem in %v than %v", words, nums)
 		}

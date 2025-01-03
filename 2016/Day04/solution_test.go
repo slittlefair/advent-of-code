@@ -1,6 +1,7 @@
 package main
 
 import (
+	"Advent-of-Code/regex"
 	"regexp"
 	"testing"
 
@@ -200,7 +201,7 @@ func Test_getValidRooms(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1 := getValidRooms(tt.input, regexp.MustCompile(`\d+`))
+			got, got1 := getValidRooms(tt.input, regex.MatchNums)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.want1, got1)
 		})
@@ -234,7 +235,7 @@ func Test_validateRooms(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, err := validateRooms(tt.input, regexp.MustCompile(`\d+`))
+			got, err := validateRooms(tt.input, regex.MatchNums)
 			tt.errorAssertionFunc(t, err)
 			assert.Equal(t, tt.want, got)
 		})

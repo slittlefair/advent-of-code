@@ -3,9 +3,9 @@ package main
 import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/maths"
+	"Advent-of-Code/regex"
 	"fmt"
 	"math"
-	"regexp"
 	"strconv"
 )
 
@@ -13,10 +13,9 @@ type Spreadsheet [][]int
 
 func parseInput(input []string) Spreadsheet {
 	ss := Spreadsheet{}
-	re := regexp.MustCompile(`\d+`)
 	for _, line := range input {
 		row := []int{}
-		nums := re.FindAllString(line, -1)
+		nums := regex.MatchNums.FindAllString(line, -1)
 		for _, n := range nums {
 			// We already match using regex so we know all numbers can be converted to ints
 			i, _ := strconv.Atoi(n)

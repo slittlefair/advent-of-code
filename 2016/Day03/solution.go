@@ -2,8 +2,8 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
@@ -32,9 +32,8 @@ func checkTriangles(triangles [][]int) int {
 
 func validateHorizontalTriangles(input []string) int {
 	count := 0
-	re := regexp.MustCompile(`\d+`)
 	for _, line := range input {
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		triangle := []int{}
 		for _, m := range matches {
 			// we know this won't error since we only deal with matches to regex
@@ -48,10 +47,9 @@ func validateHorizontalTriangles(input []string) int {
 
 func validateVerticalTriangles(input []string) int {
 	count := 0
-	re := regexp.MustCompile(`\d+`)
 	triangles := [][]int{{}, {}, {}}
 	for i, line := range input {
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		for j, m := range matches {
 			// we know this won't error since we only deal with matches to regex
 			t, _ := strconv.Atoi(m)

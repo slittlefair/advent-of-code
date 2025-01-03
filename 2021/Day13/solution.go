@@ -4,6 +4,7 @@ import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/graph"
 	"Advent-of-Code/maths"
+	"Advent-of-Code/regex"
 	"Advent-of-Code/strings"
 	"fmt"
 	"regexp"
@@ -37,9 +38,8 @@ func parseInput(input []string) (*Paper, error) {
 	p := &Paper{
 		Dots: map[graph.Co]struct{}{},
 	}
-	reNum := regexp.MustCompile(`\d+`)
 	for i := 0; i < blankIndex; i++ {
-		matches := reNum.FindAllString(input[i], -1)
+		matches := regex.MatchNums.FindAllString(input[i], -1)
 		if len(matches) != 2 {
 			return nil, fmt.Errorf("expected a valid coordinate, got %s", input[i])
 		}

@@ -2,8 +2,8 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
@@ -78,18 +78,15 @@ func (w Wires) doASSIGN(identifiers []string, nums []string) {
 }
 
 func (w Wires) followInstructions(instructions []string) {
-	identifierRe := regexp.MustCompile(`[a-z]+`)
-	signalRe := regexp.MustCompile(`[A-Z]+`)
-	intRe := regexp.MustCompile(`\d+`)
 	for len(w) != len(instructions) {
 		for _, inst := range instructions {
-			identifiers := identifierRe.FindAllString(inst, -1)
-			signal := signalRe.FindString(inst)
+			identifiers := regex.MatchLettersLower.FindAllString(inst, -1)
+			signal := regex.MatchLettersUpper.FindString(inst)
 			if signal == "NOT" {
 				w.doBitwiseNOT(identifiers)
 				continue
 			}
-			nums := intRe.FindAllString(inst, -1)
+			nums := regex.MatchNums.FindAllString(inst, -1)
 			if signal == "AND" {
 				w.doBitwiseAND(identifiers, nums)
 				continue

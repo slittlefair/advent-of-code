@@ -2,8 +2,8 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"sort"
 	"strconv"
 )
@@ -17,11 +17,10 @@ func ribbonForPresent(dimensions []int) int {
 }
 
 func totalPaperForPresents(presents []string) (int, int, error) {
-	re := regexp.MustCompile(`\d+`)
 	paper := 0
 	ribbon := 0
 	for _, present := range presents {
-		dimensions := re.FindAllString(present, -1)
+		dimensions := regex.MatchNums.FindAllString(present, -1)
 		if len(dimensions) != 3 {
 			return -1, -1, fmt.Errorf("something went wrong, got dimensions %v", dimensions)
 		}

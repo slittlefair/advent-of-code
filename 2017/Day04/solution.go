@@ -2,9 +2,9 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"Advent-of-Code/strings"
 	"fmt"
-	"regexp"
 )
 
 func isValidPart1(matches []string) bool {
@@ -30,11 +30,10 @@ func isValidPart2(matches []string) bool {
 }
 
 func countValidPhrases(input []string) (int, int) {
-	re := regexp.MustCompile(`\w+`)
 	part1 := 0
 	part2 := 0
 	for _, line := range input {
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchWords.FindAllString(line, -1)
 		if isValidPart1(matches) {
 			part1++
 			if isValidPart2(matches) {

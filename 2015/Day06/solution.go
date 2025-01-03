@@ -3,6 +3,7 @@ package main
 import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/graph"
+	"Advent-of-Code/regex"
 	"Advent-of-Code/slice"
 	"fmt"
 	"regexp"
@@ -60,12 +61,11 @@ func (l Lights) toggleLights(nums []int) {
 }
 
 func (l *Lights) followInstructions(input []string) error {
-	re := regexp.MustCompile(`\d+`)
 	reOn := regexp.MustCompile(`on`)
 	reOff := regexp.MustCompile(`off`)
 	reToggle := regexp.MustCompile(`toggle`)
 	for _, inst := range input {
-		nums := re.FindAllString(inst, -1)
+		nums := regex.MatchNums.FindAllString(inst, -1)
 		if len(nums) != 4 {
 			return fmt.Errorf("something went wrong, got nums %v", nums)
 		}

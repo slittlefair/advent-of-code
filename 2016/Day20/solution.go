@@ -2,8 +2,8 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"sort"
 	"strconv"
 )
@@ -11,9 +11,8 @@ import (
 func composeBounds(input []string, upperBound int) ([]int, []int) {
 	lowers := []int{}
 	uppers := []int{}
-	re := regexp.MustCompile(`\d+`)
 	for _, line := range input {
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		lower, _ := strconv.Atoi(matches[0])
 		lowers = append(lowers, lower)
 		upper, _ := strconv.Atoi(matches[1])

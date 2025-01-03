@@ -3,8 +3,8 @@ package main
 import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/maths"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 )
 
 type PolymerizationEquipment struct {
@@ -30,9 +30,8 @@ func parseInput(input []string) (*PolymerizationEquipment, error) {
 		}
 		pe.lf[string(line[i])]++
 	}
-	re := regexp.MustCompile(`\w+`)
 	for i := 2; i < len(input); i++ {
-		matches := re.FindAllString(input[i], -1)
+		matches := regex.MatchWords.FindAllString(input[i], -1)
 		if len(matches) != 2 {
 			return nil, fmt.Errorf("error parsing input line, expected 2 strings for line %s", input[i])
 		}

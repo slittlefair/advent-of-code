@@ -3,19 +3,17 @@ package main
 import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/maths"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"slices"
 	"strconv"
 )
-
-var re = regexp.MustCompile(`\d+`)
 
 func createSortedSlicesFromInput(input []string) ([]int, []int, error) {
 	slice1 := make([]int, len(input))
 	slice2 := make([]int, len(input))
 	for i, line := range input {
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		if l := len(matches); l != 2 {
 			return nil, nil, fmt.Errorf("malformed input line, expected 2 numbers, got %d: %v", l, line)
 		}

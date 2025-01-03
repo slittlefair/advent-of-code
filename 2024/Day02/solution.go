@@ -2,18 +2,16 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"Advent-of-Code/slice"
 	"fmt"
-	"regexp"
 	"strconv"
 )
-
-var re = regexp.MustCompile(`\d+`)
 
 func createReportsFromInput(input []string) [][]int {
 	reports := [][]int{}
 	for _, line := range input {
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		report := []int{}
 		for _, m := range matches {
 			// We can ignore the error as we know each one can be converted to an int due to the regex matching

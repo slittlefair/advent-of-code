@@ -3,6 +3,7 @@ package main
 import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/graph"
+	"Advent-of-Code/regex"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -63,8 +64,7 @@ func (p *Position) followInstruction(inst string) error {
 	} else {
 		return fmt.Errorf("malformed instruction %s", inst)
 	}
-	intRe := regexp.MustCompile(`\d+`)
-	ints := intRe.FindAllString(inst, -1)
+	ints := regex.MatchNums.FindAllString(inst, -1)
 	if len(ints) != 1 {
 		return fmt.Errorf("malformed instruction %s", inst)
 	}

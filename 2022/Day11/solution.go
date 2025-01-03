@@ -2,8 +2,8 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
@@ -35,8 +35,7 @@ func createMonkey(input []string) (*Monkey, []int, error) {
 	}
 
 	// Get starting items
-	re := regexp.MustCompile(`\d+`)
-	matches := re.FindAllString(input[1], -1)
+	matches := regex.MatchNums.FindAllString(input[1], -1)
 	items := []int{}
 	for _, m := range matches {
 		// We know all matched can be converted to ints due to regex matching, so we can safely

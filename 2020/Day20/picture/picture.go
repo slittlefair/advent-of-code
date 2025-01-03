@@ -3,9 +3,9 @@ package picture
 import (
 	tile "Advent-of-Code/2020/Day20/tile"
 	"Advent-of-Code/graph"
+	"Advent-of-Code/regex"
 	"errors"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
@@ -19,7 +19,6 @@ type Picture struct {
 
 // Populate tiles takes the string of lines, input, and populates the tiles accordingly
 func (p *Picture) PopulateTiles(input []string) {
-	re := regexp.MustCompile(`\d+`)
 	t := tile.Tile{
 		Pixels: make(map[graph.Co]string),
 	}
@@ -32,7 +31,7 @@ func (p *Picture) PopulateTiles(input []string) {
 			}
 			continue
 		}
-		if match := re.FindString(line); match != "" {
+		if match := regex.MatchNums.FindString(line); match != "" {
 			t.ID = match
 			i = 0
 			continue
@@ -142,7 +141,8 @@ func (p Picture) GetTileFromID(id string) (tile.Tile, error) {
 // we expect there to be a top left tile, so return an error if one doesn't exist
 func (p Picture) GetTopLeftTile() (tile.Tile, error) {
 	for _, t := range p.Tiles {
-		if t.AdjacentTiles.Bottom != "" && t.AdjacentTiles.Right != "" && t.AdjacentTiles.Left == "" && t.AdjacentTiles.Top == "" {
+		if t.AdjacentTiles.Bottom != "" && t.AdjacentTiles.Right != "" && t.AdjacentTiles.Left == "" &&
+			t.AdjacentTiles.Top == "" {
 			return t, nil
 		}
 	}

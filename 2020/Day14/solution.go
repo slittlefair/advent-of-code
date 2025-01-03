@@ -2,15 +2,13 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 )
 
 type Addresses map[int]int
-
-var reMask = regexp.MustCompile(`\w+`)
 
 func getVal(val int, mask string) (int, error) {
 	and, err := strconv.ParseUint(strings.ReplaceAll(mask, "X", "1"), 2, 0)
@@ -28,7 +26,7 @@ func findSolutions(entries []string) (int, int, error) {
 	var mask string
 
 	for _, entry := range entries {
-		matches := reMask.FindAllString(entry, -1)
+		matches := regex.MatchWords.FindAllString(entry, -1)
 		if len(matches) == 2 {
 			mask = matches[1]
 		} else {
