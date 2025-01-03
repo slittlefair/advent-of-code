@@ -6,3 +6,4 @@
 - [x] Day 4 - Ceres Search :full_moon: :mag:
 - [x] Day 5 - Print Queue :printer: :standing_woman: :standing_person: :standing_man:
 - [x] Day 6 - Guard Gallivant :shield: :walking_woman:
+- [x] Day 7 - Bridge Repair :bridge_at_night: :hammer_and_wrench:
