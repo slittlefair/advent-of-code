@@ -2,8 +2,8 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"sort"
 	"strings"
 )
@@ -17,12 +17,11 @@ type Foods struct {
 }
 
 func (f *Foods) parseInput(input []string) {
-	re := regexp.MustCompile(`\w+`)
 	for _, line := range input {
 		split := strings.Split(line, "contains")
-		ingredients := re.FindAllString(split[0], -1)
+		ingredients := regex.MatchWords.FindAllString(split[0], -1)
 		f.OriginalInput = append(f.OriginalInput, ingredients)
-		allergens := re.FindAllString(split[1], -1)
+		allergens := regex.MatchWords.FindAllString(split[1], -1)
 		for _, a := range allergens {
 			if _, ok := f.Contains[a]; !ok {
 				f.Contains[a] = map[string]bool{}

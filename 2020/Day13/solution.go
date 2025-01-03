@@ -3,8 +3,8 @@ package main
 import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/maths"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
@@ -16,12 +16,11 @@ type Bus struct {
 type Buses []Bus
 
 func parseInput(entries []string) (int, Buses, error) {
-	re := regexp.MustCompile(`\w+`)
 	arrivalTime, err := strconv.Atoi(entries[0])
 	if err != nil {
 		return 0, nil, err
 	}
-	busStrings := re.FindAllString(entries[1], -1)
+	busStrings := regex.MatchWords.FindAllString(entries[1], -1)
 	buses := []Bus{}
 	for offset, id := range busStrings {
 		bus, err := strconv.Atoi(id)

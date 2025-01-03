@@ -2,14 +2,13 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
 func parseInput(input []string) (int, int, error) {
-	re := regexp.MustCompile(`\d+`)
-	matches := re.FindAllString(input[0], -1)
+	matches := regex.MatchNums.FindAllString(input[0], -1)
 	if len(matches) != 2 {
 		return -1, -1, fmt.Errorf("got %d numbers, should have 2 from %v", len(matches), input)
 	}

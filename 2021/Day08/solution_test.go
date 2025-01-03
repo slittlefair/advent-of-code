@@ -1,7 +1,7 @@
 package main
 
 import (
-	"regexp"
+	"Advent-of-Code/regex"
 	"testing"
 
 	"github.com/stretchr/testify/assert"
@@ -50,7 +50,7 @@ func Test_parseInput(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got, got1, err := parseInput(tt.line, regexp.MustCompile(`\w+`))
+			got, got1, err := parseInput(tt.line, regex.MatchWords)
 			tt.errorAssertionFunc(t, err)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.want1, got1)

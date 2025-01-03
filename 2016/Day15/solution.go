@@ -2,8 +2,8 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
@@ -17,9 +17,8 @@ type allDiscs map[int]*disc
 
 func parseInput(input []string) (allDiscs, error) {
 	ad := allDiscs{}
-	re := regexp.MustCompile(`\d+`)
 	for _, line := range input {
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		if len(matches) != 4 {
 			return nil, fmt.Errorf("did not get expected 4 ints from %v", line)
 		}

@@ -2,8 +2,8 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -79,12 +79,11 @@ func (rc Racers) runRace(length int) (int, int) {
 }
 
 func parseInput(input []string) Racers {
-	re := regexp.MustCompile(`\d+`)
 	racers := Racers{}
 	for _, reindeer := range input {
 		split := strings.Split(reindeer, " ")
 		name := split[0]
-		nums := re.FindAllString(reindeer, -1)
+		nums := regex.MatchNums.FindAllString(reindeer, -1)
 		// We can ignore the errors as we know they'll convert due to regex match
 		speed, _ := strconv.Atoi(nums[0])
 		duration, _ := strconv.Atoi(nums[1])

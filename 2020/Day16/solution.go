@@ -2,10 +2,10 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"Advent-of-Code/slice"
 	"errors"
 	"fmt"
-	"regexp"
 	"strings"
 )
 
@@ -23,12 +23,10 @@ type TicketCollection [][]int
 
 // var allValidTickets TicketCollection
 
-var re = regexp.MustCompile(`\d+`)
-
 // Populate a field with the valid numbers, so we can just look up a number on a ticket to see if it
 // is valid for a field
 func (tf TicketFields) populateField(field []string) error {
-	rangeLimits := re.FindAllString(field[1], -1)
+	rangeLimits := regex.MatchNums.FindAllString(field[1], -1)
 	// We know we won't get errors due to regex matching
 	rangeLimitsNums, _ := slice.StringSliceToIntSlice(rangeLimits)
 	if len(rangeLimitsNums) != 4 {
@@ -149,7 +147,7 @@ func (tf TicketFields) runSolution(entries []string) ([]int, int, TicketCollecti
 			}
 		} else {
 			// We know we won't get errors due to regex matching
-			nums, _ := slice.StringSliceToIntSlice(re.FindAllString(entry, -1))
+			nums, _ := slice.StringSliceToIntSlice(regex.MatchNums.FindAllString(entry, -1))
 			if len(myTicket) == 0 {
 				myTicket = nums
 				tf.populatePossibleValueIndices(len(myTicket))

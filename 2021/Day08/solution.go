@@ -2,6 +2,7 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
 	"math"
 	"regexp"
@@ -177,11 +178,10 @@ func (vm ValueMap) decodeOutputValue(outputValue []string) int {
 }
 
 func findSolution(input []string) (int, int, error) {
-	re := regexp.MustCompile(`\w+`)
 	part1 := 0
 	part2 := 0
 	for _, i := range input {
-		signalPatterns, outputValue, err := parseInput(i, re)
+		signalPatterns, outputValue, err := parseInput(i, regex.MatchWords)
 		if err != nil {
 			return -1, -1, err
 		}

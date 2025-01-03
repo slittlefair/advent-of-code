@@ -2,13 +2,12 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
 	"regexp"
 	"strconv"
 	"strings"
 )
-
-var reInt = regexp.MustCompile(`\d+`)
 
 type Cube struct {
 	re  *regexp.Regexp
@@ -51,7 +50,7 @@ func handleLine(line string) (bool, int) {
 	for _, s := range split {
 		for i, col := range colours {
 			if match := col.re.FindString(s); match != "" {
-				num := reInt.FindString(match)
+				num := regex.MatchNums.FindString(match)
 				v, _ := strconv.Atoi(num)
 				if v > col.max {
 					validGame = false

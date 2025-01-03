@@ -2,17 +2,16 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
 func decompress(s string, part1 bool) int {
-	re := regexp.MustCompile(`\d+`)
 	length := 0
 	for i := 0; i < len(s); i++ {
 		if string(s[i]) == "(" {
-			nums := re.FindAllString(s[i:], 2)
+			nums := regex.MatchNums.FindAllString(s[i:], 2)
 			n0, _ := strconv.Atoi(nums[0])
 			n1, _ := strconv.Atoi(nums[1])
 			for {

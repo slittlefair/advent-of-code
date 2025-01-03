@@ -2,12 +2,10 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
-
-var re = regexp.MustCompile(`\d+`)
 
 type Equation struct {
 	testValue int
@@ -17,7 +15,7 @@ type Equation struct {
 func parseInput(input []string) []Equation {
 	equations := []Equation{}
 	for _, line := range input {
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		eq := Equation{}
 		for i, m := range matches {
 			// We know this won't error since it's a match on the regex, so it is sure to convert

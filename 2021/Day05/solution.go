@@ -4,8 +4,8 @@ import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/graph"
 	"Advent-of-Code/maths"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
@@ -51,9 +51,8 @@ func convertDiagonalToCos(startX, endX, startY, endY int) []graph.Co {
 
 func validCos(input []string, part2 bool) ([]graph.Co, error) {
 	cos := []graph.Co{}
-	reNum := regexp.MustCompile(`\d+`)
 	for _, line := range input {
-		matches := reNum.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		if len(matches) != 4 {
 			return nil, fmt.Errorf("expected 4 matches, got %d in %v", len(matches), matches)
 		}
@@ -68,7 +67,9 @@ func validCos(input []string, part2 bool) ([]graph.Co, error) {
 		m2 := matchInts[2]
 		m3 := matchInts[3]
 		if m0 == m2 || m1 == m3 {
-			cos = append(cos, convertToCos(maths.Min(m0, m2), maths.Max(m0, m2), maths.Min(m1, m3), maths.Max(m1, m3))...)
+			cos = append(
+				cos,
+				convertToCos(maths.Min(m0, m2), maths.Max(m0, m2), maths.Min(m1, m3), maths.Max(m1, m3))...)
 		} else if part2 {
 			cos = append(cos, convertDiagonalToCos(m0, m2, m1, m3)...)
 		}

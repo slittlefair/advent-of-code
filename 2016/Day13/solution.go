@@ -4,8 +4,8 @@ import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/graph"
 	djk "Advent-of-Code/graph/dijkstra"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -15,8 +15,7 @@ func parseInput(input []string) (int, graph.Co, error) {
 	if err != nil {
 		return -1, graph.Co{}, err
 	}
-	re := regexp.MustCompile(`\d+`)
-	matches := re.FindAllString(input[1], -1)
+	matches := regex.MatchNums.FindAllString(input[1], -1)
 	x, _ := strconv.Atoi(matches[0])
 	y, _ := strconv.Atoi(matches[1])
 	return num, graph.Co{X: x, Y: y}, nil

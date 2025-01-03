@@ -3,6 +3,7 @@ package card_test
 import (
 	"Advent-of-Code/2021/Day04/card"
 	"Advent-of-Code/graph"
+	"Advent-of-Code/regex"
 	"regexp"
 	"testing"
 
@@ -56,7 +57,7 @@ func TestCard_ParseCard(t *testing.T) {
 					"6 10  3 18  5",
 					"1 12 20 15 19",
 				},
-				reNum: regexp.MustCompile(`\d+`),
+				reNum: regex.MatchNums,
 			},
 			want: &card.Card{
 				Numbers: map[graph.Co]*card.Number{
@@ -103,7 +104,7 @@ func TestCard_ParseCard(t *testing.T) {
 					"20 11 10 24  4",
 					"14 21 16 12  6",
 				},
-				reNum: regexp.MustCompile(`\d+`),
+				reNum: regex.MatchNums,
 			},
 			want: &card.Card{
 				Numbers: map[graph.Co]*card.Number{
@@ -150,7 +151,7 @@ func TestCard_ParseCard(t *testing.T) {
 					"22 11 13  6  5",
 					"2  0 12  3  7",
 				},
-				reNum: regexp.MustCompile(`\d+`),
+				reNum: regex.MatchNums,
 			},
 			want: &card.Card{
 				Numbers: map[graph.Co]*card.Number{

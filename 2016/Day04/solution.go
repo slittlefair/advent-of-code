@@ -3,6 +3,7 @@ package main
 import (
 	"Advent-of-Code/cipher"
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
 	"reflect"
 	"regexp"
@@ -81,11 +82,10 @@ func validateRooms(input []string, reNum *regexp.Regexp) (string, error) {
 
 func main() {
 	input := file.Read()
-	reNum := regexp.MustCompile(`\d+`)
-	validRooms, sum := getValidRooms(input, reNum)
+	validRooms, sum := getValidRooms(input, regex.MatchNums)
 	fmt.Println("Part 1:", sum)
 
-	id, err := validateRooms(validRooms, reNum)
+	id, err := validateRooms(validRooms, regex.MatchNums)
 	if err != nil {
 		fmt.Println(err)
 		return

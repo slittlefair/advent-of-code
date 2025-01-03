@@ -3,8 +3,8 @@ package main
 import (
 	"Advent-of-Code/file"
 	"Advent-of-Code/graph"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -30,8 +30,7 @@ func constructLights(height, width int) *Lights {
 }
 
 func (l *Lights) followInstruction(inst string) error {
-	re := regexp.MustCompile(`\d+`)
-	matches := re.FindAllString(inst, -1)
+	matches := regex.MatchNums.FindAllString(inst, -1)
 	if l := len(matches); l != 2 {
 		return fmt.Errorf("expected 2 numbers, got %d from %s", l, inst)
 	}

@@ -2,8 +2,8 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 )
 
@@ -15,9 +15,8 @@ type Elf struct {
 func findContainedAssignments(input []string) (int, int, error) {
 	containedPairs := 0
 	overlappingPairs := 0
-	re := regexp.MustCompile(`\d+`)
 	for _, line := range input {
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		if len(matches) != 4 {
 			return -1, -1, fmt.Errorf("malformed input %s", line)
 		}

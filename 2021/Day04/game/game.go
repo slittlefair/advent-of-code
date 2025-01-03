@@ -3,8 +3,8 @@ package game
 import (
 	"Advent-of-Code/2021/Day04/card"
 	"Advent-of-Code/graph"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"strconv"
 	"strings"
 )
@@ -35,11 +35,10 @@ func ParseInput(input []string) (*Game, error) {
 	}
 	g := &Game{}
 	g.Nums = nums
-	reNum := regexp.MustCompile(`\d+`)
 	for i := 1; i < len(input); i += 6 {
 		card := &card.Card{Numbers: make(map[graph.Co]*card.Number)}
 		// We pass in a regex match we know ParseCard can handle, so we can ignore the error
-		_ = card.ParseCard(input[i:i+6], reNum)
+		_ = card.ParseCard(input[i:i+6], regex.MatchNums)
 		g.Cards = append(g.Cards, card)
 	}
 	g.CardsNotWon = make(map[*card.Card]struct{})
@@ -71,5 +70,8 @@ func (g *Game) PlayGame() (int, int, error) {
 			}
 		}
 	}
-	return part1, part2, fmt.Errorf("could not find last winning card after all numbers called, %d cards remaining", len(g.CardsNotWon))
+	return part1, part2, fmt.Errorf(
+		"could not find last winning card after all numbers called, %d cards remaining",
+		len(g.CardsNotWon),
+	)
 }

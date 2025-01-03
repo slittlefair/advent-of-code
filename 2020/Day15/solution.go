@@ -2,9 +2,9 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"Advent-of-Code/slice"
 	"fmt"
-	"regexp"
 )
 
 type NumsSaid struct {
@@ -54,8 +54,7 @@ func (wns WhenNumsSaid) playGame(startingIndex int) (int, int) {
 
 func main() {
 	numList := file.Read()[0]
-	re := regexp.MustCompile(`\d+`)
-	numStrings, err := slice.StringSliceToIntSlice(re.FindAllString(numList, -1))
+	numStrings, err := slice.StringSliceToIntSlice(regex.MatchNums.FindAllString(numList, -1))
 	if err != nil {
 		fmt.Println(err)
 		return

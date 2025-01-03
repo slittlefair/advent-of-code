@@ -2,15 +2,13 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
-	"regexp"
 	"sort"
 	"strconv"
 )
 
 type orderingRules map[int]map[int]bool
-
-var re = regexp.MustCompile(`\d+`)
 
 func parseInput(input []string) (orderingRules, [][]int) {
 	rules := orderingRules{}
@@ -23,7 +21,7 @@ func parseInput(input []string) (orderingRules, [][]int) {
 			continue
 		}
 		if parsingRules {
-			matches := re.FindAllString(line, 2)
+			matches := regex.MatchNums.FindAllString(line, 2)
 			// We can ignore errors since we've already used regex tomatch, so we know they can be converted
 			n1, _ := strconv.Atoi(matches[0])
 			n2, _ := strconv.Atoi(matches[1])
@@ -38,7 +36,7 @@ func parseInput(input []string) (orderingRules, [][]int) {
 			continue
 		}
 
-		matches := re.FindAllString(line, -1)
+		matches := regex.MatchNums.FindAllString(line, -1)
 		p := make([]int, len(matches))
 		for i, m := range matches {
 			// We can ignore errors since we've already used regex tomatch, so we know they can be converted
