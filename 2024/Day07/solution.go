@@ -81,10 +81,6 @@ func (c concat) print() string {
 var part1Operators = []operator{add{}, multiply{}}
 var part2Operators = []operator{add{}, multiply{}, concat{}}
 
-var indexAccum = map[int]bool{}
-
-var ops []operator
-
 // Recursive function that calls an opertor at a specific point of an equation. It returns true if
 // it's the end of the equation and we match the test value, or false if it doesn't, or can't,
 // evaluate to the test value.
@@ -122,7 +118,7 @@ func (eq Equation) doOperation(op operator, index, tot int, allOperators, correc
 // Utility function for printing a correct solution for an equation. It prints elements and operators
 // in turn along with the test value.
 // e.g. "6 * 8 || 6 * 15 = 7290"
-func (eq Equation) print(correctOps []operator) {
+func (eq Equation) Print(correctOps []operator) {
 	for i, v := range eq.equations {
 		if i == len(eq.equations)-1 {
 			fmt.Printf("%v = %v\n", v, eq.testValue)
