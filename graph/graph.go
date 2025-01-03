@@ -39,7 +39,7 @@ func (g *Grid) PrintGrid() {
 			if v, ok := g.Graph[Co{X: x, Y: y}]; !ok {
 				fmt.Print(".")
 			} else {
-				fmt.Printf(v)
+				fmt.Print(v)
 			}
 		}
 		fmt.Println()

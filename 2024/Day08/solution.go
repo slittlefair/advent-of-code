@@ -32,13 +32,13 @@ func (am AntennaMap) Print(part int) error {
 				if _, ok := am.antinodes[co]; ok {
 					fmt.Print("#")
 				} else {
-					fmt.Printf(".")
+					fmt.Print(".")
 				}
 				continue
 			} else if _, ok := am.antinodesPart2[co]; ok {
 				fmt.Print("#")
 			} else {
-				fmt.Printf(".")
+				fmt.Print(".")
 			}
 		}
 		fmt.Println()
