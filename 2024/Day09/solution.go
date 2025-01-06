@@ -26,7 +26,7 @@ func parseInput(input []string) (Disk, error) {
 
 	// Setting up the slice with a capacity and length allows us to add by assignment, rather than
 	// appending, which is slightly more expensive
-	disk := make([]int, blockSum, blockSum)
+	disk := make([]int, blockSum)
 	id := 0
 	index := 0
 	for i, n := range intConv {
@@ -49,10 +49,8 @@ func parseInput(input []string) (Disk, error) {
 // copy returns a copy of a disk so we can manipulate the disk in part 1 and not have to parseInput
 // again for part 2
 func (d Disk) copy() Disk {
-	disk := make(Disk, len(d), len(d))
-	for i, v := range d {
-		disk[i] = v
-	}
+	disk := make(Disk, len(d))
+	copy(disk, d)
 	return disk
 }
 
@@ -148,7 +146,7 @@ func (d Disk) compact2() {
 		}
 		// Once we've evaluated a block we can descrease i by the length of the block-1. This
 		// ensures we move onto a different block rather than trying to evaluate the same block
-		// block again minus teh element we just started at.
+		// block again minus the element we just started at.
 		i -= len(blocks) - 1
 	}
 }
