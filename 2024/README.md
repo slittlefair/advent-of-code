@@ -8,3 +8,4 @@
 - [x] Day 6 - Guard Gallivant :shield: :walking_woman:
 - [x] Day 7 - Bridge Repair :bridge_at_night: :hammer_and_wrench:
 - [x] Day 8 - Resonant Collinearity :muscle: :chart_with_upwards_trend:
+- [x] Day 9 - Disk Fragmenter :cd: :broken_heart:
