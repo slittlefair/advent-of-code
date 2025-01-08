@@ -6,8 +6,8 @@ import (
 	"fmt"
 )
 
-func parseInput(input []string) *graph.Grid {
-	g := graph.NewGrid()
+func parseInput(input []string) *graph.Grid[string] {
+	g := graph.NewGrid[string]()
 	g.MaxY = len(input)
 	g.MaxX = len(input[0])
 
@@ -25,7 +25,7 @@ var expectedSequence = []string{"M", "A", "S"}
 // Recursively look for coordinates in a grid from a certain point and check we find a sequence. If
 // at any point we fail to follow the sequence we immediately return false all the way back to the
 // original call
-func traverseCos(g *graph.Grid, currentCo, dir graph.Co, currentIndex int) bool {
+func traverseCos(g *graph.Grid[string], currentCo, dir graph.Co, currentIndex int) bool {
 	adjCo := graph.Co{X: currentCo.X + dir.X, Y: currentCo.Y + dir.Y}
 	v, ok := g.Graph[adjCo]
 
@@ -49,7 +49,7 @@ func traverseCos(g *graph.Grid, currentCo, dir graph.Co, currentIndex int) bool 
 }
 
 // Part 1
-func findXmas(g *graph.Grid, co graph.Co) int {
+func findXmas(g *graph.Grid[string], co graph.Co) int {
 	count := 0
 	if g.Graph[co] != "X" {
 		return count
@@ -76,7 +76,7 @@ var diagonals = []graph.Co{
 }
 
 // Part 2
-func findMasInX(g *graph.Grid, co graph.Co) bool {
+func findMasInX(g *graph.Grid[string], co graph.Co) bool {
 	// If the center character isn't A, move on
 	if g.Graph[co] != "A" {
 		return false
@@ -100,7 +100,7 @@ func findMasInX(g *graph.Grid, co graph.Co) bool {
 	return g.Graph[co1] != g.Graph[co2]
 }
 
-func calculateXmasTotals(g *graph.Grid) (int, int) {
+func calculateXmasTotals(g *graph.Grid[string]) (int, int) {
 	part1, part2 := 0, 0
 	for y := g.MinY; y <= g.MaxY; y++ {
 		for x := g.MinX; x <= g.MaxX; x++ {

@@ -110,7 +110,7 @@ var g = map[graph.Co]string{
 	{X: 9, Y: 9}: "X",
 }
 
-var grid = &graph.Grid{
+var grid = &graph.Grid[string]{
 	MaxX:  9,
 	MaxY:  9,
 	Graph: g,
@@ -125,7 +125,7 @@ func Test_parseInput(t *testing.T) {
 			"MAXS",
 		}
 		g := parseInput(input)
-		assert.Equal(t, &graph.Grid{
+		assert.Equal(t, &graph.Grid[string]{
 			MaxX: 4,
 			MaxY: 4,
 			Graph: map[graph.Co]string{

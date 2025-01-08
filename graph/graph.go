@@ -13,27 +13,27 @@ type Co struct {
 }
 
 // Graph is a map allowing to record string values at coordinates
-type Graph map[Co]string
+type Graph[T any] map[Co]T
 
 // Grid is a struct containing min and max values as well as a map of coordinates to string values
-type Grid struct {
-	Graph                  Graph
+type Grid[T any] struct {
+	Graph                  Graph[T]
 	MinX, MaxX, MinY, MaxY int
 }
 
-func NewGrid() *Grid {
-	return &Grid{
-		Graph: make(map[Co]string),
+func NewGrid[T any]() *Grid[T] {
+	return &Grid[T]{
+		Graph: make(map[Co]T),
 	}
 }
 
 // OutOfBounds returns a boolean for whether the given coordinate is out of bounds of the grid. That
 // is, are any points above any maximum values or below any minimum values
-func (g *Grid) OutOfBounds(co Co) bool {
+func (g *Grid[T]) OutOfBounds(co Co) bool {
 	return co.X < g.MinX || co.X > g.MaxX || co.Y < g.MinY || co.Y > g.MaxY
 }
 
-func (g *Grid) PrintGrid() {
+func (g *Grid[T]) PrintGrid() {
 	for y := 0; y <= g.MaxY; y++ {
 		for x := 0; x <= g.MaxX; x++ {
 			if v, ok := g.Graph[Co{X: x, Y: y}]; !ok {

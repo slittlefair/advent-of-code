@@ -26,10 +26,10 @@ func Test_parseInput(t *testing.T) {
 				co:  graph.Co{X: 4, Y: 6},
 				dir: 0,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -65,10 +65,10 @@ func Test_step(t *testing.T) {
 				co:  graph.Co{X: 4, Y: 1},
 				dir: 0,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -102,10 +102,10 @@ func Test_step(t *testing.T) {
 				co:  graph.Co{X: 4, Y: 2},
 				dir: 0,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -139,10 +139,10 @@ func Test_step(t *testing.T) {
 				co:  graph.Co{X: 4, Y: 2},
 				dir: 1,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -177,10 +177,10 @@ func Test_step(t *testing.T) {
 				co:  graph.Co{X: 9, Y: 9},
 				dir: 2,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -212,10 +212,10 @@ func Test_step(t *testing.T) {
 				co:  graph.Co{X: 4, Y: 2},
 				dir: 1,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -249,10 +249,10 @@ func Test_runPatrol(t *testing.T) {
 				co:  graph.Co{X: 4, Y: 6},
 				dir: 0,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -280,10 +280,10 @@ func Test_runPatrol(t *testing.T) {
 				co:  graph.Co{X: 4, Y: 6},
 				dir: 0,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -312,10 +312,10 @@ func Test_runPatrol(t *testing.T) {
 				co:  graph.Co{X: 4, Y: 6},
 				dir: 0,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -345,10 +345,10 @@ func Test_resetFloor(t *testing.T) {
 				co:  graph.Co{X: 4, Y: 6},
 				dir: 0,
 			},
-			grid: &graph.Grid{
+			grid: &graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 0}: "#",
 					{X: 9, Y: 1}: "#",
 					{X: 2, Y: 3}: "#",
@@ -388,7 +388,7 @@ func Test_resetFloor(t *testing.T) {
 
 		floor.resetFloor(obstacle, *originalGuard)
 		assert.Equal(t, originalGuard, floor.guard)
-		assert.Equal(t, graph.Graph{
+		assert.Equal(t, graph.Graph[string]{
 			{X: 4, Y: 0}: "#",
 			{X: 9, Y: 1}: "#",
 			{X: 2, Y: 3}: "#",
