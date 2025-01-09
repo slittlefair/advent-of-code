@@ -69,19 +69,30 @@ func (tm *TopMap) findTrails() {
 	}
 }
 
+func (tm TopMap) getScores() int {
+	score := 0
+	for _, v := range tm.trails {
+		score += len(v)
+	}
+	return score
+}
+
+func findSolutions(input []string) (int, int, error) {
+	topMap, err := parseInput(input)
+	if err != nil {
+		return 0, 0, err
+	}
+	topMap.findTrails()
+	part1 := topMap.getScores()
+	return part1, 0, nil
+}
+
 func main() {
 	input := file.Read()
-	topMap, err := parseInput(input)
+	part1, _, err := findSolutions(input)
 	if err != nil {
 		fmt.Println(err)
 		return
 	}
-	topMap.Grid.PrintGrid()
-
-	topMap.findTrails()
-	count := 0
-	for _, v := range topMap.trails {
-		count += len(v)
-	}
-	fmt.Printf("Part1: %v\n", count)
+	fmt.Printf("Part1: %v\n", part1)
 }
