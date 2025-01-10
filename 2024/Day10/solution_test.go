@@ -119,7 +119,7 @@ func Test_parseInput(t *testing.T) {
 	})
 }
 
-func test_makePathString(t *testing.T) {
+func Test_makePathString(t *testing.T) {
 	t.Run("returns the correct path string for a given slice of coordinates", func(t *testing.T) {
 		path := []graph.Co{
 			{X: 1, Y: 0},
@@ -129,7 +129,7 @@ func test_makePathString(t *testing.T) {
 			{X: 0, Y: 0},
 			{X: 8, Y: 9876},
 		}
-		want := "X:1,Y:0X:4,Y:4X:999,Y:-1X:2,Y:3X:0,Y:0X:8,Y:9876"
+		want := "X:1Y:0X:4Y:4X:999Y:-1X:2Y:3X:0Y:0X:8Y:9876"
 		pathString := makePathString(path)
 		assert.Equal(t, want, pathString)
 	})
