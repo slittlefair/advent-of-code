@@ -13,7 +13,7 @@ type Guard struct {
 
 type Floor struct {
 	guard        *Guard
-	grid         *graph.Grid
+	grid         *graph.Grid[string]
 	visitedSteps map[graph.Co]map[int]bool
 }
 
@@ -42,7 +42,7 @@ var dirs = []graph.Co{{Y: -1}, {X: 1}, {Y: 1}, {X: -1}}
 // }
 
 func parseInput(input []string) *Floor {
-	g := graph.NewGrid()
+	g := graph.NewGrid[string]()
 	g.MaxY = len(input) - 1
 	g.MaxX = len(input[0]) - 1
 	guard := &Guard{
@@ -128,7 +128,7 @@ func findSolutions(input []string) (int, int) {
 	floor := parseInput(input)
 
 	// Record the original graph and guard values so we can reset the floor after each part2 iteration
-	originalGraph := graph.Graph{}
+	originalGraph := graph.Graph[string]{}
 	for k, v := range floor.grid.Graph {
 		originalGraph[k] = v
 	}

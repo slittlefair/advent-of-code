@@ -7,7 +7,7 @@ import (
 )
 
 type AntennaMap struct {
-	graph.Grid
+	graph.Grid[string]
 
 	antennas       map[string]map[graph.Co]bool
 	antinodes      map[graph.Co]bool
@@ -49,8 +49,8 @@ func (am AntennaMap) Print(part int) error {
 // Parse the input to create a grid of antennas
 func parseInput(input []string) AntennaMap {
 	am := AntennaMap{
-		Grid: graph.Grid{
-			Graph: make(graph.Graph),
+		Grid: graph.Grid[string]{
+			Graph: make(graph.Graph[string]),
 			MaxY:  len(input) - 1,
 			MaxX:  len(input[0]) - 1,
 		},

@@ -25,10 +25,10 @@ func Test_parseInput(t *testing.T) {
 		}
 
 		want := AntennaMap{
-			Grid: graph.Grid{
+			Grid: graph.Grid[string]{
 				MaxX: 11,
 				MaxY: 11,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 8, Y: 1}: "0",
 					{X: 5, Y: 2}: "0",
 					{X: 7, Y: 3}: "0",
@@ -63,10 +63,10 @@ func Test_parseInput(t *testing.T) {
 func TestAntennaMap_findAntinodes(t *testing.T) {
 	t.Run("returns number of antinodes for part 1 for a given input", func(t *testing.T) {
 		am := AntennaMap{
-			Grid: graph.Grid{
+			Grid: graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 4, Y: 3}: "a",
 					{X: 8, Y: 4}: "a",
 					{X: 5, Y: 5}: "a",
@@ -89,10 +89,10 @@ func TestAntennaMap_findAntinodes(t *testing.T) {
 
 	t.Run("returns number of antinodes for part 2 for a given input", func(t *testing.T) {
 		am := AntennaMap{
-			Grid: graph.Grid{
+			Grid: graph.Grid[string]{
 				MaxX: 9,
 				MaxY: 9,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 0, Y: 0}: "T",
 					{X: 3, Y: 1}: "T",
 					{X: 1, Y: 2}: "T",
@@ -115,10 +115,10 @@ func TestAntennaMap_findAntinodes(t *testing.T) {
 
 	t.Run("returns number of antinodes for parts 1 and 2 for a given input", func(t *testing.T) {
 		am := AntennaMap{
-			Grid: graph.Grid{
+			Grid: graph.Grid[string]{
 				MaxX: 11,
 				MaxY: 11,
-				Graph: graph.Graph{
+				Graph: graph.Graph[string]{
 					{X: 8, Y: 1}: "0",
 					{X: 5, Y: 2}: "0",
 					{X: 7, Y: 3}: "0",
