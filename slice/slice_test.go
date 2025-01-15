@@ -49,7 +49,70 @@ func TestPermutations(t *testing.T) {
 	}
 }
 
-func TestRemove(t *testing.T) {
+func TestRemoveByIndex(t *testing.T) {
+	type args struct {
+		s []int
+		e int
+	}
+	tests := []struct {
+		name               string
+		args               args
+		want               []int
+		want1              []int
+		errorAssertionFunc assert.ErrorAssertionFunc
+	}{
+		{
+			name: "it removes first element from given slice",
+			args: args{
+				s: []int{1, 2, 3, 4},
+				e: 1,
+			},
+			want:               []int{2, 3, 4},
+			want1:              []int{1, 2, 3, 4},
+			errorAssertionFunc: assert.NoError,
+		},
+		{
+			name: "it removes last element from given slice",
+			args: args{
+				s: []int{1, 2, 3, 4},
+				e: 4,
+			},
+			want:               []int{1, 2, 3},
+			want1:              []int{1, 2, 3, 4},
+			errorAssertionFunc: assert.NoError,
+		},
+		{
+			name: "it removes a middle element from given slice",
+			args: args{
+				s: []int{1, 2, 3, 4},
+				e: 2,
+			},
+			want:               []int{1, 3, 4},
+			want1:              []int{1, 2, 3, 4},
+			errorAssertionFunc: assert.NoError,
+		},
+		{
+			name: "it returns an error if the element isn't in the given slice",
+			args: args{
+				s: []int{1, 2, 3, 4},
+				e: 5,
+			},
+			want:               []int{1, 2, 3, 4},
+			want1:              []int{1, 2, 3, 4},
+			errorAssertionFunc: assert.Error,
+		},
+	}
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			got, err := slice.RemoveByElement(tt.args.s, tt.args.e)
+			tt.errorAssertionFunc(t, err)
+			assert.Equal(t, tt.want, got)
+			assert.Equal(t, tt.want1, tt.args.s)
+		})
+	}
+}
+
+func TestRemoveByElement(t *testing.T) {
 	type args struct {
 		s []int
 		i int
@@ -90,7 +153,7 @@ func TestRemove(t *testing.T) {
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			got := slice.Remove(tt.args.s, tt.args.i)
+			got := slice.RemoveByIndex(tt.args.s, tt.args.i)
 			assert.Equal(t, tt.want, got)
 			assert.Equal(t, tt.want1, tt.args.s)
 		})
