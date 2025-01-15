@@ -34,8 +34,8 @@ func (g *Grid[T]) OutOfBounds(co Co) bool {
 }
 
 func (g *Grid[T]) PrintGrid() {
-	for y := 0; y <= g.MaxY; y++ {
-		for x := 0; x <= g.MaxX; x++ {
+	for y := g.MinY; y <= g.MaxY; y++ {
+		for x := g.MinX; x <= g.MaxX; x++ {
 			if v, ok := g.Graph[Co{X: x, Y: y}]; !ok {
 				fmt.Print(".")
 			} else {
