@@ -11,3 +11,4 @@
 - [x] Day 9 - Disk Fragmenter :cd: :broken_heart:
 - [x] Day 10 - Hoof It :deer: :walking:
 - [x] Day 11 - Plutonian Pebbles :ringed_planet: :rock:
+- [x] Day 12 - Garden Groups :cherry_blossom: :sunflower: :hibiscus: :tulip:
