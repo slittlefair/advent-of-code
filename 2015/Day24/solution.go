@@ -44,7 +44,7 @@ func getLowestQuantumEntanglement(combos [][]int) (int, error) {
 func (vc *ValidCombos) iterate(remainingPackages, bucket []int, weight, maxLevel int) {
 	for i, rp := range remainingPackages {
 		newBucket := append(bucket, rp)
-		newRemainingPackages := slice.Remove(remainingPackages, i)
+		newRemainingPackages := slice.RemoveByIndex(remainingPackages, i)
 		if len(newBucket) < maxLevel {
 			vc.iterate(newRemainingPackages, newBucket, weight, maxLevel)
 		}

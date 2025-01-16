@@ -55,7 +55,7 @@ func findSolutions(input []string) (int, int) {
 				if j < 0 {
 					continue
 				}
-				if isSafe, _ := reportIsSafe(slice.Remove(report, j)); isSafe {
+				if isSafe, _ := reportIsSafe(slice.RemoveByIndex(report, j)); isSafe {
 					// If we're now safe having removed any element, increase the count
 					part2++
 					break

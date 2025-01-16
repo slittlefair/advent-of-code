@@ -2,6 +2,7 @@ package slice
 
 import (
 	"Advent-of-Code/maths"
+	"fmt"
 	"strconv"
 )
 
@@ -97,11 +98,20 @@ func Equal[K comparable](slice1, slice2 []K) bool {
 	return true
 }
 
-// Remove removes the element at index i from slice s and returns that slice, whilst keeping the original in tact
-func Remove[K comparable](s []K, i int) []K {
+// RemoveByIndex removes the element at index i from slice s and returns that slice, whilst keeping the original in tact
+func RemoveByIndex[K comparable](s []K, i int) []K {
 	ret := make([]K, 0)
 	ret = append(ret, s[:i]...)
 	return append(ret, s[i+1:]...)
+}
+
+func RemoveByElement[K comparable](s []K, elem K) ([]K, error) {
+	for i, e := range s {
+		if e == elem {
+			return RemoveByIndex(s, i), nil
+		}
+	}
+	return s, fmt.Errorf("elem not found in slice")
 }
 
 // FindExtremities returns the max and min value from a slice of ints
