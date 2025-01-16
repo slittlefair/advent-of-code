@@ -12,3 +12,4 @@
 - [x] Day 10 - Hoof It :deer: :walking:
 - [x] Day 11 - Plutonian Pebbles :ringed_planet: :rock:
 - [x] Day 12 - Garden Groups :cherry_blossom: :sunflower: :hibiscus: :tulip:
+- [x] Day 13 - Claw Contraption :eagle: :slot_machine:
