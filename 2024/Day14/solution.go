@@ -24,9 +24,9 @@ func parseInput(input []string, x, y int) (*Bathroom, error) {
 	robots := make([]*Robot, len(input))
 	for i, line := range input {
 		// For each line, get the four numbers and create a robot with those values
-		matches := regex.MatchNums.FindAllString(line, -1)
+		matches := regex.MatchNumsWithNegatives.FindAllString(line, -1)
 		if l := len(matches); l != 4 {
-			return nil, fmt.Errorf("malformed input, expected 4 nums, got %d: %v\n", l, line)
+			return nil, fmt.Errorf("malformed input, expected 4 nums, got %d: %v", l, line)
 		}
 		r := &Robot{}
 		for j, m := range matches {
