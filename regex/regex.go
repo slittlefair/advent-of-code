@@ -5,6 +5,9 @@ import "regexp"
 // Match all numbers in a string
 var MatchNums = regexp.MustCompile(`\d+`)
 
+// Match all numbers, including negatives, in a string
+var MatchNumsWithNegatives = regexp.MustCompile(`[-]?\d+`)
+
 // Match all lower case letters in a string
 var MatchLettersLower = regexp.MustCompile(`[a-z]+`)
 
