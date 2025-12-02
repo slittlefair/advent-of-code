@@ -12,6 +12,10 @@ type Co struct {
 	Z int
 }
 
+func (c Co) Add(co Co) Co {
+	return Co{X: c.X + co.X, Y: c.Y + co.Y, Z: c.Z + co.Z}
+}
+
 // Graph is a map allowing to record string values at coordinates
 type Graph[T any] map[Co]T
 

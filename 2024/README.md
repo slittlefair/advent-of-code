@@ -14,3 +14,4 @@
 - [x] Day 12 - Garden Groups :cherry_blossom: :sunflower: :hibiscus: :tulip:
 - [x] Day 13 - Claw Contraption :eagle: :slot_machine:
 - [x] Day 14 - Bathroom Dedoubt :toilet: :european_castle:
+- [ ] Day 15 - Warehouse Woes :card_file_box: :sob:
