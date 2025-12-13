@@ -11,4 +11,9 @@ linters:
     - unconvert
     - unparam
     - whitespace
+  settings:
+    revive:
+      rules:
+        - name: package-comments
+          disabled: true
 
