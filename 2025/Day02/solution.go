@@ -23,9 +23,9 @@ func parseInput(input []string) ([]DataStruct, error) {
 			if len(nums) != 2 {
 				return nil, fmt.Errorf("malformed nums: %v", m)
 			}
-			min, _ := strconv.Atoi(nums[0])
-			max, _ := strconv.Atoi(nums[1])
-			ds = append(ds, DataStruct{min, max})
+			n0, _ := strconv.Atoi(nums[0])
+			n1, _ := strconv.Atoi(nums[1])
+			ds = append(ds, DataStruct{min: n0, max: n1})
 		}
 	}
 	return ds, nil
@@ -45,7 +45,7 @@ func evaluateNum(s string) (int, int) {
 		// Cycle over the number getting substrings of the various lengths, adding them to a map. We
 		// want to end up with a map of length 1, in which case it's the same substring repeated.
 		// If the value in the map is two then it's made up of the same substring twice, in which
-		// case it satisifes part 1 as well as part 2.
+		// case it satisifies part 1 as well as part 2.
 		for i := 0; i <= l-j; i += j {
 			m[s[i:i+j]]++
 		}
