@@ -1,11 +1,14 @@
+version:
+2
+
 linters:
-  enable:
-    - goconst
-    - misspell
-    - prealloc
-    - predeclared
-    - revive
-    - testpackage
-    - unconvert
-    - unparam
-    - whitespace
+enable:
+-goconst
+-misspell
+-prealloc
+-predeclared
+-revive
+-testpackage
+-unconvert
+-unparam
+-whitespace
