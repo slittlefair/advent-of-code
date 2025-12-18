@@ -2,6 +2,7 @@ package main
 
 import (
 	"Advent-of-Code/file"
+	"Advent-of-Code/regex"
 	"fmt"
 	"regexp"
 	"strconv"
@@ -12,14 +13,13 @@ type DataStruct struct {
 }
 
 var reRange = regexp.MustCompile(`\d+-\d+`)
-var reNum = regexp.MustCompile(`\d+`)
 
 func parseInput(input []string) ([]DataStruct, error) {
 	ds := []DataStruct{}
 	for _, line := range input {
 		matches := reRange.FindAllString(line, -1)
 		for _, m := range matches {
-			nums := reNum.FindAllString(m, -1)
+			nums := regex.MatchNums.FindAllString(m, -1)
 			if len(nums) != 2 {
 				return nil, fmt.Errorf("malformed nums: %v", m)
 			}
