@@ -1,27 +1,27 @@
 # :christmas_tree: 2015 :christmas_tree:
 
-- [x] Day 1 - Not Quite Lisp :wavy_dash: :yin_yang:
-- [x] Day 2 - I Was Told There Would Be No Math :no_entry_sign: :1234:
-- [x] Day 3 - Perfectly Spherical Houses in a Vacuum :red_circle: :houses:
-- [x] Day 4 - The Ideal Stocking Stuffer :100: :socks:
-- [x] Day 5 - Doesn't He Have Intern-Elves For This? :baby: :elf:
-- [x] Day 6 - Probably a Fire Hazard :fire: :warning:
-- [x] Day 7 - Some Assembly Required :toolbox: :eight_spoked_asterisk:
-- [x] Day 8 - Matchsticks :fire: :chopsticks:
-- [x] Day 9 - All in a Single Night :one: :night_with_stars:
-- [x] Day 10 - Elves Look, Elves Say :eyes: :speaking_head:
-- [x] Day 11 - Corporate Policy :necktie: :scroll:
-- [x] Day 12 - JSAbacusFramework<area>.io :abacus: :building_construction:
-- [x] Day 13 - Knights of the Dinner Table :night_with_stars: :hamburger:
-- [x] Day 14 - Reindeer Olympics :deer: :weight_lifting_man:
-- [x] Day 15 - Science for Hungry People :microscope: :hungary:
-- [x] Day 16 - Aunt Sue :woman: :boy:
-- [x] Day 17 - No Such Thing as Too Much :x: :beers:
-- [x] Day 18 - Like a GIF For Your Yard :space_invader: :house_with_garden:
-- [x] Day 19 - Medicine for Rudolph :pill: :deer:
-- [x] Day 20 - Infinite Elves and Infinite Houses :infinity: :infinity:
-- [x] Day 21 - RPG Simulator 20XX :crossed_swords: :shield:
-- [x] Day 22 - Wizard Simulator 20XX :mage_man: :sparkles:
-- [x] Day 23 - Opening the Turing Lock :old_key: :unlock:
-- [x] Day 24 - It Hangs in the Balance :climbing: :balance_scale:
-- [x] Day 25 - Let It Snow :cloud_with_snow: :snowflake:
+- [x] Day 1
+- [x] Day 2
+- [x] Day 3
+- [x] Day 4
+- [x] Day 5
+- [x] Day 6
+- [x] Day 7
+- [x] Day 8
+- [x] Day 9
+- [x] Day 10
+- [x] Day 11
+- [x] Day 12
+- [x] Day 13
+- [x] Day 14
+- [x] Day 15
+- [x] Day 16
+- [x] Day 17
+- [x] Day 18
+- [x] Day 19
+- [x] Day 20
+- [x] Day 21
+- [x] Day 22
+- [x] Day 23
+- [x] Day 24
+- [x] Day 25

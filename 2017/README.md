@@ -1,7 +1,27 @@
 # :christmas_tree: 2017 :christmas_tree:
 
-- [x] Day 1 - Inverse Captcha :arrows_counterclockwise: :camera_flash:
-- [x] Day 2 - Corruption Checksum :currency_exchange: :white_check_mark:
-- [x] Day 3 - Spiral Memory :medical_symbol: :brain:
-- [x] Day 4 - High-Entropy Passphrases :eight_spoked_asterisk: :eight_spoked_asterisk:
-- [x] Day 5 - A Maze of Twisty Trampolines, All Alike :arrows_clockwise: :handball_person:
+- [x] Day 1
+- [x] Day 2
+- [x] Day 3
+- [x] Day 4
+- [x] Day 5
+- [ ] Day 6
+- [ ] Day 7
+- [ ] Day 8
+- [ ] Day 9
+- [ ] Day 10
+- [ ] Day 11
+- [ ] Day 12
+- [ ] Day 13
+- [ ] Day 14
+- [ ] Day 15
+- [ ] Day 16
+- [ ] Day 17
+- [ ] Day 18
+- [ ] Day 19
+- [ ] Day 20
+- [ ] Day 21
+- [ ] Day 22
+- [ ] Day 23
+- [ ] Day 24
+- [ ] Day 25
