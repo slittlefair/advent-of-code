@@ -1,19 +1,19 @@
-# :christmas_tree: 2024 :christmas_tree:
+# :christmas_tree: 2023 :christmas_tree:
 
 - [x] Day 1
 - [x] Day 2
 - [x] Day 3
-- [x] Day 4
-- [x] Day 5
-- [x] Day 6
-- [x] Day 7
-- [x] Day 8
-- [x] Day 9
-- [x] Day 10
-- [x] Day 11
-- [x] Day 12
-- [x] Day 13
-- [x] Day 14
+- [ ] Day 4
+- [ ] Day 5
+- [ ] Day 6
+- [ ] Day 7
+- [ ] Day 8
+- [ ] Day 9
+- [ ] Day 10
+- [ ] Day 11
+- [ ] Day 12
+- [ ] Day 13
+- [ ] Day 14
 - [ ] Day 15
 - [ ] Day 16
 - [ ] Day 17

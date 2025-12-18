@@ -1,27 +1,27 @@
 # :christmas_tree: 2020 :christmas_tree:
 
-- [x] Day 1 - Report Repair :memo: :wrench:
-- [x] Day 2 - Password Philosophy :eight_spoked_asterisk: :thinking:
-- [x] Day 3 - Toboggan Trajectory :snowboarder: :arrow_right:
-- [x] Day 4 - Passport Processing :passport_control: :gear:
-- [x] Day 5 - Binary Boarding :keycap_ten: :ticket:
-- [x] Day 6 - Custom Customs :customs: :customs:
-- [x] Day 7 - Handy Haversacks :hand: :baggage_claim:
-- [x] Day 8 - Handheld Halting :video_game: :stop_sign:
-- [x] Day 9 - Encoding Error :asterisk: :x:
-- [x] Day 10 - Adapter Array :battery: :battery:
-- [x] Day 11 - Seating System :seat: :gear:
-- [x] Day 12 - Rain Risk :umbrella: :warning:
-- [x] Day 13 - Shuttle Search :bus: :mag:
-- [x] Day 14 - Docking Data :anchor: :electric_plug:
-- [x] Day 15 - Rambunctious Recitation :loudspeaker: :thinking:
-- [x] Day 16 - Ticket Translation :ticket: :speech_balloon:
-- [x] Day 17 - Conway Cubes :black_square_button: :white_square_button:
-- [x] Day 18 - Operation Order :1234: :arrows_counterclockwise:
-- [x] Day 19 - Monster Messages :dragon_face: :envelope:
-- [x] Day 20 - Jurassic Jigsaw :t-rex: :jigsaw:
-- [x] Day 21 - Allergen Assessment :microbe: :man_health_worker:
-- [x] Day 22 - Crab Combat :crab: :crossed_swords:
-- [x] Day 23 - Crab Cups :crab: :cup_with_straw:
-- [x] Day 24 - Lobby Layout :hotel: :world_map:
-- [x] Day 25 - Combo Breaker :lock: :unlock:
+- [x] Day 1
+- [x] Day 2
+- [x] Day 3
+- [x] Day 4
+- [x] Day 5
+- [x] Day 6
+- [x] Day 7
+- [x] Day 8
+- [x] Day 9
+- [x] Day 10
+- [x] Day 11
+- [x] Day 12
+- [x] Day 13
+- [x] Day 14
+- [x] Day 15
+- [x] Day 16
+- [x] Day 17
+- [x] Day 18
+- [x] Day 19
+- [x] Day 20
+- [x] Day 21
+- [x] Day 22
+- [x] Day 23
+- [x] Day 24
+- [x] Day 25
