@@ -93,7 +93,6 @@ out:
 		freshSlice = append(freshSlice, fr)
 	}
 	ing.fresh = freshSlice
-
 }
 
 func findSolutions(input []string) (int, int, error) {
