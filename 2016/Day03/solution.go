@@ -34,11 +34,11 @@ func validateHorizontalTriangles(input []string) int {
 	count := 0
 	for _, line := range input {
 		matches := regex.MatchNums.FindAllString(line, -1)
-		triangle := []int{}
-		for _, m := range matches {
+		triangle := make([]int, len(matches))
+		for i, m := range matches {
 			// we know this won't error since we only deal with matches to regex
-			i, _ := strconv.Atoi(m)
-			triangle = append(triangle, i)
+			n, _ := strconv.Atoi(m)
+			triangle[i] = n
 		}
 		count += checkTriangles([][]int{triangle})
 	}
