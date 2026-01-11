@@ -38,15 +38,15 @@ func parseInput(input []string) ([]*Problem, error) {
 
 	// Get column breaks to chunk up each problem's numbers
 	blankColumns := re.FindAllStringSubmatchIndex(input[len(input)-1], -1)
-	columnBreaks := []int{}
-	for _, bc := range blankColumns {
-		columnBreaks = append(columnBreaks, bc[0])
+	columnBreaks := make([]int, len(blankColumns)+1)
+	for i, bc := range blankColumns {
+		columnBreaks[i] = bc[0]
 	}
 	maxLineLength := 0
 	for _, line := range input {
 		maxLineLength = maths.Max(maxLineLength, len(line)+1)
 	}
-	columnBreaks = append(columnBreaks, maxLineLength)
+	columnBreaks[len(columnBreaks)-1] = maxLineLength
 
 	for i, line := range input {
 		if i != len(input)-1 {
@@ -88,10 +88,10 @@ func findSolutions(input []string) (int, int, error) {
 	problems, err := parseInput(input)
 	for _, p := range problems {
 		// Part 1
-		nums := []int{}
-		for _, nArr := range p.numbers {
+		nums := make([]int, len(p.numbers))
+		for i, nArr := range p.numbers {
 			num, _ := strconv.Atoi(strings.TrimSpace(strings.Join(nArr, "")))
-			nums = append(nums, num)
+			nums[i] = num
 		}
 		part1 += p.op(nums)
 
