@@ -18,7 +18,7 @@ func composeBounds(input []string, upperBound int) ([]int, []int) {
 		upper, _ := strconv.Atoi(matches[1])
 		uppers[i] = upper
 	}
-	// The largest upper may be less than the max possible IP, so add ean extra lower upper so we
+	// The largest upper may be less than the max possible IP, so add an extra lower upper so we
 	// include IPs up to this.
 	lowers[len(lowers)-1] = upperBound + 1
 	uppers[len(uppers)-1] = upperBound + 1
