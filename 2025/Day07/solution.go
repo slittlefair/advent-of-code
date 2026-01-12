@@ -48,17 +48,17 @@ func (b *Beams) stepBeam(beam graph.Co) []graph.Co {
 }
 
 func (b *Beams) step() {
-	newBeams := make(map[graph.Co]int)
+	beams := make(map[graph.Co]int)
 	for beam, freq := range b.beams {
-		new := b.stepBeam(beam)
-		for _, n := range new {
-			newBeams[n] += freq
+		newBeams := b.stepBeam(beam)
+		for _, nb := range newBeams {
+			beams[nb] += freq
 		}
-		if len(new) > 1 {
+		if len(newBeams) > 1 {
 			b.part1++
 		}
 	}
-	b.beams = newBeams
+	b.beams = beams
 }
 
 func findSolutions(input []string) (int, int) {
