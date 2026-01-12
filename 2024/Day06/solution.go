@@ -51,9 +51,10 @@ func parseInput(input []string) *Floor {
 	for y, line := range input {
 		for x, r := range line {
 			str := string(r)
-			if str == "^" {
+			switch str {
+			case "^":
 				guard.co = graph.Co{X: x, Y: y}
-			} else if str == "#" {
+			case "#":
 				g.Graph[graph.Co{X: x, Y: y}] = str
 			}
 		}

@@ -40,11 +40,11 @@ func calculateDiffInSlices(slice1, slice2 []int) (int, error) {
 	}
 
 	if !slices.IsSorted(slice2) {
-		return diff, fmt.Errorf("Expect slice2 is already sorted")
+		return diff, fmt.Errorf("expect slice2 is already sorted")
 	}
 
 	if len(slice1) != len(slice2) {
-		return diff, fmt.Errorf("Expect slices to be of the same length: %d vs. %d", len(slice1), len(slice2))
+		return diff, fmt.Errorf("expect slices to be of the same length: %d vs. %d", len(slice1), len(slice2))
 	}
 
 	for i := range slice1 {

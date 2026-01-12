@@ -41,16 +41,17 @@ func (p *Programme) runProgramme(tweakAtIndex int) int {
 	instructionsRun := map[int]bool{}
 	for {
 		inst := p.instructions[index]
-		if inst.instruction == "nop" {
+		switch inst.instruction {
+		case "nop":
 			if index == tweakAtIndex {
 				index += inst.value
 			} else {
 				index++
 			}
-		} else if inst.instruction == "acc" {
+		case "acc":
 			accumulator += inst.value
 			index++
-		} else if inst.instruction == "jmp" {
+		case "jmp":
 			if index == tweakAtIndex {
 				index++
 			} else {

@@ -9,16 +9,16 @@ import (
 )
 
 func createReportsFromInput(input []string) [][]int {
-	reports := [][]int{}
-	for _, line := range input {
+	reports := make([][]int, len(input))
+	for i, line := range input {
 		matches := regex.MatchNums.FindAllString(line, -1)
-		report := []int{}
-		for _, m := range matches {
+		report := make([]int, len(matches))
+		for j, m := range matches {
 			// We can ignore the error as we know each one can be converted to an int due to the regex matching
 			v, _ := strconv.Atoi(m)
-			report = append(report, v)
+			report[j] = v
 		}
-		reports = append(reports, report)
+		reports[i] = report
 	}
 	return reports
 }

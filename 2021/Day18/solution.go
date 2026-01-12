@@ -104,10 +104,11 @@ func (p *Pair) explode() bool {
 		*ep.right += *ep.pair.rightVal
 	}
 	newVal := 0
-	if ep.pair == ep.pair.parent.leftPair {
+	switch ep.pair {
+	case ep.pair.parent.leftPair:
 		ep.pair.parent.leftPair = nil
 		ep.pair.parent.leftVal = &newVal
-	} else if ep.pair == ep.pair.parent.rightPair {
+	case ep.pair.parent.rightPair:
 		ep.pair.parent.rightPair = nil
 		ep.pair.parent.rightVal = &newVal
 	}

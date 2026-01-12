@@ -56,10 +56,8 @@ func (n Numbers) part2(part1Sol int) (int, error) {
 
 func main() {
 	entries := file.ReadAsInts()
-	numbers := Numbers{}
-	for _, e := range entries {
-		numbers = append(numbers, e)
-	}
+	numbers := make(Numbers, len(entries))
+	copy(numbers, entries)
 	preambleLength := 25
 
 	part1Sol, err := numbers.part1(preambleLength)

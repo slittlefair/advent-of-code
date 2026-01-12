@@ -18,9 +18,9 @@ type Tiles struct {
 
 func parseInput(input []string) [][]string {
 	re := regexp.MustCompile(`e|se|ne|w|sw|nw`)
-	tileList := [][]string{}
-	for _, line := range input {
-		tileList = append(tileList, re.FindAllString(line, -1))
+	tileList := make([][]string, len(input))
+	for i, line := range input {
+		tileList[i] = re.FindAllString(line, -1)
 	}
 	return tileList
 }

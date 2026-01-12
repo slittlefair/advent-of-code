@@ -13,9 +13,9 @@ type Game struct {
 }
 
 func createGame(input string, maxNum int) Game {
-	inputNums := []int{}
-	for _, num := range input {
-		inputNums = append(inputNums, int(num-'0'))
+	inputNums := make([]int, len(input))
+	for i, num := range input {
+		inputNums[i] = int(num - '0')
 	}
 
 	g := Game{
@@ -68,7 +68,7 @@ func (g *Game) doMove() {
 }
 
 func (g *Game) playGame(rounds int) {
-	for i := 0; i < rounds; i++ {
+	for range rounds {
 		g.doMove()
 	}
 }

@@ -13,8 +13,8 @@ type Equation struct {
 }
 
 func parseInput(input []string) []Equation {
-	equations := []Equation{}
-	for _, line := range input {
+	equations := make([]Equation, len(input))
+	for j, line := range input {
 		matches := regex.MatchNums.FindAllString(line, -1)
 		eq := Equation{}
 		for i, m := range matches {
@@ -26,7 +26,7 @@ func parseInput(input []string) []Equation {
 				eq.equations = append(eq.equations, num)
 			}
 		}
-		equations = append(equations, eq)
+		equations[j] = eq
 	}
 	return equations
 }

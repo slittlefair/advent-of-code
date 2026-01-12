@@ -12,16 +12,16 @@ import (
 type Spreadsheet [][]int
 
 func parseInput(input []string) Spreadsheet {
-	ss := Spreadsheet{}
-	for _, line := range input {
-		row := []int{}
+	ss := make(Spreadsheet, len(input))
+	for i, line := range input {
 		nums := regex.MatchNums.FindAllString(line, -1)
-		for _, n := range nums {
+		row := make([]int, len(nums))
+		for j, n := range nums {
 			// We already match using regex so we know all numbers can be converted to ints
-			i, _ := strconv.Atoi(n)
-			row = append(row, i)
+			c, _ := strconv.Atoi(n)
+			row[j] = c
 		}
-		ss = append(ss, row)
+		ss[i] = row
 	}
 	return ss
 }
