@@ -81,11 +81,12 @@ func (g Grid) evaluateOccupiedSeat(co graph.Co, part int) string {
 func (g Grid) generateNextGrid(part int) Grid {
 	newGrid := Grid{}
 	for co, val := range g {
-		if val == "L" {
+		switch val {
+		case "L":
 			newGrid[co] = g.evaluateEmptySeat(co, part)
-		} else if val == "#" {
+		case "#":
 			newGrid[co] = g.evaluateOccupiedSeat(co, part)
-		} else {
+		default:
 			newGrid[co] = "."
 		}
 	}

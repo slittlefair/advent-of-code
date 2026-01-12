@@ -79,7 +79,7 @@ func findSolutions(sums []string) (int, int) {
 	runningTotalPart1 := 0
 	runningTotalPart2 := 0
 	for _, sum := range sums {
-		sum = strings.Replace(sum, " ", "", -1)
+		sum = strings.ReplaceAll(sum, " ", "")
 		// Because the input contains only valid characters these conversions will never return
 		// errors
 		val, _ := strconv.Atoi(evaluateSum(sum, 1))

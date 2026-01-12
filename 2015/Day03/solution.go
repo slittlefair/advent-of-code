@@ -21,25 +21,27 @@ func createVisitedHouses() *VisitedHouses {
 }
 
 func (vh *VisitedHouses) moveSanta(dir string) {
-	if dir == "<" {
+	switch dir {
+	case "<":
 		vh.Santa.X--
-	} else if dir == ">" {
+	case ">":
 		vh.Santa.X++
-	} else if dir == "^" {
+	case "^":
 		vh.Santa.Y--
-	} else if dir == "v" {
+	case "v":
 		vh.Santa.Y++
 	}
 }
 
 func (vh *VisitedHouses) moveRoboSanta(dir string) {
-	if dir == "<" {
+	switch dir {
+	case "<":
 		vh.RoboSanta.X--
-	} else if dir == ">" {
+	case ">":
 		vh.RoboSanta.X++
-	} else if dir == "^" {
+	case "^":
 		vh.RoboSanta.Y--
-	} else if dir == "v" {
+	case "v":
 		vh.RoboSanta.Y++
 	}
 }

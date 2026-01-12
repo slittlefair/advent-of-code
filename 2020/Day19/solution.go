@@ -44,7 +44,13 @@ func (i *Input) parseInput(rawInput []string) {
 	}
 }
 
-func (i Input) iterateMessages(key string, remainingRules []string, message string, index int, seen map[string]bool) map[string]bool {
+func (i Input) iterateMessages(
+	key string,
+	remainingRules []string,
+	message string,
+	index int,
+	seen map[string]bool,
+) map[string]bool {
 	rule := i.Rules[key]
 	if rule.val != "" {
 		if index >= len(message) {
@@ -77,11 +83,12 @@ func (i Input) iterateMessages(key string, remainingRules []string, message stri
 
 func (i Input) changeRulesForPart2() {
 	for key := range i.Rules {
-		if key == "8" {
+		switch key {
+		case "8":
 			i.Rules["8"] = Rule{
 				subRules: [][]string{{"42"}, {"42", "8"}},
 			}
-		} else if key == "11" {
+		case "11":
 			i.Rules["11"] = Rule{
 				subRules: [][]string{{"42", "31"}, {"42", "11", "31"}},
 			}

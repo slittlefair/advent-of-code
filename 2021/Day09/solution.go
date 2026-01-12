@@ -85,7 +85,7 @@ func (bs Basins) multiplyLargestBasinSizes() int {
 func findSolutions(input []string) (int, int) {
 	hm := parseInput(input)
 	lp := hm.findLowPoints()
-	basins := Basins{}
+	basins := make(Basins, 0, len(lp))
 	for co := range lp {
 		basins = append(basins, hm.calculateBasin(co))
 	}

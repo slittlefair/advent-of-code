@@ -12,15 +12,15 @@ type Banks [][]int
 var re = regexp.MustCompile(`\d`)
 
 func parseInput(input []string) Banks {
-	banks := Banks{}
-	for _, line := range input {
+	banks := make(Banks, len(input))
+	for i, line := range input {
 		matches := re.FindAllString(line, -1)
-		bank := []int{}
-		for _, m := range matches {
+		bank := make([]int, len(matches))
+		for j, m := range matches {
 			n, _ := strconv.Atoi(m)
-			bank = append(bank, n)
+			bank[j] = n
 		}
-		banks = append(banks, bank)
+		banks[i] = bank
 	}
 	return banks
 }

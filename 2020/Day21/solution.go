@@ -92,14 +92,14 @@ func (f *Foods) assignIngredientToAllergen() {
 }
 
 func (f Foods) createDangerousIngredientsList() string {
-	allergens := []string{}
+	allergens := make([]string, 0, len(f.AllergenToIngredient))
 	for allergen := range f.AllergenToIngredient {
 		allergens = append(allergens, allergen)
 	}
 	sort.Strings(allergens)
-	ingredients := []string{}
-	for _, allergen := range allergens {
-		ingredients = append(ingredients, f.AllergenToIngredient[allergen])
+	ingredients := make([]string, len(allergens))
+	for i, allergen := range allergens {
+		ingredients[i] = f.AllergenToIngredient[allergen]
 	}
 	return strings.Join(ingredients, ",")
 }
