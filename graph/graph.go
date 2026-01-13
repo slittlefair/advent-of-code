@@ -3,6 +3,7 @@ package graph
 import (
 	"Advent-of-Code/maths"
 	"fmt"
+	"math"
 )
 
 // Co is a simple struct for a graph coordinate with points x, y, z
@@ -66,8 +67,15 @@ func AdjacentCos(co Co, includeDiagonals bool) []Co {
 }
 
 // CalculateManhattanDistance calculates the manhattan distance between the origin
-func CalculateManhattanDistance(co1, co2 Co) int {
-	x := co1.X - co2.X
-	y := co1.Y - co2.Y
+func CalculateManhattanDistance(p, q Co) int {
+	x := p.X - q.X
+	y := p.Y - q.Y
 	return maths.Abs(x) + maths.Abs(y)
+}
+
+func CalculateEuclideanDistance(p, q Co) float64 {
+	x := float64(p.X - q.X)
+	y := float64(p.Y - q.Y)
+	z := float64(p.Z - q.Z)
+	return math.Sqrt(x*x + y*y + z*z)
 }

@@ -99,7 +99,7 @@ func Equal[K comparable](slice1, slice2 []K) bool {
 }
 
 // RemoveByIndex removes the element at index i from slice s and returns that slice, whilst keeping the original in tact
-func RemoveByIndex[K comparable](s []K, i int) []K {
+func RemoveByIndex[K any](s []K, i int) []K {
 	ret := make([]K, 0, len(s)-1)
 	ret = append(ret, s[:i]...)
 	return append(ret, s[i+1:]...)
