@@ -5,11 +5,9 @@ import (
 	"Advent-of-Code/graph"
 	"Advent-of-Code/maths"
 	"Advent-of-Code/regex"
-	"Advent-of-Code/timer"
 	"fmt"
 	"slices"
 	"strconv"
-	"time"
 )
 
 type bounds struct {
@@ -101,37 +99,24 @@ func parseInput(input []string) *Theater {
 	return tr
 }
 
-func (t *Theater) coordinateInside(co graph.Co, checkX, checkY bool) bool {
-	if checkX {
-		if co.Y < t.wallLookupX[co.X].min || co.Y > t.wallLookupX[co.X].max {
-			return false
-		}
-	}
-	if checkY {
-		if co.X < t.wallLookupY[co.Y].min || co.X > t.wallLookupY[co.Y].max {
-			return false
-		}
-	}
-	return true
+func (t *Theater) xCoordinateInside(co graph.Co) bool {
+	return co.Y >= t.wallLookupX[co.X].min && co.Y <= t.wallLookupX[co.X].max
+}
+
+func (t *Theater) yCoordinateInside(co graph.Co) bool {
+	return co.X >= t.wallLookupY[co.Y].min && co.X <= t.wallLookupY[co.Y].max
 }
 
 func findSolutions(input []string) (part1 int, part2 int) {
 	t := parseInput(input)
-	n := time.Now()
 	for i := range len(t.tiles) {
-		// TODO remove
-		if i%20 == 0 {
-			fmt.Printf("%v  ", i)
-			timer.Track(n)
-		}
 		for j := range i {
 			co1 := t.tiles[i]
 			co2 := t.tiles[j]
-			diffX := maths.Abs(co1.X-co2.X) + 1
-			diffY := maths.Abs(co1.Y-co2.Y) + 1
-			part1 = maths.Max(part1, diffX*diffY)
+			d := (maths.Abs(co1.X-co2.X) + 1) * (maths.Abs(co1.Y-co2.Y) + 1)
+			part1 = maths.Max(part1, d)
 
-			if diffX*diffY < part2 {
+			if d < part2 {
 				continue
 			}
 
@@ -141,23 +126,23 @@ func findSolutions(input []string) (part1 int, part2 int) {
 			slices.Sort(yCos)
 
 			for y := yCos[0] + 1; y < yCos[1]; y++ {
-				if !t.coordinateInside(graph.Co{X: xCos[0], Y: y}, false, true) {
+				if !t.yCoordinateInside(graph.Co{X: xCos[0], Y: y}) {
 					goto out
 				}
-				if !t.coordinateInside(graph.Co{X: xCos[1], Y: y}, true, false) {
+				if !t.xCoordinateInside(graph.Co{X: xCos[1], Y: y}) {
 					goto out
 				}
 			}
 			for x := xCos[0] + 1; x < xCos[1]; x++ {
-				if !t.coordinateInside(graph.Co{X: x, Y: yCos[0]}, true, false) {
+				if !t.xCoordinateInside(graph.Co{X: x, Y: yCos[0]}) {
 					goto out
 				}
-				if !t.coordinateInside(graph.Co{X: x, Y: yCos[1]}, false, true) {
+				if !t.yCoordinateInside(graph.Co{X: x, Y: yCos[1]}) {
 					goto out
 				}
 			}
 
-			part2 = maths.Max(part2, diffX*diffY)
+			part2 = d
 		out:
 		}
 	}
@@ -168,10 +153,8 @@ func main() {
 	// TODO optimise this - part 2 causes run to yield correct solution but takes ~11s.
 	// Feels like current approach is optimised as much as possible so maybe total rethink and
 	// refactor is needed
-	t := time.Now()
 	input := file.Read()
 	part1, part2 := findSolutions(input)
 	fmt.Printf("Part1: %v\n", part1)
 	fmt.Printf("Part2: %v\n", part2)
-	timer.Track(t)
 }
