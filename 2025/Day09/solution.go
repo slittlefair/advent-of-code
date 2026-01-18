@@ -102,9 +102,6 @@ func parseInput(input []string) *Theater {
 }
 
 func (t *Theater) coordinateInside(co graph.Co, checkX, checkY bool) bool {
-	if _, ok := t.Graph[co]; ok {
-		return true
-	}
 	if checkX {
 		if co.Y < t.wallLookupX[co.X].min || co.Y > t.wallLookupX[co.X].max {
 			return false
@@ -120,10 +117,12 @@ func (t *Theater) coordinateInside(co graph.Co, checkX, checkY bool) bool {
 
 func findSolutions(input []string) (part1 int, part2 int) {
 	t := parseInput(input)
+	n := time.Now()
 	for i := range len(t.tiles) {
 		// TODO remove
 		if i%20 == 0 {
-			fmt.Println(i)
+			fmt.Printf("%v  ", i)
+			timer.Track(n)
 		}
 		for j := range i {
 			co1 := t.tiles[i]
@@ -132,16 +131,17 @@ func findSolutions(input []string) (part1 int, part2 int) {
 			diffY := maths.Abs(co1.Y-co2.Y) + 1
 			part1 = maths.Max(part1, diffX*diffY)
 
+			if diffX*diffY < part2 {
+				continue
+			}
+
 			xCos := []int{co1.X, co2.X}
 			slices.Sort(xCos)
 			yCos := []int{co1.Y, co2.Y}
 			slices.Sort(yCos)
-			if diffX*diffY < part2 {
-				goto out
-			}
 
 			for y := yCos[0] + 1; y < yCos[1]; y++ {
-				if !t.coordinateInside(graph.Co{X: xCos[0], Y: y}, true, true) {
+				if !t.coordinateInside(graph.Co{X: xCos[0], Y: y}, false, true) {
 					goto out
 				}
 				if !t.coordinateInside(graph.Co{X: xCos[1], Y: y}, true, false) {
@@ -149,7 +149,7 @@ func findSolutions(input []string) (part1 int, part2 int) {
 				}
 			}
 			for x := xCos[0] + 1; x < xCos[1]; x++ {
-				if !t.coordinateInside(graph.Co{X: x, Y: yCos[0]}, true, true) {
+				if !t.coordinateInside(graph.Co{X: x, Y: yCos[0]}, true, false) {
 					goto out
 				}
 				if !t.coordinateInside(graph.Co{X: x, Y: yCos[1]}, false, true) {
@@ -165,7 +165,7 @@ func findSolutions(input []string) (part1 int, part2 int) {
 }
 
 func main() {
-	// TODO optimise this - part 2 causes run to yield correct solution but takes ~1m07s.
+	// TODO optimise this - part 2 causes run to yield correct solution but takes ~11s.
 	// Feels like current approach is optimised as much as possible so maybe total rethink and
 	// refactor is needed
 	t := time.Now()
