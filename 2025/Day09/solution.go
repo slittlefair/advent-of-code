@@ -5,9 +5,11 @@ import (
 	"Advent-of-Code/graph"
 	"Advent-of-Code/maths"
 	"Advent-of-Code/regex"
+	"Advent-of-Code/timer"
 	"fmt"
 	"slices"
 	"strconv"
+	"time"
 )
 
 type bounds struct {
@@ -91,11 +93,6 @@ func parseInput(input []string) *Theater {
 		}
 	}
 
-	tilesWalls := make([]graph.Co, 0, len(tr.Graph))
-	for v := range tr.Graph {
-		tilesWalls = append(tilesWalls, v)
-	}
-
 	return tr
 }
 
@@ -153,8 +150,10 @@ func main() {
 	// TODO optimise this - part 2 causes run to yield correct solution but takes ~11s.
 	// Feels like current approach is optimised as much as possible so maybe total rethink and
 	// refactor is needed
+	t := time.Now()
 	input := file.Read()
 	part1, part2 := findSolutions(input)
 	fmt.Printf("Part1: %v\n", part1)
 	fmt.Printf("Part2: %v\n", part2)
+	timer.Track(t)
 }
