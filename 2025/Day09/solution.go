@@ -121,6 +121,7 @@ func (t *Theater) coordinateInside(co graph.Co, checkX, checkY bool) bool {
 func findSolutions(input []string) (part1 int, part2 int) {
 	t := parseInput(input)
 	for i := range len(t.tiles) {
+		// TODO remove
 		if i%20 == 0 {
 			fmt.Println(i)
 		}
