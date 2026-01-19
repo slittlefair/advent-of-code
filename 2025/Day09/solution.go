@@ -104,6 +104,10 @@ func (t *Theater) yCoordinateInside(co graph.Co) bool {
 	return co.X >= t.wallLookupY[co.Y].min && co.X <= t.wallLookupY[co.Y].max
 }
 
+func (t *Theater) coordinateInside(co graph.Co) bool {
+	return t.xCoordinateInside(co) && t.yCoordinateInside(co)
+}
+
 func findSolutions(input []string) (part1 int, part2 int) {
 	t := parseInput(input)
 	for i := range len(t.tiles) {
@@ -118,23 +122,27 @@ func findSolutions(input []string) (part1 int, part2 int) {
 			}
 
 			xCos := []int{co1.X, co2.X}
-			slices.Sort(xCos)
+			if co1.X > co2.X {
+				xCos = []int{co2.X, co1.X}
+			}
 			yCos := []int{co1.Y, co2.Y}
-			slices.Sort(yCos)
+			if co1.Y > co2.Y {
+				yCos = []int{co2.Y, co1.Y}
+			}
 
-			for y := yCos[0] + 1; y < yCos[1]; y++ {
-				if !t.yCoordinateInside(graph.Co{X: xCos[0], Y: y}) {
+			for y := yCos[0] + 1; y < yCos[1]; y += 2 {
+				if !t.coordinateInside(graph.Co{X: xCos[0], Y: y}) {
 					goto out
 				}
-				if !t.xCoordinateInside(graph.Co{X: xCos[1], Y: y}) {
+				if !t.coordinateInside(graph.Co{X: xCos[1], Y: y}) {
 					goto out
 				}
 			}
-			for x := xCos[0] + 1; x < xCos[1]; x++ {
-				if !t.xCoordinateInside(graph.Co{X: x, Y: yCos[0]}) {
+			for x := xCos[0] + 1; x < xCos[1]; x += 2 {
+				if !t.coordinateInside(graph.Co{X: x, Y: yCos[0]}) {
 					goto out
 				}
-				if !t.yCoordinateInside(graph.Co{X: x, Y: yCos[1]}) {
+				if !t.coordinateInside(graph.Co{X: x, Y: yCos[1]}) {
 					goto out
 				}
 			}
