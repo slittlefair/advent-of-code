@@ -2,21 +2,19 @@ package main
 
 import (
 	"Advent-of-Code/file"
-	"Advent-of-Code/timer"
 	"fmt"
 	"maps"
 	"regexp"
 	"slices"
 	"strconv"
 	"strings"
-	"time"
 )
 
 type Machine struct {
 	Lights   uint16
 	Buttons  [][]int
 	Joltages []int
-	Success  int
+	part1    int
 }
 
 var reLights = regexp.MustCompile(`\[([.#]+)\]`)
@@ -62,23 +60,25 @@ func parseInput(input []string) []*Machine {
 
 type Cache map[uint16]struct{}
 
-func (m *Machine) switchLights(lights uint16, buttons int, sequence []int, cache Cache) {
-	if m.Success == 1 {
+func (m *Machine) switchLights(lights uint16, buttons int, sequence []int, cache Cache, maxLevel int) {
+	if len(sequence) >= maxLevel {
 		return
 	}
-	lightCopy := lights
-	for _, v := range m.Buttons[buttons] {
-		lightCopy ^= 1 << v
+	if m.part1 == 1 {
+		return
 	}
-	if lightCopy == m.Lights {
-		m.Success = len(sequence)
+	for _, v := range m.Buttons[buttons] {
+		lights ^= 1 << v
+	}
+	if lights == m.Lights {
+		m.part1 = len(sequence)
 		return
 	}
 	cacheCopy := maps.Clone(cache)
-	if _, ok := cacheCopy[lightCopy]; ok {
+	if _, ok := cacheCopy[lights]; ok {
 		return
 	}
-	cacheCopy[lightCopy] = struct{}{}
+	cacheCopy[lights] = struct{}{}
 	for b := range m.Buttons {
 		if b == buttons {
 			continue
@@ -86,32 +86,32 @@ func (m *Machine) switchLights(lights uint16, buttons int, sequence []int, cache
 		if slices.Contains(sequence, b) {
 			continue
 		}
-		if m.Success != 0 && len(sequence) == m.Success-1 {
-			return
-		}
-		m.switchLights(lightCopy, b, append(sequence, b), cacheCopy)
+		m.switchLights(lights, b, append(sequence, b), cacheCopy, maxLevel)
 	}
 }
 
 func findSolutions(input []string) (part1 int, part2 int) {
 	machines := parseInput(input)
 	for _, m := range machines {
-		for b := range m.Buttons {
-			cache := make(map[uint16]struct{})
-			cache[m.Lights] = struct{}{}
-			m.switchLights(uint16(0), b, []int{b}, cache)
+		for i := 1; i <= len(m.Buttons); i++ {
+			for b := range m.Buttons {
+				if m.part1 != 0 {
+					goto out
+				}
+				cache := make(map[uint16]struct{})
+				cache[m.Lights] = struct{}{}
+				m.switchLights(uint16(0), b, []int{b}, cache, i)
+			}
 		}
-		part1 += m.Success
+	out:
+		part1 += m.part1
 	}
 	return part1, part2
 }
 
 func main() {
-	f := time.Now()
 	input := file.Read()
 	part1, part2 := findSolutions(input)
-	// TODO speed up part 1
 	fmt.Printf("Part1: %v\n", part1)
 	fmt.Printf("Part2: %v\n", part2)
-	timer.Track(f)
 }
