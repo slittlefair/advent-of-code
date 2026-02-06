@@ -39,10 +39,10 @@ func parseInput(input []string) []*Machine {
 
 		for _, m := range buttonMatches {
 			btn := strings.Split(m[1], ",")
-			buttons := []int{}
-			for _, b := range btn {
+			buttons := make([]int, len(btn))
+			for i, b := range btn {
 				n, _ := strconv.Atoi(b)
-				buttons = append(buttons, n)
+				buttons[i] = n
 			}
 			mach.Buttons = append(mach.Buttons, buttons)
 		}
